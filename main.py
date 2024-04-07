@@ -534,7 +534,7 @@ class Kifuwarabe():
                 print(f'[DEBUG] control_list jsa:{convert_sq_to_jsa_for_list(sq_list)}')
 
                 # SEE を調べる
-                see_value = self.colleague.static_exchange_evaluation.do_it(dst_sq)
+                see_value = 0
                 print(f'[DEBUG] see_value:{see_value}')
 
             elif cmd[0] == 'sqtest':
@@ -583,7 +583,7 @@ class Kifuwarabe():
                         self.subordinate.board.push_pass()
 
                         print('局面評価値内訳：')
-                        value_list = self.colleague.position_evaluation.do_it(move_dst_sq=dst_sq)
+                        value_list = 0
                         for index, value in enumerate(value_list):
                             print(f'　　（{index:2}） {value:10}')
                         print(f'　　（計） {sum(value_list):10}')
@@ -608,7 +608,7 @@ class Kifuwarabe():
                     # 局面評価値表示
                     dst_sq = MoveHelper.destination(move)
                     print('局面評価値内訳：')
-                    value_list = self.colleague.position_evaluation.do_it(move_dst_sq=dst_sq)
+                    value_list = 0
                     for index, value in enumerate(value_list):
                         print(f'　　（{index:2}） {value:10}')
                     print(f'　　（計） {sum(value_list):10}')
@@ -688,16 +688,9 @@ class KifuwarabesColleague():
         )
         """思考"""
 
-        self._position_evaluation = PositionEvaluation(
-            kifuwarabes_subordinate=kifuwarabes_subordinate,
-            kifuwarabes_colleague=self
-        )
-        """局面評価"""
-
         self._alpha_beta_pruning = AlphaBetaPruning(
             kifuwarabes_subordinate=kifuwarabes_subordinate,
-            kifuwarabes_colleague=self,
-            on_eval_on_leaf=self.position_evaluation.do_it
+            kifuwarabes_colleague=self
         )
         """探索アルゴリズム　アルファーベーター刈り"""
 
@@ -725,11 +718,6 @@ class KifuwarabesColleague():
     def thought(self):
         """思考"""
         return self._thought
-
-    @property
-    def position_evaluation(self):
-        """局面評価"""
-        return self._position_evaluation
 
     @property
     def alpha_beta_pruning(self):
@@ -1429,9 +1417,13 @@ class Thought():
     #     return move
 
 
-class PositionEvaluation():
-    """局面評価
-    末端局面を評価する"""
+class AlphaBetaPruning():
+    """探索アルゴリズム　アルファーベーター刈り
+    ミニマックス戦略
+    実装はネガマックス
+
+    📖 [アルファベータ探索（alpha-beta pruning）やろうぜ（＾～＾）？](https://crieit.net/drafts/60e6206eaf964)
+    """
 
     def __init__(self, kifuwarabes_subordinate, kifuwarabes_colleague):
         """初期化
@@ -1457,63 +1449,6 @@ class PositionEvaluation():
     def kifuwarabes_colleague(self):
         """きふわらべの同僚"""
         return self._kifuwarabes_colleague
-
-
-    def do_it(self, move_dst_sq):
-        """末端局面での評価値計算
-        Parameters
-        ----------
-        move_dst_sq : int
-            着手移動先升番号 sq
-        """
-
-        # 駒の取り合いを解消したい。SEE（Static Exchange Evaluation）
-        see_value = self.kifuwarabes_colleague.static_exchange_evaluation.do_it(move_dst_sq)
-
-        # 駒割評価値、振り飛車評価値、SEE値
-        return [0, 0, see_value]
-
-
-class AlphaBetaPruning():
-    """探索アルゴリズム　アルファーベーター刈り
-    ミニマックス戦略
-    実装はネガマックス
-
-    📖 [アルファベータ探索（alpha-beta pruning）やろうぜ（＾～＾）？](https://crieit.net/drafts/60e6206eaf964)
-    """
-
-    def __init__(self, kifuwarabes_subordinate, kifuwarabes_colleague, on_eval_on_leaf):
-        """初期化
-
-        Parameters
-        ----------
-        kifuwarabes_subordinate
-            きふわらべの部下
-        """
-
-        self._kifuwarabes_subordinate = kifuwarabes_subordinate
-        """きふわらべの部下"""
-
-        self._kifuwarabes_colleague = kifuwarabes_colleague
-        """きふわらべの同僚"""
-
-        self._on_eval_on_leaf = on_eval_on_leaf
-        """末端局面での評価値計算"""
-
-    @property
-    def kifuwarabes_subordinate(self):
-        """きふわらべの部下"""
-        return self._kifuwarabes_subordinate
-
-    @property
-    def kifuwarabes_colleague(self):
-        """きふわらべの同僚"""
-        return self._kifuwarabes_colleague
-
-    @property
-    def on_eval_on_leaf(self):
-        """末端局面での評価値計算"""
-        return self._on_eval_on_leaf
 
     def do_it(self, depth, alpha, beta, is_root=False):
         """それをする
@@ -1555,8 +1490,7 @@ class AlphaBetaPruning():
                     """末端局面評価値"""
 
                     # どんな手を指したか
-                    value_list = self.on_eval_on_leaf(move_dst_sq=MoveHelper.destination(move))
-                    temp_value = sum(value_list)
+                    temp_value = 0
 
             else:
                 pass
