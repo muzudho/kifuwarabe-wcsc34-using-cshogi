@@ -1,10 +1,13 @@
 import cshogi
 from feeling_luckey import choice_lottery
-from evaluation_table import get_evaluation_table_index_from_move_as_usi, get_evaluation_value
+from evaluation_table import EvaluationTable
 
 
 board = cshogi.Board()
 """盤"""
+
+evaluation_table = EvaluationTable()
+"""評価値テーブル"""
 
 
 def usi_loop():
@@ -66,6 +69,10 @@ def usi():
 
 def isready():
     """対局準備"""
+
+    # 評価関数テーブルをファイルから読み込む。無ければランダム値の入った物を新規作成する
+    evaluation_table.load_or_new_evaluation_table()
+
     print('readyok', flush=True)
 
 
@@ -117,7 +124,7 @@ def go():
             return cshogi.move_to_usi(matemove)
 
     # くじを引く
-    bestmove = choice_lottery(list(board.legal_moves))
+    bestmove = choice_lottery(evaluation_table, list(board.legal_moves))
 
     print(f"info depth 0 seldepth 0 time 1 nodes 0 score cp 0 string I'm feeling luckey")
     print(f'bestmove {bestmove}', flush=True)
@@ -149,26 +156,26 @@ def lottery():
     print('くじ一覧：')
 
     # USIプロトコルでの符号表記に変換
-    move_list_as_usi = []
+    sorted_legal_move_list_as_usi = []
 
     for move in board.legal_moves:
-        move_list_as_usi.append(cshogi.move_to_usi(move))
+        sorted_legal_move_list_as_usi.append(cshogi.move_to_usi(move))
 
     # ソート
-    move_list_as_usi.sort()
+    sorted_legal_move_list_as_usi.sort()
+
+    # 候補手に評価値を付けた辞書を作成
+    move_score_dictionary = evaluation_table.make_move_score_dictionary(sorted_legal_move_list_as_usi)
 
     # 表示
     number = 1
 
-    for move_a_as_usi in move_list_as_usi:
+    for move_a_as_usi in sorted_legal_move_list_as_usi:
 
-        # 総当たりで評価値を計算
-        sum_value = 0
+        # 指し手の評価値
+        move_value = move_score_dictionary[move_a_as_usi]
 
-        for move_b_as_usi in move_list_as_usi:
-            sum_value += get_evaluation_value(move_a_as_usi, move_b_as_usi)
-
-        print(f'  ({number:3}) {move_a_as_usi:5} = {get_evaluation_table_index_from_move_as_usi(move_a_as_usi):5} evalueation:{sum_value:3}')
+        print(f'  ({number:3}) {move_a_as_usi:5} = {evaluation_table.get_evaluation_table_index_from_move_as_usi(move_a_as_usi):5} value:{move_value:3}')
         number += 1
 
 
