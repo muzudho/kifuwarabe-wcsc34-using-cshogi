@@ -91,7 +91,7 @@ def go(kifuwarabe):
     """思考開始～最善手返却"""
     (bestmove, beta) = kifuwarabe.colleague.thought.do_it()
     alpha = -beta
-    print(f'info depth 1 seldepth 1 time 1 nodes 1 score cp {alpha} string x')
+    print(f'info depth 0 seldepth 1 time 1 nodes 1 score cp {alpha} string x')
     print(f'bestmove {bestmove}', flush=True)
 
 
@@ -117,7 +117,6 @@ def undo(kifuwarabe):
 def moveval(kifuwarabe):
     """１手読みでの指し手の評価値一覧"""
 
-    old_depth = kifuwarabe.colleague.thought.depth
     kifuwarabe.colleague.thought.depth = 1
 
     for move in kifuwarabe.subordinate.board.legal_moves:
@@ -133,8 +132,6 @@ def moveval(kifuwarabe):
 
         kifuwarabe.subordinate.board.pop()
         # 一手戻す
-
-    kifuwarabe.colleague.thought.depth = old_depth
 
 
 class Kifuwarabe():
@@ -206,43 +203,6 @@ class KifuwarabesColleague():
         return self._thought
 
 
-def eval_board(board):
-    """評価"""
-
-    if board.is_game_over():
-        # 負け
-        return -30000
-
-    if board.is_nyugyoku():
-        # 入玉宣言勝ち
-        return 30000
-
-    draw = board.is_draw(16)
-
-    if draw == cshogi.REPETITION_DRAW:
-        # 千日手
-        return 0
-
-    if draw == cshogi.REPETITION_WIN:
-        # 千日手で勝ち
-        return 30000
-
-    if draw == cshogi.REPETITION_LOSE:
-        # 千日手で負け
-        return -30000
-
-    if draw == cshogi.REPETITION_SUPERIOR:
-        # 千日手の上限？？
-        return 30000
-
-    if draw == cshogi.REPETITION_INFERIOR:
-        # 千日手の下限？？
-        return -30000
-
-    """別途、計算が必要"""
-    return None
-
-
 class Thought():
     """思考。
     主に、そのための設定"""
@@ -259,22 +219,10 @@ class Thought():
         self._board = board
         """盤"""
 
-        self._depth = 3
-        """読みの深さ"""
-
     @property
     def board(self):
         """盤"""
         return self._board
-
-    @property
-    def depth(self):
-        """読みの深さ"""
-        return self._depth
-
-    @depth.setter
-    def depth(self, value):
-        self._depth = value
 
     def do_it(self):
         """それをする"""
