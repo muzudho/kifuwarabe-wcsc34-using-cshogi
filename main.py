@@ -37,8 +37,12 @@ def usi_loop():
             """中断"""
             stop()
 
+        elif cmd[0] == 'gameover':
+            """対局終了"""
+            gameover(cmd)
+
         elif cmd[0] == 'quit':
-            """終了"""
+            """アプリケーション終了"""
             break
 
         # 以下、独自拡張
@@ -104,24 +108,26 @@ def go():
     if board.is_game_over():
         """投了局面時"""
 
-        return 'resign'
-        """投了"""
+        # 投了
+        print(f'resign', flush=True)
+        return
 
     if board.is_nyugyoku():
         """入玉宣言局面時"""
 
-        return 'win'
-        """勝利宣言"""
+        # 勝利宣言
+        print(f'win', flush=True)
+        return
 
     # 一手詰めを詰める
     if not board.is_check():
         """自玉に王手がかかっていない時で"""
 
-        if (matemove:=board.mate_move_in_1ply()):
+        if (matemove := board.mate_move_in_1ply()):
             """一手詰めの指し手があれば、それを取得"""
 
-            print('info score mate 1 pv {}'.format(cshogi.move_to_usi(matemove)))
-            return cshogi.move_to_usi(matemove)
+            print('info score mate 1 pv {}'.format(cshogi.move_to_usi(matemove)), flush=True)
+            return
 
     # くじを引く
     bestmove = choice_lottery(evaluation_table, list(board.legal_moves))
@@ -132,7 +138,19 @@ def go():
 
 def stop():
     """中断"""
-    print('bestmove resign' , flush=True)
+    print('bestmove resign', flush=True)
+
+
+def gameover(cmd):
+    """対局終了"""
+
+    if 2 <= len(cmd):
+        if cmd[1] == 'lose':
+            print("あ～あ、負けたぜ（ー＿ー）", flush=True)
+        elif cmd[1] == 'win':
+            print("やったぜ　勝ったぜ（＾ｑ＾）", flush=True)
+        else:
+            print(f"なんだろな（・＿・）？　{cmd[1]}", flush=True)
 
 
 def do(cmd):
