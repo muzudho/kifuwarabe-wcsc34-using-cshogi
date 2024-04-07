@@ -191,10 +191,6 @@ class KifuwarabesColleague():
         self._board = board
         """盤"""
 
-        self._board_value = BoardValue(
-            board=self._board)
-        """盤の決まりきった価値"""
-
         self._thought = Thought(
             board=self._board)
         """思考"""
@@ -205,71 +201,46 @@ class KifuwarabesColleague():
         return self._board
 
     @property
-    def board_value(self):
-        """盤の決まりきった価値"""
-        return self._board_value
-
-    @property
     def thought(self):
         """思考"""
         return self._thought
 
 
-class BoardValue():
-    """盤の決まりきった価値"""
+def eval_board(board):
+    """評価"""
 
-    def __init__(self, board):
-        """初期化
+    if board.is_game_over():
+        # 負け
+        return -30000
 
-        Parameters
-        ----------
-        board
-            盤
-        """
+    if board.is_nyugyoku():
+        # 入玉宣言勝ち
+        return 30000
 
-        self._board = board
-        """盤"""
+    draw = board.is_draw(16)
 
-    @property
-    def board(self):
-        """盤"""
-        return self._board
+    if draw == cshogi.REPETITION_DRAW:
+        # 千日手
+        return 0
 
-    def eval(self):
-        """評価"""
+    if draw == cshogi.REPETITION_WIN:
+        # 千日手で勝ち
+        return 30000
 
-        if self.board.is_game_over():
-            # 負け
-            return -30000
+    if draw == cshogi.REPETITION_LOSE:
+        # 千日手で負け
+        return -30000
 
-        if self.board.is_nyugyoku():
-            # 入玉宣言勝ち
-            return 30000
+    if draw == cshogi.REPETITION_SUPERIOR:
+        # 千日手の上限？？
+        return 30000
 
-        draw = self.board.is_draw(16)
+    if draw == cshogi.REPETITION_INFERIOR:
+        # 千日手の下限？？
+        return -30000
 
-        if draw == cshogi.REPETITION_DRAW:
-            # 千日手
-            return 0
-
-        if draw == cshogi.REPETITION_WIN:
-            # 千日手で勝ち
-            return 30000
-
-        if draw == cshogi.REPETITION_LOSE:
-            # 千日手で負け
-            return -30000
-
-        if draw == cshogi.REPETITION_SUPERIOR:
-            # 千日手の上限？？
-            return 30000
-
-        if draw == cshogi.REPETITION_INFERIOR:
-            # 千日手の下限？？
-            return -30000
-
-        """別途、計算が必要"""
-        return None
+    """別途、計算が必要"""
+    return None
 
 
 class Thought():
