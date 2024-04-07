@@ -1,12 +1,15 @@
 import random
 import datetime
 import os
+from result_file import exists_result_file, read_result_file
 
 
 class EvaluationTable():
     """評価値テーブル"""
 
     def __init__(self):
+        self._file_modified = False
+
         self._move_size = 8424
         self._table_size = 70_955_352
         self._evaluation_table = [0] * 70_955_352
@@ -53,24 +56,13 @@ class EvaluationTable():
         # 評価関数テーブル・ファイルが存在しないとき
         if not os.path.isfile('eval.csv'):
             # ダミーデータを入れる。１分ほどかかる
-            print(f"[{datetime.datetime.now()}] make evaluation table in memory ...")
+            print(f"[{datetime.datetime.now()}] make random evaluation table in memory ...")
 
             for index in range(0, self._table_size):
                 self._evaluation_table[index] = random.randint(-1,1)
 
             print(f"[{datetime.datetime.now()}] evaluation table maked in memory")
-
-            print(f"[{datetime.datetime.now()}] save eval.csv file ...")
-
-            # ファイルに出力する
-            with open('eval.csv', 'w', encoding="utf-8") as f:
-                # 配列の要素の整数型を文字列型に変換してカンマで連結
-                text = ','.join(map(str,self._evaluation_table))
-                print(f"[{datetime.datetime.now()}] text created ...")
-
-                f.write(text)
-
-            print(f"[{datetime.datetime.now()}] eval.csv file saved")
+            self._file_modified = True
 
         else:
             # ロードする。１分ほどかかる
@@ -82,6 +74,14 @@ class EvaluationTable():
 
                 # CSVファイルをカンマで分割し、整数型へ変換したあとリストに入れる
                 self._evaluation_table = list(map(int,text.split(',')))
+
+            # 結果を見る。持将棋や、負けていれば、内容をランダムに変更してみる
+            if exists_result_file:
+                result_text = read_result_file()
+
+                # 前回の対局で、負けるか、引き分けなら、内容を変えます
+                if result_text in ('lose', 'draw'):
+                    self.modify_table(result_text)
 
             print(f"[{datetime.datetime.now()}] eval.csv file loaded")
 
@@ -249,3 +249,43 @@ class EvaluationTable():
             move_score_dictionary[move_a_as_usi] = sum_value
 
         return move_score_dictionary
+
+
+    def modify_table(self, result_text):
+        """評価値テーブルの内容を適当に変更します"""
+
+        if result_text == 'lose':
+            count = self._table_size//1000
+        elif result_text == 'draw':
+            count = self._table_size//10000
+        else:
+            count = 0
+
+        for _i in range(0, count):
+            n = random.randint(0, self._table_size)
+            self._evaluation_table[n] = random.randint(-1,1)
+
+        self._file_modified = True
+
+
+    def save_evaluation_to_file(self):
+        """保存する"""
+
+        if self._file_modified:
+            print(f"[{datetime.datetime.now()}] save eval.csv file ...")
+
+            # ファイルに出力する
+            with open('eval.csv', 'w', encoding="utf-8") as f:
+                # 配列の要素の整数型を文字列型に変換してカンマで連結
+                text = ','.join(map(str,self._evaluation_table))
+                print(f"[{datetime.datetime.now()}] text created ...")
+
+                f.write(text)
+
+            self._file_modified = False
+
+            print(f"[{datetime.datetime.now()}] eval.csv file saved")
+
+        else:
+            print(f"[{datetime.datetime.now()}] eval.csv file not changed")
+

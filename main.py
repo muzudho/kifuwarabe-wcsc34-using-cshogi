@@ -1,6 +1,7 @@
 import cshogi
 from feeling_luckey import choice_lottery
 from evaluation_table import EvaluationTable
+from result_file import save_lose, save_win, save_draw, save_otherwise, exists_result_file, delete_result_file
 
 
 board = cshogi.Board()
@@ -24,6 +25,10 @@ def usi_loop():
         elif cmd[0] == 'isready':
             """対局準備"""
             isready()
+
+        elif cmd[0] == 'usinewgame':
+            """新しい対局"""
+            usinewgame()
 
         elif cmd[0] == 'position':
             """局面データ解析"""
@@ -80,6 +85,12 @@ def isready():
     print('readyok', flush=True)
 
 
+def usinewgame():
+    """新しい対局"""
+    if exists_result_file():
+        delete_result_file()
+
+
 def position(cmd):
     """局面データ解析"""
     pos = cmd[1].split('moves')
@@ -126,14 +137,16 @@ def go():
         if (matemove := board.mate_move_in_1ply()):
             """一手詰めの指し手があれば、それを取得"""
 
-            print('info score mate 1 pv {}'.format(cshogi.move_to_usi(matemove)), flush=True)
+            best_move = cshogi.move_to_usi(matemove)
+            print('info score mate 1 pv {}'.format(best_move), flush=True)
+            print(f'bestmove {best_move}', flush=True)
             return
 
     # くじを引く
-    bestmove = choice_lottery(evaluation_table, list(board.legal_moves))
+    best_move = choice_lottery(evaluation_table, list(board.legal_moves))
 
     print(f"info depth 0 seldepth 0 time 1 nodes 0 score cp 0 string I'm feeling luckey")
-    print(f'bestmove {bestmove}', flush=True)
+    print(f'bestmove {best_move}', flush=True)
 
 
 def stop():
@@ -145,33 +158,22 @@ def gameover(cmd):
     """対局終了"""
 
     if 2 <= len(cmd):
+        # 負け
         if cmd[1] == 'lose':
-            print("あ～あ、負けたぜ（＞＿＜）", flush=True)
+            save_lose()
 
-            # ファイルに出力する
-            with open('result.txt', 'w', encoding="utf-8") as f:
-                f.write("lose")
-
+        # 勝ち
         elif cmd[1] == 'win':
-            print("やったぜ　勝ったぜ（＾ｑ＾）", flush=True)
+            save_win()
+            evaluation_table.save_evaluation_to_file()
 
-            # ファイルに出力する
-            with open('result.txt', 'w', encoding="utf-8") as f:
-                f.write("win")
-
+        # 持将棋
         elif cmd[1] == 'draw':
-            print("持将棋か～（ー＿ー）", flush=True)
+            save_draw()
 
-            # ファイルに出力する
-            with open('result.txt', 'w', encoding="utf-8") as f:
-                f.write("draw")
-
+        # その他
         else:
-            print(f"なんだろな（・＿・）？　{cmd[1]}", flush=True)
-
-            # ファイルに出力する
-            with open('result.txt', 'w', encoding="utf-8") as f:
-                f.write(cmd[1])
+            save_otherwise(cmd[1])
 
 
 def do(cmd):
