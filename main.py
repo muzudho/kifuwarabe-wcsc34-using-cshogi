@@ -506,28 +506,6 @@ class Kifuwarabe():
                     jsa = sq_to_jsa(sq)
                     print(f'升：{jsa}　駒：{piece_to_string(piece)}　sq jsa：{jsa_to_sq(jsa)}')
 
-            elif cmd[0] == 'ranging':
-                """振り飛車になっているか確認する"""
-
-                ranging_rook = self.colleague.sense_of_beauty.check_ranging_rook()
-
-                if ranging_rook == 0:
-                    print(f'［振り飛車確認］　何でもない')
-                elif ranging_rook == 1:
-                    print(f'［振り飛車確認］　相居飛車')
-                elif ranging_rook == 2:
-                    print(f'［振り飛車確認］　先手振り飛車')
-                elif ranging_rook == 3:
-                    print(f'［振り飛車確認］　後手振り飛車')
-                elif ranging_rook == 4:
-                    print(f'［振り飛車確認］　相振り飛車')
-
-                piece_at28 = self.subordinate.board.pieces[cshogi.H2]
-                print(f'２八の駒：{piece_to_string(piece_at28)}')
-
-                piece_at82 = self.subordinate.board.pieces[cshogi.B8]
-                print(f'８二の駒：{piece_to_string(piece_at82)}')
-
             elif cmd[0] == 'posval':
                 """独自拡張。局面評価表示
                 example: 着手が４三だったとき
@@ -632,12 +610,6 @@ class KifuwarabesColleague():
         )
         """盤の決まりきった価値"""
 
-        self._sense_of_beauty = SenseOfBeauty(
-            kifuwarabes_subordinate=kifuwarabes_subordinate,
-            kifuwarabes_colleague=self
-        )
-        """美意識"""
-
         self._thought = Thought(
             kifuwarabes_subordinate=kifuwarabes_subordinate,
             kifuwarabes_colleague=self
@@ -659,11 +631,6 @@ class KifuwarabesColleague():
     def board_value(self):
         """盤の決まりきった価値"""
         return self._board_value
-
-    @property
-    def sense_of_beauty(self):
-        """美意識"""
-        return self._sense_of_beauty
 
     @property
     def thought(self):
@@ -742,82 +709,6 @@ class BoardValue():
         """別途、計算が必要"""
         return None
 
-
-class SenseOfBeauty():
-    """美意識"""
-
-    def __init__(self, kifuwarabes_subordinate, kifuwarabes_colleague):
-        """初期化
-
-        Parameters
-        ----------
-        kifuwarabes_subordinate
-            きふわらべの部下
-        kifuwarabes_colleague
-            きふわらべの同僚
-        """
-
-        self._kifuwarabes_subordinate = kifuwarabes_subordinate
-        """きふわらべの部下"""
-
-        self._kifuwarabes_colleague = kifuwarabes_colleague
-        """きふわらべの同僚"""
-
-    @property
-    def kifuwarabes_subordinate(self):
-        """きふわらべの部下"""
-        return self._kifuwarabes_subordinate
-
-    @property
-    def kifuwarabes_colleague(self):
-        """きふわらべの同僚"""
-        return self._kifuwarabes_colleague
-
-    def check_ranging_rook(self):
-        """振り飛車かどうか調べる
-        0: 何でもない
-        1: 相居飛車
-        2: 先手振り飛車、後手居飛車
-        3: 先手居飛車、後手振り飛車
-        4: 相振り飛車
-        """
-
-        # 局面には２つの飛車がある。
-        # 盤上に自分の飛車、相手の飛車があるときのみ発動する
-
-        sente_idx = 0
-        gote_idx = 1
-        piece_idx = 0 # piece index
-        sq_idx = 1 # square index
-
-        rook_pos = []
-        for sq, piece in enumerate(self.kifuwarabes_subordinate.board.pieces):
-            if piece == cshogi.BROOK or piece == cshogi.WROOK:
-                rook_pos.append((piece,sq))
-
-        if len(rook_pos) == 2:
-            if rook_pos[sente_idx][piece_idx] == rook_pos[gote_idx][piece_idx]:
-                """先手、後手が分かれていなければ、対象外"""
-                pass
-
-            # 先手、後手の順にする
-            if rook_pos[gote_idx][piece_idx] == cshogi.BROOK and rook_pos[sente_idx][piece_idx] == cshogi.WROOK:
-                temp = rook_pos[gote_idx]
-                rook_pos[gote_idx] = rook_pos[sente_idx]
-                rook_pos[sente_idx] = temp
-
-            if rook_pos[sente_idx][sq_idx] == jsa_to_sq(28):
-                if rook_pos[gote_idx][sq_idx] == jsa_to_sq(82):
-                    return 1 # 相居飛車
-                else:
-                    return 3 # 後手振り飛車
-            else:
-                if rook_pos[gote_idx][sq_idx] == jsa_to_sq(82):
-                    return 2 # 先手振り飛車
-                else:
-                    return 4 # 相振り飛車
-
-        return 0 # 何でもない
 
 class Thought():
     """思考。
@@ -1042,21 +933,6 @@ class AlphaBetaPruning():
         else:
             return (alpha, None)
         """自分が将来獲得できるであろう、もっとも良い、最低限の評価値"""
-
-
-class SqHelper():
-    """升番号 sq"""
-
-    @staticmethod
-    def file(sq):
-        """筋"""
-        return sq // 9 + 1
-
-    @staticmethod
-    def rank(sq):
-        """段"""
-        # print(f'[rank] sq: {sq}, sq%9: {sq%9}, sq%9+1: {sq%9+1}')
-        return sq % 9 + 1
 
 
 if __name__ == '__main__':
