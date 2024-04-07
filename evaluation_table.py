@@ -45,6 +45,10 @@ class EvaluationTable():
 
                 (5 * 9 + 7) * 81 * 2 = 8424
                 (8424 - 1) * 8424 = 70_955_352
+
+            ----------
+
+            値は、 -1,0,1 を入れる代わりに、+1 して 0,1,2 を入れてある。保存時にマイナスの符号で１文字使うのを省くため
         """
 
 
@@ -66,15 +70,7 @@ class EvaluationTable():
             self._file_modified = True
 
         else:
-            # ロードする。１分ほどかかる
-            print(f"[{datetime.datetime.now()}] load eval.csv file ...")
-
-            with open('eval.csv', 'r', encoding="utf-8") as f:
-                text = f.read()
-                print(f"[{datetime.datetime.now()}] eval.csv read ...")
-
-                # CSVファイルをカンマで分割し、整数型へ変換したあとリストに入れる
-                self._evaluation_table = list(map(int,text.split(',')))
+            self.load_evaluation_from_file()
 
             # 結果を見る。持将棋や、負けていれば、内容をランダムに変更してみる
             if exists_result_file:
@@ -280,8 +276,8 @@ class EvaluationTable():
 
             # ファイルに出力する
             with open('eval.csv', 'w', encoding="utf-8") as f:
-                # 配列の要素の整数型を文字列型に変換してカンマで連結
-                text = ','.join(map(str,self._evaluation_table))
+                # 配列の要素の整数型を文字列型に変換して隙間を空けずに連結
+                text = ''.join(map(str,self._evaluation_table))
                 print(f"[{datetime.datetime.now()}] text created ...")
 
                 f.write(text)
@@ -293,3 +289,17 @@ class EvaluationTable():
         else:
             print(f"[{datetime.datetime.now()}] eval.csv file not changed")
 
+    def load_evaluation_from_file(self):
+        """読込む"""
+
+        # ロードする。１分ほどかかる
+        print(f"[{datetime.datetime.now()}] load eval.csv file ...")
+
+        with open('eval.csv', 'r', encoding="utf-8") as f:
+            text = f.read()
+            print(f"[{datetime.datetime.now()}] eval.csv read ...")
+
+            # 隙間のないテキストを１文字ずつ分解
+            tokens = list(text)
+            # 整数型へ変換したあと、またリストに入れる
+            self._evaluation_table = list(map(int,tokens))
