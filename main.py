@@ -92,7 +92,32 @@ def position_detail(sfen, usi_moves):
 
 def go():
     """思考開始～最善手返却"""
-    bestmove = think()
+
+    if board.is_game_over():
+        """投了局面時"""
+
+        return 'resign'
+        """投了"""
+
+    if board.is_nyugyoku():
+        """入玉宣言局面時"""
+
+        return 'win'
+        """勝利宣言"""
+
+    # 一手詰めを詰める
+    if not board.is_check():
+        """自玉に王手がかかっていない時で"""
+
+        if (matemove:=board.mate_move_in_1ply()):
+            """一手詰めの指し手があれば、それを取得"""
+
+            print('info score mate 1 pv {}'.format(cshogi.move_to_usi(matemove)))
+            return cshogi.move_to_usi(matemove)
+
+    # くじを引く
+    bestmove = feeling_luckey(list(board.legal_moves))
+
     print(f"info depth 0 seldepth 0 time 1 nodes 0 score cp 0 string I'm feeling luckey")
     print(f'bestmove {bestmove}', flush=True)
 
@@ -139,32 +164,10 @@ def lottery():
         number += 1
 
 
-def think():
-    """それをする"""
+def feeling_luckey(legal_move_list):
+    """くじを引く"""
 
-    if board.is_game_over():
-        """投了局面時"""
-
-        return 'resign'
-        """投了"""
-
-    if board.is_nyugyoku():
-        """入玉宣言局面時"""
-
-        return 'win'
-        """勝利宣言"""
-
-    if not board.is_check():
-        """自玉に王手がかかっていない時"""
-
-        if (matemove:=board.mate_move_in_1ply()):
-            """あれば、一手詰めの指し手を取得"""
-
-            print('info score mate 1 pv {}'.format(cshogi.move_to_usi(matemove)))
-            return cshogi.move_to_usi(matemove)
-
-    bestmove_list = list(board.legal_moves)
-    bestmove = random.choice(bestmove_list)
+    bestmove = random.choice(legal_move_list)
     """候補手の中からランダムに選ぶ"""
 
     return cshogi.move_to_usi(bestmove)
