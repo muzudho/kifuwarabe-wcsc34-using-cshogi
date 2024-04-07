@@ -1481,41 +1481,8 @@ class PositionEvaluation():
         # 駒の取り合いを解消したい。SEE（Static Exchange Evaluation）
         see_value = self.kifuwarabes_colleague.static_exchange_evaluation.do_it(move_dst_sq)
 
-        ranging_value = 0
-        ranging_rook = self._kifuwarabes_colleague.sense_of_beauty.check_ranging_rook()
-
-        if ranging_rook == 2:
-            # 先手振り飛車
-            if cshogi.BLACK == self.kifuwarabes_subordinate.board.turn:
-                # 手番が振り飛車やってる。えらいぞ
-                ranging_value = 10
-            else:
-                # 相手が振り飛車やってる。しゃーない
-                pass
-
-        elif ranging_rook == 3:
-            # 後手振り飛車
-            if cshogi.WHITE == self.kifuwarabes_subordinate.board.turn:
-                # 手番が振り飛車やってる。えらいぞ
-                ranging_value = 10
-            else:
-                # 相手が振り飛車やってる。しゃーない
-                pass
-
-        elif ranging_rook == 1:
-            # 相居飛車やってる。さっさと飛車振れだぜ
-            ranging_value = -10
-
-        elif ranging_rook == 4:
-            # 相振り飛車やってる。しゃーない
-            pass
-
-        else:
-            # 何でもない
-            pass
-
         # 駒割評価値、振り飛車評価値、SEE値
-        return [0, ranging_value, see_value]
+        return [0, 0, see_value]
 
 
 class AlphaBetaPruning():
