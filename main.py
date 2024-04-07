@@ -198,9 +198,7 @@ class KifuwarabesColleague():
         """盤の決まりきった価値"""
 
         self._thought = Thought(
-            board=self._board,
-            kifuwarabes_colleague=self
-        )
+            board=self._board)
         """思考"""
 
     @property
@@ -290,22 +288,17 @@ class Thought():
     """思考。
     主に、そのための設定"""
 
-    def __init__(self, board, kifuwarabes_colleague):
+    def __init__(self, board):
         """初期化
 
         Parameters
         ----------
         board
             盤
-        kifuwarabes_colleague
-            きふわらべの同僚
         """
 
         self._board = board
         """盤"""
-
-        self._kifuwarabes_colleague = kifuwarabes_colleague
-        """きふわらべの同僚"""
 
         self._depth = 3
         """読みの深さ"""
@@ -314,11 +307,6 @@ class Thought():
     def board(self):
         """盤"""
         return self._board
-
-    @property
-    def kifuwarabes_colleague(self):
-        """きふわらべの同僚"""
-        return self._kifuwarabes_colleague
 
     @property
     def depth(self):
