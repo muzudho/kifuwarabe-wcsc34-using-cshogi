@@ -1,5 +1,6 @@
 import cshogi
-from feeling_luckey import choice_lottery, get_evaluation_table_index_from_move_as_usi
+from feeling_luckey import choice_lottery
+from evaluation_table import get_evaluation_table_index_from_move_as_usi, get_evaluation_value
 
 
 board = cshogi.Board()
@@ -159,8 +160,15 @@ def lottery():
     # 表示
     number = 1
 
-    for move_as_usi in move_list_as_usi:
-        print(f'  ({number:3}) {move_as_usi:5} = {get_evaluation_table_index_from_move_as_usi(move_as_usi):5}')
+    for move_a_as_usi in move_list_as_usi:
+
+        # 総当たりで評価値を計算
+        sum_value = 0
+
+        for move_b_as_usi in move_list_as_usi:
+            sum_value += get_evaluation_value(move_a_as_usi, move_b_as_usi)
+
+        print(f'  ({number:3}) {move_a_as_usi:5} = {get_evaluation_table_index_from_move_as_usi(move_a_as_usi):5} evalueation:{sum_value:3}')
         number += 1
 
 
