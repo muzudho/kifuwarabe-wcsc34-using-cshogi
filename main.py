@@ -19,6 +19,124 @@ test_case_3 = "position sfen lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B7/LNSGK
 # 📖 [_cshogi.pyx](https://github.com/TadaoYamaoka/cshogi/blob/master/cshogi/_cshogi.pyx)
 
 
+def usi_loop(kifuwarabe):
+    """USIループ"""
+    while True:
+
+        cmd = input().split(' ', 1)
+        """入力"""
+
+        if cmd[0] == 'usi':
+            """USIエンジン握手"""
+            usi()
+
+        elif cmd[0] == 'isready':
+            """対局準備"""
+            isready()
+
+        elif cmd[0] == 'position':
+            """局面データ解析"""
+            position(kifuwarabe, cmd)
+
+        elif cmd[0] == 'go':
+            """思考開始～最善手返却"""
+            go(kifuwarabe)
+
+        elif cmd[0] == 'stop':
+            """中断"""
+            stop()
+
+        elif cmd[0] == 'quit':
+            """終了"""
+            break
+
+        # 以下、独自拡張
+
+        elif cmd[0] == 'do':
+            """一手指す
+            example: ７六歩
+                code: do 7g7f
+            """
+            do(kifuwarabe, cmd)
+
+        elif cmd[0] == 'undo':
+            """一手戻す
+                code: undo
+            """
+            undo(kifuwarabe)
+
+        elif cmd[0] == 'moveval':
+            """１手読みでの指し手の評価値一覧"""
+            moveval(kifuwarabe)
+
+
+def usi():
+    """USIエンジン握手"""
+    print('id name KifuwarabeWCSC34')
+    print('usiok', flush=True)
+
+
+def isready():
+    """対局準備"""
+    print('readyok', flush=True)
+
+
+def position(kifuwarabe, cmd):
+    """局面データ解析"""
+    pos = cmd[1].split('moves')
+    kifuwarabe.position(pos[0].strip(), pos[1].split() if len(pos) > 1 else [])
+
+
+def go(kifuwarabe):
+    """思考開始～最善手返却"""
+    (bestmove, beta) = kifuwarabe.colleague.thought.do_it()
+    alpha = -beta
+    print(f'info depth 1 seldepth 1 time 1 nodes 1 score cp {alpha} string x')
+    print(f'bestmove {bestmove}', flush=True)
+
+
+def stop():
+    """中断"""
+    print('bestmove resign' , flush=True)
+
+
+def do(kifuwarabe, cmd):
+    """一手指す
+    example: ７六歩
+        code: do 7g7f
+    """
+    kifuwarabe.subordinate.board.push_usi(cmd[1])
+
+
+def undo(kifuwarabe):
+    """一手戻す
+        code: undo
+    """
+    kifuwarabe.subordinate.board.pop()
+
+def moveval(kifuwarabe):
+    """１手読みでの指し手の評価値一覧"""
+
+    old_depth = kifuwarabe.colleague.thought.depth
+    kifuwarabe.colleague.thought.depth = 1
+
+    for move in kifuwarabe.subordinate.board.legal_moves:
+        kifuwarabe.subordinate.board.push(move)
+        # 一手指す
+
+        # 局面評価値表示
+        print('局面評価値内訳：')
+        value_list = 0
+        for index, value in enumerate(value_list):
+            print(f'　　（{index:2}） {value:10}')
+        print(f'　　（計） {sum(value_list):10}')
+
+        kifuwarabe.subordinate.board.pop()
+        # 一手戻す
+
+    kifuwarabe.colleague.thought.depth = old_depth
+
+
 class Kifuwarabe():
     """きふわらべ"""
 
@@ -41,108 +159,6 @@ class Kifuwarabe():
     def colleague(self):
         """きふわらべの同僚"""
         return self._colleague
-
-    def usi_loop(self):
-        """USIループ"""
-
-        while True:
-
-            cmd = input().split(' ', 1)
-            """入力"""
-
-            if cmd[0] == 'usi':
-                """USIエンジン握手"""
-                print('id name KifuwarabeWCSC34')
-                print('usiok', flush=True)
-
-            elif cmd[0] == 'isready':
-                """対局準備"""
-                print('readyok', flush=True)
-
-            elif cmd[0] == 'position':
-                """局面データ解析"""
-                pos = cmd[1].split('moves')
-                self.position(pos[0].strip(), pos[1].split() if len(pos) > 1 else [])
-
-            elif cmd[0] == 'go':
-                """思考開始～最善手返却"""
-                (bestmove, beta) = self.colleague.thought.do_it()
-                alpha = -beta
-                print(f'info depth 1 seldepth 1 time 1 nodes 1 score cp {alpha} string x')
-                print(f'bestmove {bestmove}', flush=True)
-
-            elif cmd[0] == 'stop':
-                """中断"""
-                print('bestmove resign' , flush=True)
-
-            elif cmd[0] == 'quit':
-                """終了"""
-                break
-
-            # 以下、独自拡張
-
-            elif cmd[0] == 'do':
-                """一手指す
-                example: ７六歩
-                   code: do 7g7f
-                """
-                self.subordinate.board.push_usi(cmd[1])
-
-            elif cmd[0] == 'undo':
-                """一手戻す
-                   code: undo
-                """
-                self.subordinate.board.pop()
-
-            elif cmd[0] == 'posval':
-                """独自拡張。局面評価表示
-                example: 着手が４三だったとき
-                   code: posval 43
-                """
-
-                if len(cmd)<2:
-                    print(f'miss\nexample: posval 43')
-
-                else:
-                    try:
-                        # 手番をひっくり返す（一手指したつもり）
-                        self.subordinate.board.push_pass()
-
-                        print('局面評価値内訳：')
-                        value_list = 0
-                        for index, value in enumerate(value_list):
-                            print(f'　　（{index:2}） {value:10}')
-                        print(f'　　（計） {sum(value_list):10}')
-
-                        # 手番をひっくり返す（一手指したつもり）
-                        self.subordinate.board.pop_pass()
-
-                    except Exception as e:
-                        print(f'例外：　{e}')
-                        raise e
-
-            elif cmd[0] == 'moveval':
-                """１手読みでの指し手の評価値一覧"""
-
-                old_depth = self.colleague.thought.depth
-                self.colleague.thought.depth = 1
-
-                for move in self.subordinate.board.legal_moves:
-                    self.subordinate.board.push(move)
-                    # 一手指す
-
-                    # 局面評価値表示
-                    print('局面評価値内訳：')
-                    value_list = 0
-                    for index, value in enumerate(value_list):
-                        print(f'　　（{index:2}） {value:10}')
-                    print(f'　　（計） {sum(value_list):10}')
-
-                    self.subordinate.board.pop()
-                    # 一手戻す
-
-                self.colleague.thought.depth = old_depth
-
 
     def position(self, sfen, usi_moves):
         """局面データ解析"""
@@ -362,8 +378,13 @@ class Thought():
         """指し手の記法で返却"""
 
 
+def main():
+    kifuwarabe = Kifuwarabe()
+    usi_loop(kifuwarabe)
+
+
+
 if __name__ == '__main__':
     """コマンドから実行時"""
+    main()
 
-    kifuwarabe = Kifuwarabe()
-    kifuwarabe.usi_loop()
