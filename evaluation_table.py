@@ -62,7 +62,7 @@ class EvaluationTable():
 
             print(f"[{datetime.datetime.now()}] save eval.csv file ...")
 
-            # あとで消す。ファイルに出力する
+            # ファイルに出力する
             with open('eval.csv', 'w', encoding="utf-8") as f:
                 # 配列の要素の整数型を文字列型に変換してカンマで連結
                 text = ','.join(map(str,self._evaluation_table))

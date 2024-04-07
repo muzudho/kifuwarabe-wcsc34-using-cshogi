@@ -146,11 +146,32 @@ def gameover(cmd):
 
     if 2 <= len(cmd):
         if cmd[1] == 'lose':
-            print("あ～あ、負けたぜ（ー＿ー）", flush=True)
+            print("あ～あ、負けたぜ（＞＿＜）", flush=True)
+
+            # ファイルに出力する
+            with open('result.txt', 'w', encoding="utf-8") as f:
+                f.write("lose")
+
         elif cmd[1] == 'win':
             print("やったぜ　勝ったぜ（＾ｑ＾）", flush=True)
+
+            # ファイルに出力する
+            with open('result.txt', 'w', encoding="utf-8") as f:
+                f.write("win")
+
+        elif cmd[1] == 'draw':
+            print("持将棋か～（ー＿ー）", flush=True)
+
+            # ファイルに出力する
+            with open('result.txt', 'w', encoding="utf-8") as f:
+                f.write("draw")
+
         else:
             print(f"なんだろな（・＿・）？　{cmd[1]}", flush=True)
+
+            # ファイルに出力する
+            with open('result.txt', 'w', encoding="utf-8") as f:
+                f.write(cmd[1])
 
 
 def do(cmd):
