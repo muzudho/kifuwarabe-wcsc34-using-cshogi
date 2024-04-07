@@ -1,22 +1,5 @@
 import cshogi
-# import numpy as np
 import random
-
-# テストケース
-
-test_case_1 = "position sfen 4r4/4l4/3nlnb2/3kps3/3g1G3/3SPK3/2BNLN3/4L4/4R4 b GS8Pgs8p 1"
-"""Ｎｏ．１　駒の取り合い。次の一手は５五銀 S*5e """
-
-test_case_1_1 = "position sfen 4r4/4l4/3nlnb2/3kps3/3g1G3/3SPK3/2BNLN3/4L4/4R4 b GS8Pgs8p 1 moves 4e3e"
-"""Ｎｏ．１．１　変形。３五金。posval 35 で局面評価値確認"""
-
-test_case_2 = "position sfen lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B1R5/LNSGKGSNL b - 1"
-"""Ｎｏ．２　初手、四間飛車。振り飛車しているかどうかの確認"""
-
-test_case_3 = "position sfen lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B7/LNSGKGSNL b R 1"
-"""Ｎｏ．３　平手初期局面から、先手が飛車を駒台に乗せた局面"""
-
-# 📖 [_cshogi.pyx](https://github.com/TadaoYamaoka/cshogi/blob/master/cshogi/_cshogi.pyx)
 
 
 board = cshogi.Board()
@@ -109,9 +92,8 @@ def position_detail(sfen, usi_moves):
 
 def go():
     """思考開始～最善手返却"""
-    (bestmove, beta) = think(board)
-    alpha = -beta
-    print(f'info depth 0 seldepth 1 time 1 nodes 1 score cp {alpha} string x')
+    bestmove = think()
+    print(f"info depth 0 seldepth 0 time 1 nodes 0 score cp 0 string I'm feeling luckey")
     print(f'bestmove {bestmove}', flush=True)
 
 
@@ -163,13 +145,13 @@ def think():
     if board.is_game_over():
         """投了局面時"""
 
-        return ('resign', 0)
+        return 'resign'
         """投了"""
 
     if board.is_nyugyoku():
         """入玉宣言局面時"""
 
-        return ('win', 0)
+        return 'win'
         """勝利宣言"""
 
     if not board.is_check():
@@ -179,16 +161,13 @@ def think():
             """あれば、一手詰めの指し手を取得"""
 
             print('info score mate 1 pv {}'.format(cshogi.move_to_usi(matemove)))
-            return (cshogi.move_to_usi(matemove), 0)
+            return cshogi.move_to_usi(matemove)
 
     bestmove_list = list(board.legal_moves)
     bestmove = random.choice(bestmove_list)
     """候補手の中からランダムに選ぶ"""
 
-    # 未使用
-    alpha = 0
-
-    return (cshogi.move_to_usi(bestmove), alpha)
+    return cshogi.move_to_usi(bestmove)
     """指し手の記法で返却"""
 
 
