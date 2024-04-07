@@ -1,5 +1,6 @@
 import cshogi
 import random
+from feeling_luckey import choice_lottery
 
 
 board = cshogi.Board()
@@ -116,7 +117,7 @@ def go():
             return cshogi.move_to_usi(matemove)
 
     # くじを引く
-    bestmove = feeling_luckey(list(board.legal_moves))
+    bestmove = choice_lottery(list(board.legal_moves))
 
     print(f"info depth 0 seldepth 0 time 1 nodes 0 score cp 0 string I'm feeling luckey")
     print(f'bestmove {bestmove}', flush=True)
@@ -162,16 +163,6 @@ def lottery():
     for move_as_usi in move_list_as_usi:
         print(f'  ({number:3}) {move_as_usi}')
         number += 1
-
-
-def feeling_luckey(legal_move_list):
-    """くじを引く"""
-
-    bestmove = random.choice(legal_move_list)
-    """候補手の中からランダムに選ぶ"""
-
-    return cshogi.move_to_usi(bestmove)
-    """指し手の記法で返却"""
 
 
 if __name__ == '__main__':
