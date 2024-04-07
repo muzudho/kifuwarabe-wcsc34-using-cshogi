@@ -7,7 +7,8 @@ from result_file import exists_result_file, read_result_file
 class EvaluationTable():
     """評価値テーブル"""
 
-    def __init__(self):
+    def __init__(self, file_number):
+        self._eval_file_basename = f'eval_{file_number}.txt'
         self._file_modified = False
 
         self._move_size = 8424
@@ -48,6 +49,40 @@ class EvaluationTable():
 
             ----------
 
+            TODO 駒は任意の点ＡからＢへ移動できるわけではないので、本来はもっと圧縮できるはず
+
+              9  8  7  6  5  4  3  2  1
+            +--+--+--+--+--+--+--+--+--+
+            |                          | 一
+            |                          | 二
+            |                          | 三
+            |                          | 四
+            |                          | 五
+            |                          | 六
+            |                          | 七
+            |                          | 八
+            |                          | 九
+            +--+--+--+--+--+--+--+--+--+
+
+            持ち駒の銀はどこにでも置けるので S* × 81 になるが、
+            ↓ １一の駒が動ける範囲は　１列目の８マス、一行目の８マス、斜め下の８マスと、桂で２５個、成りを考慮して５０個のはずだ
+            これを一意に番号が振れるか？
+
+              9  8  7  6  5  4  3  2  1
+            +--+--+--+--+--+--+--+--+--+
+            | *  *  *  *  *  *  *  *  *| 一
+            |                      *  *| 二
+            |                   *  *  *| 三
+            |                *        *| 四
+            |             *           *| 五
+            |          *              *| 六
+            |       *                 *| 七
+            |    *                    *| 八
+            | *                       *| 九
+            +--+--+--+--+--+--+--+--+--+
+
+            ----------
+
             値は、 -1,0,1 を入れる代わりに、+1 して 0,1,2 を入れてある。保存時にマイナスの符号で１文字使うのを省くため
         """
 
@@ -55,10 +90,10 @@ class EvaluationTable():
     def load_or_new_evaluation_table(self):
         """評価関数テーブルをファイルから読み込む。無ければランダム値の入った物を新規作成する"""
 
-        print(f"[{datetime.datetime.now()}] eval.csv file exists check ...")
+        print(f"[{datetime.datetime.now()}] {self._eval_file_basename} file exists check ...")
 
         # 評価関数テーブル・ファイルが存在しないとき
-        if not os.path.isfile('eval.csv'):
+        if not os.path.isfile(self._eval_file_basename):
             # ダミーデータを入れる。１分ほどかかる
             print(f"[{datetime.datetime.now()}] make random evaluation table in memory ...")
 
@@ -80,7 +115,7 @@ class EvaluationTable():
                 if result_text in ('lose', 'draw'):
                     self.modify_table(result_text)
 
-            print(f"[{datetime.datetime.now()}] eval.csv file loaded")
+            print(f"[{datetime.datetime.now()}] {self._eval_file_basename} file loaded")
 
 
     def get_evaluation_table_index_from_move_as_usi(self, move_as_usi):
@@ -272,10 +307,10 @@ class EvaluationTable():
         """保存する"""
 
         if self._file_modified:
-            print(f"[{datetime.datetime.now()}] save eval.csv file ...")
+            print(f"[{datetime.datetime.now()}] save {self._eval_file_basename} file ...")
 
             # ファイルに出力する
-            with open('eval.csv', 'w', encoding="utf-8") as f:
+            with open(self._eval_file_basename, 'w', encoding="utf-8") as f:
                 # 配列の要素の整数型を文字列型に変換して隙間を空けずに連結
                 text = ''.join(map(str,self._evaluation_table))
                 print(f"[{datetime.datetime.now()}] text created ...")
@@ -284,20 +319,21 @@ class EvaluationTable():
 
             self._file_modified = False
 
-            print(f"[{datetime.datetime.now()}] eval.csv file saved")
+            print(f"[{datetime.datetime.now()}] {self._eval_file_basename} file saved")
 
         else:
-            print(f"[{datetime.datetime.now()}] eval.csv file not changed")
+            print(f"[{datetime.datetime.now()}] {self._eval_file_basename} file not changed")
+
 
     def load_evaluation_from_file(self):
         """読込む"""
 
         # ロードする。１分ほどかかる
-        print(f"[{datetime.datetime.now()}] load eval.csv file ...")
+        print(f"[{datetime.datetime.now()}] load {self._eval_file_basename} file ...")
 
-        with open('eval.csv', 'r', encoding="utf-8") as f:
+        with open(self._eval_file_basename, 'r', encoding="utf-8") as f:
             text = f.read()
-            print(f"[{datetime.datetime.now()}] eval.csv read ...")
+            print(f"[{datetime.datetime.now()}] {self._eval_file_basename} read ...")
 
             # 隙間のないテキストを１文字ずつ分解
             tokens = list(text)

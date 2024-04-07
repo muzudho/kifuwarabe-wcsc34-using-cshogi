@@ -1,4 +1,5 @@
 import cshogi
+import random
 from feeling_luckey import choice_lottery
 from evaluation_table import EvaluationTable
 from result_file import save_lose, save_win, save_draw, save_otherwise, exists_result_file, delete_result_file
@@ -7,7 +8,7 @@ from result_file import save_lose, save_win, save_draw, save_otherwise, exists_r
 board = cshogi.Board()
 """盤"""
 
-evaluation_table = EvaluationTable()
+evaluation_table = EvaluationTable(file_number=random.randint(1,3))
 """評価値テーブル"""
 
 
