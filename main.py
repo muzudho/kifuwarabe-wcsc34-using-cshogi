@@ -504,8 +504,6 @@ class Kifuwarabe():
                         # 移動先
                         sq_list = self.colleague.control.sq_list_by(origin_sq=sq,
                                                                     piece=piece)
-                        self.colleague.check_board_print.set_by_sq_list(sq_list=sq_list)
-                        self.colleague.check_board_print.do_it()
 
                     except Exception as e:
                         print(f'例外：　{e}')
@@ -534,8 +532,6 @@ class Kifuwarabe():
 
                 # その利きを表示
                 print(f'[DEBUG] control_list jsa:{convert_sq_to_jsa_for_list(sq_list)}')
-                self.colleague.check_board_print.set_by_sq_list(sq_list)
-                self.colleague.check_board_print.do_it()
 
                 # SEE を調べる
                 see_value = self.colleague.static_exchange_evaluation.do_it(dst_sq)
@@ -599,10 +595,6 @@ class Kifuwarabe():
                         print(f'例外：　{e}')
                         raise e
 
-            elif cmd[0] == 'pos':
-                """独自拡張。局面表示"""
-                self.colleague.position_print.do_it()
-
             elif cmd[0] == 'moveval':
                 """１手読みでの指し手の評価値一覧"""
 
@@ -612,9 +604,6 @@ class Kifuwarabe():
                 for move in self.subordinate.board.legal_moves:
                     self.subordinate.board.push(move)
                     # 一手指す
-
-                    self.colleague.position_print.do_it()
-                    # 局面表示
 
                     # 局面評価値表示
                     dst_sq = MoveHelper.destination(move)
@@ -682,18 +671,6 @@ class KifuwarabesColleague():
         self._kifuwarabes_subordinate = kifuwarabes_subordinate
         """きふわらべの部下"""
 
-        self._position_print = PositionPrint(
-            kifuwarabes_subordinate=kifuwarabes_subordinate,
-            kifuwarabes_colleague=self
-        )
-        """局面表示"""
-
-        self._check_board_print = CheckBoardPrint(
-            kifuwarabes_subordinate=kifuwarabes_subordinate,
-            kifuwarabes_colleague=self
-        )
-        """チェックボード表示"""
-
         self._board_value = BoardValue(
             kifuwarabes_subordinate=kifuwarabes_subordinate,
             kifuwarabes_colleague=self
@@ -741,16 +718,6 @@ class KifuwarabesColleague():
     def kifuwarabes_subordinate(self):
         """きふわらべの部下"""
         return self._kifuwarabes_subordinate
-
-    @property
-    def check_board_print(self):
-        """チェックボード表示"""
-        return self._check_board_print
-
-    @property
-    def position_print(self):
-        """局面表示"""
-        return self._position_print
 
     @property
     def board_value(self):
@@ -868,377 +835,6 @@ class MaterialsValue():
             """後手は評価値の正負を反転"""
             return -value
 
-class CheckBoardPrint():
-    """チェックボード表示"""
-
-    def __init__(self, kifuwarabes_subordinate, kifuwarabes_colleague):
-        """初期化
-
-        Parameters
-        ----------
-        kifuwarabes_subordinate
-            きふわらべの部下
-        kifuwarabes_colleague
-            きふわらべの同僚
-        """
-
-        self._kifuwarabes_subordinate = kifuwarabes_subordinate
-        """きふわらべの部下"""
-
-        self._kifuwarabes_colleague = kifuwarabes_colleague
-        """きふわらべの同僚"""
-
-        self._number_board = [0] * 81
-
-    @property
-    def kifuwarabes_subordinate(self):
-        """きふわらべの部下"""
-        return self._kifuwarabes_subordinate
-
-    @property
-    def kifuwarabes_colleague(self):
-        """きふわらべの同僚"""
-        return self._kifuwarabes_colleague
-
-    @property
-    def number_board(self):
-        """数盤"""
-        return self._number_board
-
-    def set_by_sq_list(self, sq_list):
-        """升番号のリストを使って、盤をチェック"""
-        self._number_board = [0] * 81
-
-        for sq in sq_list:
-            self._number_board[sq] = 1
-
-    def do_it(self):
-        """それをする"""
-
-        text = ''
-
-        # 盤
-        a = non_zero_to_cross(self.number_board[cshogi.A1])
-        b = non_zero_to_cross(self.number_board[cshogi.A2])
-        c = non_zero_to_cross(self.number_board[cshogi.A3])
-        d = non_zero_to_cross(self.number_board[cshogi.A4])
-        e = non_zero_to_cross(self.number_board[cshogi.A5])
-        f = non_zero_to_cross(self.number_board[cshogi.A6])
-        g = non_zero_to_cross(self.number_board[cshogi.A7])
-        h = non_zero_to_cross(self.number_board[cshogi.A8])
-        i = non_zero_to_cross(self.number_board[cshogi.A9])
-        text += f"""　　９　　８　　７　　６　　５　　４　　３　　２　　１
-＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋
-｜{i}｜{h}｜{g}｜{f}｜{e}｜{d}｜{c}｜{b}｜{a}｜　一　ａ
-＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋
-"""
-
-        a = non_zero_to_cross(self.number_board[cshogi.B1])
-        b = non_zero_to_cross(self.number_board[cshogi.B2])
-        c = non_zero_to_cross(self.number_board[cshogi.B3])
-        d = non_zero_to_cross(self.number_board[cshogi.B4])
-        e = non_zero_to_cross(self.number_board[cshogi.B5])
-        f = non_zero_to_cross(self.number_board[cshogi.B6])
-        g = non_zero_to_cross(self.number_board[cshogi.B7])
-        h = non_zero_to_cross(self.number_board[cshogi.B8])
-        i = non_zero_to_cross(self.number_board[cshogi.B9])
-        text += f"""｜{i}｜{h}｜{g}｜{f}｜{e}｜{d}｜{c}｜{b}｜{a}｜　二　ｂ
-＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋
-"""
-
-        a = non_zero_to_cross(self.number_board[cshogi.C1])
-        b = non_zero_to_cross(self.number_board[cshogi.C2])
-        c = non_zero_to_cross(self.number_board[cshogi.C3])
-        d = non_zero_to_cross(self.number_board[cshogi.C4])
-        e = non_zero_to_cross(self.number_board[cshogi.C5])
-        f = non_zero_to_cross(self.number_board[cshogi.C6])
-        g = non_zero_to_cross(self.number_board[cshogi.C7])
-        h = non_zero_to_cross(self.number_board[cshogi.C8])
-        i = non_zero_to_cross(self.number_board[cshogi.C9])
-        text += f"""｜{i}｜{h}｜{g}｜{f}｜{e}｜{d}｜{c}｜{b}｜{a}｜　三　ｃ
-＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋
-"""
-
-        a = non_zero_to_cross(self.number_board[cshogi.D1])
-        b = non_zero_to_cross(self.number_board[cshogi.D2])
-        c = non_zero_to_cross(self.number_board[cshogi.D3])
-        d = non_zero_to_cross(self.number_board[cshogi.D4])
-        e = non_zero_to_cross(self.number_board[cshogi.D5])
-        f = non_zero_to_cross(self.number_board[cshogi.D6])
-        g = non_zero_to_cross(self.number_board[cshogi.D7])
-        h = non_zero_to_cross(self.number_board[cshogi.D8])
-        i = non_zero_to_cross(self.number_board[cshogi.D9])
-        text += f"""｜{i}｜{h}｜{g}｜{f}｜{e}｜{d}｜{c}｜{b}｜{a}｜　四　ｄ
-＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋
-"""
-
-        a = non_zero_to_cross(self.number_board[cshogi.E1])
-        b = non_zero_to_cross(self.number_board[cshogi.E2])
-        c = non_zero_to_cross(self.number_board[cshogi.E3])
-        d = non_zero_to_cross(self.number_board[cshogi.E4])
-        e = non_zero_to_cross(self.number_board[cshogi.E5])
-        f = non_zero_to_cross(self.number_board[cshogi.E6])
-        g = non_zero_to_cross(self.number_board[cshogi.E7])
-        h = non_zero_to_cross(self.number_board[cshogi.E8])
-        i = non_zero_to_cross(self.number_board[cshogi.E9])
-        text += f"""｜{i}｜{h}｜{g}｜{f}｜{e}｜{d}｜{c}｜{b}｜{a}｜　五　ｅ
-＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋
-"""
-
-        a = non_zero_to_cross(self.number_board[cshogi.F1])
-        b = non_zero_to_cross(self.number_board[cshogi.F2])
-        c = non_zero_to_cross(self.number_board[cshogi.F3])
-        d = non_zero_to_cross(self.number_board[cshogi.F4])
-        e = non_zero_to_cross(self.number_board[cshogi.F5])
-        f = non_zero_to_cross(self.number_board[cshogi.F6])
-        g = non_zero_to_cross(self.number_board[cshogi.F7])
-        h = non_zero_to_cross(self.number_board[cshogi.F8])
-        i = non_zero_to_cross(self.number_board[cshogi.F9])
-        text += f"""｜{i}｜{h}｜{g}｜{f}｜{e}｜{d}｜{c}｜{b}｜{a}｜　六　ｆ
-＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋
-"""
-
-        a = non_zero_to_cross(self.number_board[cshogi.G1])
-        b = non_zero_to_cross(self.number_board[cshogi.G2])
-        c = non_zero_to_cross(self.number_board[cshogi.G3])
-        d = non_zero_to_cross(self.number_board[cshogi.G4])
-        e = non_zero_to_cross(self.number_board[cshogi.G5])
-        f = non_zero_to_cross(self.number_board[cshogi.G6])
-        g = non_zero_to_cross(self.number_board[cshogi.G7])
-        h = non_zero_to_cross(self.number_board[cshogi.G8])
-        i = non_zero_to_cross(self.number_board[cshogi.G9])
-        text += f"""｜{i}｜{h}｜{g}｜{f}｜{e}｜{d}｜{c}｜{b}｜{a}｜　七　ｇ
-＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋
-"""
-
-        a = non_zero_to_cross(self.number_board[cshogi.H1])
-        b = non_zero_to_cross(self.number_board[cshogi.H2])
-        c = non_zero_to_cross(self.number_board[cshogi.H3])
-        d = non_zero_to_cross(self.number_board[cshogi.H4])
-        e = non_zero_to_cross(self.number_board[cshogi.H5])
-        f = non_zero_to_cross(self.number_board[cshogi.H6])
-        g = non_zero_to_cross(self.number_board[cshogi.H7])
-        h = non_zero_to_cross(self.number_board[cshogi.H8])
-        i = non_zero_to_cross(self.number_board[cshogi.H9])
-        text += f"""｜{i}｜{h}｜{g}｜{f}｜{e}｜{d}｜{c}｜{b}｜{a}｜　八　ｈ
-＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋
-"""
-
-        a = non_zero_to_cross(self.number_board[cshogi.I1])
-        b = non_zero_to_cross(self.number_board[cshogi.I2])
-        c = non_zero_to_cross(self.number_board[cshogi.I3])
-        d = non_zero_to_cross(self.number_board[cshogi.I4])
-        e = non_zero_to_cross(self.number_board[cshogi.I5])
-        f = non_zero_to_cross(self.number_board[cshogi.I6])
-        g = non_zero_to_cross(self.number_board[cshogi.I7])
-        h = non_zero_to_cross(self.number_board[cshogi.I8])
-        i = non_zero_to_cross(self.number_board[cshogi.I9])
-        text += f"""｜{i}｜{h}｜{g}｜{f}｜{e}｜{d}｜{c}｜{b}｜{a}｜　九　ｉ
-＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋
-"""
-
-        print(text)
-
-class PositionPrint():
-    """局面表示"""
-
-    def __init__(self, kifuwarabes_subordinate, kifuwarabes_colleague):
-        """初期化
-
-        Parameters
-        ----------
-        kifuwarabes_subordinate
-            きふわらべの部下
-        kifuwarabes_colleague
-            きふわらべの同僚
-        """
-
-        self._kifuwarabes_subordinate = kifuwarabes_subordinate
-        """きふわらべの部下"""
-
-        self._kifuwarabes_colleague = kifuwarabes_colleague
-        """きふわらべの同僚"""
-
-    @property
-    def kifuwarabes_subordinate(self):
-        """きふわらべの部下"""
-        return self._kifuwarabes_subordinate
-
-    @property
-    def kifuwarabes_colleague(self):
-        """きふわらべの同僚"""
-        return self._kifuwarabes_colleague
-
-    def do_it(self):
-        """それをする"""
-        board = self.kifuwarabes_subordinate.board
-
-        move_number_str = board.move_number
-
-        if board.turn == cshogi.BLACK:
-            turn_str = "black"
-        else:
-            turn_str = "white"
-
-        text = f'''
-
-[next {move_number_str} moves / {turn_str}]
-
-'''
-
-        # 後手持ち駒
-        a = number_of_hand_to_string(board.pieces_in_hand[cshogi.WHITE][0])
-        b = number_of_hand_to_string(board.pieces_in_hand[cshogi.WHITE][1])
-        c = number_of_hand_to_string(board.pieces_in_hand[cshogi.WHITE][2])
-        d = number_of_hand_to_string(board.pieces_in_hand[cshogi.WHITE][3])
-        e = number_of_hand_to_string(board.pieces_in_hand[cshogi.WHITE][4])
-        f = number_of_hand_to_string(board.pieces_in_hand[cshogi.WHITE][5])
-        g = number_of_hand_to_string(board.pieces_in_hand[cshogi.WHITE][6])
-
-        text += f"""　　歩　　香　　桂　　銀　　金　　角　　飛
-＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋
-｜{a}｜{b}｜{c}｜{d}｜{e}｜{f}｜{g}｜
-＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋
-
-"""
-
-        # 盤
-        a = piece_to_string(board.pieces[cshogi.A1])
-        b = piece_to_string(board.pieces[cshogi.A2])
-        c = piece_to_string(board.pieces[cshogi.A3])
-        d = piece_to_string(board.pieces[cshogi.A4])
-        e = piece_to_string(board.pieces[cshogi.A5])
-        f = piece_to_string(board.pieces[cshogi.A6])
-        g = piece_to_string(board.pieces[cshogi.A7])
-        h = piece_to_string(board.pieces[cshogi.A8])
-        i = piece_to_string(board.pieces[cshogi.A9])
-        text += f"""　　９　　８　　７　　６　　５　　４　　３　　２　　１
-＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋
-｜{i}｜{h}｜{g}｜{f}｜{e}｜{d}｜{c}｜{b}｜{a}｜　一　ａ
-＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋
-"""
-
-        a = piece_to_string(board.pieces[cshogi.B1])
-        b = piece_to_string(board.pieces[cshogi.B2])
-        c = piece_to_string(board.pieces[cshogi.B3])
-        d = piece_to_string(board.pieces[cshogi.B4])
-        e = piece_to_string(board.pieces[cshogi.B5])
-        f = piece_to_string(board.pieces[cshogi.B6])
-        g = piece_to_string(board.pieces[cshogi.B7])
-        h = piece_to_string(board.pieces[cshogi.B8])
-        i = piece_to_string(board.pieces[cshogi.B9])
-        text += f"""｜{i}｜{h}｜{g}｜{f}｜{e}｜{d}｜{c}｜{b}｜{a}｜　二　ｂ
-＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋
-"""
-
-        a = piece_to_string(board.pieces[cshogi.C1])
-        b = piece_to_string(board.pieces[cshogi.C2])
-        c = piece_to_string(board.pieces[cshogi.C3])
-        d = piece_to_string(board.pieces[cshogi.C4])
-        e = piece_to_string(board.pieces[cshogi.C5])
-        f = piece_to_string(board.pieces[cshogi.C6])
-        g = piece_to_string(board.pieces[cshogi.C7])
-        h = piece_to_string(board.pieces[cshogi.C8])
-        i = piece_to_string(board.pieces[cshogi.C9])
-        text += f"""｜{i}｜{h}｜{g}｜{f}｜{e}｜{d}｜{c}｜{b}｜{a}｜　三　ｃ
-＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋
-"""
-
-        a = piece_to_string(board.pieces[cshogi.D1])
-        b = piece_to_string(board.pieces[cshogi.D2])
-        c = piece_to_string(board.pieces[cshogi.D3])
-        d = piece_to_string(board.pieces[cshogi.D4])
-        e = piece_to_string(board.pieces[cshogi.D5])
-        f = piece_to_string(board.pieces[cshogi.D6])
-        g = piece_to_string(board.pieces[cshogi.D7])
-        h = piece_to_string(board.pieces[cshogi.D8])
-        i = piece_to_string(board.pieces[cshogi.D9])
-        text += f"""｜{i}｜{h}｜{g}｜{f}｜{e}｜{d}｜{c}｜{b}｜{a}｜　四　ｄ
-＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋
-"""
-
-        a = piece_to_string(board.pieces[cshogi.E1])
-        b = piece_to_string(board.pieces[cshogi.E2])
-        c = piece_to_string(board.pieces[cshogi.E3])
-        d = piece_to_string(board.pieces[cshogi.E4])
-        e = piece_to_string(board.pieces[cshogi.E5])
-        f = piece_to_string(board.pieces[cshogi.E6])
-        g = piece_to_string(board.pieces[cshogi.E7])
-        h = piece_to_string(board.pieces[cshogi.E8])
-        i = piece_to_string(board.pieces[cshogi.E9])
-        text += f"""｜{i}｜{h}｜{g}｜{f}｜{e}｜{d}｜{c}｜{b}｜{a}｜　五　ｅ
-＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋
-"""
-
-        a = piece_to_string(board.pieces[cshogi.F1])
-        b = piece_to_string(board.pieces[cshogi.F2])
-        c = piece_to_string(board.pieces[cshogi.F3])
-        d = piece_to_string(board.pieces[cshogi.F4])
-        e = piece_to_string(board.pieces[cshogi.F5])
-        f = piece_to_string(board.pieces[cshogi.F6])
-        g = piece_to_string(board.pieces[cshogi.F7])
-        h = piece_to_string(board.pieces[cshogi.F8])
-        i = piece_to_string(board.pieces[cshogi.F9])
-        text += f"""｜{i}｜{h}｜{g}｜{f}｜{e}｜{d}｜{c}｜{b}｜{a}｜　六　ｆ
-＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋
-"""
-
-        a = piece_to_string(board.pieces[cshogi.G1])
-        b = piece_to_string(board.pieces[cshogi.G2])
-        c = piece_to_string(board.pieces[cshogi.G3])
-        d = piece_to_string(board.pieces[cshogi.G4])
-        e = piece_to_string(board.pieces[cshogi.G5])
-        f = piece_to_string(board.pieces[cshogi.G6])
-        g = piece_to_string(board.pieces[cshogi.G7])
-        h = piece_to_string(board.pieces[cshogi.G8])
-        i = piece_to_string(board.pieces[cshogi.G9])
-        text += f"""｜{i}｜{h}｜{g}｜{f}｜{e}｜{d}｜{c}｜{b}｜{a}｜　七　ｇ
-＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋
-"""
-
-        a = piece_to_string(board.pieces[cshogi.H1])
-        b = piece_to_string(board.pieces[cshogi.H2])
-        c = piece_to_string(board.pieces[cshogi.H3])
-        d = piece_to_string(board.pieces[cshogi.H4])
-        e = piece_to_string(board.pieces[cshogi.H5])
-        f = piece_to_string(board.pieces[cshogi.H6])
-        g = piece_to_string(board.pieces[cshogi.H7])
-        h = piece_to_string(board.pieces[cshogi.H8])
-        i = piece_to_string(board.pieces[cshogi.H9])
-        text += f"""｜{i}｜{h}｜{g}｜{f}｜{e}｜{d}｜{c}｜{b}｜{a}｜　八　ｈ
-＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋
-"""
-
-        a = piece_to_string(board.pieces[cshogi.I1])
-        b = piece_to_string(board.pieces[cshogi.I2])
-        c = piece_to_string(board.pieces[cshogi.I3])
-        d = piece_to_string(board.pieces[cshogi.I4])
-        e = piece_to_string(board.pieces[cshogi.I5])
-        f = piece_to_string(board.pieces[cshogi.I6])
-        g = piece_to_string(board.pieces[cshogi.I7])
-        h = piece_to_string(board.pieces[cshogi.I8])
-        i = piece_to_string(board.pieces[cshogi.I9])
-        text += f"""｜{i}｜{h}｜{g}｜{f}｜{e}｜{d}｜{c}｜{b}｜{a}｜　九　ｉ
-＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋
-"""
-
-        # 先手持ち駒
-        a = number_of_hand_to_string(board.pieces_in_hand[cshogi.BLACK][0])
-        b = number_of_hand_to_string(board.pieces_in_hand[cshogi.BLACK][1])
-        c = number_of_hand_to_string(board.pieces_in_hand[cshogi.BLACK][2])
-        d = number_of_hand_to_string(board.pieces_in_hand[cshogi.BLACK][3])
-        e = number_of_hand_to_string(board.pieces_in_hand[cshogi.BLACK][4])
-        f = number_of_hand_to_string(board.pieces_in_hand[cshogi.BLACK][5])
-        g = number_of_hand_to_string(board.pieces_in_hand[cshogi.BLACK][6])
-
-        text += f"""
-　　　　　　　　飛　　角　　金　　銀　　桂　　香　　歩
-　　　　　　＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋
-　　　　　　｜{g}｜{f}｜{e}｜{d}｜{c}｜{b}｜{a}｜
-　　　　　　＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋ーー＋
-"""
-
-        print(text)
 
 class BoardValue():
     """盤の決まりきった価値"""
@@ -2193,8 +1789,6 @@ class StaticExchangeEvaluation():
 
             # その利きを表示
             # print(f'[DEBUG] dst jsa:{convert_sq_to_jsa(dst_sq)} control_list jsa:{convert_sq_to_jsa_for_list(control_sq_list)}')
-            # self.kifuwarabes_colleague.check_board_print.set_by_sq_list(control_sq_list) # [DEBUG]
-            # self.kifuwarabes_colleague.check_board_print.do_it() # [DEBUG]
 
             if dst_sq in control_sq_list:
                 # print(f'[DEBUG] {sq_to_jsa(dst_sq)}へ利かしている')
