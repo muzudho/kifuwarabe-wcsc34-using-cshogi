@@ -120,14 +120,14 @@ def go():
         """投了局面時"""
 
         # 投了
-        print(f'resign', flush=True)
+        print(f'bestmove resign', flush=True)
         return
 
     if board.is_nyugyoku():
         """入玉宣言局面時"""
 
         # 勝利宣言
-        print(f'win', flush=True)
+        print(f'bestmove win', flush=True)
         return
 
     # 一手詰めを詰める
