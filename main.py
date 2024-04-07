@@ -89,7 +89,7 @@ def position(kifuwarabe, cmd):
 
 def go(kifuwarabe):
     """思考開始～最善手返却"""
-    (bestmove, beta) = think(kifuwarabe.colleague.board)
+    (bestmove, beta) = think(kifuwarabe.board)
     alpha = -beta
     print(f'info depth 0 seldepth 1 time 1 nodes 1 score cp {alpha} string x')
     print(f'bestmove {bestmove}', flush=True)
@@ -142,14 +142,12 @@ class Kifuwarabe():
         self._board = cshogi.Board()
         """盤"""
 
-        self._colleague = KifuwarabesColleague(board=self._board)
-        """きふわらべの同僚"""
-
 
     @property
-    def colleague(self):
-        """きふわらべの同僚"""
-        return self._colleague
+    def board(self):
+        """盤"""
+        return self._board
+
 
     def position(self, sfen, usi_moves):
         """局面データ解析"""
@@ -165,32 +163,6 @@ class Kifuwarabe():
         for usi_move in usi_moves:
             """棋譜再生"""
             self.board.push_usi(usi_move)
-
-    @property
-    def board(self):
-        """盤"""
-        return self._board
-
-
-class KifuwarabesColleague():
-    """きふわらべの同僚"""
-
-    def __init__(self, board):
-        """初期化
-
-        Parameters
-        ----------
-        kifuwarabes_subordinate
-            きふわらべの部下
-        """
-
-        self._board = board
-        """盤"""
-
-    @property
-    def board(self):
-        """盤"""
-        return self._board
 
 
 def think(board):
