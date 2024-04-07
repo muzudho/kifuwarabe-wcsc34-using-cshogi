@@ -504,12 +504,6 @@ class KifuwarabesColleague():
         )
         """思考"""
 
-        self._alpha_beta_pruning = AlphaBetaPruning(
-            kifuwarabes_subordinate=kifuwarabes_subordinate,
-            kifuwarabes_colleague=self
-        )
-        """探索アルゴリズム　アルファーベーター刈り"""
-
     @property
     def kifuwarabes_subordinate(self):
         """きふわらべの部下"""
@@ -524,11 +518,6 @@ class KifuwarabesColleague():
     def thought(self):
         """思考"""
         return self._thought
-
-    @property
-    def alpha_beta_pruning(self):
-        """探索アルゴリズム　アルファーベーター刈り"""
-        return self._alpha_beta_pruning
 
 
 class BoardValue():
@@ -665,101 +654,15 @@ class Thought():
                 print('info score mate 1 pv {}'.format(cshogi.move_to_usi(matemove)))
                 return (cshogi.move_to_usi(matemove), 0)
 
-        # move = self.choice_random(list(self.kifuwarabes_subordinate.board.legal_moves))
-        (current_beta, bestmove_list) = self.kifuwarabes_colleague.alpha_beta_pruning.do_it(
-            depth=self.depth,
-            alpha = -9999999, # 数ある選択肢の中の、評価値の下限。この下限値は、ベータ値いっぱいまで上げたい"""
-            beta = 9999999, # 数ある選択肢の中の、評価値の上限。この値を超える選択肢は、相手に必ず妨害されるので選べない
-            is_root = True
-        )
-        """将来獲得できるであろう、最も良い、最低限の評価値"""
-
-        alpha = -current_beta
+        bestmove_list = list(self.kifuwarabes_subordinate.board.legal_moves)
         bestmove = random.choice(bestmove_list)
         """候補手の中からランダムに選ぶ"""
 
+        # 未使用
+        alpha = 0
+
         return (cshogi.move_to_usi(bestmove), alpha)
         """指し手の記法で返却"""
-
-    # def choice_random(self, legal_moves):
-    #     # move = np.random.choice(legal_moves)
-    #     # """乱択"""
-    # 
-    #     random.shuffle(legal_moves)
-    # 
-    #     # 取る駒，成るフラグの部分をフィルタして最大値を取る
-    # 
-    #     move = max(legal_moves, key=lambda x:x & 0b111100000100000000000000)
-    #     """
-    #                                                ^^^^     ^
-    #                                                1        2
-    #     １．　取られた駒の種類。0 以外なら何か取った
-    #     ２．　1:成り 2:成りでない。 1 なら成った
-    # 
-    #     最大値だから良いということはないが、同じ局面で、いつも同じ手を選ぶ働きがある
-    # 
-    #     📖 [1file match（仮）の参考資料２（数行でレートを1300以上上げる）](https://bleu48.hatenablog.com/entry/2023/08/05/122818)
-    #     📖 [cshogi/src/move.hpp](https://github.com/TadaoYamaoka/cshogi/blob/master/src/move.hpp)
-    # 
-    #     // xxxxxxxx xxxxxxxx xxxxxxxx x1111111  移動先
-    #     // xxxxxxxx xxxxxxxx xx111111 1xxxxxxx  移動元。駒打ちの際には、PieceType + SquareNum - 1
-    #     // xxxxxxxx xxxxxxxx x1xxxxxx xxxxxxxx  1 なら成り
-    #     // xxxxxxxx xxxx1111 xxxxxxxx xxxxxxxx  移動する駒の PieceType 駒打ちの際には使用しない。
-    #     // xxxxxxxx 1111xxxx xxxxxxxx xxxxxxxx  取られた駒の PieceType
-    #     """
-    # 
-    #     return move
-
-
-class AlphaBetaPruning():
-    """探索アルゴリズム　アルファーベーター刈り
-    ミニマックス戦略
-    実装はネガマックス
-
-    📖 [アルファベータ探索（alpha-beta pruning）やろうぜ（＾～＾）？](https://crieit.net/drafts/60e6206eaf964)
-    """
-
-    def __init__(self, kifuwarabes_subordinate, kifuwarabes_colleague):
-        """初期化
-
-        Parameters
-        ----------
-        kifuwarabes_subordinate
-            きふわらべの部下
-        """
-
-        self._kifuwarabes_subordinate = kifuwarabes_subordinate
-        """きふわらべの部下"""
-
-        self._kifuwarabes_colleague = kifuwarabes_colleague
-        """きふわらべの同僚"""
-
-    @property
-    def kifuwarabes_subordinate(self):
-        """きふわらべの部下"""
-        return self._kifuwarabes_subordinate
-
-    @property
-    def kifuwarabes_colleague(self):
-        """きふわらべの同僚"""
-        return self._kifuwarabes_colleague
-
-    def do_it(self, depth, alpha, beta, is_root=False):
-        """それをする
-
-        Parameters
-        ----------
-        depth
-            深さ
-        alpha
-            α は、わたし。数ある選択肢の中の、評価値の下限。この下限値は、ベータ値いっぱいまで上げたい
-        beta
-            β は、あなた。数ある選択肢の中の、評価値の上限。この値を超える選択肢は、相手に必ず妨害されるので選べない
-        """
-
-        best_move_list = list(self.kifuwarabes_subordinate.board.legal_moves)
-
-        return (alpha, best_move_list)
 
 
 if __name__ == '__main__':
