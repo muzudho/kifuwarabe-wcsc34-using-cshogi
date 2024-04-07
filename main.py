@@ -19,7 +19,11 @@ test_case_3 = "position sfen lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B7/LNSGK
 # 📖 [_cshogi.pyx](https://github.com/TadaoYamaoka/cshogi/blob/master/cshogi/_cshogi.pyx)
 
 
-def usi_loop(kifuwarabe):
+board = cshogi.Board()
+"""盤"""
+
+
+def usi_loop():
     """USIループ"""
     while True:
 
@@ -36,11 +40,11 @@ def usi_loop(kifuwarabe):
 
         elif cmd[0] == 'position':
             """局面データ解析"""
-            position(kifuwarabe, cmd)
+            position(cmd)
 
         elif cmd[0] == 'go':
             """思考開始～最善手返却"""
-            go(kifuwarabe)
+            go()
 
         elif cmd[0] == 'stop':
             """中断"""
@@ -57,17 +61,17 @@ def usi_loop(kifuwarabe):
             example: ７六歩
                 code: do 7g7f
             """
-            do(kifuwarabe, cmd)
+            do(cmd)
 
         elif cmd[0] == 'undo':
             """一手戻す
                 code: undo
             """
-            undo(kifuwarabe)
+            undo()
 
-        elif cmd[0] == 'moveval':
-            """１手読みでの指し手の評価値一覧"""
-            moveval(kifuwarabe)
+        elif cmd[0] == 'lottery':
+            """くじ一覧"""
+            lottery()
 
 
 def usi():
@@ -81,15 +85,31 @@ def isready():
     print('readyok', flush=True)
 
 
-def position(kifuwarabe, cmd):
+def position(cmd):
     """局面データ解析"""
     pos = cmd[1].split('moves')
-    kifuwarabe.position(pos[0].strip(), pos[1].split() if len(pos) > 1 else [])
+    position_detail(pos[0].strip(), pos[1].split() if len(pos) > 1 else [])
 
 
-def go(kifuwarabe):
+def position_detail(sfen, usi_moves):
+    """局面データ解析"""
+
+    if sfen == 'startpos':
+        """平手初期局面に変更"""
+        board.reset()
+
+    elif sfen[:5] == 'sfen ':
+        """指定局面に変更"""
+        board.set_sfen(sfen[5:])
+
+    for usi_move in usi_moves:
+        """棋譜再生"""
+        board.push_usi(usi_move)
+
+
+def go():
     """思考開始～最善手返却"""
-    (bestmove, beta) = think(kifuwarabe.board)
+    (bestmove, beta) = think(board)
     alpha = -beta
     print(f'info depth 0 seldepth 1 time 1 nodes 1 score cp {alpha} string x')
     print(f'bestmove {bestmove}', flush=True)
@@ -100,72 +120,44 @@ def stop():
     print('bestmove resign' , flush=True)
 
 
-def do(kifuwarabe, cmd):
+def do(cmd):
     """一手指す
     example: ７六歩
         code: do 7g7f
     """
-    kifuwarabe.subordinate.board.push_usi(cmd[1])
+    board.push_usi(cmd[1])
 
 
-def undo(kifuwarabe):
+def undo():
     """一手戻す
         code: undo
     """
-    kifuwarabe.subordinate.board.pop()
+    board.pop()
 
 
-def moveval(kifuwarabe):
-    """１手読みでの指し手の評価値一覧"""
+def lottery():
+    """くじ一覧"""
 
-    for move in kifuwarabe.subordinate.board.legal_moves:
-        kifuwarabe.subordinate.board.push(move)
-        # 一手指す
+    print('くじ一覧：')
 
-        # 局面評価値表示
-        print('局面評価値内訳：')
-        value_list = 0
-        for index, value in enumerate(value_list):
-            print(f'　　（{index:2}） {value:10}')
-        print(f'　　（計） {sum(value_list):10}')
+    # USIプロトコルでの符号表記に変換
+    move_list_as_usi = []
 
-        kifuwarabe.subordinate.board.pop()
-        # 一手戻す
+    for move in board.legal_moves:
+        move_list_as_usi.append(cshogi.move_to_usi(move))
 
+    # ソート
+    move_list_as_usi.sort()
 
-class Kifuwarabe():
-    """きふわらべ"""
+    # 表示
+    number = 1
 
-    def __init__(self):
-        """初期化"""
-
-        self._board = cshogi.Board()
-        """盤"""
+    for move_as_usi in move_list_as_usi:
+        print(f'  ({number:3}) {move_as_usi}')
+        number += 1
 
 
-    @property
-    def board(self):
-        """盤"""
-        return self._board
-
-
-    def position(self, sfen, usi_moves):
-        """局面データ解析"""
-
-        if sfen == 'startpos':
-            """平手初期局面に変更"""
-            self.board.reset()
-
-        elif sfen[:5] == 'sfen ':
-            """指定局面に変更"""
-            self.board.set_sfen(sfen[5:])
-
-        for usi_move in usi_moves:
-            """棋譜再生"""
-            self.board.push_usi(usi_move)
-
-
-def think(board):
+def think():
     """それをする"""
 
     if board.is_game_over():
@@ -200,13 +192,7 @@ def think(board):
     """指し手の記法で返却"""
 
 
-def main():
-    kifuwarabe = Kifuwarabe()
-    usi_loop(kifuwarabe)
-
-
-
 if __name__ == '__main__':
     """コマンドから実行時"""
-    main()
+    usi_loop()
 
