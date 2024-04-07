@@ -1,3 +1,6 @@
+import random
+import datetime
+
 __evaluation_table = [0] * 203_219_280
 """評価値テーブル
 
@@ -24,6 +27,25 @@ __evaluation_table = [0] * 203_219_280
 
     ２億超えの組み合わせがある。
 """
+
+# TODO あとで消す。ダミーデータを入れてみる。１分ほどかかる
+print(f"[{datetime.datetime.now()}] make eval ...")
+
+for index in range(0, 203_219_280):
+    __evaluation_table[index] = random.randint(-1,1)
+
+print(f"[{datetime.datetime.now()}] eval maked")
+
+print(f"[{datetime.datetime.now()}] save ...")
+
+# TODO あとで消す。ファイルに出力してみる
+with open('eval.csv', 'w', encoding="utf-8") as f:
+    # 配列の要素の整数型を文字列型に変換してカンマで連結
+    text = ','.join(map(str,__evaluation_table))
+    f.write(text)
+
+print(f"[{datetime.datetime.now()}] saved")
+
 
 
 def get_evaluation_table_index_from_move_as_usi(move_as_usi):
