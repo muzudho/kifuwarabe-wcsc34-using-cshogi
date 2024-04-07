@@ -7,7 +7,9 @@ class EvaluationTable():
     """評価値テーブル"""
 
     def __init__(self):
-        self._evaluation_table = [0] * 203_219_280
+        self._move_size = 8424
+        self._table_size = 70_955_352
+        self._evaluation_table = [0] * 70_955_352
         """評価値テーブル
 
             指し手の種類は、 src, dst, pro で構成されるものの他、 resign 等の文字列がいくつかある。
@@ -29,11 +31,17 @@ class EvaluationTable():
 
             この数を２つの組み合わせにすると
 
-                (14256-1) * 14256 = 203_219_280
+                (14256 - 1) * 14256 = 203_219_280
 
             ２億超えの組み合わせがある。
 
+            ----------
+
             しかし、家のＰＣでこのサイズの配列を２つ読み込んで対局させることはできないようだ。
+            左右対称と仮定して、９筋ではなく、５筋にする。
+
+                (5 * 9 + 7) * 81 * 2 = 8424
+                (8424 - 1) * 8424 = 70_955_352
         """
 
 
@@ -44,17 +52,17 @@ class EvaluationTable():
 
         # 評価関数テーブル・ファイルが存在しないとき
         if not os.path.isfile('eval.csv'):
-            # TODO あとで消す。ダミーデータを入れてみる。１分ほどかかる
+            # ダミーデータを入れる。１分ほどかかる
             print(f"[{datetime.datetime.now()}] make evaluation table in memory ...")
 
-            for index in range(0, 203_219_280):
+            for index in range(0, self._table_size):
                 self._evaluation_table[index] = random.randint(-1,1)
 
             print(f"[{datetime.datetime.now()}] evaluation table maked in memory")
 
             print(f"[{datetime.datetime.now()}] save eval.csv file ...")
 
-            # TODO あとで消す。ファイルに出力してみる
+            # あとで消す。ファイルに出力する
             with open('eval.csv', 'w', encoding="utf-8") as f:
                 # 配列の要素の整数型を文字列型に変換してカンマで連結
                 text = ','.join(map(str,self._evaluation_table))
@@ -65,7 +73,7 @@ class EvaluationTable():
             print(f"[{datetime.datetime.now()}] eval.csv file saved")
 
         else:
-            # TODO あとで消す。ロードしてみる
+            # ロードする。１分ほどかかる
             print(f"[{datetime.datetime.now()}] load eval.csv file ...")
 
             with open('eval.csv', 'r', encoding="utf-8") as f:
@@ -94,62 +102,54 @@ class EvaluationTable():
         dst_str = move_as_usi[2: 4]
 
         # 移動元
-        if src_str == "R*":
-            src_num = 81
-        elif src_str == "B*":
-            src_num = 82
-        elif src_str == "G*":
-            src_num = 83
-        elif src_str == "S*":
-            src_num = 84
-        elif src_str == "N*":
-            src_num = 85
-        elif src_str == "L*":
-            src_num = 86
-        elif src_str == "P*":
-            src_num = 87
+        if src_str == 'R*':
+            src_num = 45
+        elif src_str == 'B*':
+            src_num = 46
+        elif src_str == 'G*':
+            src_num = 47
+        elif src_str == 'S*':
+            src_num = 48
+        elif src_str == 'N*':
+            src_num = 49
+        elif src_str == 'L*':
+            src_num = 50
+        elif src_str == 'P*':
+            src_num = 51
         else:
 
             file_str = src_str[0]
-            if file_str == "1":
+            if file_str in ('1', '9'):
                 src_num = 0
-            elif file_str == "2":
+            elif file_str in ('2', '8'):
                 src_num = 9
-            elif file_str == "3":
+            elif file_str in ('3', '7'):
                 src_num = 18
-            elif file_str == "4":
+            elif file_str in ('4', '6'):
                 src_num = 27
             elif file_str == "5":
                 src_num = 36
-            elif file_str == "6":
-                src_num = 45
-            elif file_str == "7":
-                src_num = 54
-            elif file_str == "8":
-                src_num = 63
-            elif file_str == "9":
-                src_num = 72
             else:
                 raise Exception(f"src file error: '{file_str}' in '{move_as_usi}'")
 
             rank_str = src_str[1]
-            if rank_str == "a":
+            if rank_str == 'a':
                 src_num += 0
-            elif rank_str == "b":
+            elif rank_str == 'b':
                 src_num += 1
-            elif rank_str == "c":
+            elif rank_str == 'c':
                 src_num += 2
-            elif rank_str == "d":
+            elif rank_str == 'd':
                 src_num += 3
-            elif rank_str == "e":
+            elif rank_str == 'e':
                 src_num += 4
-            elif rank_str == "f":
+            elif rank_str == 'f':
                 src_num += 5
-            elif rank_str == "g":
+            elif rank_str == 'g':
                 src_num += 6
-            elif rank_str == "h":
+            elif rank_str == 'h':
                 src_num += 7
-            elif rank_str == "i":
+            elif rank_str == 'i':
                 src_num += 8
             else:
                 raise Exception(f"src rank error: '{rank_str}' in '{move_as_usi}'")
@@ -157,24 +157,16 @@ class EvaluationTable():
         # 移動先
         file_str = dst_str[0]
 
-        if file_str == "1":
+        if file_str in ('1', '9'):
             dst_num = 0
-        elif file_str == "2":
+        elif file_str in ('2', '8'):
             dst_num = 9
-        elif file_str == "3":
+        elif file_str in ('3', '7'):
             dst_num = 18
-        elif file_str == "4":
+        elif file_str in ('4', '6'):
             dst_num = 27
-        elif file_str == "5":
+        elif file_str == '5':
             dst_num = 36
-        elif file_str == "6":
-            dst_num = 45
-        elif file_str == "7":
-            dst_num = 54
-        elif file_str == "8":
-            dst_num = 63
-        elif file_str == "9":
-            dst_num = 72
         else:
             raise Exception(f"dst file error: '{file_str}' in '{move_as_usi}'")
 
@@ -206,7 +198,7 @@ class EvaluationTable():
         else:
             pro_num = 0
 
-        return (2 * 81 * src_num) + (2 * dst_num) + pro_num
+        return (2 * 5 * 9 * src_num) + (2 * dst_num) + pro_num
 
 
     def get_evaluation_value(self, move_a_as_usi, move_b_as_usi):
@@ -224,13 +216,13 @@ class EvaluationTable():
 
         # 昇順
         if index_a <= index_b:
-            index = index_a * 14256 + index_b
-            print(f"[DEBUG] 昇順 a:{index_a:3} b:{index_b:3} index:{index}")
+            index = index_a * self._move_size + index_b
+            #print(f"[DEBUG] 昇順 a:{index_a:3} b:{index_b:3} index:{index}")
             return self._evaluation_table[index]
 
         # 降順
-        index = index_b * 14256 + index_a
-        print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} index:{index}")
+        index = index_b * self._move_size + index_a
+        #print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} index:{index}")
         return self._evaluation_table[index]
 
 
