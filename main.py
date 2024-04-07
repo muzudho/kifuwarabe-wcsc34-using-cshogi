@@ -1,6 +1,5 @@
 import cshogi
-import random
-from feeling_luckey import choice_lottery
+from feeling_luckey import choice_lottery, get_evaluation_table_index_from_move_as_usi
 
 
 board = cshogi.Board()
@@ -161,7 +160,7 @@ def lottery():
     number = 1
 
     for move_as_usi in move_list_as_usi:
-        print(f'  ({number:3}) {move_as_usi}')
+        print(f'  ({number:3}) {move_as_usi:5} = {get_evaluation_table_index_from_move_as_usi(move_as_usi):5}')
         number += 1
 
 
