@@ -408,9 +408,6 @@ class Kifuwarabe():
 
                 else:
                     try:
-                        # 移動先
-                        dst_sq = convert_jsa_to_sq(int(cmd[1]))
-
                         # 手番をひっくり返す（一手指したつもり）
                         self.subordinate.board.push_pass()
 
@@ -760,70 +757,9 @@ class AlphaBetaPruning():
             β は、あなた。数ある選択肢の中の、評価値の上限。この値を超える選択肢は、相手に必ず妨害されるので選べない
         """
 
-        if is_root:
-            best_move_list = []
+        best_move_list = list(self.kifuwarabes_subordinate.board.legal_moves)
 
-        for move in list(self.kifuwarabes_subordinate.board.legal_moves):
-
-            self.kifuwarabes_subordinate.board.push(move)
-            """一手指す"""
-
-            # ここで、局面は相手番に変わった
-
-            temp_value = self.kifuwarabes_colleague.board_value.eval()
-            """あれば、決まりきった盤面評価値"""
-
-            if temp_value is None:
-                """別途、計算が必要なケース"""
-
-                if depth > 1:
-                    (temp_value, _move_list) = self.do_it(
-                        depth=depth - 1,
-                        alpha=-beta,    # ベーター値は、相手から見ればアルファー値
-                        beta=-alpha)    # アルファー値は、相手から見ればベーター値
-                    """将来獲得できるであろう、最低限の評価値"""
-
-                else:
-                    """末端局面評価値"""
-
-                    # どんな手を指したか
-                    temp_value = 0
-
-            else:
-                pass
-                """盤面の決まりきった評価値"""
-
-            self.kifuwarabes_subordinate.board.pop()
-            """一手戻す"""
-
-            # ここで、局面は自分の手番に戻った
-            temp_value = -temp_value
-
-            if alpha < temp_value:
-                alpha = temp_value
-                """いわゆるアルファー・アップデート。
-                自分が将来獲得できるであろう最低限の評価値が、増えた"""
-
-                if is_root:
-                    best_move_list = [move]
-
-                if beta <= alpha:
-                    """ベーター・カット
-                    最小値であるアルファーと、最大値であるベーターの間で、いい value を探索していたのに、
-                    最大値≦最小値になってしまった。
-                    これより先の兄弟に、取り得る選択肢はないので、探索を打ち切る
-                    """
-                    break
-
-            elif is_root and alpha == temp_value:
-                best_move_list.append(move)
-                """評価値が等しい指し手を追加"""
-
-        if is_root:
-            return (alpha, best_move_list)
-        else:
-            return (alpha, None)
-        """自分が将来獲得できるであろう、もっとも良い、最低限の評価値"""
+        return (alpha, best_move_list)
 
 
 if __name__ == '__main__':
