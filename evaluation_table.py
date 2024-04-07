@@ -59,7 +59,8 @@ class EvaluationTable():
             print(f"[{datetime.datetime.now()}] make random evaluation table in memory ...")
 
             for index in range(0, self._table_size):
-                self._evaluation_table[index] = random.randint(-1,1)
+                # -1,0,1 を保存するとマイナスの符号で文字数が多くなるので、+1 して 0,1,2 で保存する
+                self._evaluation_table[index] = random.randint(0,2)
 
             print(f"[{datetime.datetime.now()}] evaluation table maked in memory")
             self._file_modified = True
@@ -218,12 +219,14 @@ class EvaluationTable():
         if index_a <= index_b:
             index = index_a * self._move_size + index_b
             #print(f"[DEBUG] 昇順 a:{index_a:3} b:{index_b:3} index:{index}")
-            return self._evaluation_table[index]
 
         # 降順
-        index = index_b * self._move_size + index_a
+        else:
+            index = index_b * self._move_size + index_a
+
         #print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} index:{index}")
-        return self._evaluation_table[index]
+        # 0,1,2 が保存されているので、 -1 すると、 -1,0,1 になる。マイナスの符号が付くと文字数が多くなるのでこうしている
+        return self._evaluation_table[index] - 1
 
 
     def make_move_score_dictionary(self, sorted_legal_move_list_as_usi):
@@ -263,7 +266,8 @@ class EvaluationTable():
 
         for _i in range(0, count):
             n = random.randint(0, self._table_size)
-            self._evaluation_table[n] = random.randint(-1,1)
+            # -1,0,1 を保存するとマイナスの符号で文字数が多くなるので、+1 して 0,1,2 で保存する
+            self._evaluation_table[n] = random.randint(0,2)
 
         self._file_modified = True
 
