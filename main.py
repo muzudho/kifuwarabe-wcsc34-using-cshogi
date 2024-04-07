@@ -446,7 +446,7 @@ class Kifuwarabe():
 
             if cmd[0] == 'usi':
                 """USIエンジン握手"""
-                print('id name Kifuwarabe1FileV1_1')
+                print('id name KifuwarabeWCSC34')
                 print('usiok', flush=True)
 
             elif cmd[0] == 'isready':
@@ -643,18 +643,11 @@ class KifuwarabesSubordinate():
         self._board = cshogi.Board()
         """盤"""
 
-        self._materials_value = MaterialsValue()
-        """駒の価値"""
-
     @property
     def board(self):
         """盤"""
         return self._board
 
-    @property
-    def materials_value(self):
-        """駒の価値"""
-        return self._materials_value
 
 class KifuwarabesColleague():
     """きふわらべの同僚"""
@@ -753,87 +746,6 @@ class KifuwarabesColleague():
     def static_exchange_evaluation(self):
         """評価関数　エス・イー・イー（Static Exchange Evaluation；静的駒交換評価）"""
         return self._static_exchange_evaluation
-
-
-class MaterialsValue():
-    """手番から見た駒割評価"""
-
-    def __init__(self):
-        # 利き１個 100点換算。長い利きは利き２個分
-        # 駒種類に順序が付くように、同点は避ける
-        none_value = 0
-        pawn_value = 100
-        lance_value = 200
-        knight_value = 201
-        silver_value = 500
-        gold_value = 600
-        bishop_value = 800
-        rook_value = 801
-        king_value = 30000
-        promoted_pawn = 604
-        promoted_lance = 603
-        promoted_knight = 602
-        promoted_silver = 601
-        horse = 1200
-        dragon = 1201
-
-        self._hand = [pawn_value, lance_value, knight_value, silver_value, gold_value, bishop_value, rook_value,]
-        """持ち駒。歩、香、桂、銀、金、角、飛"""
-
-        self._piece_type_values = [
-            none_value, pawn_value, lance_value, knight_value, silver_value, bishop_value, rook_value, gold_value, king_value,
-            # None、▲歩、▲香、▲桂、▲銀、▲角、▲飛、▲金、▲玉、
-            promoted_pawn, promoted_lance, promoted_knight, promoted_silver, horse, dragon, none_value,
-            # ▲と、▲杏、▲圭、▲全、▲馬、▲竜、未使用、
-        ]
-
-        self._piece_values = [
-            none_value, pawn_value, lance_value, knight_value, silver_value, bishop_value, rook_value, gold_value, king_value,
-            # None、▲歩、▲香、▲桂、▲銀、▲角、▲飛、▲金、▲玉、
-            promoted_pawn, promoted_lance, promoted_knight, promoted_silver, horse, dragon, none_value,
-            # ▲と、▲杏、▲圭、▲全、▲馬、▲竜、未使用、
-            -none_value, -pawn_value, -lance_value, -knight_value, -silver_value, -bishop_value, -rook_value, -gold_value, -king_value,
-            # 未使用、▽歩、▽香、▽桂、▽銀、▽角、▽飛、▽金、▽玉、
-            -promoted_pawn, -promoted_lance, -promoted_knight, -promoted_silver, -horse, -dragon, -none_value,
-            # ▽と、▽杏、▽圭、▽全、▽馬、▽竜、未使用
-            ]
-        """盤上の駒の価値
-        📖 [cshogiのサンプルプログラム(MinMax探索)](https://tadaoyamaoka.hatenablog.com/entry/2023/08/13/223655)
-        """
-
-    @property
-    def hand(self):
-        """持ち駒の価値"""
-        return self._hand
-
-    @property
-    def piece_type_values(self):
-        """駒の種類別の価値"""
-        return self._piece_type_values
-
-    @property
-    def piece_values(self):
-        """盤上の駒の価値"""
-        return self._piece_values
-
-    def eval(self, board):
-        """手番から見た評価"""
-
-        value = sum(self.piece_values[pc] for pc in board.pieces if 0 < pc)
-        """盤上の駒の価値"""
-
-        pieces_in_hand = board.pieces_in_hand
-        """持ち駒"""
-
-        value += sum(self.hand[hand_idx] * (pieces_in_hand[cshogi.BLACK][hand_idx] - pieces_in_hand[cshogi.WHITE][hand_idx]) for hand_idx in range(7) )
-        """持ち駒の価値"""
-
-        if board.turn == cshogi.BLACK:
-            return value
-
-        else:
-            """後手は評価値の正負を反転"""
-            return -value
 
 
 class BoardValue():
@@ -1566,10 +1478,6 @@ class PositionEvaluation():
             着手移動先升番号 sq
         """
 
-        # 手番から見た駒割評価
-        materials_value = self.kifuwarabes_subordinate.materials_value.eval(
-            board=self.kifuwarabes_subordinate.board)
-
         # 駒の取り合いを解消したい。SEE（Static Exchange Evaluation）
         see_value = self.kifuwarabes_colleague.static_exchange_evaluation.do_it(move_dst_sq)
 
@@ -1606,7 +1514,8 @@ class PositionEvaluation():
             # 何でもない
             pass
 
-        return [materials_value, ranging_value, see_value]
+        # 駒割評価値、振り飛車評価値、SEE値
+        return [0, ranging_value, see_value]
 
 
 class AlphaBetaPruning():
@@ -1812,7 +1721,8 @@ class StaticExchangeEvaluation():
         for piece in attacker_list:
             # マテリアル・バリュー（Material Value；駒の価値）を求める
             pt = PieceTypeHelper.from_piece(piece)
-            mat = self.kifuwarabes_subordinate.materials_value.piece_type_values[pt]
+            # 駒の価値
+            mat = 0
 
             if self.kifuwarabes_subordinate.board.turn == cshogi.BLACK:
                 if piece < 16:
@@ -1843,9 +1753,8 @@ class StaticExchangeEvaluation():
         # for mat_pc in opponent_list:
         #     print(f'[DEBUG] mat_pc: {piece_to_string(mat_pc[1])}')
 
-        # 取り合いになる場所に置かれている駒は、取り返される
-        dst_pt = PieceTypeHelper.from_piece(dst_pc)
-        mat = self.kifuwarabes_subordinate.materials_value.piece_type_values[dst_pt]
+        # 駒の価値
+        mat = 0
         value = mat
         # print(f'[DEBUG] opponent: {-value}')
 
