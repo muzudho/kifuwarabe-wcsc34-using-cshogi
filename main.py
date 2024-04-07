@@ -192,9 +192,7 @@ class KifuwarabesColleague():
         """盤"""
 
         self._board_value = BoardValue(
-            board=self._board,
-            kifuwarabes_colleague=self
-        )
+            board=self._board)
         """盤の決まりきった価値"""
 
         self._thought = Thought(
@@ -220,32 +218,22 @@ class KifuwarabesColleague():
 class BoardValue():
     """盤の決まりきった価値"""
 
-    def __init__(self, board, kifuwarabes_colleague):
+    def __init__(self, board):
         """初期化
 
         Parameters
         ----------
         board
             盤
-        kifuwarabes_colleague
-            きふわらべの同僚
         """
 
         self._board = board
         """盤"""
 
-        self._kifuwarabes_colleague = kifuwarabes_colleague
-        """きふわらべの同僚"""
-
     @property
     def board(self):
         """盤"""
         return self._board
-
-    @property
-    def kifuwarabes_colleague(self):
-        """きふわらべの同僚"""
-        return self._kifuwarabes_colleague
 
     def eval(self):
         """評価"""
