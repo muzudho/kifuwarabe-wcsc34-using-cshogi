@@ -89,7 +89,7 @@ def position(kifuwarabe, cmd):
 
 def go(kifuwarabe):
     """思考開始～最善手返却"""
-    (bestmove, beta) = kifuwarabe.colleague.thought.do_it()
+    (bestmove, beta) = think(kifuwarabe.colleague.board)
     alpha = -beta
     print(f'info depth 0 seldepth 1 time 1 nodes 1 score cp {alpha} string x')
     print(f'bestmove {bestmove}', flush=True)
@@ -114,10 +114,9 @@ def undo(kifuwarabe):
     """
     kifuwarabe.subordinate.board.pop()
 
+
 def moveval(kifuwarabe):
     """１手読みでの指し手の評価値一覧"""
-
-    kifuwarabe.colleague.thought.depth = 1
 
     for move in kifuwarabe.subordinate.board.legal_moves:
         kifuwarabe.subordinate.board.push(move)
@@ -188,75 +187,45 @@ class KifuwarabesColleague():
         self._board = board
         """盤"""
 
-        self._thought = Thought(
-            board=self._board)
-        """思考"""
-
     @property
     def board(self):
         """盤"""
         return self._board
 
-    @property
-    def thought(self):
-        """思考"""
-        return self._thought
 
+def think(board):
+    """それをする"""
 
-class Thought():
-    """思考。
-    主に、そのための設定"""
+    if board.is_game_over():
+        """投了局面時"""
 
-    def __init__(self, board):
-        """初期化
+        return ('resign', 0)
+        """投了"""
 
-        Parameters
-        ----------
-        board
-            盤
-        """
+    if board.is_nyugyoku():
+        """入玉宣言局面時"""
 
-        self._board = board
-        """盤"""
+        return ('win', 0)
+        """勝利宣言"""
 
-    @property
-    def board(self):
-        """盤"""
-        return self._board
+    if not board.is_check():
+        """自玉に王手がかかっていない時"""
 
-    def do_it(self):
-        """それをする"""
+        if (matemove:=board.mate_move_in_1ply()):
+            """あれば、一手詰めの指し手を取得"""
 
-        if self.board.is_game_over():
-            """投了局面時"""
+            print('info score mate 1 pv {}'.format(cshogi.move_to_usi(matemove)))
+            return (cshogi.move_to_usi(matemove), 0)
 
-            return ('resign', 0)
-            """投了"""
+    bestmove_list = list(board.legal_moves)
+    bestmove = random.choice(bestmove_list)
+    """候補手の中からランダムに選ぶ"""
 
-        if self.board.is_nyugyoku():
-            """入玉宣言局面時"""
+    # 未使用
+    alpha = 0
 
-            return ('win', 0)
-            """勝利宣言"""
-
-        if not self.board.is_check():
-            """自玉に王手がかかっていない時"""
-
-            if (matemove:=self.board.mate_move_in_1ply()):
-                """あれば、一手詰めの指し手を取得"""
-
-                print('info score mate 1 pv {}'.format(cshogi.move_to_usi(matemove)))
-                return (cshogi.move_to_usi(matemove), 0)
-
-        bestmove_list = list(self.board.legal_moves)
-        bestmove = random.choice(bestmove_list)
-        """候補手の中からランダムに選ぶ"""
-
-        # 未使用
-        alpha = 0
-
-        return (cshogi.move_to_usi(bestmove), alpha)
-        """指し手の記法で返却"""
+    return (cshogi.move_to_usi(bestmove), alpha)
+    """指し手の記法で返却"""
 
 
 def main():
