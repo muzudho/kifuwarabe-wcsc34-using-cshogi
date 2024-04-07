@@ -143,17 +143,12 @@ class Kifuwarabe():
     def __init__(self):
         """初期化"""
 
-        self._subordinate = KifuwarabesSubordinate()
-        """きふわらべの部下"""
+        self._board = cshogi.Board()
+        """盤"""
 
-        self._colleague = KifuwarabesColleague(
-            kifuwarabes_subordinate=self.subordinate)
+        self._colleague = KifuwarabesColleague(board=self._board)
         """きふわらべの同僚"""
 
-    @property
-    def subordinate(self):
-        """きふわらべの部下"""
-        return self._subordinate
 
     @property
     def colleague(self):
@@ -165,24 +160,15 @@ class Kifuwarabe():
 
         if sfen == 'startpos':
             """平手初期局面に変更"""
-            self.subordinate.board.reset()
+            self.board.reset()
 
         elif sfen[:5] == 'sfen ':
             """指定局面に変更"""
-            self.subordinate.board.set_sfen(sfen[5:])
+            self.board.set_sfen(sfen[5:])
 
         for usi_move in usi_moves:
             """棋譜再生"""
-            self.subordinate.board.push_usi(usi_move)
-
-class KifuwarabesSubordinate():
-    """きふわらべの部下"""
-
-    def __init__(self):
-        """初期化"""
-
-        self._board = cshogi.Board()
-        """盤"""
+            self.board.push_usi(usi_move)
 
     @property
     def board(self):
@@ -193,7 +179,7 @@ class KifuwarabesSubordinate():
 class KifuwarabesColleague():
     """きふわらべの同僚"""
 
-    def __init__(self, kifuwarabes_subordinate):
+    def __init__(self, board):
         """初期化
 
         Parameters
@@ -202,25 +188,25 @@ class KifuwarabesColleague():
             きふわらべの部下
         """
 
-        self._kifuwarabes_subordinate = kifuwarabes_subordinate
-        """きふわらべの部下"""
+        self._board = board
+        """盤"""
 
         self._board_value = BoardValue(
-            kifuwarabes_subordinate=kifuwarabes_subordinate,
+            board=self._board,
             kifuwarabes_colleague=self
         )
         """盤の決まりきった価値"""
 
         self._thought = Thought(
-            kifuwarabes_subordinate=kifuwarabes_subordinate,
+            board=self._board,
             kifuwarabes_colleague=self
         )
         """思考"""
 
     @property
-    def kifuwarabes_subordinate(self):
-        """きふわらべの部下"""
-        return self._kifuwarabes_subordinate
+    def board(self):
+        """盤"""
+        return self._board
 
     @property
     def board_value(self):
@@ -236,27 +222,27 @@ class KifuwarabesColleague():
 class BoardValue():
     """盤の決まりきった価値"""
 
-    def __init__(self, kifuwarabes_subordinate, kifuwarabes_colleague):
+    def __init__(self, board, kifuwarabes_colleague):
         """初期化
 
         Parameters
         ----------
-        kifuwarabes_subordinate
-            きふわらべの部下
+        board
+            盤
         kifuwarabes_colleague
             きふわらべの同僚
         """
 
-        self._kifuwarabes_subordinate = kifuwarabes_subordinate
-        """きふわらべの部下"""
+        self._board = board
+        """盤"""
 
         self._kifuwarabes_colleague = kifuwarabes_colleague
         """きふわらべの同僚"""
 
     @property
-    def kifuwarabes_subordinate(self):
-        """きふわらべの部下"""
-        return self._kifuwarabes_subordinate
+    def board(self):
+        """盤"""
+        return self._board
 
     @property
     def kifuwarabes_colleague(self):
@@ -266,15 +252,15 @@ class BoardValue():
     def eval(self):
         """評価"""
 
-        if self.kifuwarabes_subordinate.board.is_game_over():
+        if self.board.is_game_over():
             # 負け
             return -30000
 
-        if self.kifuwarabes_subordinate.board.is_nyugyoku():
+        if self.board.is_nyugyoku():
             # 入玉宣言勝ち
             return 30000
 
-        draw = self.kifuwarabes_subordinate.board.is_draw(16)
+        draw = self.board.is_draw(16)
 
         if draw == cshogi.REPETITION_DRAW:
             # 千日手
@@ -304,19 +290,19 @@ class Thought():
     """思考。
     主に、そのための設定"""
 
-    def __init__(self, kifuwarabes_subordinate, kifuwarabes_colleague):
+    def __init__(self, board, kifuwarabes_colleague):
         """初期化
 
         Parameters
         ----------
-        kifuwarabes_subordinate
-            きふわらべの部下
+        board
+            盤
         kifuwarabes_colleague
             きふわらべの同僚
         """
 
-        self._kifuwarabes_subordinate = kifuwarabes_subordinate
-        """きふわらべの部下"""
+        self._board = board
+        """盤"""
 
         self._kifuwarabes_colleague = kifuwarabes_colleague
         """きふわらべの同僚"""
@@ -325,9 +311,9 @@ class Thought():
         """読みの深さ"""
 
     @property
-    def kifuwarabes_subordinate(self):
-        """きふわらべの部下"""
-        return self._kifuwarabes_subordinate
+    def board(self):
+        """盤"""
+        return self._board
 
     @property
     def kifuwarabes_colleague(self):
@@ -346,28 +332,28 @@ class Thought():
     def do_it(self):
         """それをする"""
 
-        if self.kifuwarabes_subordinate.board.is_game_over():
+        if self.board.is_game_over():
             """投了局面時"""
 
             return ('resign', 0)
             """投了"""
 
-        if self.kifuwarabes_subordinate.board.is_nyugyoku():
+        if self.board.is_nyugyoku():
             """入玉宣言局面時"""
 
             return ('win', 0)
             """勝利宣言"""
 
-        if not self.kifuwarabes_subordinate.board.is_check():
+        if not self.board.is_check():
             """自玉に王手がかかっていない時"""
 
-            if (matemove:=self.kifuwarabes_subordinate.board.mate_move_in_1ply()):
+            if (matemove:=self.board.mate_move_in_1ply()):
                 """あれば、一手詰めの指し手を取得"""
 
                 print('info score mate 1 pv {}'.format(cshogi.move_to_usi(matemove)))
                 return (cshogi.move_to_usi(matemove), 0)
 
-        bestmove_list = list(self.kifuwarabes_subordinate.board.legal_moves)
+        bestmove_list = list(self.board.legal_moves)
         bestmove = random.choice(bestmove_list)
         """候補手の中からランダムに選ぶ"""
 
