@@ -13,12 +13,17 @@ def delete_result_file():
 
 
 def read_result_file():
-    """結果の読込"""
-    with open('result.txt', 'r', encoding="utf-8") as f:
-        text = f.read()
-        print(f"[{datetime.datetime.now()}] result.txt read ...")
+    try:
+        """結果の読込"""
+        with open('result.txt', 'r', encoding="utf-8") as f:
+            text = f.read()
+            print(f"[{datetime.datetime.now()}] result.txt read ...", flush=True)
 
-    return text.strip()
+        return text.strip()
+
+    # ファイルの読込に失敗したら、空文字を返す
+    except:
+        return ""
 
 
 def save_lose():

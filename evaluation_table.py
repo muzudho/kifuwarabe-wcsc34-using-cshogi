@@ -139,18 +139,18 @@ class EvaluationTable():
     def load_or_new_evaluation_table(self):
         """評価関数テーブルをファイルから読み込む。無ければランダム値の入った物を新規作成する"""
 
-        print(f"[{datetime.datetime.now()}] {self._eval_file_basename} file exists check ...")
+        print(f"[{datetime.datetime.now()}] {self._eval_file_basename} file exists check ...", flush=True)
 
         # 評価関数テーブル・ファイルが存在しないとき
         if not os.path.isfile(self._eval_file_basename):
             # ダミーデータを入れる。１分ほどかかる
-            print(f"[{datetime.datetime.now()}] make random evaluation table in memory ...")
+            print(f"[{datetime.datetime.now()}] make random evaluation table in memory ...", flush=True)
 
             for index in range(0, self._table_size):
                 # -1,0,1 を保存するとマイナスの符号で文字数が多くなるので、+1 して 0,1,2 で保存する
                 self._evaluation_table[index] = random.randint(0,2)
 
-            print(f"[{datetime.datetime.now()}] evaluation table maked in memory")
+            print(f"[{datetime.datetime.now()}] evaluation table maked in memory", flush=True)
             self._file_modified = True
 
         else:
@@ -164,7 +164,7 @@ class EvaluationTable():
                 if result_text in ('lose', 'draw'):
                     self.modify_table(result_text)
 
-            print(f"[{datetime.datetime.now()}] {self._eval_file_basename} file loaded")
+            print(f"[{datetime.datetime.now()}] {self._eval_file_basename} file loaded", flush=True)
 
 
     def get_evaluation_table_index_from_move_as_usi(self, move_as_usi):
@@ -298,13 +298,13 @@ class EvaluationTable():
         # 昇順
         if index_a <= index_b:
             index = index_a * self._move_size + index_b
-            #print(f"[DEBUG] 昇順 a:{index_a:3} b:{index_b:3} index:{index}")
+            #print(f"[DEBUG] 昇順 a:{index_a:3} b:{index_b:3} index:{index}", flush=True)
 
         # 降順
         else:
             index = index_b * self._move_size + index_a
 
-        #print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} index:{index}")
+        #print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} index:{index}", flush=True)
         # 0,1,2 が保存されているので、 -1 すると、 -1,0,1 になる。マイナスの符号が付くと文字数が多くなるのでこうしている
         return self._evaluation_table[index] - 1
 
@@ -356,33 +356,33 @@ class EvaluationTable():
         """保存する"""
 
         if self._file_modified:
-            print(f"[{datetime.datetime.now()}] save {self._eval_file_basename} file ...")
+            print(f"[{datetime.datetime.now()}] save {self._eval_file_basename} file ...", flush=True)
 
             # ファイルに出力する
             with open(self._eval_file_basename, 'w', encoding="utf-8") as f:
                 # 配列の要素の整数型を文字列型に変換して隙間を空けずに連結
                 text = ''.join(map(str,self._evaluation_table))
-                print(f"[{datetime.datetime.now()}] text created ...")
+                print(f"[{datetime.datetime.now()}] text created ...", flush=True)
 
                 f.write(text)
 
             self._file_modified = False
 
-            print(f"[{datetime.datetime.now()}] {self._eval_file_basename} file saved")
+            print(f"[{datetime.datetime.now()}] {self._eval_file_basename} file saved", flush=True)
 
         else:
-            print(f"[{datetime.datetime.now()}] {self._eval_file_basename} file not changed")
+            print(f"[{datetime.datetime.now()}] {self._eval_file_basename} file not changed", flush=True)
 
 
     def load_evaluation_from_file(self):
         """読込む"""
 
         # ロードする。１分ほどかかる
-        print(f"[{datetime.datetime.now()}] load {self._eval_file_basename} file ...")
+        print(f"[{datetime.datetime.now()}] load {self._eval_file_basename} file ...", flush=True)
 
         with open(self._eval_file_basename, 'r', encoding="utf-8") as f:
             text = f.read()
-            print(f"[{datetime.datetime.now()}] {self._eval_file_basename} read ...")
+            print(f"[{datetime.datetime.now()}] {self._eval_file_basename} read ...", flush=True)
 
             # 隙間のないテキストを１文字ずつ分解
             tokens = list(text)

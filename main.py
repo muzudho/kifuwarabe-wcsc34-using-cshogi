@@ -1,5 +1,6 @@
 import cshogi
 import random
+import time
 from feeling_luckey import choice_lottery
 from evaluation_table import EvaluationTable
 from result_file import save_lose, save_win, save_draw, save_otherwise, exists_result_file, delete_result_file
