@@ -9,8 +9,11 @@ from result_file import save_lose, save_win, save_draw, save_otherwise, exists_r
 board = cshogi.Board()
 """盤"""
 
-evaluation_table = EvaluationTable(file_number=random.randint(1,3))
-"""評価値テーブル"""
+evaluation_table = EvaluationTable(file_number=random.randint(1,6))
+"""評価値テーブル
+
+さいころに倣って６個
+"""
 
 
 def usi_loop():
@@ -224,5 +227,9 @@ def lottery():
 
 if __name__ == '__main__':
     """コマンドから実行時"""
-    usi_loop()
+    try:
+        usi_loop()
+    except Exception as err:
+        print(f"[unexpected error] {err=}, {type(err)=}")
+        raise
 
