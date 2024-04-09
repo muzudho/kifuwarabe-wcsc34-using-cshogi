@@ -338,9 +338,9 @@ class EvaluationTable():
         """評価値テーブルの内容を適当に変更します"""
 
         if result_text == 'lose':
-            count = self._table_size//1000
+            count = self._table_size//100
         elif result_text == 'draw':
-            count = self._table_size//10000
+            count = self._table_size//1000
         else:
             count = 0
 
