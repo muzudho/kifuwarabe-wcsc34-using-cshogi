@@ -346,7 +346,7 @@ class EvaluationTable():
         """指した手の評価値を適当に変更します。負けたときか、引き分けのときに限る"""
 
         if result_text in ('lose', 'draw'):
-            for move_as_usi in canditates_memory.move_set():
+            for move_as_usi in canditates_memory.move_set:
                 index = self.get_evaluation_table_index_from_move_as_usi(move_as_usi)
 
                 # -1,0,1 を保存するとマイナスの符号で文字数が多くなるので、+1 して 0,1,2 で保存する
