@@ -31,9 +31,15 @@ class ResultFile():
 
     def delete(self):
         """ファイルの削除"""
-        print(f"[{datetime.datetime.now()}] {self.file_name} file delete...", flush=True)
-        os.remove(self.file_name)
-        print(f"[{datetime.datetime.now()}] {self.file_name} file deleted", flush=True)
+
+        try:
+            print(f"[{datetime.datetime.now()}] {self.file_name} file delete...", flush=True)
+            os.remove(self.file_name)
+            print(f"[{datetime.datetime.now()}] {self.file_name} file deleted", flush=True)
+
+        except FileNotFoundError:
+            # ファイルが無いのなら、削除に失敗しても問題ない
+            pass
 
 
     def read(self):

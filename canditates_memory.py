@@ -15,7 +15,7 @@ class CanditatesMemory():
         candidates_memory = CanditatesMemory(file_number)
 
         # ファイルが存在するとき
-        if os.path.isfile(candidates_memory.file_name):
+        if candidates_memory.exists_file():
             print(f"[{datetime.datetime.now()}] read {candidates_memory.file_name} file ...", flush=True)
 
             try:
@@ -60,12 +60,21 @@ class CanditatesMemory():
         return self._move_set
 
 
+    def exists_file(self):
+        """"ファイルが存在するか？"""
+        return os.path.isfile(self._file_name)
+
+
     def delete(self):
         """削除"""
-        print(f"[{datetime.datetime.now()}] {self.file_name} file delete...", flush=True)
-        os.remove(self.file_name)
-        print(f"[{datetime.datetime.now()}] {self.file_name} file deleted", flush=True)
+        try:
+            print(f"[{datetime.datetime.now()}] {self.file_name} file delete...", flush=True)
+            os.remove(self.file_name)
+            print(f"[{datetime.datetime.now()}] {self.file_name} file deleted", flush=True)
 
+        except FileNotFoundError:
+            # ファイルが無いのなら、削除に失敗しても問題ない
+            pass
 
     def save(self):
         """保存"""
