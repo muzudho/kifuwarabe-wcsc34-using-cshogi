@@ -23,7 +23,7 @@ class Kifuwarabe():
         self._canditates_memory = None
 
         # 評価値テーブル
-        self._evaluation_table = EvaluationTable(file_number=self._player_file_number)
+        self._evaluation_table = None
 
         # 結果ファイル（デフォルト）
         self._result_file = None
@@ -95,6 +95,11 @@ class Kifuwarabe():
 
     def isready(self):
         """対局準備"""
+        print('readyok', flush=True)
+
+
+    def usinewgame(self):
+        """新しい対局"""
 
         # さいころに倣って６個
         self._player_file_number = random.randint(1,6)
@@ -107,17 +112,8 @@ class Kifuwarabe():
 
         # 評価関数テーブルをファイルから読み込む。無ければランダム値の入った物を新規作成する
         self._evaluation_table = EvaluationTable(file_number=self._player_file_number)
-        self._evaluation_table.load_or_new_evaluation_table(self._result_file)
+        self._evaluation_table.load_from_file_or_random_table(self._result_file)
         self._evaluation_table.update_evaluation_table(self._canditates_memory, self._result_file)
-
-        print('readyok', flush=True)
-
-
-    def usinewgame(self):
-        """新しい対局"""
-
-        # 指し手の候補手の記憶を初期化
-        self._canditates_memory = CanditatesMemory()
 
         # 結果ファイルを削除
         if self._result_file.exists():
@@ -194,19 +190,23 @@ class Kifuwarabe():
             # 負け
             if cmd[1] == 'lose':
                 self._result_file.save_lose()
+                self._canditates_memory.save()
 
             # 勝ち
             elif cmd[1] == 'win':
                 self._result_file.save_win()
+                self._canditates_memory.save()
                 self._evaluation_table.save_evaluation_to_file()
 
             # 持将棋
             elif cmd[1] == 'draw':
                 self._result_file.save_draw()
+                self._canditates_memory.save()
 
             # その他
             else:
                 self._result_file.save_otherwise(cmd[1])
+                self._canditates_memory.save()
 
 
     def do(self, cmd):

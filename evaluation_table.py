@@ -7,7 +7,7 @@ class EvaluationTable():
     """評価値テーブル"""
 
     def __init__(self, file_number):
-        self._eval_file_basename = f'eval_{file_number}.txt'
+        self._eval_file_basename = f'n{file_number}_eval.txt'
         self._file_modified = False
 
         self._move_size = 8424
@@ -135,7 +135,7 @@ class EvaluationTable():
         """
 
 
-    def load_or_new_evaluation_table(self, result_file):
+    def load_from_file_or_random_table(self, result_file):
         """評価関数テーブルをファイルから読み込む。無ければランダム値の入った物を新規作成する"""
 
         print(f"[{datetime.datetime.now()}] {self._eval_file_basename} file exists check ...", flush=True)
@@ -386,13 +386,13 @@ class EvaluationTable():
         """読込む"""
 
         # ロードする。１分ほどかかる
-        print(f"[{datetime.datetime.now()}] load {self._eval_file_basename} file ...", flush=True)
+        print(f"[{datetime.datetime.now()}] read {self._eval_file_basename} file ...", flush=True)
 
         with open(self._eval_file_basename, 'r', encoding="utf-8") as f:
             text = f.read()
-            print(f"[{datetime.datetime.now()}] {self._eval_file_basename} read ...", flush=True)
+            print(f"[{datetime.datetime.now()}] {self._eval_file_basename} read", flush=True)
 
-            # 隙間のないテキストを１文字ずつ分解
-            tokens = list(text)
-            # 整数型へ変換したあと、またリストに入れる
-            self._evaluation_table = list(map(int,tokens))
+        # 隙間のないテキストを１文字ずつ分解
+        tokens = list(text)
+        # 整数型へ変換したあと、またリストに入れる
+        self._evaluation_table = list(map(int,tokens))
