@@ -295,8 +295,8 @@ class EvaluationTable():
         return (2 * 5 * 9 * src_num) + (2 * dst_num) + pro_num
 
 
-    def get_evaluation_value(self, move_a_as_usi, move_b_as_usi):
-        """両方残すなら 0点、インデックスが小さい方を残すなら -1点、インデックスが大きい方を残すなら +1点"""
+    def get_evaluation_index(self, move_a_as_usi, move_b_as_usi):
+        """指し手２つの組み合わせインデックス"""
 
         # 同じ指し手を比較したら 0 とする（総当たりの二重ループとかでここを通る）
         if move_a_as_usi == move_b_as_usi:
@@ -316,6 +316,15 @@ class EvaluationTable():
         # 降順
         else:
             index = index_b * self._move_size + index_a
+
+        return index
+
+
+    def get_evaluation_value(self, move_a_as_usi, move_b_as_usi):
+        """両方残すなら 0点、インデックスが小さい方を残すなら -1点、インデックスが大きい方を残すなら +1点"""
+
+        index = self.get_evaluation_index(move_a_as_usi, move_b_as_usi)
+
 
         #print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} index:{index}", flush=True)
         # 0,1,2 が保存されているので、 -1 すると、 -1,0,1 になる。マイナスの符号が付くと文字数が多くなるのでこうしている
@@ -351,14 +360,15 @@ class EvaluationTable():
         """指した手の評価値を適当に変更します。負けたときか、引き分けのときに限る"""
 
         if result_text in ('lose', 'draw'):
-            for move_as_usi in canditates_memory.move_set:
-                index = self.get_evaluation_table_index_from_move_as_usi(move_as_usi)
+            for move_a_as_usi in canditates_memory.move_set:
+                for move_b_as_usi in canditates_memory.move_set:
+                    index = self.get_evaluation_index(move_a_as_usi, move_b_as_usi)
 
-                # -1,0,1 を保存するとマイナスの符号で文字数が多くなるので、+1 して 0,1,2 で保存する
-                # 元の値（0,1,2）
-                # ランダムに 1 か 2 を足す
-                # mod 3 する
-                self._evaluation_table[index] = (self._evaluation_table[index] + random.randint(1,2)) % 3
+                    # -1,0,1 を保存するとマイナスの符号で文字数が多くなるので、+1 して 0,1,2 で保存する
+                    # 元の値（0,1,2）
+                    # ランダムに 1 か 2 を足す
+                    # mod 3 する
+                    self._evaluation_table[index] = (self._evaluation_table[index] + random.randint(1,2)) % 3
 
             self._file_modified = True
 
