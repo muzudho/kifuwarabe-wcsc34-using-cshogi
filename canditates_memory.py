@@ -22,6 +22,11 @@ class CanditatesMemory():
             if text != "":
                 candidates_memory._move_set = set(text.split(' '))
 
+                # （読込直後の）中身の確認
+                for move in candidates_memory._move_set:
+                    print(f"[{datetime.datetime.now()}] (loaded) move:{move}", flush=True)
+
+
         return candidates_memory
 
 
@@ -40,14 +45,21 @@ class CanditatesMemory():
         return self._file_name
 
 
+    def delete(self):
+        """削除"""
+        print(f"[{datetime.datetime.now()}] {self.file_name} file delete...", flush=True)
+        os.remove(self.file_name)
+        print(f"[{datetime.datetime.now()}] {self.file_name} file deleted", flush=True)
+
+
     def save(self):
         """保存"""
         print(f"[{datetime.datetime.now()}] save {self.file_name} file ...", flush=True)
 
         # ファイルに出力する
         with open(self.file_name, 'w', encoding="utf-8") as f:
-            # 配列の要素の整数型を文字列型に変換して隙間を空けずに連結
-            text = ''.join(map(str,self._move_set))
+            # 配列の要素の整数型を文字列型に変換して空白区切りで連結
+            text = ' '.join(map(str,self._move_set))
             print(f"[{datetime.datetime.now()}] text created ...", flush=True)
 
             f.write(text)

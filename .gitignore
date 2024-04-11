@@ -1,6 +1,8 @@
 # (^q^)
 
-eval_1.txt
+n*_eval.txt
+n*_canditates_memory.txt
+n*_result.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
