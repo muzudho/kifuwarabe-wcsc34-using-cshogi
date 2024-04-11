@@ -1,5 +1,6 @@
 import cshogi
 import random
+import datetime
 from canditates_memory import CanditatesMemory
 from evaluation_table import EvaluationTable
 from feeling_luckey import choice_lottery
@@ -119,6 +120,7 @@ class Kifuwarabe():
         if self._result_file.exists():
             self._result_file.delete()
 
+        print(f"[{datetime.datetime.now()}] usinewgame end", flush=True)
 
     def position(self, cmd):
         """局面データ解析"""
