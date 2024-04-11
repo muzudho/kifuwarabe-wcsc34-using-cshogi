@@ -3,7 +3,10 @@ import datetime
 
 
 class CanditatesMemory():
-    """候補に挙がった手は全て覚えておく"""
+    """候補に挙がった手は全て覚えておく
+
+    勝ったら、全部忘れる
+    """
 
 
     @classmethod
@@ -43,6 +46,12 @@ class CanditatesMemory():
     def file_name(self):
         """ファイル名"""
         return self._file_name
+
+
+    @property
+    def move_set(self):
+        """指し手の集合"""
+        return self._move_set
 
 
     def delete(self):

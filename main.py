@@ -122,6 +122,7 @@ class Kifuwarabe():
 
         print(f"[{datetime.datetime.now()}] usinewgame end", flush=True)
 
+
     def position(self, cmd):
         """局面データ解析"""
         pos = cmd[1].split('moves')
@@ -191,23 +192,37 @@ class Kifuwarabe():
         if 2 <= len(cmd):
             # 負け
             if cmd[1] == 'lose':
+                # ［対局結果］　常に記憶する
                 self._result_file.save_lose()
+
+                # ［指した手］　勝っていないなら追加していく
                 self._canditates_memory.save()
 
             # 勝ち
             elif cmd[1] == 'win':
+                # ［対局結果］　常に記憶する
                 self._result_file.save_win()
-                self._canditates_memory.save()
+
+                # ［指した手］　勝ったら全部忘れる
+                self._canditates_memory.delete()
+
+                # ［評価値］　勝ったら記憶する
                 self._evaluation_table.save_evaluation_to_file()
 
             # 持将棋
             elif cmd[1] == 'draw':
+                # ［対局結果］　常に記憶する
                 self._result_file.save_draw()
+
+                # ［指した手］　勝っていないなら追加していく
                 self._canditates_memory.save()
 
             # その他
             else:
+                # ［対局結果］　常に記憶する
                 self._result_file.save_otherwise(cmd[1])
+
+                # ［指した手］　勝っていないなら追加していく
                 self._canditates_memory.save()
 
 

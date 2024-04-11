@@ -343,21 +343,19 @@ class EvaluationTable():
 
 
     def modify_table(self, result_text, canditates_memory):
-        """評価値テーブルの内容を適当に変更します"""
+        """指した手の評価値を適当に変更します。負けたときか、引き分けのときに限る"""
 
-        if result_text == 'lose':
-            count = self._table_size//100
-        elif result_text == 'draw':
-            count = self._table_size//1000
-        else:
-            count = 0
+        if result_text in ('lose', 'draw'):
+            for move_as_usi in canditates_memory.move_set():
+                index = self.get_evaluation_table_index_from_move_as_usi(move_as_usi)
 
-        for _i in range(0, count):
-            n = random.randint(0, self._table_size)
-            # -1,0,1 を保存するとマイナスの符号で文字数が多くなるので、+1 して 0,1,2 で保存する
-            self._evaluation_table[n] = random.randint(0,2)
+                # -1,0,1 を保存するとマイナスの符号で文字数が多くなるので、+1 して 0,1,2 で保存する
+                # 元の値（0,1,2）
+                # ランダムに 1 か 2 を足す
+                # mod 3 する
+                self._evaluation_table[index] = (self._evaluation_table[index] + random.randint(1,2)) % 3
 
-        self._file_modified = True
+            self._file_modified = True
 
 
     def save_evaluation_to_file(self):
