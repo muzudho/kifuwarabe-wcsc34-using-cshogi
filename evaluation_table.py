@@ -7,7 +7,8 @@ class EvaluationTable():
     """評価値テーブル"""
 
     def __init__(self, file_number):
-        self._eval_file_basename = f'n{file_number}_eval.txt'
+        self._file_number = file_number
+        self._file_name = f'n{file_number}_eval.txt'
         self._file_modified = False
 
         self._move_size = 8424
@@ -135,17 +136,21 @@ class EvaluationTable():
         """
 
 
-    def load_from_file_or_random_table(self, result_file):
+    def exists_file(self):
+        return os.path.isfile(self._file_name)
+
+
+    def load_from_file_or_random_table(self):
         """評価関数テーブルをファイルから読み込む。無ければランダム値の入った物を新規作成する"""
 
-        print(f"[{datetime.datetime.now()}] {self._eval_file_basename} file exists check ...", flush=True)
+        print(f"[{datetime.datetime.now()}] {self._file_name} file exists check ...", flush=True)
 
         # 評価関数テーブル・ファイルが存在しないとき
-        if not os.path.isfile(self._eval_file_basename):
+        if not self.exists_file():
 
-            # 結果ファイルは削除
-            if result_file.exists():
-                result_file.delete()
+            ## 結果ファイルは削除
+            #if result_file.exists():
+            #    result_file.delete()
 
             # ダミーデータを入れる。１分ほどかかる
             print(f"[{datetime.datetime.now()}] make random evaluation table in memory ...", flush=True)
@@ -159,7 +164,7 @@ class EvaluationTable():
 
         else:
             self.load_evaluation_from_file()
-            print(f"[{datetime.datetime.now()}] {self._eval_file_basename} file loaded", flush=True)
+            print(f"[{datetime.datetime.now()}] {self._file_name} file loaded", flush=True)
 
 
     def update_evaluation_table(self, canditates_memory, result_file):
@@ -172,7 +177,7 @@ class EvaluationTable():
             # 前回の対局で、負けるか、引き分けなら、内容を変えます
             if result_text in ('lose', 'draw'):
                 self.modify_table(result_text, canditates_memory)
-                print(f"[{datetime.datetime.now()}] {self._eval_file_basename} file updated", flush=True)
+                print(f"[{datetime.datetime.now()}] {self._file_name} file updated", flush=True)
 
 
     def get_evaluation_table_index_from_move_as_usi(self, move_as_usi):
@@ -362,10 +367,10 @@ class EvaluationTable():
         """保存する"""
 
         if self._file_modified:
-            print(f"[{datetime.datetime.now()}] save {self._eval_file_basename} file ...", flush=True)
+            print(f"[{datetime.datetime.now()}] save {self._file_name} file ...", flush=True)
 
             # ファイルに出力する
-            with open(self._eval_file_basename, 'w', encoding="utf-8") as f:
+            with open(self._file_name, 'w', encoding="utf-8") as f:
                 # 配列の要素の整数型を文字列型に変換して隙間を空けずに連結
                 text = ''.join(map(str,self._evaluation_table))
                 print(f"[{datetime.datetime.now()}] text created ...", flush=True)
@@ -374,21 +379,27 @@ class EvaluationTable():
 
             self._file_modified = False
 
-            print(f"[{datetime.datetime.now()}] {self._eval_file_basename} file saved", flush=True)
+            print(f"[{datetime.datetime.now()}] {self._file_name} file saved", flush=True)
 
         else:
-            print(f"[{datetime.datetime.now()}] {self._eval_file_basename} file not changed", flush=True)
+            print(f"[{datetime.datetime.now()}] {self._file_name} file not changed", flush=True)
 
 
     def load_evaluation_from_file(self):
         """読込む"""
 
         # ロードする。１分ほどかかる
-        print(f"[{datetime.datetime.now()}] read {self._eval_file_basename} file ...", flush=True)
+        print(f"[{datetime.datetime.now()}] read {self._file_name} file ...", flush=True)
 
-        with open(self._eval_file_basename, 'r', encoding="utf-8") as f:
-            text = f.read()
-            print(f"[{datetime.datetime.now()}] {self._eval_file_basename} read", flush=True)
+        try:
+            # ファイルの存在チェックを済ませておくこと
+            with open(self._file_name, 'r', encoding="utf-8") as f:
+                text = f.read()
+                print(f"[{datetime.datetime.now()}] {self._file_name} read", flush=True)
+
+        except FileNotFoundError as ex:
+            print(f"[evaluation table / load from file] [{self._file_name}] file error. {ex}")
+            raise
 
         # 隙間のないテキストを１文字ずつ分解
         tokens = list(text)

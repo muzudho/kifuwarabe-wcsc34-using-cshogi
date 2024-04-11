@@ -40,6 +40,7 @@ class ResultFile():
         try:
             """結果の読込"""
             print(f"[{datetime.datetime.now()}] {self.file_name} file read ...", flush=True)
+
             with open(self.file_name, 'r', encoding="utf-8") as f:
                 text = f.read()
 

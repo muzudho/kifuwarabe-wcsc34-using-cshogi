@@ -113,12 +113,12 @@ class Kifuwarabe():
 
         # 評価関数テーブルをファイルから読み込む。無ければランダム値の入った物を新規作成する
         self._evaluation_table = EvaluationTable(file_number=self._player_file_number)
-        self._evaluation_table.load_from_file_or_random_table(self._result_file)
+        self._evaluation_table.load_from_file_or_random_table()
         self._evaluation_table.update_evaluation_table(self._canditates_memory, self._result_file)
 
-        # 結果ファイルを削除
-        if self._result_file.exists():
-            self._result_file.delete()
+        ## 結果ファイルを削除
+        #if self._result_file.exists():
+        #    self._result_file.delete()
 
         print(f"[{datetime.datetime.now()}] usinewgame end", flush=True)
 

@@ -18,9 +18,15 @@ class CanditatesMemory():
         if os.path.isfile(candidates_memory.file_name):
             print(f"[{datetime.datetime.now()}] read {candidates_memory.file_name} file ...", flush=True)
 
-            with open(candidates_memory.file_name, 'r', encoding="utf-8") as f:
-                text = f.read().strip()
-                print(f"[{datetime.datetime.now()}] {candidates_memory.file_name} read", flush=True)
+            try:
+                with open(candidates_memory.file_name, 'r', encoding="utf-8") as f:
+                    text = f.read().strip()
+
+            except FileNotFoundError as ex:
+                print(f"[canditates memory / load from file] [{candidates_memory.file_name}] file error. {ex}")
+                raise
+
+            print(f"[{datetime.datetime.now()}] {candidates_memory.file_name} read", flush=True)
 
             if text != "":
                 candidates_memory._move_set = set(text.split(' '))
