@@ -1,234 +1,264 @@
 import cshogi
 import random
-import time
-from feeling_luckey import choice_lottery
+from canditates_memory import CanditatesMemory
 from evaluation_table import EvaluationTable
-from result_file import save_lose, save_win, save_draw, save_otherwise, exists_result_file, delete_result_file
+from feeling_luckey import choice_lottery
+from result_file import ResultFile
 
 
-board = cshogi.Board()
-"""盤"""
-
-evaluation_table = EvaluationTable(file_number=random.randint(1,6))
-"""評価値テーブル
-
-さいころに倣って６個
-"""
+class Kifuwarabe():
+    """きふわらべ"""
 
 
-def usi_loop():
-    """USIループ"""
-    while True:
+    def __init__(self):
+        """初期化"""
 
-        cmd = input().split(' ', 1)
-        """入力"""
+        # さいころに倣って６個
+        self._player_file_number = None
 
-        if cmd[0] == 'usi':
-            """USIエンジン握手"""
-            usi()
+        # 盤
+        self._board = cshogi.Board()
 
-        elif cmd[0] == 'isready':
-            """対局準備"""
-            isready()
+        # 候補に挙がった手は全て覚えておく
+        self._canditates_memory = None
 
-        elif cmd[0] == 'usinewgame':
-            """新しい対局"""
-            usinewgame()
+        # 評価値テーブル
+        self._evaluation_table = EvaluationTable(file_number=self._player_file_number)
 
-        elif cmd[0] == 'position':
-            """局面データ解析"""
-            position(cmd)
-
-        elif cmd[0] == 'go':
-            """思考開始～最善手返却"""
-            go()
-
-        elif cmd[0] == 'stop':
-            """中断"""
-            stop()
-
-        elif cmd[0] == 'gameover':
-            """対局終了"""
-            gameover(cmd)
-
-        elif cmd[0] == 'quit':
-            """アプリケーション終了"""
-            break
-
-        # 以下、独自拡張
-
-        elif cmd[0] == 'do':
-            """一手指す
-            example: ７六歩
-                code: do 7g7f
-            """
-            do(cmd)
-
-        elif cmd[0] == 'undo':
-            """一手戻す
-                code: undo
-            """
-            undo()
-
-        elif cmd[0] == 'lottery':
-            """くじ一覧"""
-            lottery()
+        # 結果ファイル（デフォルト）
+        self._result_file = None
 
 
-def usi():
-    """USIエンジン握手"""
-    print('id name KifuwarabeWCSC34')
-    print('usiok', flush=True)
+    def usi_loop(self):
+        """USIループ"""
+
+        while True:
+
+            # 入力
+            cmd = input().split(' ', 1)
+
+            # USIエンジン握手
+            if cmd[0] == 'usi':
+                self.usi()
+
+            # 対局準備
+            elif cmd[0] == 'isready':
+                self.isready()
+
+            # 新しい対局
+            elif cmd[0] == 'usinewgame':
+                self.usinewgame()
+
+            # 局面データ解析
+            elif cmd[0] == 'position':
+                self.position(cmd)
+
+            # 思考開始～最善手返却
+            elif cmd[0] == 'go':
+                self.go()
+
+            # 中断
+            elif cmd[0] == 'stop':
+                self.stop()
+
+            # 対局終了
+            elif cmd[0] == 'gameover':
+                self.gameover(cmd)
+
+            # アプリケーション終了
+            elif cmd[0] == 'quit':
+                break
+
+            # 以下、独自拡張
+
+            # 一手指す
+            # example: ７六歩
+            #       code: do 7g7f
+            elif cmd[0] == 'do':
+                self.do(cmd)
+
+            # 一手戻す
+            #       code: undo
+            elif cmd[0] == 'undo':
+                self.undo()
+
+            # くじ一覧
+            elif cmd[0] == 'lottery':
+                self.lottery()
 
 
-def isready():
-    """対局準備"""
-
-    # 評価関数テーブルをファイルから読み込む。無ければランダム値の入った物を新規作成する
-    evaluation_table.load_or_new_evaluation_table()
-
-    print('readyok', flush=True)
+    def usi(self):
+        """USIエンジン握手"""
+        print('id name KifuwarabeWCSC34')
+        print('usiok', flush=True)
 
 
-def usinewgame():
-    """新しい対局"""
-    if exists_result_file():
-        delete_result_file()
+    def isready(self):
+        """対局準備"""
+
+        # さいころに倣って６個
+        self._player_file_number = random.randint(1,6)
+
+        # 前回の対局の指し手の候補手の記憶
+        self._canditates_memory = CanditatesMemory.load_from_file(self._player_file_number)
+
+        # 結果ファイル（デフォルト）
+        self._result_file = ResultFile(self._player_file_number)
+
+        # 評価関数テーブルをファイルから読み込む。無ければランダム値の入った物を新規作成する
+        self._evaluation_table = EvaluationTable(file_number=self._player_file_number)
+        self._evaluation_table.load_or_new_evaluation_table(self._result_file)
+        self._evaluation_table.update_evaluation_table(self._canditates_memory, self._result_file)
+
+        print('readyok', flush=True)
 
 
-def position(cmd):
-    """局面データ解析"""
-    pos = cmd[1].split('moves')
-    position_detail(pos[0].strip(), pos[1].split() if len(pos) > 1 else [])
+    def usinewgame(self):
+        """新しい対局"""
+
+        # 指し手の候補手の記憶を初期化
+        self._canditates_memory = CanditatesMemory()
+
+        # 結果ファイルを削除
+        if self._result_file.exists():
+            self._result_file.delete()
 
 
-def position_detail(sfen, usi_moves):
-    """局面データ解析"""
-
-    if sfen == 'startpos':
-        """平手初期局面に変更"""
-        board.reset()
-
-    elif sfen[:5] == 'sfen ':
-        """指定局面に変更"""
-        board.set_sfen(sfen[5:])
-
-    for usi_move in usi_moves:
-        """棋譜再生"""
-        board.push_usi(usi_move)
+    def position(self, cmd):
+        """局面データ解析"""
+        pos = cmd[1].split('moves')
+        self.position_detail(pos[0].strip(), pos[1].split() if len(pos) > 1 else [])
 
 
-def go():
-    """思考開始～最善手返却"""
+    def position_detail(self, sfen, usi_moves):
+        """局面データ解析"""
 
-    if board.is_game_over():
-        """投了局面時"""
+        if sfen == 'startpos':
+            """平手初期局面に変更"""
+            self._board.reset()
 
-        # 投了
-        print(f'bestmove resign', flush=True)
-        return
+        elif sfen[:5] == 'sfen ':
+            """指定局面に変更"""
+            self._board.set_sfen(sfen[5:])
 
-    if board.is_nyugyoku():
-        """入玉宣言局面時"""
+        for usi_move in usi_moves:
+            """棋譜再生"""
+            self._board.push_usi(usi_move)
 
-        # 勝利宣言
-        print(f'bestmove win', flush=True)
-        return
 
-    # 一手詰めを詰める
-    if not board.is_check():
-        """自玉に王手がかかっていない時で"""
+    def go(self):
+        """思考開始～最善手返却"""
 
-        if (matemove := board.mate_move_in_1ply()):
-            """一手詰めの指し手があれば、それを取得"""
+        if self._board.is_game_over():
+            """投了局面時"""
 
-            best_move = cshogi.move_to_usi(matemove)
-            print('info score mate 1 pv {}'.format(best_move), flush=True)
-            print(f'bestmove {best_move}', flush=True)
+            # 投了
+            print(f'bestmove resign', flush=True)
             return
 
-    # くじを引く
-    best_move = choice_lottery(evaluation_table, list(board.legal_moves))
+        if self._board.is_nyugyoku():
+            """入玉宣言局面時"""
 
-    print(f"info depth 0 seldepth 0 time 1 nodes 0 score cp 0 string I'm feeling luckey")
-    print(f'bestmove {best_move}', flush=True)
+            # 勝利宣言
+            print(f'bestmove win', flush=True)
+            return
 
+        # 一手詰めを詰める
+        if not self._board.is_check():
+            """自玉に王手がかかっていない時で"""
 
-def stop():
-    """中断"""
-    print('bestmove resign', flush=True)
+            if (matemove := self._board.mate_move_in_1ply()):
+                """一手詰めの指し手があれば、それを取得"""
 
+                best_move = cshogi.move_to_usi(matemove)
+                print('info score mate 1 pv {}'.format(best_move), flush=True)
+                print(f'bestmove {best_move}', flush=True)
+                return
 
-def gameover(cmd):
-    """対局終了"""
+        # くじを引く
+        best_move = choice_lottery(self._evaluation_table, list(self._board.legal_moves), self._canditates_memory)
 
-    if 2 <= len(cmd):
-        # 負け
-        if cmd[1] == 'lose':
-            save_lose()
-
-        # 勝ち
-        elif cmd[1] == 'win':
-            save_win()
-            evaluation_table.save_evaluation_to_file()
-
-        # 持将棋
-        elif cmd[1] == 'draw':
-            save_draw()
-
-        # その他
-        else:
-            save_otherwise(cmd[1])
+        print(f"info depth 0 seldepth 0 time 1 nodes 0 score cp 0 string I'm feeling luckey")
+        print(f'bestmove {best_move}', flush=True)
 
 
-def do(cmd):
-    """一手指す
-    example: ７六歩
-        code: do 7g7f
-    """
-    board.push_usi(cmd[1])
+    def stop(self):
+        """中断"""
+        print('bestmove resign', flush=True)
 
 
-def undo():
-    """一手戻す
-        code: undo
-    """
-    board.pop()
+    def gameover(self, cmd):
+        """対局終了"""
+
+        if 2 <= len(cmd):
+            # 負け
+            if cmd[1] == 'lose':
+                self._result_file.save_lose()
+
+            # 勝ち
+            elif cmd[1] == 'win':
+                self._result_file.save_win()
+                self._evaluation_table.save_evaluation_to_file()
+
+            # 持将棋
+            elif cmd[1] == 'draw':
+                self._result_file.save_draw()
+
+            # その他
+            else:
+                self._result_file.save_otherwise(cmd[1])
 
 
-def lottery():
-    """くじ一覧"""
+    def do(self, cmd):
+        """一手指す
+        example: ７六歩
+            code: do 7g7f
+        """
+        self._board.push_usi(cmd[1])
 
-    print('くじ一覧：')
 
-    # USIプロトコルでの符号表記に変換
-    sorted_legal_move_list_as_usi = []
+    def undo(self):
+        """一手戻す
+            code: undo
+        """
+        self._board.pop()
 
-    for move in board.legal_moves:
-        sorted_legal_move_list_as_usi.append(cshogi.move_to_usi(move))
 
-    # ソート
-    sorted_legal_move_list_as_usi.sort()
+    def lottery(self):
+        """くじ一覧"""
 
-    # 候補手に評価値を付けた辞書を作成
-    move_score_dictionary = evaluation_table.make_move_score_dictionary(sorted_legal_move_list_as_usi)
+        print('くじ一覧：')
 
-    # 表示
-    number = 1
+        # USIプロトコルでの符号表記に変換
+        sorted_legal_move_list_as_usi = []
 
-    for move_a_as_usi in sorted_legal_move_list_as_usi:
+        for move in self._board.legal_moves:
+            sorted_legal_move_list_as_usi.append(cshogi.move_to_usi(move))
 
-        # 指し手の評価値
-        move_value = move_score_dictionary[move_a_as_usi]
+        # ソート
+        sorted_legal_move_list_as_usi.sort()
 
-        print(f'  ({number:3}) {move_a_as_usi:5} = {evaluation_table.get_evaluation_table_index_from_move_as_usi(move_a_as_usi):5} value:{move_value:3}')
-        number += 1
+        # 候補手に評価値を付けた辞書を作成
+        move_score_dictionary = self._evaluation_table.make_move_score_dictionary(sorted_legal_move_list_as_usi)
+
+        # 表示
+        number = 1
+
+        for move_a_as_usi in sorted_legal_move_list_as_usi:
+
+            # 指し手の評価値
+            move_value = move_score_dictionary[move_a_as_usi]
+
+            print(f'  ({number:3}) {move_a_as_usi:5} = {self._evaluation_table.get_evaluation_table_index_from_move_as_usi(move_a_as_usi):5} value:{move_value:3}')
+            number += 1
 
 
 if __name__ == '__main__':
     """コマンドから実行時"""
     try:
-        usi_loop()
+        kifuwarabe = Kifuwarabe()
+        kifuwarabe.usi_loop()
+
     except Exception as err:
         print(f"[unexpected error] {err=}, {type(err)=}")
         raise

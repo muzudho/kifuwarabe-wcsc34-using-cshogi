@@ -1,7 +1,6 @@
 import random
 import datetime
 import os
-from result_file import exists_result_file, read_result_file
 
 
 class EvaluationTable():
@@ -136,13 +135,18 @@ class EvaluationTable():
         """
 
 
-    def load_or_new_evaluation_table(self):
+    def load_or_new_evaluation_table(self, result_file):
         """評価関数テーブルをファイルから読み込む。無ければランダム値の入った物を新規作成する"""
 
         print(f"[{datetime.datetime.now()}] {self._eval_file_basename} file exists check ...", flush=True)
 
         # 評価関数テーブル・ファイルが存在しないとき
         if not os.path.isfile(self._eval_file_basename):
+
+            # 結果ファイルは削除
+            if result_file.exists():
+                result_file.delete()
+
             # ダミーデータを入れる。１分ほどかかる
             print(f"[{datetime.datetime.now()}] make random evaluation table in memory ...", flush=True)
 
@@ -155,16 +159,20 @@ class EvaluationTable():
 
         else:
             self.load_evaluation_from_file()
-
-            # 結果を見る。持将棋や、負けていれば、内容をランダムに変更してみる
-            if exists_result_file:
-                result_text = read_result_file()
-
-                # 前回の対局で、負けるか、引き分けなら、内容を変えます
-                if result_text in ('lose', 'draw'):
-                    self.modify_table(result_text)
-
             print(f"[{datetime.datetime.now()}] {self._eval_file_basename} file loaded", flush=True)
+
+
+    def update_evaluation_table(self, canditates_memory, result_file):
+        """結果ファイルを読み込んで、持将棋や、負けていれば、内容をランダムに変更してみる"""
+
+        if result_file.exists():
+            # 結果ファイルを読込
+            result_text = result_file.read()
+
+            # 前回の対局で、負けるか、引き分けなら、内容を変えます
+            if result_text in ('lose', 'draw'):
+                self.modify_table(result_text, canditates_memory)
+                print(f"[{datetime.datetime.now()}] {self._eval_file_basename} file updated", flush=True)
 
 
     def get_evaluation_table_index_from_move_as_usi(self, move_as_usi):
@@ -334,7 +342,7 @@ class EvaluationTable():
         return move_score_dictionary
 
 
-    def modify_table(self, result_text):
+    def modify_table(self, result_text, canditates_memory):
         """評価値テーブルの内容を適当に変更します"""
 
         if result_text == 'lose':
