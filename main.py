@@ -89,7 +89,7 @@ class Kifuwarabe():
 
             # くじ一覧
             elif cmd[0] == 'lottery':
-                self.lottery()
+                self.lottery(self._board)
 
 
     def usi(self):
@@ -186,7 +186,8 @@ class Kifuwarabe():
                 self._evaluation_table,
                 list(self._board.legal_moves),
                 self._canditates_memory,
-                self._ko_memory)
+                self._ko_memory,
+                self._board)
 
         # コウを更新
         self._ko_memory.enqueue(best_move)
@@ -255,27 +256,37 @@ class Kifuwarabe():
         self._board.pop()
 
 
-    def lottery(self):
+    def lottery(self, board):
         """くじ一覧"""
 
         print('くじ一覧：')
 
         # USIプロトコルでの符号表記に変換
-        sorted_legal_move_list_as_usi = []
+        sorted_legal_friend_move_list_as_usi = []
+        opponent_legal_move_list_as_usi = []
 
         for move in self._board.legal_moves:
-            sorted_legal_move_list_as_usi.append(cshogi.move_to_usi(move))
+            sorted_legal_friend_move_list_as_usi.append(cshogi.move_to_usi(move))
 
         # ソート
-        sorted_legal_move_list_as_usi.sort()
+        sorted_legal_friend_move_list_as_usi.sort()
+
+        # 相手が指せる手の一覧
+        board.push_pass()
+        for opponent_move in board.legal_moves:
+            opponent_legal_move_list_as_usi.append(cshogi.move_to_usi(opponent_move))
+
+        board.pop_pass()
 
         # 候補手に評価値を付けた辞書を作成
-        move_score_dictionary = self._evaluation_table.make_move_score_dictionary(sorted_legal_move_list_as_usi)
+        move_score_dictionary = self._evaluation_table.make_move_score_dictionary(
+                sorted_legal_friend_move_list_as_usi,
+                opponent_legal_move_list_as_usi)
 
         # 表示
         number = 1
 
-        for move_a_as_usi in sorted_legal_move_list_as_usi:
+        for move_a_as_usi in sorted_legal_friend_move_list_as_usi:
 
             # 指し手の評価値
             move_value = move_score_dictionary[move_a_as_usi]

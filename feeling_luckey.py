@@ -2,11 +2,12 @@ import cshogi
 import random
 
 
-def choice_lottery(evaluation_table, legal_move_list, canditates_memory, ko_memory):
+def choice_lottery(evaluation_table, legal_move_list, canditates_memory, ko_memory, board):
     """くじを引く"""
 
     # USIプロトコルでの符号表記に変換
-    sorted_legal_move_list_as_usi = []
+    sorted_friend_legal_move_list_as_usi = []
+    opponent_legal_move_list_as_usi = []
     ko_move_as_usi = ko_memory.get_head()
 
     for move in legal_move_list:
@@ -17,17 +18,26 @@ def choice_lottery(evaluation_table, legal_move_list, canditates_memory, ko_memo
             has_ko = True
             continue
 
-        sorted_legal_move_list_as_usi.append(move_as_usi)
+        sorted_friend_legal_move_list_as_usi.append(move_as_usi)
 
     # コウを省いて投了になるぐらいなら、コウを指す
-    if len(sorted_legal_move_list_as_usi) < 1 and has_ko:
-        sorted_legal_move_list_as_usi.append(ko_move_as_usi)
+    if len(sorted_friend_legal_move_list_as_usi) < 1 and has_ko:
+        sorted_friend_legal_move_list_as_usi.append(ko_move_as_usi)
 
     # ソート
-    sorted_legal_move_list_as_usi.sort()
+    sorted_friend_legal_move_list_as_usi.sort()
+
+    # 相手が指せる手の一覧
+    board.push_pass()
+    for opponent_move in board.legal_moves:
+        opponent_legal_move_list_as_usi.append(cshogi.move_to_usi(opponent_move))
+
+    board.pop_pass()
 
     # 候補手に評価値を付けた辞書を作成
-    move_score_dictionary = evaluation_table.make_move_score_dictionary(sorted_legal_move_list_as_usi)
+    move_score_dictionary = evaluation_table.make_move_score_dictionary(
+            sorted_friend_legal_move_list_as_usi,
+            opponent_legal_move_list_as_usi)
 
     # 候補に挙がった指し手は全て記憶しておく
     canditates_memory.union_dictionary(move_score_dictionary)
