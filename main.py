@@ -89,7 +89,7 @@ class Kifuwarabe():
 
             # くじ一覧
             elif cmd[0] == 'lottery':
-                self.lottery(self._board)
+                self.lottery()
 
 
     def usi(self):
@@ -256,37 +256,54 @@ class Kifuwarabe():
         self._board.pop()
 
 
-    def lottery(self, board):
+    def lottery(self):
         """くじ一覧"""
 
-        print('くじ一覧：')
-
         # USIプロトコルでの符号表記に変換
-        sorted_legal_friend_move_list_as_usi = []
-        opponent_legal_move_list_as_usi = []
+        sorted_friend_legal_move_list_as_usi = []
+        opponent_legal_move_set_as_usi = set()
 
         for move in self._board.legal_moves:
-            sorted_legal_friend_move_list_as_usi.append(cshogi.move_to_usi(move))
+            sorted_friend_legal_move_list_as_usi.append(cshogi.move_to_usi(move))
 
         # ソート
-        sorted_legal_friend_move_list_as_usi.sort()
+        sorted_friend_legal_move_list_as_usi.sort()
+
+        print('自分の合法手一覧：')
+        number = 1
+        for move_a_as_usi in sorted_friend_legal_move_list_as_usi:
+            print(f'  ({number:3}) {move_a_as_usi:5} = {self._evaluation_table.get_evaluation_table_index_from_move_as_usi(move_a_as_usi):5}')
+            number += 1
+
 
         # 相手が指せる手の一覧
-        board.push_pass()
-        for opponent_move in board.legal_moves:
-            opponent_legal_move_list_as_usi.append(cshogi.move_to_usi(opponent_move))
+        #
+        #   ヌルムーブをしたいが、 `self._board.push_pass()` が機能しなかったので、合法手を全部指してみることにする
+        #
+        for move_a_as_usi in sorted_friend_legal_move_list_as_usi:
+            self._board.push_usi(move_a_as_usi)
+            for opponent_move in self._board.legal_moves:
+                opponent_legal_move_set_as_usi.add(cshogi.move_to_usi(opponent_move))
 
-        board.pop_pass()
+            self._board.pop()
+
+        print('次のいくつもの局面の相手の合法手の集合：')
+        number = 1
+        for move_a_as_usi in opponent_legal_move_set_as_usi:
+            print(f'  ({number:3}) {move_a_as_usi:5} = {self._evaluation_table.get_evaluation_table_index_from_move_as_usi(move_a_as_usi):5}')
+            number += 1
+
 
         # 候補手に評価値を付けた辞書を作成
         move_score_dictionary = self._evaluation_table.make_move_score_dictionary(
-                sorted_legal_friend_move_list_as_usi,
-                opponent_legal_move_list_as_usi)
+                sorted_friend_legal_move_list_as_usi,
+                opponent_legal_move_set_as_usi)
 
         # 表示
+        print('くじ一覧：')
         number = 1
 
-        for move_a_as_usi in sorted_legal_friend_move_list_as_usi:
+        for move_a_as_usi in sorted_friend_legal_move_list_as_usi:
 
             # 指し手の評価値
             move_value = move_score_dictionary[move_a_as_usi]

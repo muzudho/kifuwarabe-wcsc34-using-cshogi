@@ -260,14 +260,14 @@ class EvaluationTable():
     def make_move_score_dictionary(
             self,
             sorted_friend_legal_move_list_as_usi,
-            opponent_legal_move_list_as_usi):
+            opponent_legal_move_set_as_usi):
         """指し手に評価値を付ける
 
         Parameters
         ----------
         sorted_friend_legal_move_list_as_usi : list
             USIプロトコルでの符号表記の指し手の配列。辞書順で昇順にソート済み
-        sorted_opponent_legal_move_list_as_usi : list
+        sorted_opponent_legal_move_set_as_usi : set
             相手の指し手
         """
 
@@ -284,7 +284,7 @@ class EvaluationTable():
                 sum_value += self.get_evaluation_value(move_a_as_usi, move_b_as_usi)
 
             # 自軍の駒Ａと、相手の駒Ｂ
-            for move_b_as_usi in opponent_legal_move_list_as_usi:
+            for move_b_as_usi in opponent_legal_move_set_as_usi:
                 sum_value += self.get_evaluation_value(move_a_as_usi, move_b_as_usi)
 
             move_score_dictionary[move_a_as_usi] = sum_value
