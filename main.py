@@ -89,7 +89,7 @@ class Kifuwarabe():
 
             # くじ一覧
             elif cmd[0] == 'lottery':
-                self.lottery()
+                self.lottery(self._board)
 
 
     def usi(self):
@@ -121,7 +121,7 @@ class Kifuwarabe():
         # 評価関数テーブルをファイルから読み込む。無ければランダム値の入った物を新規作成する
         self._evaluation_table = EvaluationTable(file_number=self._player_file_number)
         self._evaluation_table.load_from_file_or_random_table()
-        self._evaluation_table.update_evaluation_table(self._canditates_memory, self._result_file)
+        self._evaluation_table.update_evaluation_table(self._canditates_memory, self._result_file, self._board)
 
         ## 結果ファイルを削除
         #if self._result_file.exists():
@@ -186,7 +186,8 @@ class Kifuwarabe():
                 self._evaluation_table,
                 list(self._board.legal_moves),
                 self._canditates_memory,
-                self._ko_memory)
+                self._ko_memory,
+                self._board)
 
         # コウを更新
         self._ko_memory.enqueue(best_move)
@@ -255,7 +256,7 @@ class Kifuwarabe():
         self._board.pop()
 
 
-    def lottery(self):
+    def lottery(self, board):
         """くじ一覧"""
 
         print('くじ一覧：')
@@ -270,7 +271,9 @@ class Kifuwarabe():
         sorted_legal_move_list_as_usi.sort()
 
         # 候補手に評価値を付けた辞書を作成
-        move_score_dictionary = self._evaluation_table.make_move_score_dictionary(sorted_legal_move_list_as_usi)
+        move_score_dictionary = self._evaluation_table.make_move_score_dictionary(
+                sorted_legal_move_list_as_usi,
+                self._board)
 
         # 表示
         number = 1
@@ -280,7 +283,7 @@ class Kifuwarabe():
             # 指し手の評価値
             move_value = move_score_dictionary[move_a_as_usi]
 
-            print(f'  ({number:3}) {move_a_as_usi:5} = {self._evaluation_table.get_evaluation_table_index_from_move_as_usi(move_a_as_usi):5} value:{move_value:3}')
+            print(f'  ({number:3}) {move_a_as_usi:5} = {self._evaluation_table.get_evaluation_table_index_from_move(board.move_from_usi(move_a_as_usi)):5} value:{move_value:3}')
             number += 1
 
 

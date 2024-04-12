@@ -1,3 +1,4 @@
+import cshogi
 import random
 import datetime
 import os
@@ -167,7 +168,7 @@ class EvaluationTable():
             print(f"[{datetime.datetime.now()}] {self._file_name} file loaded", flush=True)
 
 
-    def update_evaluation_table(self, canditates_memory, result_file):
+    def update_evaluation_table(self, canditates_memory, result_file, board):
         """結果ファイルを読み込んで、持将棋や、負けていれば、内容をランダムに変更してみる"""
 
         if result_file.exists():
@@ -176,11 +177,11 @@ class EvaluationTable():
 
             # 前回の対局で、負けるか、引き分けなら、内容を変えます
             if result_text in ('lose', 'draw'):
-                self.modify_table(result_text, canditates_memory)
+                self.modify_table(result_text, canditates_memory, board)
                 print(f"[{datetime.datetime.now()}] {self._file_name} file updated", flush=True)
 
 
-    def get_evaluation_table_index_from_move_as_usi(self, move_as_usi):
+    def get_evaluation_table_index_from_move(self, move):
         """USIの指し手の符号を、評価値テーブルのインデックスへ変換します
 
         Parameters
@@ -188,6 +189,8 @@ class EvaluationTable():
         move_as_usi : str
             "7g7f" や "3d3c+"、 "R*5e" のような文字列を想定。 "resign" のような文字列は想定外
         """
+
+        move_as_usi = cshogi.move_to_usi(move)
 
         # 移動元
         src_str = move_as_usi[0: 2]
@@ -295,15 +298,15 @@ class EvaluationTable():
         return (2 * 5 * 9 * src_num) + (2 * dst_num) + pro_num
 
 
-    def get_evaluation_index(self, move_a_as_usi, move_b_as_usi):
+    def get_evaluation_index(self, move_a, move_b):
         """指し手２つの組み合わせインデックス"""
 
         # 同じ指し手を比較したら 0 とする（総当たりの二重ループとかでここを通る）
-        if move_a_as_usi == move_b_as_usi:
+        if move_a == move_b:
             return 0
 
-        index_a = self.get_evaluation_table_index_from_move_as_usi(move_a_as_usi)
-        index_b = self.get_evaluation_table_index_from_move_as_usi(move_b_as_usi)
+        index_a = self.get_evaluation_table_index_from_move(move_a)
+        index_b = self.get_evaluation_table_index_from_move(move_b)
 
         move_indexes = [index_a, index_b]
         move_indexes.sort()
@@ -320,49 +323,56 @@ class EvaluationTable():
         return index
 
 
-    def get_evaluation_value(self, move_a_as_usi, move_b_as_usi):
+    def get_evaluation_value(self, move_a, move_b):
         """両方残すなら 0点、インデックスが小さい方を残すなら -1点、インデックスが大きい方を残すなら +1点"""
 
-        index = self.get_evaluation_index(move_a_as_usi, move_b_as_usi)
-
+        index = self.get_evaluation_index(
+                move_a,
+                move_b)
 
         #print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} index:{index}", flush=True)
         # 0,1,2 が保存されているので、 -1 すると、 -1,0,1 になる。マイナスの符号が付くと文字数が多くなるのでこうしている
         return self._evaluation_table[index] - 1
 
 
-    def make_move_score_dictionary(self, sorted_legal_move_list_as_usi):
+    def make_move_score_dictionary(self, sorted_legal_move_list_as_usi, board):
         """指し手に評価値を付ける
 
         Parameters
         ----------
         sorted_legal_move_list_as_usi : list
-            USIプロトコルでの符号表記の指し手の配列。辞書順で昇順にソート済み
+            USIプロトコルでの符号表記の自分の指し手の配列。辞書順で昇順にソート済み
         """
 
         # 指し手に評価値を付ける
         move_score_dictionary = {}
 
+        # 自分の指し手Ａ
         for move_a_as_usi in sorted_legal_move_list_as_usi:
 
             # 総当たりで評価値を計算
             sum_value = 0
 
+            # 自分の指し手Ｂ
             for move_b_as_usi in sorted_legal_move_list_as_usi:
-                sum_value += self.get_evaluation_value(move_a_as_usi, move_b_as_usi)
+                sum_value += self.get_evaluation_value(
+                        board.move_from_usi(move_a_as_usi),
+                        board.move_from_usi(move_b_as_usi))
 
             move_score_dictionary[move_a_as_usi] = sum_value
 
         return move_score_dictionary
 
 
-    def modify_table(self, result_text, canditates_memory):
+    def modify_table(self, result_text, canditates_memory, board):
         """指した手の評価値を適当に変更します。負けたときか、引き分けのときに限る"""
 
         if result_text in ('lose', 'draw'):
             for move_a_as_usi in canditates_memory.move_set:
                 for move_b_as_usi in canditates_memory.move_set:
-                    index = self.get_evaluation_index(move_a_as_usi, move_b_as_usi)
+                    index = self.get_evaluation_index(
+                            board.move_from_usi(move_a_as_usi),
+                            board.move_from_usi(move_b_as_usi))
 
                     # -1,0,1 を保存するとマイナスの符号で文字数が多くなるので、+1 して 0,1,2 で保存する
                     # 元の値（0,1,2）
