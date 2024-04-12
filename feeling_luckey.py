@@ -2,14 +2,26 @@ import cshogi
 import random
 
 
-def choice_lottery(evaluation_table, legal_move_list, canditates_memory):
+def choice_lottery(evaluation_table, legal_move_list, canditates_memory, ko_memory):
     """くじを引く"""
 
     # USIプロトコルでの符号表記に変換
     sorted_legal_move_list_as_usi = []
+    ko_move_as_usi = ko_memory.get_head()
 
     for move in legal_move_list:
-        sorted_legal_move_list_as_usi.append(cshogi.move_to_usi(move))
+        move_as_usi = cshogi.move_to_usi(move)
+
+        # コウならスキップする
+        if move_as_usi == ko_move_as_usi:
+            has_ko = True
+            continue
+
+        sorted_legal_move_list_as_usi.append(move_as_usi)
+
+    # コウを省いて投了になるぐらいなら、コウを指す
+    if len(sorted_legal_move_list_as_usi) < 1 and has_ko:
+        sorted_legal_move_list_as_usi.append(ko_move_as_usi)
 
     # ソート
     sorted_legal_move_list_as_usi.sort()

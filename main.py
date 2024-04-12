@@ -4,6 +4,7 @@ import datetime
 from canditates_memory import CanditatesMemory
 from evaluation_table import EvaluationTable
 from feeling_luckey import choice_lottery
+from ko_memory import KoMemory
 from result_file import ResultFile
 
 
@@ -25,6 +26,9 @@ class Kifuwarabe():
 
         # 評価値テーブル
         self._evaluation_table = None
+
+        # コウの記憶
+        self._ko_memory = None
 
         # 結果ファイル（デフォルト）
         self._result_file = None
@@ -108,6 +112,9 @@ class Kifuwarabe():
         # 前回の対局の指し手の候補手の記憶
         self._canditates_memory = CanditatesMemory.load_from_file(self._player_file_number)
 
+        # コウの記録
+        self._ko_memory = KoMemory()
+
         # 結果ファイル（デフォルト）
         self._result_file = ResultFile(self._player_file_number)
 
@@ -175,7 +182,14 @@ class Kifuwarabe():
                 return
 
         # くじを引く
-        best_move = choice_lottery(self._evaluation_table, list(self._board.legal_moves), self._canditates_memory)
+        best_move = choice_lottery(
+                self._evaluation_table,
+                list(self._board.legal_moves),
+                self._canditates_memory,
+                self._ko_memory)
+
+        # コウを更新
+        self._ko_memory.enqueue(best_move)
 
         print(f"info depth 0 seldepth 0 time 1 nodes 0 score cp 0 string I'm feeling luckey")
         print(f'bestmove {best_move}', flush=True)
