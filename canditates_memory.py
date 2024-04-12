@@ -117,3 +117,28 @@ class CanditatesMemory():
         ## 中身の確認
         #for move in self._move_set:
         #    print(f"[{datetime.datetime.now()}] (after) move:{move}", flush=True)
+
+    def union_set(self, move_set):
+        before_size = len(self._move_set)
+        print(f"[{datetime.datetime.now()}] (before size:{before_size}) merge candidates moves...", flush=True)
+
+        ## （変更前の）中身の確認
+        #for move in self._move_set:
+        #    print(f"[{datetime.datetime.now()}] (before) move:{move}", flush=True)
+
+        ## 中身の確認
+        #for move in move_score_dictionary.keys():
+        #    print(f"[{datetime.datetime.now()}] (input) move:{move}", flush=True)
+
+        # 和集合
+        self._move_set = self._move_set.union(move_set)
+        after_size = len(self._move_set)
+
+        # 変わってないかも知らんけど
+        self._file_modified = before_size != after_size
+
+        print(f"[{datetime.datetime.now()}] (after size:{after_size}) candidates moves merged", flush=True)
+
+        ## 中身の確認
+        #for move in self._move_set:
+        #    print(f"[{datetime.datetime.now()}] (after) move:{move}", flush=True)

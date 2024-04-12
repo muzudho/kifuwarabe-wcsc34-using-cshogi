@@ -45,6 +45,7 @@ def choice_lottery(evaluation_table, legal_move_list, canditates_memory, ko_memo
 
     # 候補に挙がった指し手は全て記憶しておく
     canditates_memory.union_dictionary(move_score_dictionary)
+    canditates_memory.union_set(opponent_legal_move_set_as_usi)
 
     # 一番高い評価値を探す。評価値は -593～593 程度を想定
     best_score = -1000
