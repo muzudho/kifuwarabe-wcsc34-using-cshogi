@@ -1,6 +1,8 @@
+import cshogi
+import os
 import random
 import datetime
-import os
+from move import Move
 
 
 class EvaluationTable():
@@ -114,6 +116,8 @@ class EvaluationTable():
         move_as_usi : str
             "7g7f" や "3d3c+"、 "R*5e" のような文字列を想定。 "resign" のような文字列は想定外
         """
+
+        move_obj = Move(move_as_usi)
 
         # 移動元
         src_str = move_as_usi[0: 2]
@@ -260,7 +264,8 @@ class EvaluationTable():
     def make_move_score_dictionary(
             self,
             sorted_friend_legal_move_list_as_usi,
-            opponent_legal_move_set_as_usi):
+            opponent_legal_move_set_as_usi,
+            turn):
         """指し手に評価値を付ける
 
         Parameters
@@ -269,6 +274,8 @@ class EvaluationTable():
             USIプロトコルでの符号表記の指し手の配列。辞書順で昇順にソート済み
         sorted_opponent_legal_move_set_as_usi : set
             相手の指し手
+        turn
+            手番
         """
 
         # 指し手に評価値を付ける
@@ -276,15 +283,29 @@ class EvaluationTable():
 
         for move_a_as_usi in sorted_friend_legal_move_list_as_usi:
 
+            # TODO 後手なら、指し手の先後をひっくり返す
+            if turn == cshogi.WHITE:
+                pass
+
             # 総当たりで評価値を計算
             sum_value = 0
 
             # 自軍の駒Ａと、自軍の駒Ｂ
             for move_b_as_usi in sorted_friend_legal_move_list_as_usi:
+
+                # TODO 後手なら、指し手の先後をひっくり返す
+                if turn == cshogi.WHITE:
+                    pass
+
                 sum_value += self.get_evaluation_value(move_a_as_usi, move_b_as_usi)
 
             # 自軍の駒Ａと、相手の駒Ｂ
             for move_b_as_usi in opponent_legal_move_set_as_usi:
+
+                # TODO 後手なら、指し手の先後をひっくり返す
+                if turn == cshogi.WHITE:
+                    pass
+
                 sum_value += self.get_evaluation_value(move_a_as_usi, move_b_as_usi)
 
             move_score_dictionary[move_a_as_usi] = sum_value

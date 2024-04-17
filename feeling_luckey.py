@@ -2,7 +2,12 @@ import cshogi
 import random
 
 
-def choice_lottery(evaluation_table, legal_move_list, canditates_memory, ko_memory, board):
+def choice_lottery(
+        evaluation_table,
+        legal_move_list,
+        canditates_memory,
+        ko_memory,
+        board):
     """くじを引く"""
 
     # USIプロトコルでの符号表記に変換
@@ -41,7 +46,8 @@ def choice_lottery(evaluation_table, legal_move_list, canditates_memory, ko_memo
     # 候補手に評価値を付けた辞書を作成
     move_score_dictionary = evaluation_table.make_move_score_dictionary(
             sorted_friend_legal_move_list_as_usi,
-            opponent_legal_move_set_as_usi)
+            opponent_legal_move_set_as_usi,
+            board.turn)
 
     # 候補に挙がった指し手は全て記憶しておく
     canditates_memory.union_dictionary(move_score_dictionary)
