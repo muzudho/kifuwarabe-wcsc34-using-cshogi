@@ -33,7 +33,7 @@ class Kifuwarabe():
         # 結果ファイル（デフォルト）
         self._result_file = None
 
-        # 自分の手番（ダミー値）
+        # 自分の手番（初期値はダミー値）
         self._my_turn = cshogi.BLACK
 
 
@@ -148,17 +148,17 @@ class Kifuwarabe():
         # 平手初期局面に変更
         if sfen_text == 'startpos':
             self._board.reset()
-            self._my_turn = self._board.turn
 
         # 指定局面に変更
         elif sfen_text[:5] == 'sfen ':
             self._board.set_sfen(sfen_text[5:])
-            self._my_turn = self._board.turn
 
         # 棋譜再生
         for move_as_usi in moves_text_as_usi:
             self._board.push_usi(move_as_usi)
 
+        # 局面の手番を、自分の手番とする
+        self._my_turn = self._board.turn
 
     def go(self):
         """思考開始～最善手返却"""

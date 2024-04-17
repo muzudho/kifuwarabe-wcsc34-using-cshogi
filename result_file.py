@@ -1,6 +1,7 @@
 import cshogi
 import os
 import datetime
+from turn import Turn
 
 
 class ResultFile():
@@ -64,13 +65,7 @@ class ResultFile():
     def save_lose(self, my_turn):
         """負け"""
 
-        if my_turn == cshogi.BLACK:
-            turn_text = 'black'
-        elif my_turn == cshogi.WHITE:
-            turn_text = 'white'
-        else:
-            raise ValueError(f"failed to my turn: {my_turn}")
-
+        turn_text = Turn.to_string(my_turn)
         print(f"あ～あ、 {turn_text} 番で負けたぜ（＞＿＜）", flush=True)
 
         # ファイルに出力する
@@ -83,13 +78,7 @@ class ResultFile():
     def save_win(self, my_turn):
         """勝ち"""
 
-        if my_turn == cshogi.BLACK:
-            turn_text = 'black'
-        elif my_turn == cshogi.WHITE:
-            turn_text = 'white'
-        else:
-            raise ValueError(f"failed to my turn: {my_turn}")
-
+        turn_text = Turn.to_string(my_turn)
         print(f"やったぜ {turn_text} 番で勝ったぜ（＾ｑ＾）", flush=True)
 
         # ファイルに出力する
@@ -102,13 +91,7 @@ class ResultFile():
     def save_draw(self, my_turn):
         """持将棋"""
 
-        if my_turn == cshogi.BLACK:
-            turn_text = 'black'
-        elif my_turn == cshogi.WHITE:
-            turn_text = 'white'
-        else:
-            raise ValueError(f"failed to my turn: {my_turn}")
-
+        turn_text = Turn.to_string(my_turn)
         print(f"持将棋か～（ー＿ー） turn: {turn_text}", flush=True)
 
         # ファイルに出力する
@@ -121,13 +104,7 @@ class ResultFile():
     def save_otherwise(self, result_text, my_turn):
         """予期しない結果"""
 
-        if my_turn == cshogi.BLACK:
-            turn_text = 'black'
-        elif my_turn == cshogi.WHITE:
-            turn_text = 'white'
-        else:
-            raise ValueError(f"failed to my turn: {my_turn}")
-
+        turn_text = Turn.to_string(my_turn)
         print(f"なんだろな（・＿・）？　'{result_text}', turn: '{turn_text}'", flush=True)
 
         # ファイルに出力する
