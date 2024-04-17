@@ -33,6 +33,9 @@ class Kifuwarabe():
         # 結果ファイル（デフォルト）
         self._result_file = None
 
+        # 自分の手番（ダミー値）
+        self._my_turn = cshogi.BLACK
+
 
     def usi_loop(self):
         """USIループ"""
@@ -133,23 +136,28 @@ class Kifuwarabe():
     def position(self, cmd):
         """局面データ解析"""
         pos = cmd[1].split('moves')
-        self.position_detail(pos[0].strip(), pos[1].split() if len(pos) > 1 else [])
+        sfen_text = pos[0].strip()
+        # 区切りは半角空白１文字とします
+        moves_text = (pos[1].split(' ') if len(pos) > 1 else [])
+        self.position_detail(sfen_text, moves_text)
 
 
-    def position_detail(self, sfen, usi_moves):
+    def position_detail(self, sfen_text, moves_text_as_usi):
         """局面データ解析"""
 
-        if sfen == 'startpos':
-            """平手初期局面に変更"""
+        # 平手初期局面に変更
+        if sfen_text == 'startpos':
             self._board.reset()
+            self._my_turn = self._board.turn
 
-        elif sfen[:5] == 'sfen ':
-            """指定局面に変更"""
-            self._board.set_sfen(sfen[5:])
+        # 指定局面に変更
+        elif sfen_text[:5] == 'sfen ':
+            self._board.set_sfen(sfen_text[5:])
+            self._my_turn = self._board.turn
 
-        for usi_move in usi_moves:
-            """棋譜再生"""
-            self._board.push_usi(usi_move)
+        # 棋譜再生
+        for move_as_usi in moves_text_as_usi:
+            self._board.push_usi(move_as_usi)
 
 
     def go(self):
@@ -208,7 +216,7 @@ class Kifuwarabe():
             # 負け
             if cmd[1] == 'lose':
                 # ［対局結果］　常に記憶する
-                self._result_file.save_lose()
+                self._result_file.save_lose(self._my_turn)
 
                 # ［指した手］　勝っていないなら追加していく
                 self._canditates_memory.save()
@@ -216,7 +224,7 @@ class Kifuwarabe():
             # 勝ち
             elif cmd[1] == 'win':
                 # ［対局結果］　常に記憶する
-                self._result_file.save_win()
+                self._result_file.save_win(self._my_turn)
 
                 # ［指した手］　勝ったら全部忘れる
                 self._canditates_memory.delete()
@@ -227,7 +235,7 @@ class Kifuwarabe():
             # 持将棋
             elif cmd[1] == 'draw':
                 # ［対局結果］　常に記憶する
-                self._result_file.save_draw()
+                self._result_file.save_draw(self._my_turn)
 
                 # ［指した手］　勝っていないなら追加していく
                 self._canditates_memory.save()
@@ -235,7 +243,7 @@ class Kifuwarabe():
             # その他
             else:
                 # ［対局結果］　常に記憶する
-                self._result_file.save_otherwise(cmd[1])
+                self._result_file.save_otherwise(cmd[1], self._my_turn)
 
                 # ［指した手］　勝っていないなら追加していく
                 self._canditates_memory.save()
@@ -272,7 +280,8 @@ class Kifuwarabe():
         print('自分の合法手一覧：')
         number = 1
         for move_a_as_usi in sorted_friend_legal_move_list_as_usi:
-            print(f'  ({number:3}) {move_a_as_usi:5} = {self._evaluation_table.get_evaluation_table_index_from_move_as_usi(move_a_as_usi):5}')
+            evaluation_table_index = self._evaluation_table.get_evaluation_table_index_from_move_as_usi(move_a_as_usi, self._board.turn)
+            print(f'  ({number:3}) {move_a_as_usi:5} = {evaluation_table_index:5}')
             number += 1
 
 
@@ -290,7 +299,8 @@ class Kifuwarabe():
         print('次のいくつもの局面の相手の合法手の集合：')
         number = 1
         for move_a_as_usi in opponent_legal_move_set_as_usi:
-            print(f'  ({number:3}) {move_a_as_usi:5} = {self._evaluation_table.get_evaluation_table_index_from_move_as_usi(move_a_as_usi):5}')
+            evaluation_table_index = self._evaluation_table.get_evaluation_table_index_from_move_as_usi(move_a_as_usi, self._board.turn)
+            print(f'  ({number:3}) {move_a_as_usi:5} = {evaluation_table_index:5}')
             number += 1
 
 
@@ -309,7 +319,8 @@ class Kifuwarabe():
             # 指し手の評価値
             move_value = move_score_dictionary[move_a_as_usi]
 
-            print(f'  ({number:3}) {move_a_as_usi:5} = {self._evaluation_table.get_evaluation_table_index_from_move_as_usi(move_a_as_usi):5} value:{move_value:3}')
+            evaluation_table_index = self._evaluation_table.get_evaluation_table_index_from_move_as_usi(move_a_as_usi, self._board.turn)
+            print(f'  ({number:3}) {move_a_as_usi:5} = {evaluation_table_index:5} value:{move_value:3}')
             number += 1
 
 

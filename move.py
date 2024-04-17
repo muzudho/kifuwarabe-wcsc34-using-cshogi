@@ -177,4 +177,10 @@ class Move():
         else:
             pro_num = 0
 
-        return (2 * 5 * 9 * src_num) + (2 * dst_num) + pro_num
+        self._evaluation_table_index = (2 * 5 * 9 * src_num) + (2 * dst_num) + pro_num
+
+
+    @property
+    def evaluation_table_index(self):
+        """評価値テーブルのセルのインデックス"""
+        return self._evaluation_table_index

@@ -1,3 +1,4 @@
+import cshogi
 import os
 import datetime
 
@@ -60,46 +61,78 @@ class ResultFile():
             return ""
 
 
-    def save_lose(self):
+    def save_lose(self, my_turn):
         """負け"""
-        print("あ～あ、負けたぜ（＞＿＜）", flush=True)
+
+        if my_turn == cshogi.BLACK:
+            turn_text = 'black'
+        elif my_turn == cshogi.WHITE:
+            turn_text = 'white'
+        else:
+            raise ValueError(f"failed to my turn: {my_turn}")
+
+        print(f"あ～あ、 {turn_text} 番で負けたぜ（＞＿＜）", flush=True)
 
         # ファイルに出力する
         print(f"[{datetime.datetime.now()}] {self.file_name} file save ...", flush=True)
         with open(self.file_name, 'w', encoding="utf-8") as f:
-            f.write("lose")
+            f.write(f"lose {turn_text}")
 
         print(f"[{datetime.datetime.now()}] {self.file_name} file saved", flush=True)
 
-    def save_win(self):
+    def save_win(self, my_turn):
         """勝ち"""
-        print("やったぜ　勝ったぜ（＾ｑ＾）", flush=True)
+
+        if my_turn == cshogi.BLACK:
+            turn_text = 'black'
+        elif my_turn == cshogi.WHITE:
+            turn_text = 'white'
+        else:
+            raise ValueError(f"failed to my turn: {my_turn}")
+
+        print(f"やったぜ {turn_text} 番で勝ったぜ（＾ｑ＾）", flush=True)
 
         # ファイルに出力する
         print(f"[{datetime.datetime.now()}] {self.file_name} file save ...", flush=True)
         with open(self.file_name, 'w', encoding="utf-8") as f:
-            f.write("win")
+            f.write(f"win {turn_text}")
 
         print(f"[{datetime.datetime.now()}] {self.file_name} file saved", flush=True)
 
-    def save_draw(self):
+    def save_draw(self, my_turn):
         """持将棋"""
-        print("持将棋か～（ー＿ー）", flush=True)
+
+        if my_turn == cshogi.BLACK:
+            turn_text = 'black'
+        elif my_turn == cshogi.WHITE:
+            turn_text = 'white'
+        else:
+            raise ValueError(f"failed to my turn: {my_turn}")
+
+        print(f"持将棋か～（ー＿ー） turn: {turn_text}", flush=True)
 
         # ファイルに出力する
         print(f"[{datetime.datetime.now()}] {self.file_name} file save ...", flush=True)
         with open(self.file_name, 'w', encoding="utf-8") as f:
-            f.write("draw")
+            f.write(f"draw {turn_text}")
 
         print(f"[{datetime.datetime.now()}] {self.file_name} file saved", flush=True)
 
-    def save_otherwise(self, result_text):
+    def save_otherwise(self, result_text, my_turn):
         """予期しない結果"""
-        print(f"なんだろな（・＿・）？　{result_text}", flush=True)
+
+        if my_turn == cshogi.BLACK:
+            turn_text = 'black'
+        elif my_turn == cshogi.WHITE:
+            turn_text = 'white'
+        else:
+            raise ValueError(f"failed to my turn: {my_turn}")
+
+        print(f"なんだろな（・＿・）？　'{result_text}', turn: '{turn_text}'", flush=True)
 
         # ファイルに出力する
         print(f"[{datetime.datetime.now()}] {self.file_name} file save ...", flush=True)
         with open(self.file_name, 'w', encoding="utf-8") as f:
-            f.write(result_text)
+            f.write(f"{result_text} {turn_text}")
 
         print(f"[{datetime.datetime.now()}] {self.file_name} file saved", flush=True)

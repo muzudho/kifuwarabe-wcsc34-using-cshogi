@@ -100,15 +100,24 @@ class EvaluationTable():
 
         if result_file.exists():
             # 結果ファイルを読込
-            result_text = result_file.read()
+            tokens = result_file.read().split(' ')
+            result_text = tokens[0]
+            turn_text = tokens[1]
+
+            if turn_text == 'black':
+                turn = cshogi.BLACK
+            elif turn_text == 'white':
+                turn = cshogi.WHITE
+            else:
+                raise ValueError(f"failed to turn: '{turn_text}'")
 
             # 前回の対局で、負けるか、引き分けなら、内容を変えます
             if result_text in ('lose', 'draw'):
-                self.modify_table(result_text, canditates_memory)
+                self.modify_table(result_text, canditates_memory, turn)
                 print(f"[{datetime.datetime.now()}] {self._file_name} file updated", flush=True)
 
 
-    def get_evaluation_table_index_from_move_as_usi(self, move_as_usi):
+    def get_evaluation_table_index_from_move_as_usi(self, move_as_usi, turn):
         """USIの指し手の符号を、評価値テーブルのインデックスへ変換します
 
         Parameters
@@ -119,121 +128,24 @@ class EvaluationTable():
 
         move_obj = Move(move_as_usi)
 
-        # 移動元
-        src_str = move_as_usi[0: 2]
-
-        # 移動先
-        dst_str = move_as_usi[2: 4]
-
-        # 移動元
-        if src_str == 'R*':
-            src_num = 45
-        elif src_str == 'B*':
-            src_num = 46
-        elif src_str == 'G*':
-            src_num = 47
-        elif src_str == 'S*':
-            src_num = 48
-        elif src_str == 'N*':
-            src_num = 49
-        elif src_str == 'L*':
-            src_num = 50
-        elif src_str == 'P*':
-            src_num = 51
-        else:
-
-            file_str = src_str[0]
-            if file_str in ('1', '9'):
-                src_num = 0
-            elif file_str in ('2', '8'):
-                src_num = 9
-            elif file_str in ('3', '7'):
-                src_num = 18
-            elif file_str in ('4', '6'):
-                src_num = 27
-            elif file_str == "5":
-                src_num = 36
-            else:
-                raise Exception(f"src file error: '{file_str}' in '{move_as_usi}'")
-
-            rank_str = src_str[1]
-            if rank_str == 'a':
-                src_num += 0
-            elif rank_str == 'b':
-                src_num += 1
-            elif rank_str == 'c':
-                src_num += 2
-            elif rank_str == 'd':
-                src_num += 3
-            elif rank_str == 'e':
-                src_num += 4
-            elif rank_str == 'f':
-                src_num += 5
-            elif rank_str == 'g':
-                src_num += 6
-            elif rank_str == 'h':
-                src_num += 7
-            elif rank_str == 'i':
-                src_num += 8
-            else:
-                raise Exception(f"src rank error: '{rank_str}' in '{move_as_usi}'")
-
-        # 移動先
-        file_str = dst_str[0]
-
-        if file_str in ('1', '9'):
-            dst_num = 0
-        elif file_str in ('2', '8'):
-            dst_num = 9
-        elif file_str in ('3', '7'):
-            dst_num = 18
-        elif file_str in ('4', '6'):
-            dst_num = 27
-        elif file_str == '5':
-            dst_num = 36
-        else:
-            raise Exception(f"dst file error: '{file_str}' in '{move_as_usi}'")
-
-        rank_str = dst_str[1]
-        if rank_str == "a":
-            dst_num += 0
-        elif rank_str == "b":
-            dst_num += 1
-        elif rank_str == "c":
-            dst_num += 2
-        elif rank_str == "d":
-            dst_num += 3
-        elif rank_str == "e":
-            dst_num += 4
-        elif rank_str == "f":
-            dst_num += 5
-        elif rank_str == "g":
-            dst_num += 6
-        elif rank_str == "h":
-            dst_num += 7
-        elif rank_str == "i":
-            dst_num += 8
-        else:
-            raise Exception(f"dst rank error: '{rank_str}' in '{move_as_usi}'")
-
-        # 成りかそれ以外（５文字なら成りだろう）
-        if 4 < len(move_as_usi):
-            pro_num = 1
-        else:
-            pro_num = 0
-
-        return (2 * 5 * 9 * src_num) + (2 * dst_num) + pro_num
+        return move_obj.evaluation_table_index
 
 
-    def get_evaluation_index(self, move_a_as_usi, move_b_as_usi):
+    def get_evaluation_index(self, move_a_as_usi, move_b_as_usi, turn):
         """指し手２つの組み合わせインデックス"""
 
         # 同じ指し手を比較したら 0 とする（総当たりの二重ループとかでここを通る）
         if move_a_as_usi == move_b_as_usi:
             return 0
 
-        index_a = self.get_evaluation_table_index_from_move_as_usi(move_a_as_usi)
-        index_b = self.get_evaluation_table_index_from_move_as_usi(move_b_as_usi)
+        # 後手なら、指し手の先後をひっくり返す（将棋盤を１８０°回転させるのと同等）
+        if turn == cshogi.WHITE:
+            move_a_as_usi = Move.flip_turn(move_a_as_usi)
+            move_b_as_usi = Move.flip_turn(move_b_as_usi)
+            pass
+
+        index_a = self.get_evaluation_table_index_from_move_as_usi(move_a_as_usi, turn)
+        index_b = self.get_evaluation_table_index_from_move_as_usi(move_b_as_usi, turn)
 
         move_indexes = [index_a, index_b]
         move_indexes.sort()
@@ -250,10 +162,10 @@ class EvaluationTable():
         return index
 
 
-    def get_evaluation_value(self, move_a_as_usi, move_b_as_usi):
+    def get_evaluation_value(self, move_a_as_usi, move_b_as_usi, turn):
         """両方残すなら 0点、インデックスが小さい方を残すなら -1点、インデックスが大きい方を残すなら +1点"""
 
-        index = self.get_evaluation_index(move_a_as_usi, move_b_as_usi)
+        index = self.get_evaluation_index(move_a_as_usi, move_b_as_usi, turn)
 
 
         #print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} index:{index}", flush=True)
@@ -282,44 +194,29 @@ class EvaluationTable():
         move_score_dictionary = {}
 
         for move_a_as_usi in sorted_friend_legal_move_list_as_usi:
-
-            # TODO 後手なら、指し手の先後をひっくり返す
-            if turn == cshogi.WHITE:
-                pass
-
             # 総当たりで評価値を計算
             sum_value = 0
 
             # 自軍の駒Ａと、自軍の駒Ｂ
             for move_b_as_usi in sorted_friend_legal_move_list_as_usi:
-
-                # TODO 後手なら、指し手の先後をひっくり返す
-                if turn == cshogi.WHITE:
-                    pass
-
-                sum_value += self.get_evaluation_value(move_a_as_usi, move_b_as_usi)
+                sum_value += self.get_evaluation_value(move_a_as_usi, move_b_as_usi, turn)
 
             # 自軍の駒Ａと、相手の駒Ｂ
             for move_b_as_usi in opponent_legal_move_set_as_usi:
-
-                # TODO 後手なら、指し手の先後をひっくり返す
-                if turn == cshogi.WHITE:
-                    pass
-
-                sum_value += self.get_evaluation_value(move_a_as_usi, move_b_as_usi)
+                sum_value += self.get_evaluation_value(move_a_as_usi, move_b_as_usi, turn)
 
             move_score_dictionary[move_a_as_usi] = sum_value
 
         return move_score_dictionary
 
 
-    def modify_table(self, result_text, canditates_memory):
+    def modify_table(self, result_text, canditates_memory, turn):
         """指した手の評価値を適当に変更します。負けたときか、引き分けのときに限る"""
 
         if result_text in ('lose', 'draw'):
             for move_a_as_usi in canditates_memory.move_set:
                 for move_b_as_usi in canditates_memory.move_set:
-                    index = self.get_evaluation_index(move_a_as_usi, move_b_as_usi)
+                    index = self.get_evaluation_index(move_a_as_usi, move_b_as_usi, turn)
 
                     # -1,0,1 を保存するとマイナスの符号で文字数が多くなるので、+1 して 0,1,2 で保存する
                     # 元の値（0,1,2）
