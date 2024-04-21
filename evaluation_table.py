@@ -36,6 +36,8 @@ class EvaluationTable():
 
     def make_move_as_usi_and_policy_dictionary(
             self,
+            friend_king_sq,
+            opponent_king_sq,
             sorted_friend_legal_move_list_as_usi,
             opponent_legal_move_set_as_usi,
             turn):
@@ -58,6 +60,8 @@ class EvaluationTable():
 
         ## TODO ＫＦ＋ＫＯポリシー
         kf_plus_ko_policy_dictionary = self._kf_plus_ko_policy_table.make_move_as_usi_and_policy_dictionary(
+                friend_king_sq,
+                opponent_king_sq,
                 sorted_friend_legal_move_list_as_usi,
                 opponent_legal_move_set_as_usi,
                 turn)

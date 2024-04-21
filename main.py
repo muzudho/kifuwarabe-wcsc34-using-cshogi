@@ -268,14 +268,18 @@ class Kifuwarabe():
 """)
 
         if self._my_turn == cshogi.BLACK:
+            sq_of_friend_king = self._board.king_square(cshogi.BLACK)
+            sq_of_opponent_king = self._board.king_square(cshogi.WHITE)
             print(f"""\
-自玉の位置：　{self._board.king_square(cshogi.BLACK)}
-敵玉の位置：　{self._board.king_square(cshogi.WHITE)}
+自玉の位置：　{sq_of_friend_king}
+敵玉の位置：　{sq_of_opponent_king}
 """)
         else:
+            sq_of_friend_king = self._board.king_square(cshogi.WHITE)
+            sq_of_opponent_king = self._board.king_square(cshogi.BLACK)
             print(f"""\
-自玉の位置：　{self._board.king_square(cshogi.WHITE)}
-敵玉の位置：　{self._board.king_square(cshogi.BLACK)}
+自玉の位置：　{sq_of_friend_king}
+敵玉の位置：　{sq_of_opponent_king}
 """)
 
         # USIプロトコルでの符号表記に変換
@@ -317,6 +321,8 @@ class Kifuwarabe():
 
         # 候補手に評価値を付けた辞書を作成
         move_as_usi_and_score_dictionary = self._evaluation_table.make_move_as_usi_and_policy_dictionary(
+                sq_of_friend_king,
+                sq_of_opponent_king,
                 sorted_friend_legal_move_list_as_usi,
                 opponent_legal_move_set_as_usi,
                 self._board.turn)
