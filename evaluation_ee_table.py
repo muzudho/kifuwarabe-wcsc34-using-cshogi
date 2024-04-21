@@ -5,18 +5,33 @@ import datetime
 from move import Move
 
 
-class EvaluationTable():
-    """評価値テーブル"""
+class EvaluationEeTable():
+    """評価値EEテーブル
+
+    合法手（つまり利き）を E （Effect）と呼ぶとし、
+
+    現局面（自分の手番）の合法手を E1、
+    E1 を指したときの局目（相手の手番）の合法手を E2 とする
+
+    Eはさらに e1, e2, ... en の集合とし、
+    評価値テーブルは
+    e1 e1
+    e1 e2
+    e1 e3
+    ...
+    en en
+    の形を取る。これを EE と呼ぶとする
+    """
 
     def __init__(self, file_number):
         self._file_number = file_number
-        self._file_name = f'n{file_number}_eval.txt'
+        self._file_name = f'n{file_number}_eval_ee.txt'
         self._file_modified = False
 
         self._move_size = 8424
         self._table_size = 70_955_352
-        self._evaluation_table = [0] * 70_955_352
-        """評価値テーブル
+        self._evaluation_ee_table = [0] * 70_955_352
+        """評価値EEテーブル
 
             指し手の種類は、 src, dst, pro で構成されるものの他、 resign 等の文字列がいくつかある。
             src は盤上の 81マスと、駒台の７種類の駒。
@@ -85,7 +100,7 @@ class EvaluationTable():
 
             for index in range(0, self._table_size):
                 # -1,0,1 を保存するとマイナスの符号で文字数が多くなるので、+1 して 0,1,2 で保存する
-                self._evaluation_table[index] = random.randint(0,2)
+                self._evaluation_ee_table[index] = random.randint(0,2)
 
             print(f"[{datetime.datetime.now()}] evaluation table maked in memory", flush=True)
             self._file_modified = True
@@ -170,7 +185,7 @@ class EvaluationTable():
 
         #print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} index:{index}", flush=True)
         # 0,1,2 が保存されているので、 -1 すると、 -1,0,1 になる。マイナスの符号が付くと文字数が多くなるのでこうしている
-        return self._evaluation_table[index] - 1
+        return self._evaluation_ee_table[index] - 1
 
 
     def make_move_score_dictionary(
@@ -222,10 +237,10 @@ class EvaluationTable():
                     # 元の値（0,1,2）
                     # ランダムに 1 か 2 を足す
                     # mod 3 する
-                    #self._evaluation_table[index] = (self._evaluation_table[index] + random.randint(1,2)) % 3
+                    #self._evaluation_ee_table[index] = (self._evaluation_ee_table[index] + random.randint(1,2)) % 3
 
                     # 乱数で単純に上書き。つまり、変わらないこともある
-                    self._evaluation_table[index] = random.randint(0,2)
+                    self._evaluation_ee_table[index] = random.randint(0,2)
 
             self._file_modified = True
 
@@ -239,7 +254,7 @@ class EvaluationTable():
             # ファイルに出力する
             with open(self._file_name, 'w', encoding="utf-8") as f:
                 # 配列の要素の整数型を文字列型に変換して隙間を空けずに連結
-                text = ''.join(map(str,self._evaluation_table))
+                text = ''.join(map(str,self._evaluation_ee_table))
                 print(f"[{datetime.datetime.now()}] text created ...", flush=True)
 
                 f.write(text)
@@ -271,4 +286,4 @@ class EvaluationTable():
         # 隙間のないテキストを１文字ずつ分解
         tokens = list(text)
         # 整数型へ変換したあと、またリストに入れる
-        self._evaluation_table = list(map(int,tokens))
+        self._evaluation_ee_table = list(map(int,tokens))

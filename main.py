@@ -2,7 +2,7 @@ import cshogi
 import random
 import datetime
 from canditates_memory import CanditatesMemory
-from evaluation_table import EvaluationTable
+from evaluation_ee_table import EvaluationEeTable
 from feeling_luckey import choice_lottery
 from ko_memory import KoMemory
 from result_file import ResultFile
@@ -24,8 +24,8 @@ class Kifuwarabe():
         # 候補に挙がった手は全て覚えておく
         self._canditates_memory = None
 
-        # 評価値テーブル
-        self._evaluation_table = None
+        # 評価値EEテーブル
+        self._evaluation_ee_table = None
 
         # コウの記憶
         self._ko_memory = None
@@ -122,9 +122,9 @@ class Kifuwarabe():
         self._result_file = ResultFile(self._player_file_number)
 
         # 評価関数テーブルをファイルから読み込む。無ければランダム値の入った物を新規作成する
-        self._evaluation_table = EvaluationTable(file_number=self._player_file_number)
-        self._evaluation_table.load_from_file_or_random_table()
-        self._evaluation_table.update_evaluation_table(self._canditates_memory, self._result_file)
+        self._evaluation_ee_table = EvaluationEeTable(file_number=self._player_file_number)
+        self._evaluation_ee_table.load_from_file_or_random_table()
+        self._evaluation_ee_table.update_evaluation_table(self._canditates_memory, self._result_file)
 
         ## 結果ファイルを削除
         #if self._result_file.exists():
@@ -191,7 +191,7 @@ class Kifuwarabe():
 
         # くじを引く
         best_move = choice_lottery(
-                self._evaluation_table,
+                self._evaluation_ee_table,
                 list(self._board.legal_moves),
                 self._canditates_memory,
                 self._ko_memory,
@@ -230,7 +230,7 @@ class Kifuwarabe():
                 self._canditates_memory.delete()
 
                 # ［評価値］　勝ったら記憶する
-                self._evaluation_table.save_evaluation_to_file()
+                self._evaluation_ee_table.save_evaluation_to_file()
 
             # 持将棋
             elif cmd[1] == 'draw':
@@ -280,7 +280,7 @@ class Kifuwarabe():
         print('自分の合法手一覧：')
         number = 1
         for move_a_as_usi in sorted_friend_legal_move_list_as_usi:
-            evaluation_table_index = self._evaluation_table.get_evaluation_table_index_from_move_as_usi(move_a_as_usi, self._board.turn)
+            evaluation_table_index = self._evaluation_ee_table.get_evaluation_table_index_from_move_as_usi(move_a_as_usi, self._board.turn)
             print(f'  ({number:3}) {move_a_as_usi:5} = {evaluation_table_index:5}')
             number += 1
 
@@ -299,13 +299,13 @@ class Kifuwarabe():
         print('次のいくつもの局面の相手の合法手の集合：')
         number = 1
         for move_a_as_usi in opponent_legal_move_set_as_usi:
-            evaluation_table_index = self._evaluation_table.get_evaluation_table_index_from_move_as_usi(move_a_as_usi, self._board.turn)
+            evaluation_table_index = self._evaluation_ee_table.get_evaluation_table_index_from_move_as_usi(move_a_as_usi, self._board.turn)
             print(f'  ({number:3}) {move_a_as_usi:5} = {evaluation_table_index:5}')
             number += 1
 
 
         # 候補手に評価値を付けた辞書を作成
-        move_score_dictionary = self._evaluation_table.make_move_score_dictionary(
+        move_score_dictionary = self._evaluation_ee_table.make_move_score_dictionary(
                 sorted_friend_legal_move_list_as_usi,
                 opponent_legal_move_set_as_usi,
                 self._board.turn)
@@ -319,7 +319,7 @@ class Kifuwarabe():
             # 指し手の評価値
             move_value = move_score_dictionary[move_a_as_usi]
 
-            evaluation_table_index = self._evaluation_table.get_evaluation_table_index_from_move_as_usi(move_a_as_usi, self._board.turn)
+            evaluation_table_index = self._evaluation_ee_table.get_evaluation_table_index_from_move_as_usi(move_a_as_usi, self._board.turn)
             print(f'  ({number:3}) {move_a_as_usi:5} = {evaluation_table_index:5} value:{move_value:3}')
             number += 1
 
