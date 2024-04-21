@@ -44,19 +44,19 @@ def choice_lottery(
         board.pop()
 
     # 候補手に評価値を付けた辞書を作成
-    move_score_dictionary = evaluation_table.make_move_score_dictionary(
+    move_as_usi_and_score_dictionary = evaluation_table.make_move_as_usi_and_policy_dictionary(
             sorted_friend_legal_move_list_as_usi,
             opponent_legal_move_set_as_usi,
             board.turn)
 
     # 候補に挙がった指し手は全て記憶しておく
-    canditates_memory.union_dictionary(move_score_dictionary)
+    canditates_memory.union_dictionary(move_as_usi_and_score_dictionary)
     canditates_memory.union_set(opponent_legal_move_set_as_usi)
 
     # 一番高い評価値を探す。評価値は -593～593 程度を想定
     best_score = -1000
     best_move_list = []
-    for move_as_usi, score in move_score_dictionary.items():
+    for move_as_usi, score in move_as_usi_and_score_dictionary.items():
         if best_score == score:
             best_move_list.append(move_as_usi)
         elif best_score < score:
