@@ -133,17 +133,15 @@ class EvaluationKfPlusKoTable():
             self.load_evaluation_from_file()
 
 
-    def get_table_index(self, move_as_usi, sq_of_friend_king, sq_of_opponent_king, turn):
+    def get_table_index(self, move_as_usi, sq_of_king, turn):
         """指し手２つの組み合わせインデックス
-    
+
         Parameters
         ----------
         move_as_usi : str
             指し手の符号。USI表記
-        sq_of_friend_king : int
-            自玉の位置
-        sq_of_opponent_king : int
-            敵玉の位置
+        sq_of_king : int
+            指定の玉のいるマス
         turn : int
             手番の指定
         """
@@ -151,12 +149,25 @@ class EvaluationKfPlusKoTable():
         # 後手なら、指し手の先後をひっくり返す（将棋盤を１８０°回転させるのと同等）
         if turn == cshogi.WHITE:
             move_as_usi = Move.flip_turn(move_as_usi)
+            sq_of_king = 81 - sq_of_king
 
-        return self.get_table_index_from_move_as_usi(move_as_usi)
+        return Move(move_as_usi).get_table_index(
+                is_symmetrical_board=False)
 
 
-    def make_move_and_policy_dictionary(
+    def get_evaluation_value(self, move_as_usi, turn):
+        """両方残すなら 0点、インデックスが小さい方を残すなら -1点、インデックスが大きい方を残すなら +1点"""
+
+        index = self.get_table_index(move_as_usi, turn)
+
+        # 0,1,2 が保存されているので、 -1 すると、 -1,0,1 になる。マイナスの符号が付くと文字数が多くなるのでこうしている
+        return self._evaluation_ke_table[index] - 1
+
+
+    def make_move_as_usi_and_policy_dictionary(
             self,
+            friend_king_sq,
+            opponent_king_sq,
             sorted_friend_legal_move_list_as_usi,
             opponent_legal_move_set_as_usi,
             turn):
@@ -164,6 +175,10 @@ class EvaluationKfPlusKoTable():
 
         Parameters
         ----------
+        friend_king_sq : int
+            自玉のマス
+        opponent_king_sq : int
+            敵玉のマス
         sorted_friend_legal_move_list_as_usi : list
             USIプロトコルでの符号表記の指し手の配列。辞書順で昇順にソート済み
         sorted_opponent_legal_move_set_as_usi : set
@@ -171,4 +186,23 @@ class EvaluationKfPlusKoTable():
         turn
             手番
         """
-        return {} # TODO
+        #return {} # TODO
+
+        # 指し手に評価値を付ける
+        move_as_usi_and_score_dictionary = {}
+
+        for move_a_as_usi in sorted_friend_legal_move_list_as_usi:
+            # 総当たりで評価値を計算
+            sum_value = 0
+
+            # （ＦＦ）：　自軍の玉のいるマスと、自軍の指し手Ａ
+            for move_b_as_usi in sorted_friend_legal_move_list_as_usi:
+                sum_value += self.get_evaluation_value(move_a_as_usi, move_b_as_usi, turn)
+
+            # （ＦＯ）：　敵軍の玉のいるマスと、敵軍の指し手Ｂ
+            for move_b_as_usi in opponent_legal_move_set_as_usi:
+                sum_value += self.get_evaluation_value(move_a_as_usi, move_b_as_usi, turn)
+
+            move_as_usi_and_score_dictionary[move_a_as_usi] = sum_value
+
+        return move_as_usi_and_score_dictionary

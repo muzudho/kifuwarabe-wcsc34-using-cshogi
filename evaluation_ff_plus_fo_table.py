@@ -152,8 +152,10 @@ class EvaluationFfPlusFoTable():
             move_a_as_usi = Move.flip_turn(move_a_as_usi)
             move_b_as_usi = Move.flip_turn(move_b_as_usi)
 
-        index_a = self.get_table_index_from_move_as_usi(move_a_as_usi)
-        index_b = self.get_table_index_from_move_as_usi(move_b_as_usi)
+        index_a = Move(move_a_as_usi).get_table_index(
+                is_symmetrical_board=True)
+        index_b = Move(move_b_as_usi).get_table_index(
+                is_symmetrical_board=True)
 
         move_indexes = [index_a, index_b]
         move_indexes.sort()
@@ -192,20 +194,6 @@ class EvaluationFfPlusFoTable():
                 print(f"[{datetime.datetime.now()}] {self._file_name} file updated", flush=True)
 
 
-    def get_table_index_from_move_as_usi(self, move_as_usi):
-        """USIの指し手の符号を、評価値テーブルのインデックスへ変換します
-
-        Parameters
-        ----------
-        move_as_usi : str
-            "7g7f" や "3d3c+"、 "R*5e" のような文字列を想定。 "resign" のような文字列は想定外
-        """
-
-        move_obj = Move(move_as_usi)
-
-        return move_obj.get_symmetrical_table_index()
-
-
     def get_evaluation_value(self, move_a_as_usi, move_b_as_usi, turn):
         """両方残すなら 0点、インデックスが小さい方を残すなら -1点、インデックスが大きい方を残すなら +1点"""
 
@@ -241,11 +229,11 @@ class EvaluationFfPlusFoTable():
             # 総当たりで評価値を計算
             sum_value = 0
 
-            # （ＦＦ）：　自軍の駒Ａと、自軍の駒Ｂ
+            # （ＦＦ）：　自軍の指し手Ａと、自軍の指し手Ｂ
             for move_b_as_usi in sorted_friend_legal_move_list_as_usi:
                 sum_value += self.get_evaluation_value(move_a_as_usi, move_b_as_usi, turn)
 
-            # （ＦＯ）：　自軍の駒Ａと、相手の駒Ｂ
+            # （ＦＯ）：　自軍の指し手Ａと、相手の指し手Ｂ
             for move_b_as_usi in opponent_legal_move_set_as_usi:
                 sum_value += self.get_evaluation_value(move_a_as_usi, move_b_as_usi, turn)
 

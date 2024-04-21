@@ -71,12 +71,33 @@ class Move():
         '3' : 18,
         '4' : 27,
         '5' : 36,
+        '6' : 45,
+        '7' : 54,
+        '8' : 63,
+        '9' : 72,
+    }
+    """移動元の１文字目をインデックスへ変換"""
+
+
+    _src_dst_str_1st_figure_to_index_on_symmetrical_board = {
+        'R' : 45,   # 'R*' 移動元の打
+        'B' : 46,   # 'B*'
+        'G' : 47,   # 'G*'
+        'S' : 48,   # 'S*'
+        'N' : 49,   # 'N*'
+        'L' : 50,   # 'L*'
+        'P' : 51,   # 'P*'
+        '1' : 0,
+        '2' : 9,
+        '3' : 18,
+        '4' : 27,
+        '5' : 36,
         '6' : 27,   # 列は左右対称
         '7' : 18,
         '8' : 9,
         '9' : 0,
     }
-    """移動元の１文字目をインデックスへ変換"""
+    """移動元の１文字目をインデックスへ変換。盤は左右対称とします"""
 
     _src_dst_str_2nd_figure_to_index = {
         '*': 0,     # 移動元の打
@@ -134,7 +155,13 @@ class Move():
 
 
     def __init__(self, move_as_usi):
-        """初期化"""
+        """初期化
+
+        Parameters
+        ----------
+        move_as_usi : str
+            "7g7f" や "3d3c+"、 "R*5e" のような文字列を想定。 "resign" のような文字列は想定外
+        """
         self._move_as_usi = move_as_usi
 
 
@@ -174,8 +201,16 @@ class Move():
         return False
 
 
-    def get_symmetrical_table_index(self):
-        """将棋盤の筋が左右対称のときの評価値テーブルのセルのインデックス"""
+    def get_table_index(
+            self,
+            is_symmetrical_board):
+        """将棋盤の筋が左右対称のときの評価値テーブルのセルのインデックス
+
+        Parameters
+        ----------
+        is_symmetrical_board : bool
+            盤は左右対称か？
+        """
 
         # 移動元
         src_str = self._move_as_usi[0: 2]
@@ -184,8 +219,12 @@ class Move():
         dst_str = self._move_as_usi[2: 4]
 
         try:
-            src_num = Move._src_dst_str_1st_figure_to_index[src_str[0]] + Move._src_dst_str_2nd_figure_to_index[src_str[1]]
-            dst_num = Move._src_dst_str_1st_figure_to_index[dst_str[0]] + Move._src_dst_str_2nd_figure_to_index[dst_str[1]]
+            if is_symmetrical_board:
+                src_num = Move._src_dst_str_1st_figure_to_index_on_symmetrical_board[src_str[0]] + Move._src_dst_str_2nd_figure_to_index[src_str[1]]
+                dst_num = Move._src_dst_str_1st_figure_to_index_on_symmetrical_board[dst_str[0]] + Move._src_dst_str_2nd_figure_to_index[dst_str[1]]
+            else:
+                src_num = Move._src_dst_str_1st_figure_to_index[src_str[0]] + Move._src_dst_str_2nd_figure_to_index[src_str[1]]
+                dst_num = Move._src_dst_str_1st_figure_to_index[dst_str[0]] + Move._src_dst_str_2nd_figure_to_index[dst_str[1]]
 
         except:
             raise Exception(f"dst dst error in '{self._move_as_usi}'")

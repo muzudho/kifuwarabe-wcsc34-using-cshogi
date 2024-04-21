@@ -1,5 +1,6 @@
 from evaluation_ff_plus_fo_table import EvaluationFfPlusFoTable
 from evaluation_kf_plus_ko_table import EvaluationKfPlusKoTable
+from move import Move
 
 
 class EvaluationTable():
@@ -56,7 +57,7 @@ class EvaluationTable():
                 move_as_usi_and_score_dictionary[ff_plus_fo] = policy
 
         ## TODO ＫＦ＋ＫＯポリシー
-        kf_plus_ko_policy_dictionary = self._kf_plus_ko_policy_table.make_move_and_policy_dictionary(
+        kf_plus_ko_policy_dictionary = self._kf_plus_ko_policy_table.make_move_as_usi_and_policy_dictionary(
                 sorted_friend_legal_move_list_as_usi,
                 opponent_legal_move_set_as_usi,
                 turn)
@@ -76,6 +77,6 @@ class EvaluationTable():
             move_as_usi):
         """内容確認用
         指し手を１つ指定すると、その評価値が入っているＥＥテーブルのインデックスを返します"""
-        return self._ff_plus_fo_policy_table.get_table_index_from_move_as_usi(
-                move_as_usi)
+        return Move(move_as_usi).get_table_index(
+                is_symmetrical_board=True)
 
