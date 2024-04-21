@@ -44,7 +44,7 @@ def choice_lottery(
         board.pop()
 
     # 候補手に評価値を付けた辞書を作成
-    move_score_dictionary = evaluation_table.make_ee_score_dictionary(
+    move_score_dictionary = evaluation_table.make_move_score_dictionary(
             sorted_friend_legal_move_list_as_usi,
             opponent_legal_move_set_as_usi,
             board.turn)

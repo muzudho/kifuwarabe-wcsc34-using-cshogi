@@ -21,6 +21,12 @@ class EvaluationEeTable():
     ...
     en en
     の形を取る。これを EE と呼ぶとする
+
+    自軍を Friend、相手を Opponent と呼ぶとし、
+    自軍の合法手と自分の合法手の関係を FF、
+    自軍の合法手と相手の合法手の関係を FO と呼ぶとき、
+
+    このテーブルを使って FF + FO の評価値を返す
     """
 
     def __init__(self, file_number):
@@ -188,7 +194,7 @@ class EvaluationEeTable():
         return self._evaluation_ee_table[index] - 1
 
 
-    def make_move_score_dictionary(
+    def make_move_score_dictionary_from_ff_plus_fo(
             self,
             sorted_friend_legal_move_list_as_usi,
             opponent_legal_move_set_as_usi,
@@ -212,11 +218,11 @@ class EvaluationEeTable():
             # 総当たりで評価値を計算
             sum_value = 0
 
-            # 自軍の駒Ａと、自軍の駒Ｂ
+            # （ＦＦ）：　自軍の駒Ａと、自軍の駒Ｂ
             for move_b_as_usi in sorted_friend_legal_move_list_as_usi:
                 sum_value += self.get_evaluation_value(move_a_as_usi, move_b_as_usi, turn)
 
-            # 自軍の駒Ａと、相手の駒Ｂ
+            # （ＦＯ）：　自軍の駒Ａと、相手の駒Ｂ
             for move_b_as_usi in opponent_legal_move_set_as_usi:
                 sum_value += self.get_evaluation_value(move_a_as_usi, move_b_as_usi, turn)
 
