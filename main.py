@@ -262,6 +262,22 @@ class Kifuwarabe():
     def lottery(self):
         """くじ一覧"""
 
+        print(f"""\
+先手玉の位置：　{self._board.king_square(cshogi.BLACK)}
+後手玉の位置：　{self._board.king_square(cshogi.WHITE)}
+""")
+
+        if self._my_turn == cshogi.BLACK:
+            print(f"""\
+自玉の位置：　{self._board.king_square(cshogi.BLACK)}
+敵玉の位置：　{self._board.king_square(cshogi.WHITE)}
+""")
+        else:
+            print(f"""\
+自玉の位置：　{self._board.king_square(cshogi.WHITE)}
+敵玉の位置：　{self._board.king_square(cshogi.BLACK)}
+""")
+
         # USIプロトコルでの符号表記に変換
         sorted_friend_legal_move_list_as_usi = []
         opponent_legal_move_set_as_usi = set()

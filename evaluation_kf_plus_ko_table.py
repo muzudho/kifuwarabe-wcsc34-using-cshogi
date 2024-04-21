@@ -134,7 +134,7 @@ class EvaluationKfPlusKoTable():
 
 
     def get_table_index(self, move_as_usi, sq_of_king, turn):
-        """指し手２つの組み合わせインデックス
+        """ＫＥテーブルのインデックス
 
         Parameters
         ----------
@@ -151,7 +151,7 @@ class EvaluationKfPlusKoTable():
             move_as_usi = Move.flip_turn(move_as_usi)
             sq_of_king = 81 - sq_of_king
 
-        return Move(move_as_usi).get_table_index(
+        return sq_of_king * self._move_size + Move(move_as_usi).get_table_index(
                 is_symmetrical_board=False)
 
 
