@@ -321,8 +321,8 @@ class Kifuwarabe():
 
         # 候補手に評価値を付けた辞書を作成
         move_as_usi_and_score_dictionary = self._evaluation_table.make_move_as_usi_and_policy_dictionary(
-                sq_of_friend_king,
-                sq_of_opponent_king,
+                #sq_of_friend_king,
+                #sq_of_opponent_king,
                 sorted_friend_legal_move_list_as_usi,
                 opponent_legal_move_set_as_usi,
                 self._board.turn)

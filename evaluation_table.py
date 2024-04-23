@@ -27,17 +27,22 @@ class EvaluationTable():
 
         # ＦｋＦ＋ＦｋＯポリシー
         self._fkf_plus_fko_policy_table = EvaluationFkfPlusFkoTable(file_number=self._file_number)
+        self._fkf_plus_fko_policy_table.load_from_file_or_random_table()
+        self._fkf_plus_fko_policy_table.update_evaluation_table(canditates_memory, result_file)
 
 
     def save_file(self):
         """ファイルの保存"""
+
+        # ＦｍＦ＋ＦｍＯポリシー
+        self._fmf_plus_fmo_policy_table.save_evaluation_to_file()
+
+        # ＦｋＦ＋ＦｋＯポリシー
         self._fmf_plus_fmo_policy_table.save_evaluation_to_file()
 
 
     def make_move_as_usi_and_policy_dictionary(
             self,
-            friend_king_sq,
-            opponent_king_sq,
             sorted_friend_legal_move_list_as_usi,
             opponent_legal_move_set_as_usi,
             turn):
@@ -45,7 +50,7 @@ class EvaluationTable():
 
         move_as_usi_and_score_dictionary = {}
 
-        ## ＦｍＦ＋ＦｍＯポリシー
+        # ＦｍＦ＋ＦｍＯポリシー
         fmf_plus_fmo_policy_dictionary = self._fmf_plus_fmo_policy_table.make_move_as_usi_and_policy_dictionary(
                 sorted_friend_legal_move_list_as_usi,
                 opponent_legal_move_set_as_usi,
@@ -58,10 +63,8 @@ class EvaluationTable():
             else:
                 move_as_usi_and_score_dictionary[fmf_plus_fmo] = policy
 
-        ## TODO ＦｋＦ＋ＦｋＯポリシー
-        fkf_plus_fko_policy_dictionary = self._fkf_plus_fko_policy_table.make_move_as_usi_and_policy_dictionary(
-                friend_king_sq,
-                opponent_king_sq,
+        # ＦｍＦ＋ＦｍＯポリシー
+        fkf_plus_fko_policy_dictionary = self._fmf_plus_fmo_policy_table.make_move_as_usi_and_policy_dictionary(
                 sorted_friend_legal_move_list_as_usi,
                 opponent_legal_move_set_as_usi,
                 turn)
