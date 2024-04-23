@@ -5,15 +5,15 @@ import datetime
 from move import Move
 
 
-class EvaluationFfPlusFoTable():
-    """評価値ＦＦ＋ＦＯテーブル
+class EvaluationFmfPlusFmoTable():
+    """評価値ＦｍＦ＋ＦｍＯテーブル
 
     合法手（つまり利き）を E （Effect）と呼ぶとし、
 
     現局面（自分の手番）の合法手を E1、
     E1 を指したときの局目（相手の手番）の合法手を E2 とする
 
-    Eはさらに e1, e2, ... en の集合とし、
+    Eは e1, e2, ... en の集合とし、
     評価値テーブルは
     e1 e1
     e1 e2
@@ -22,11 +22,15 @@ class EvaluationFfPlusFoTable():
     en en
     の形を取る。これを EE と呼ぶとする
 
-    自軍を Friend、相手を Opponent と呼ぶとし、
-    自軍の合法手と自分の合法手の関係を FF、
-    自軍の合法手と相手の合法手の関係を FO と呼ぶとき、
+    さらに自軍を F（Friend）、相手を O（Opponent） と呼ぶとし、
+    玉の合法手を K（King）、玉以外の合法手を M (Minions) と呼ぶとする。
+    Fk（自玉の合法手）と F（自分の合法手）の関係を FkF、
+    Fm（自軍の玉以外の合法手）と F（自分の合法手）の関係を FmF、
+    Fk（自玉の合法手）と O（相手の合法手）の関係を FkO、
+    Fm（自軍の玉以外の合法手）と O（相手の合法手）の関係を FmO、
+    と呼ぶとき、
 
-    このテーブルを使って FF + FO の評価値を返す
+    このテーブルを使って FmF + FmO の評価値を返す
     """
 
     def __init__(self, file_number):

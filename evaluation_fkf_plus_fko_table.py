@@ -5,31 +5,32 @@ import datetime
 from move import Move
 
 
-class EvaluationFk1PlusFk2Table():
-    """TODO 自軍の指し手×自玉の指し手＋自軍の指し手×相手玉の指し手
+class EvaluationFkfPlusFkoTable():
+    """評価値ＦｋＦ＋ＦｋＯテーブル
 
-    自軍の合法手（自玉の指し手を除く）を F と呼ぶとする。
-    自玉の指し手を K1 と呼ぶとする。
-    相手玉の指し手を K2 と呼ぶとする。
+    合法手（つまり利き）を E （Effect）と呼ぶとし、
 
-    玉の位置を K （King）と呼ぶとし、要素は k1, k2, ... k81 まである。
-    合法手（つまり利き）を E （Effect）と呼ぶとする。
+    現局面（自分の手番）の合法手を E1、
+    E1 を指したときの局目（相手の手番）の合法手を E2 とする
 
-    E はさらに自軍と相手とに分け、
-    自軍を Friend、相手を Opponent と呼ぶとし、
-    自玉と自軍の合法手の関係を KF、
-    相手玉と自軍の合法手との関係を KO と呼ぶ
-
+    Eは e1, e2, ... en の集合とし、
     評価値テーブルは
-    k1 e1
-    k1 e2
-    k1 e3
+    e1 e1
+    e1 e2
+    e1 e3
     ...
-    k81 en
-    の形を取る。これを KE と呼ぶ
+    en en
+    の形を取る。これを EE と呼ぶとする
 
+    さらに自軍を F（Friend）、相手を O（Opponent） と呼ぶとし、
+    玉の合法手を K（King）、玉以外の合法手を M (Minions) と呼ぶとする。
+    Fk（自玉の合法手）と F（自分の合法手）の関係を FkF、
+    Fm（自軍の玉以外の合法手）と F（自分の合法手）の関係を FmF、
+    Fk（自玉の合法手）と O（相手の合法手）の関係を FkO、
+    Fm（自軍の玉以外の合法手）と O（相手の合法手）の関係を FmO、
+    と呼ぶとき、
 
-    この KE テーブルを使って KF + KO の評価値を返す
+    このテーブルを使って FkF + FkO の評価値を返す
     """
 
     def __init__(self, file_number):
@@ -172,7 +173,8 @@ class EvaluationFk1PlusFk2Table():
             self,
             friend_king_sq,
             opponent_king_sq,
-            sorted_friend_legal_move_list_as_usi,
+            sorted_friend_king_legal_move_list_as_usi,
+            sorted_friend_others_legal_move_list_as_usi,
             opponent_legal_move_set_as_usi,
             turn):
         """指し手に評価値を付ける
@@ -183,8 +185,10 @@ class EvaluationFk1PlusFk2Table():
             自玉のマス
         opponent_king_sq : int
             敵玉のマス
-        sorted_friend_legal_move_list_as_usi : list
-            USIプロトコルでの符号表記の指し手の配列。辞書順で昇順にソート済み
+        sorted_friend_king_legal_move_list_as_usi : list
+            USIプロトコルでの符号表記の指し手の配列。辞書順で昇順にソート済み。自玉の合法手
+        sorted_friend_others_legal_move_list_as_usi : list
+            USIプロトコルでの符号表記の指し手の配列。辞書順で昇順にソート済み。自軍の自玉以外の合法手
         sorted_opponent_legal_move_set_as_usi : set
             相手の指し手
         turn
