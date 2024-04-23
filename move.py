@@ -114,6 +114,9 @@ class Move():
     """移動元、移動先の２文字目をインデックスへ変換"""
 
 
+    _src_drops = ('R*', 'B*', 'G*', 'S*', 'N*', 'L*', 'P*')
+
+
     @classmethod
     def flip_turn(clazz, move_as_usi):
         """先後をひっくり返します"""
@@ -127,7 +130,7 @@ class Move():
         # 移動元
         #
         # ［打］は先後で表記は同じ
-        if src_str in ('R*', 'B*', 'G*', 'S*', 'N*', 'L*', 'P*'):
+        if src_str in Move._src_drops:
             pass
 
         else:
@@ -165,6 +168,54 @@ class Move():
         self._move_as_usi = move_as_usi
 
 
+    def get_src_file_or_none(self):
+        """移動元の列番号　＞　序数。打ではマス番号は取得できない"""
+
+        # 移動元
+        src_str = self._move_as_usi[0: 2]
+
+        # ［打］は列番号を取得できない
+        if src_str in Move._src_drops:
+            return None
+
+        file_str = src_str[0]
+
+        try:
+            Move._file_str_to_num[file_str]
+        except:
+            raise Exception(f"src file error: '{file_str}' in '{self._move_as_usi}'")
+
+
+    def get_src_rank_or_none(self):
+        """移動元の段番号　＞　序数。打ではマス番号は取得できない"""
+
+        # 移動先
+        src_str = self._move_as_usi[0: 2]
+
+        # ［打］は列番号を取得できない
+        if src_str in Move._src_drops:
+            return None
+
+        rank_str = src_str[1]
+
+        try:
+            Move._rank_str_to_num[rank_str]
+        except:
+            raise Exception(f"src rank error: '{rank_str}' in '{self._move_as_usi}'")
+
+
+    def get_src_sq_or_none(self):
+        """移動元のマス番号（Destination Square）。打ではマス番号は取得できない"""
+
+        file_or_none = self.get_src_file_or_none()
+        rank_or_none = self.get_src_rank_or_none()
+
+        if file_or_none is not None and rank_or_none is not None:
+            return (rank_or_none - 1) * 9 + (file_or_none - 1)
+
+        return None
+
+
     def get_dst_file(self):
         """移動先の列番号　＞　序数"""
 
@@ -185,12 +236,17 @@ class Move():
         # 移動先
         src_str = self._move_as_usi[0: 2]
 
-        rank_str = src_str[0]
+        rank_str = src_str[1]
 
         try:
             Move._rank_str_to_num[rank_str]
         except:
             raise Exception(f"dst rank error: '{rank_str}' in '{self._move_as_usi}'")
+
+
+    def get_dst_sq(self):
+        """移動先のマス番号（Destination Square）"""
+        return (self.get_dst_rank() - 1) * 9 + (self.get_dst_file() - 1)
 
 
     def is_promotion(self):

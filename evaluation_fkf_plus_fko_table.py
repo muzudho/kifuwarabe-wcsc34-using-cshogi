@@ -211,14 +211,17 @@ class EvaluationFkfPlusFkoTable():
 
     def make_move_as_usi_and_policy_dictionary(
             self,
-            sorted_friend_legal_move_list_as_usi,
+            sorted_friend_king_legal_move_list_as_usi,
+            sorted_friend_minions_legal_move_list_as_usi,
             opponent_legal_move_set_as_usi,
             turn):
         """指し手に評価値を付ける
 
         Parameters
         ----------
-        sorted_friend_legal_move_list_as_usi : list
+        sorted_friend_king_legal_move_list_as_usi : list
+            USIプロトコルでの符号表記の指し手の配列。辞書順で昇順にソート済み
+        sorted_friend_minions_legal_move_list_as_usi : list
             USIプロトコルでの符号表記の指し手の配列。辞書順で昇順にソート済み
         sorted_opponent_legal_move_set_as_usi : set
             相手の指し手
@@ -229,19 +232,26 @@ class EvaluationFkfPlusFkoTable():
         # 指し手に評価値を付ける
         move_as_usi_and_score_dictionary = {}
 
-        for move_a_as_usi in sorted_friend_legal_move_list_as_usi:
-            # 総当たりで評価値を計算
-            sum_value = 0
+        list_of_sorted_king_legal_move_list_as_usi = [
+            sorted_friend_king_legal_move_list_as_usi,
+            sorted_friend_minions_legal_move_list_as_usi,
+        ]
 
-            # （ＦＦ）：　自軍の指し手Ａと、自軍の指し手Ｂ
-            for move_b_as_usi in sorted_friend_legal_move_list_as_usi:
-                sum_value += self.get_evaluation_value(move_a_as_usi, move_b_as_usi, turn)
+        for sorted_king_legal_move_list_as_usi in list_of_sorted_king_legal_move_list_as_usi:
+            for move_a_as_usi in sorted_king_legal_move_list_as_usi:
+                # 総当たりで評価値を計算
+                sum_value = 0
 
-            # （ＦＯ）：　自軍の指し手Ａと、相手の指し手Ｂ
-            for move_b_as_usi in opponent_legal_move_set_as_usi:
-                sum_value += self.get_evaluation_value(move_a_as_usi, move_b_as_usi, turn)
+                # （ＦＦ）：　自軍の指し手Ａと、自軍の指し手Ｂ
+                for sorted_king_legal_move_list_as_usi_2 in list_of_sorted_king_legal_move_list_as_usi:
+                    for move_b_as_usi in sorted_king_legal_move_list_as_usi_2:
+                        sum_value += self.get_evaluation_value(move_a_as_usi, move_b_as_usi, turn)
 
-            move_as_usi_and_score_dictionary[move_a_as_usi] = sum_value
+                # （ＦＯ）：　自軍の指し手Ａと、相手の指し手Ｂ
+                for move_b_as_usi in opponent_legal_move_set_as_usi:
+                    sum_value += self.get_evaluation_value(move_a_as_usi, move_b_as_usi, turn)
+
+                move_as_usi_and_score_dictionary[move_a_as_usi] = sum_value
 
         return move_as_usi_and_score_dictionary
 

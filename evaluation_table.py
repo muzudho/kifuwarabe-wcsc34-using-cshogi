@@ -43,29 +43,18 @@ class EvaluationTable():
 
     def make_move_as_usi_and_policy_dictionary(
             self,
-            sorted_friend_legal_move_list_as_usi,
+            sorted_friend_king_legal_move_list_as_usi,
+            sorted_friend_minions_legal_move_list_as_usi,
             opponent_legal_move_set_as_usi,
             turn):
         """指し手にスコアが紐づく辞書を作成"""
 
         move_as_usi_and_score_dictionary = {}
 
-        # ＦｍＦ＋ＦｍＯポリシー
-        fmf_plus_fmo_policy_dictionary = self._fmf_plus_fmo_policy_table.make_move_as_usi_and_policy_dictionary(
-                sorted_friend_legal_move_list_as_usi,
-                opponent_legal_move_set_as_usi,
-                turn)
-
-        ## 評価値をマージ
-        for fmf_plus_fmo, policy in fmf_plus_fmo_policy_dictionary.items():
-            if fmf_plus_fmo in move_as_usi_and_score_dictionary:
-                move_as_usi_and_score_dictionary[fmf_plus_fmo] += policy
-            else:
-                move_as_usi_and_score_dictionary[fmf_plus_fmo] = policy
-
-        # ＦｍＦ＋ＦｍＯポリシー
+        # ＦｋＦ＋ＦｋＯポリシー
         fkf_plus_fko_policy_dictionary = self._fmf_plus_fmo_policy_table.make_move_as_usi_and_policy_dictionary(
-                sorted_friend_legal_move_list_as_usi,
+                sorted_friend_king_legal_move_list_as_usi,
+                sorted_friend_minions_legal_move_list_as_usi,
                 opponent_legal_move_set_as_usi,
                 turn)
 
@@ -75,6 +64,20 @@ class EvaluationTable():
                 move_as_usi_and_score_dictionary[fkf_plus_fko] += policy
             else:
                 move_as_usi_and_score_dictionary[fkf_plus_fko] = policy
+
+        # ＦｍＦ＋ＦｍＯポリシー
+        fmf_plus_fmo_policy_dictionary = self._fmf_plus_fmo_policy_table.make_move_as_usi_and_policy_dictionary(
+                sorted_friend_king_legal_move_list_as_usi,
+                sorted_friend_minions_legal_move_list_as_usi,
+                opponent_legal_move_set_as_usi,
+                turn)
+
+        ## 評価値をマージ
+        for fmf_plus_fmo, policy in fmf_plus_fmo_policy_dictionary.items():
+            if fmf_plus_fmo in move_as_usi_and_score_dictionary:
+                move_as_usi_and_score_dictionary[fmf_plus_fmo] += policy
+            else:
+                move_as_usi_and_score_dictionary[fmf_plus_fmo] = policy
 
         return move_as_usi_and_score_dictionary
 

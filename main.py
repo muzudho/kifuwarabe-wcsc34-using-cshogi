@@ -6,6 +6,7 @@ from evaluation_table import EvaluationTable
 from feeling_luckey import choice_lottery
 from ko_memory import KoMemory
 from result_file import ResultFile
+from move_list import create_move_lists
 
 
 class Kifuwarabe():
@@ -186,11 +187,11 @@ class Kifuwarabe():
 
         # くじを引く
         best_move = choice_lottery(
-                self._evaluation_table,
-                list(self._board.legal_moves),
-                self._canditates_memory,
-                self._ko_memory,
-                self._board)
+                evaluation_table=self._evaluation_table,
+                legal_move_list=list(self._board.legal_moves),
+                canditates_memory=self._canditates_memory,
+                ko_memory=self._ko_memory,
+                board=self._board)
 
         # コウを更新
         self._ko_memory.enqueue(best_move)
@@ -283,18 +284,21 @@ class Kifuwarabe():
 """)
 
         # USIプロトコルでの符号表記に変換
-        sorted_friend_legal_move_list_as_usi = []
+        sorted_friend_king_legal_move_list_as_usi, sorted_friend_minions_legal_move_list_as_usi = create_move_lists(
+                legal_move_list=list(self._board.legal_moves),
+                ko_memory=self._ko_memory,
+                board=self._board)
         opponent_legal_move_set_as_usi = set()
 
-        for move in self._board.legal_moves:
-            sorted_friend_legal_move_list_as_usi.append(cshogi.move_to_usi(move))
 
-        # ソート
-        sorted_friend_legal_move_list_as_usi.sort()
-
-        print('自分の合法手一覧：')
         number = 1
-        for move_a_as_usi in sorted_friend_legal_move_list_as_usi:
+        print('自玉の合法手一覧：')
+        for move_a_as_usi in sorted_friend_king_legal_move_list_as_usi:
+            ee_table_index = self._evaluation_table.get_ee_table_index_from_move_as_usi(move_a_as_usi)
+            print(f'  ({number:3}) {move_a_as_usi:5} = {ee_table_index:5}')
+            number += 1
+        print('自軍の玉以外の合法手一覧：')
+        for move_a_as_usi in sorted_friend_minions_legal_move_list_as_usi:
             ee_table_index = self._evaluation_table.get_ee_table_index_from_move_as_usi(move_a_as_usi)
             print(f'  ({number:3}) {move_a_as_usi:5} = {ee_table_index:5}')
             number += 1
@@ -304,12 +308,18 @@ class Kifuwarabe():
         #
         #   ヌルムーブをしたいが、 `self._board.push_pass()` が機能しなかったので、合法手を全部指してみることにする
         #
-        for move_a_as_usi in sorted_friend_legal_move_list_as_usi:
-            self._board.push_usi(move_a_as_usi)
-            for opponent_move in self._board.legal_moves:
-                opponent_legal_move_set_as_usi.add(cshogi.move_to_usi(opponent_move))
+        list_of_sorted_king_legal_move_list_as_usi = [
+            sorted_friend_king_legal_move_list_as_usi,
+            sorted_friend_minions_legal_move_list_as_usi,
+        ]
 
-            self._board.pop()
+        for sorted_king_legal_move_list_as_usi in list_of_sorted_king_legal_move_list_as_usi:
+            for move_a_as_usi in sorted_king_legal_move_list_as_usi:
+                self._board.push_usi(move_a_as_usi)
+                for opponent_move in self._board.legal_moves:
+                    opponent_legal_move_set_as_usi.add(cshogi.move_to_usi(opponent_move))
+
+                self._board.pop()
 
         print('次のいくつもの局面の相手の合法手の集合：')
         number = 1
@@ -321,9 +331,8 @@ class Kifuwarabe():
 
         # 候補手に評価値を付けた辞書を作成
         move_as_usi_and_score_dictionary = self._evaluation_table.make_move_as_usi_and_policy_dictionary(
-                #sq_of_friend_king,
-                #sq_of_opponent_king,
-                sorted_friend_legal_move_list_as_usi,
+                sorted_friend_king_legal_move_list_as_usi,
+                sorted_friend_minions_legal_move_list_as_usi,
                 opponent_legal_move_set_as_usi,
                 self._board.turn)
 
@@ -331,14 +340,15 @@ class Kifuwarabe():
         print('くじ一覧：')
         number = 1
 
-        for move_a_as_usi in sorted_friend_legal_move_list_as_usi:
+        for sorted_king_legal_move_list_as_usi in list_of_sorted_king_legal_move_list_as_usi:
+            for move_a_as_usi in sorted_king_legal_move_list_as_usi:
 
-            # 指し手の評価値
-            move_value = move_as_usi_and_score_dictionary[move_a_as_usi]
+                # 指し手の評価値
+                move_value = move_as_usi_and_score_dictionary[move_a_as_usi]
 
-            ee_table_index = self._evaluation_table.get_ee_table_index_from_move_as_usi(move_a_as_usi)
-            print(f'  ({number:3}) {move_a_as_usi:5} = {ee_table_index:5} value:{move_value:3}')
-            number += 1
+                ee_table_index = self._evaluation_table.get_ee_table_index_from_move_as_usi(move_a_as_usi)
+                print(f'  ({number:3}) {move_a_as_usi:5} = {ee_table_index:5} value:{move_value:3}')
+                number += 1
 
 
 if __name__ == '__main__':

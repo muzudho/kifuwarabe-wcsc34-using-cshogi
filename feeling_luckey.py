@@ -1,5 +1,6 @@
 import cshogi
 import random
+from move_list import create_move_lists
 
 
 def choice_lottery(
@@ -10,46 +11,38 @@ def choice_lottery(
         board):
     """くじを引く"""
 
-    # USIプロトコルでの符号表記に変換
-    sorted_friend_legal_move_list_as_usi = []
+    sorted_friend_king_legal_move_list_as_usi, sorted_friend_minions_legal_move_list_as_usi = create_move_lists(
+            legal_move_list,
+            ko_memory,
+            board)
     opponent_legal_move_set_as_usi = set()
-    ko_move_as_usi = ko_memory.get_head()
-
-    for move in legal_move_list:
-        move_as_usi = cshogi.move_to_usi(move)
-
-        # コウならスキップする
-        if move_as_usi == ko_move_as_usi:
-            has_ko = True
-            continue
-
-        sorted_friend_legal_move_list_as_usi.append(move_as_usi)
-
-    # コウを省いて投了になるぐらいなら、コウを指す
-    if len(sorted_friend_legal_move_list_as_usi) < 1 and has_ko:
-        sorted_friend_legal_move_list_as_usi.append(ko_move_as_usi)
-
-    # ソート
-    sorted_friend_legal_move_list_as_usi.sort()
 
     # 相手が指せる手の一覧
     #
     #   ヌルムーブをしたいが、 `board.push_pass()` が機能しなかったので、合法手を全部指してみることにする
     #
-    for move_a_as_usi in sorted_friend_legal_move_list_as_usi:
-        board.push_usi(move_a_as_usi)
-        for opponent_move in board.legal_moves:
-            opponent_legal_move_set_as_usi.add(cshogi.move_to_usi(opponent_move))
+    list_of_sorted_king_legal_move_list_as_usi = [
+        sorted_friend_king_legal_move_list_as_usi,
+        sorted_friend_minions_legal_move_list_as_usi,
+    ]
 
-        board.pop()
+    for sorted_king_legal_move_list_as_usi in list_of_sorted_king_legal_move_list_as_usi:
+        for move_a_as_usi in sorted_king_legal_move_list_as_usi:
+            board.push_usi(move_a_as_usi)
+            for opponent_move in board.legal_moves:
+                opponent_legal_move_set_as_usi.add(cshogi.move_to_usi(opponent_move))
+
+            board.pop()
 
     # 候補手に評価値を付けた辞書を作成
     move_as_usi_and_score_dictionary = evaluation_table.make_move_as_usi_and_policy_dictionary(
-            sorted_friend_legal_move_list_as_usi,
+            sorted_friend_king_legal_move_list_as_usi,
+            sorted_friend_minions_legal_move_list_as_usi,
             opponent_legal_move_set_as_usi,
             board.turn)
 
     # 候補に挙がった指し手は全て記憶しておく
+    # TODO king と minions を分けたい
     canditates_memory.union_dictionary(move_as_usi_and_score_dictionary)
     canditates_memory.union_set(opponent_legal_move_set_as_usi)
 
