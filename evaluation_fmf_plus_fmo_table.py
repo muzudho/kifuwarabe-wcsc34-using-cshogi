@@ -97,11 +97,11 @@ class EvaluationFmfPlusFmoTable():
     def reset_to_random_table(self):
         """ランダム値の入った評価値テーブルを新規作成する"""
         # ダミーデータを入れる。１分ほどかかる
-        print(f"[{datetime.datetime.now()}] make random ff evaluation table in memory ...", flush=True)
+        print(f"[{datetime.datetime.now()}] make random fmf_plus_fmo evaluation table in memory ...", flush=True)
 
         for index in range(0, self._table_size):
-            # -1,0,1 を保存するとマイナスの符号で文字数が多くなるので、+1 して 0,1,2 で保存する
-            self._evaluation_ee_table[index] = random.randint(0,2)
+            # 値は 0, 1 の２値
+            self._evaluation_ee_table[index] = random.randint(0,1)
 
         print(f"[{datetime.datetime.now()}] evaluation table maked in memory", flush=True)
         self._file_modified = True
@@ -202,11 +202,13 @@ class EvaluationFmfPlusFmoTable():
         """両方残すなら 0点、インデックスが小さい方を残すなら -1点、インデックスが大きい方を残すなら +1点"""
 
         index = self.get_table_index(move_a_as_usi, move_b_as_usi, turn)
-
-
         #print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} index:{index}", flush=True)
-        # 0,1,2 が保存されているので、 -1 すると、 -1,0,1 になる。マイナスの符号が付くと文字数が多くなるのでこうしている
-        return self._evaluation_ee_table[index] - 1
+
+        # 古いデータには 2 が入っているので、 2 は　1 に変換する
+        if self._evaluation_ee_table[index] == 2:
+            self._evaluation_ee_table[index] = 1
+
+        return self._evaluation_ee_table[index]
 
 
     def make_move_as_usi_and_policy_dictionary(
@@ -264,14 +266,8 @@ class EvaluationFmfPlusFmoTable():
                 for move_b_as_usi in canditates_memory.move_set:
                     index = self.get_table_index(move_a_as_usi, move_b_as_usi, turn)
 
-                    # -1,0,1 を保存するとマイナスの符号で文字数が多くなるので、+1 して 0,1,2 で保存する
-                    # 元の値（0,1,2）
-                    # ランダムに 1 か 2 を足す
-                    # mod 3 する
-                    #self._evaluation_ee_table[index] = (self._evaluation_ee_table[index] + random.randint(1,2)) % 3
-
-                    # 乱数で単純に上書き。つまり、変わらないこともある
-                    self._evaluation_ee_table[index] = random.randint(0,2)
+                    # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
+                    self._evaluation_ee_table[index] = random.randint(0,1)
 
             self._file_modified = True
 

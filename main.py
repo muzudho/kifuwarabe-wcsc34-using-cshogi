@@ -272,6 +272,7 @@ class Kifuwarabe():
             sq_of_friend_king = self._board.king_square(cshogi.BLACK)
             sq_of_opponent_king = self._board.king_square(cshogi.WHITE)
             print(f"""\
+自分の手番：　先手
 自玉の位置：　{sq_of_friend_king}
 敵玉の位置：　{sq_of_opponent_king}
 """)
@@ -279,6 +280,7 @@ class Kifuwarabe():
             sq_of_friend_king = self._board.king_square(cshogi.WHITE)
             sq_of_opponent_king = self._board.king_square(cshogi.BLACK)
             print(f"""\
+自分の手番：　後手
 自玉の位置：　{sq_of_friend_king}
 敵玉の位置：　{sq_of_opponent_king}
 """)
