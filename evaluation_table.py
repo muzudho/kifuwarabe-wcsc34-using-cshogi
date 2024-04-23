@@ -1,5 +1,5 @@
 from evaluation_ff_plus_fo_table import EvaluationFfPlusFoTable
-from evaluation_kf_plus_ko_table import EvaluationKfPlusKoTable
+from evaluation_fk1_plus_fk2_table import EvaluationFk1PlusFk2Table
 from move import Move
 
 
@@ -13,8 +13,8 @@ class EvaluationTable():
         # 評価値テーブル：　ＦＦ＋ＦＯポリシー
         self._ff_plus_fo_policy_table = None
 
-        # 評価値テーブル：　ＫＦ＋ＫＯポリシー
-        self._kf_plus_ko_policy_table = None
+        # 評価値テーブル：　Ｆｋ１＋Ｆｋ２ポリシー
+        self._fk1_plus_fk2_policy_table = None
 
 
     def usinewgame(self, canditates_memory, result_file):
@@ -25,8 +25,8 @@ class EvaluationTable():
         self._ff_plus_fo_policy_table.load_from_file_or_random_table()
         self._ff_plus_fo_policy_table.update_evaluation_table(canditates_memory, result_file)
 
-        # ＫＦ＋ＫＯポリシー
-        self._kf_plus_ko_policy_table = EvaluationKfPlusKoTable(file_number=self._file_number)
+        # Ｆｋ１＋Ｆｋ２ポリシー
+        self._fk1_plus_fk2_policy_table = EvaluationFk1PlusFk2Table(file_number=self._file_number)
 
 
     def save_file(self):
@@ -58,8 +58,8 @@ class EvaluationTable():
             else:
                 move_as_usi_and_score_dictionary[ff_plus_fo] = policy
 
-        ## TODO ＫＦ＋ＫＯポリシー
-        kf_plus_ko_policy_dictionary = self._kf_plus_ko_policy_table.make_move_as_usi_and_policy_dictionary(
+        ## TODO Ｆｋ１＋Ｆｋ２ポリシー
+        fk1_plus_fk2_policy_dictionary = self._fk1_plus_fk2_policy_table.make_move_as_usi_and_policy_dictionary(
                 friend_king_sq,
                 opponent_king_sq,
                 sorted_friend_legal_move_list_as_usi,
@@ -67,11 +67,11 @@ class EvaluationTable():
                 turn)
 
         ## 評価値をマージ
-        for kf_plus_ko, policy in kf_plus_ko_policy_dictionary.items():
-            if kf_plus_ko in move_as_usi_and_score_dictionary:
-                move_as_usi_and_score_dictionary[kf_plus_ko] += policy
+        for fk1_plus_fk2, policy in fk1_plus_fk2_policy_dictionary.items():
+            if fk1_plus_fk2 in move_as_usi_and_score_dictionary:
+                move_as_usi_and_score_dictionary[fk1_plus_fk2] += policy
             else:
-                move_as_usi_and_score_dictionary[kf_plus_ko] = policy
+                move_as_usi_and_score_dictionary[fk1_plus_fk2] = policy
 
         return move_as_usi_and_score_dictionary
 

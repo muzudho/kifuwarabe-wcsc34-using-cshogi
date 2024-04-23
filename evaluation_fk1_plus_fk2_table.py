@@ -5,8 +5,12 @@ import datetime
 from move import Move
 
 
-class EvaluationKfPlusKoTable():
-    """自玉×自軍の合法手＋相手玉×自軍の合法手の関係
+class EvaluationFk1PlusFk2Table():
+    """TODO 自軍の指し手×自玉の指し手＋自軍の指し手×相手玉の指し手
+
+    自軍の合法手（自玉の指し手を除く）を F と呼ぶとする。
+    自玉の指し手を K1 と呼ぶとする。
+    相手玉の指し手を K2 と呼ぶとする。
 
     玉の位置を K （King）と呼ぶとし、要素は k1, k2, ... k81 まである。
     合法手（つまり利き）を E （Effect）と呼ぶとする。
