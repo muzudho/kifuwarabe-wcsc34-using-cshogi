@@ -2,7 +2,7 @@ import os
 import datetime
 
 
-class CanditatesMemory():
+class CandidatesMemory():
     """候補に挙がった手は全て覚えておく
 
     勝ったら、全部忘れる
@@ -12,7 +12,7 @@ class CanditatesMemory():
     @classmethod
     def load_from_file(clazz, file_number):
         """読込"""
-        candidates_memory = CanditatesMemory(file_number)
+        candidates_memory = CandidatesMemory(file_number)
 
         # ファイルが存在するとき
         if candidates_memory.exists_file():

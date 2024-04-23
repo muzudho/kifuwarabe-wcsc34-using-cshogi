@@ -1,7 +1,7 @@
 import cshogi
 import random
 import datetime
-from canditates_memory import CanditatesMemory
+from candidates_memory import CandidatesMemory
 from evaluation_table import EvaluationTable
 from feeling_luckey import choice_lottery
 from ko_memory import KoMemory
@@ -114,7 +114,7 @@ class Kifuwarabe():
         self._player_file_number = random.randint(1,6)
 
         # 前回の対局の指し手の候補手の記憶
-        self._canditates_memory = CanditatesMemory.load_from_file(self._player_file_number)
+        self._canditates_memory = CandidatesMemory.load_from_file(self._player_file_number)
 
         # コウの記録
         self._ko_memory = KoMemory()
