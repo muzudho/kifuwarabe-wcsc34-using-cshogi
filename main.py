@@ -23,7 +23,8 @@ class Kifuwarabe():
         self._board = cshogi.Board()
 
         # 候補に挙がった手は全て覚えておく
-        self._canditates_memory = None
+        self._king_canditates_memory = None
+        self._minions_canditates_memory = None
 
         # 評価値テーブル
         self._evaluation_table = None
@@ -114,7 +115,8 @@ class Kifuwarabe():
         self._player_file_number = random.randint(1,6)
 
         # 前回の対局の指し手の候補手の記憶
-        self._canditates_memory = CandidatesMemory.load_from_file(self._player_file_number)
+        self._king_canditates_memory = CandidatesMemory.load_from_file(self._player_file_number, is_king=True)
+        self._minions_canditates_memory = CandidatesMemory.load_from_file(self._player_file_number, is_king=False)
 
         # コウの記録
         self._ko_memory = KoMemory()
@@ -124,7 +126,10 @@ class Kifuwarabe():
 
         # 評価関数テーブルをファイルから読み込む。無ければランダム値の入った物を新規作成する
         self._evaluation_table = EvaluationTable(self._player_file_number)
-        self._evaluation_table.usinewgame(self._canditates_memory, self._result_file)
+        self._evaluation_table.usinewgame(
+                self._king_canditates_memory,
+                self._minions_canditates_memory,
+                self._result_file)
 
         print(f"[{datetime.datetime.now()}] usinewgame end", flush=True)
 
@@ -189,7 +194,8 @@ class Kifuwarabe():
         best_move = choice_lottery(
                 evaluation_table=self._evaluation_table,
                 legal_move_list=list(self._board.legal_moves),
-                canditates_memory=self._canditates_memory,
+                king_canditates_memory=self._king_canditates_memory,
+                minions_canditates_memory=self._minions_canditates_memory,
                 ko_memory=self._ko_memory,
                 board=self._board)
 
@@ -215,7 +221,8 @@ class Kifuwarabe():
                 self._result_file.save_lose(self._my_turn)
 
                 # ［指した手］　勝っていないなら追加していく
-                self._canditates_memory.save()
+                self._king_canditates_memory.save()
+                self._minions_canditates_memory.save()
 
             # 勝ち
             elif cmd[1] == 'win':
@@ -223,7 +230,8 @@ class Kifuwarabe():
                 self._result_file.save_win(self._my_turn)
 
                 # ［指した手］　勝ったら全部忘れる
-                self._canditates_memory.delete()
+                self._king_canditates_memory.delete()
+                self._minions_canditates_memory.delete()
 
                 # ［評価値］　勝ったら記憶する
                 self._evaluation_table.save_file()
@@ -234,7 +242,8 @@ class Kifuwarabe():
                 self._result_file.save_draw(self._my_turn)
 
                 # ［指した手］　勝っていないなら追加していく
-                self._canditates_memory.save()
+                self._king_canditates_memory.save()
+                self._minions_canditates_memory.save()
 
             # その他
             else:
@@ -242,7 +251,8 @@ class Kifuwarabe():
                 self._result_file.save_otherwise(cmd[1], self._my_turn)
 
                 # ［指した手］　勝っていないなら追加していく
-                self._canditates_memory.save()
+                self._king_canditates_memory.save()
+                self._minions_canditates_memory.save()
 
 
     def do(self, cmd):
@@ -310,13 +320,13 @@ class Kifuwarabe():
         #
         #   ヌルムーブをしたいが、 `self._board.push_pass()` が機能しなかったので、合法手を全部指してみることにする
         #
-        list_of_sorted_king_legal_move_list_as_usi = [
+        list_of_sorted_friend_legal_move_list_as_usi = [
             sorted_friend_king_legal_move_list_as_usi,
             sorted_friend_minions_legal_move_list_as_usi,
         ]
 
-        for sorted_king_legal_move_list_as_usi in list_of_sorted_king_legal_move_list_as_usi:
-            for move_a_as_usi in sorted_king_legal_move_list_as_usi:
+        for sorted_friend_legal_move_list_as_usi in list_of_sorted_friend_legal_move_list_as_usi:
+            for move_a_as_usi in sorted_friend_legal_move_list_as_usi:
                 self._board.push_usi(move_a_as_usi)
                 for opponent_move in self._board.legal_moves:
                     opponent_legal_move_set_as_usi.add(cshogi.move_to_usi(opponent_move))
@@ -332,25 +342,34 @@ class Kifuwarabe():
 
 
         # 候補手に評価値を付けた辞書を作成
-        move_as_usi_and_score_dictionary = self._evaluation_table.make_move_as_usi_and_policy_dictionary(
+        king_move_as_usi_and_score_dictionary, minions_move_as_usi_and_score_dictionary = self._evaluation_table.make_move_as_usi_and_policy_dictionary(
                 sorted_friend_king_legal_move_list_as_usi,
                 sorted_friend_minions_legal_move_list_as_usi,
                 opponent_legal_move_set_as_usi,
                 self._board.turn)
 
         # 表示
-        print('くじ一覧：')
         number = 1
 
-        for sorted_king_legal_move_list_as_usi in list_of_sorted_king_legal_move_list_as_usi:
-            for move_a_as_usi in sorted_king_legal_move_list_as_usi:
+        print('くじ一覧（自玉の合法手）：')
+        for move_a_as_usi in sorted_friend_king_legal_move_list_as_usi:
 
-                # 指し手の評価値
-                move_value = move_as_usi_and_score_dictionary[move_a_as_usi]
+            # 指し手の評価値
+            move_value = king_move_as_usi_and_score_dictionary[move_a_as_usi]
 
-                ee_table_index = self._evaluation_table.get_ee_table_index_from_move_as_usi(move_a_as_usi)
-                print(f'  ({number:3}) {move_a_as_usi:5} = {ee_table_index:5} value:{move_value:3}')
-                number += 1
+            ee_table_index = self._evaluation_table.get_ee_table_index_from_move_as_usi(move_a_as_usi)
+            print(f'  ({number:3}) {move_a_as_usi:5} = {ee_table_index:5} value:{move_value:3}')
+            number += 1
+
+        print('くじ一覧（自軍の玉以外の合法手）：')
+        for move_a_as_usi in sorted_friend_minions_legal_move_list_as_usi:
+
+            # 指し手の評価値
+            move_value = minions_move_as_usi_and_score_dictionary[move_a_as_usi]
+
+            ee_table_index = self._evaluation_table.get_ee_table_index_from_move_as_usi(move_a_as_usi)
+            print(f'  ({number:3}) {move_a_as_usi:5} = {ee_table_index:5} value:{move_value:3}')
+            number += 1
 
 
 if __name__ == '__main__':

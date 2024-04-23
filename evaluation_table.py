@@ -17,18 +17,26 @@ class EvaluationTable():
         self._fkf_plus_fko_policy_table = None
 
 
-    def usinewgame(self, canditates_memory, result_file):
+    def usinewgame(
+            self,
+            king_canditates_memory,
+            minions_canditates_memory,
+            result_file):
         """新規対局の準備"""
 
         # ＦｍＦ＋ＦｍＯポリシー
         self._fmf_plus_fmo_policy_table = EvaluationFmfPlusFmoTable(file_number=self._file_number)
         self._fmf_plus_fmo_policy_table.load_from_file_or_random_table()
-        self._fmf_plus_fmo_policy_table.update_evaluation_table(canditates_memory, result_file)
+        self._fmf_plus_fmo_policy_table.update_evaluation_table(
+                minions_canditates_memory,  # ミニオンズ
+                result_file)
 
         # ＦｋＦ＋ＦｋＯポリシー
         self._fkf_plus_fko_policy_table = EvaluationFkfPlusFkoTable(file_number=self._file_number)
         self._fkf_plus_fko_policy_table.load_from_file_or_random_table()
-        self._fkf_plus_fko_policy_table.update_evaluation_table(canditates_memory, result_file)
+        self._fkf_plus_fko_policy_table.update_evaluation_table(
+                king_canditates_memory, # キング
+                result_file)
 
 
     def save_file(self):
@@ -49,7 +57,9 @@ class EvaluationTable():
             turn):
         """指し手にスコアが紐づく辞書を作成"""
 
-        move_as_usi_and_score_dictionary = {}
+        # 指し手に評価値を付ける
+        king_move_as_usi_and_score_dictionary = {}
+        minions_move_as_usi_and_score_dictionary = {}
 
         # ＦｋＦ＋ＦｋＯポリシー
         fkf_plus_fko_policy_dictionary = self._fmf_plus_fmo_policy_table.make_move_as_usi_and_policy_dictionary(
@@ -60,10 +70,10 @@ class EvaluationTable():
 
         ## 評価値をマージ
         for fkf_plus_fko, policy in fkf_plus_fko_policy_dictionary.items():
-            if fkf_plus_fko in move_as_usi_and_score_dictionary:
-                move_as_usi_and_score_dictionary[fkf_plus_fko] += policy
+            if fkf_plus_fko in king_move_as_usi_and_score_dictionary:
+                king_move_as_usi_and_score_dictionary[fkf_plus_fko] += policy
             else:
-                move_as_usi_and_score_dictionary[fkf_plus_fko] = policy
+                king_move_as_usi_and_score_dictionary[fkf_plus_fko] = policy
 
         # ＦｍＦ＋ＦｍＯポリシー
         fmf_plus_fmo_policy_dictionary = self._fmf_plus_fmo_policy_table.make_move_as_usi_and_policy_dictionary(
@@ -74,12 +84,12 @@ class EvaluationTable():
 
         ## 評価値をマージ
         for fmf_plus_fmo, policy in fmf_plus_fmo_policy_dictionary.items():
-            if fmf_plus_fmo in move_as_usi_and_score_dictionary:
-                move_as_usi_and_score_dictionary[fmf_plus_fmo] += policy
+            if fmf_plus_fmo in minions_move_as_usi_and_score_dictionary:
+                minions_move_as_usi_and_score_dictionary[fmf_plus_fmo] += policy
             else:
-                move_as_usi_and_score_dictionary[fmf_plus_fmo] = policy
+                minions_move_as_usi_and_score_dictionary[fmf_plus_fmo] = policy
 
-        return move_as_usi_and_score_dictionary
+        return (king_move_as_usi_and_score_dictionary, minions_move_as_usi_and_score_dictionary)
 
 
     def get_ee_table_index_from_move_as_usi(

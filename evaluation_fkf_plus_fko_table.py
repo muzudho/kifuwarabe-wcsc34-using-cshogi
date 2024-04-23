@@ -234,18 +234,18 @@ class EvaluationFkfPlusFkoTable():
         # 指し手に評価値を付ける
         move_as_usi_and_score_dictionary = {}
 
-        list_of_sorted_king_legal_move_list_as_usi = [
+        list_of_sorted_friend_legal_move_list_as_usi = [
             sorted_friend_king_legal_move_list_as_usi,
             sorted_friend_minions_legal_move_list_as_usi,
         ]
 
-        for sorted_king_legal_move_list_as_usi in list_of_sorted_king_legal_move_list_as_usi:
-            for move_a_as_usi in sorted_king_legal_move_list_as_usi:
+        for sorted_friend_legal_move_list_as_usi in list_of_sorted_friend_legal_move_list_as_usi:
+            for move_a_as_usi in sorted_friend_legal_move_list_as_usi:
                 # 総当たりで評価値を計算
                 sum_value = 0
 
                 # （ＦＦ）：　自軍の指し手Ａと、自軍の指し手Ｂ
-                for sorted_king_legal_move_list_as_usi_2 in list_of_sorted_king_legal_move_list_as_usi:
+                for sorted_king_legal_move_list_as_usi_2 in list_of_sorted_friend_legal_move_list_as_usi:
                     for move_b_as_usi in sorted_king_legal_move_list_as_usi_2:
                         sum_value += self.get_evaluation_value(move_a_as_usi, move_b_as_usi, turn)
 

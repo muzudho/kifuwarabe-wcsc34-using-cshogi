@@ -10,9 +10,12 @@ class CandidatesMemory():
 
 
     @classmethod
-    def load_from_file(clazz, file_number):
+    def load_from_file(
+            clazz,
+            file_number,
+            is_king):
         """読込"""
-        candidates_memory = CandidatesMemory(file_number)
+        candidates_memory = CandidatesMemory(file_number, is_king)
 
         # ファイルが存在するとき
         if candidates_memory.exists_file():
@@ -39,10 +42,17 @@ class CandidatesMemory():
         return candidates_memory
 
 
-    def __init__(self, file_number):
+    def __init__(
+            self,
+            file_number,
+            is_king):
         """初期化"""
         self._file_number = file_number
-        self._file_name = f'n{self._file_number}_canditates_memory.txt'
+
+        if is_king:
+            self._file_name = f'n{self._file_number}_canditates_memory_king.txt'
+        else:
+            self._file_name = f'n{self._file_number}_canditates_memory_minions.txt'
 
         self._move_set = set()
         self._file_modified = False

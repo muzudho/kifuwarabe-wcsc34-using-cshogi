@@ -6,7 +6,8 @@ from move_list import create_move_lists
 def choice_lottery(
         evaluation_table,
         legal_move_list,
-        canditates_memory,
+        king_canditates_memory,
+        minions_canditates_memory,
         ko_memory,
         board):
     """くじを引く"""
@@ -21,13 +22,13 @@ def choice_lottery(
     #
     #   ヌルムーブをしたいが、 `board.push_pass()` が機能しなかったので、合法手を全部指してみることにする
     #
-    list_of_sorted_king_legal_move_list_as_usi = [
+    list_of_sorted_friend_legal_move_list_as_usi = [
         sorted_friend_king_legal_move_list_as_usi,
         sorted_friend_minions_legal_move_list_as_usi,
     ]
 
-    for sorted_king_legal_move_list_as_usi in list_of_sorted_king_legal_move_list_as_usi:
-        for move_a_as_usi in sorted_king_legal_move_list_as_usi:
+    for sorted_friend_legal_move_list_as_usi in list_of_sorted_friend_legal_move_list_as_usi:
+        for move_a_as_usi in sorted_friend_legal_move_list_as_usi:
             board.push_usi(move_a_as_usi)
             for opponent_move in board.legal_moves:
                 opponent_legal_move_set_as_usi.add(cshogi.move_to_usi(opponent_move))
@@ -35,27 +36,33 @@ def choice_lottery(
             board.pop()
 
     # 候補手に評価値を付けた辞書を作成
-    move_as_usi_and_score_dictionary = evaluation_table.make_move_as_usi_and_policy_dictionary(
+    king_move_as_usi_and_score_dictionary, minions_move_as_usi_and_score_dictionary = evaluation_table.make_move_as_usi_and_policy_dictionary(
             sorted_friend_king_legal_move_list_as_usi,
             sorted_friend_minions_legal_move_list_as_usi,
             opponent_legal_move_set_as_usi,
             board.turn)
 
     # 候補に挙がった指し手は全て記憶しておく
-    # TODO king と minions を分けたい
-    canditates_memory.union_dictionary(move_as_usi_and_score_dictionary)
-    canditates_memory.union_set(opponent_legal_move_set_as_usi)
+    king_canditates_memory.union_dictionary(king_move_as_usi_and_score_dictionary)
+    king_canditates_memory.union_set(opponent_legal_move_set_as_usi)
+    minions_canditates_memory.union_dictionary(minions_move_as_usi_and_score_dictionary)
+    minions_canditates_memory.union_set(opponent_legal_move_set_as_usi)
+
+    all_move_as_usi_and_score_dictionary = [
+        king_move_as_usi_and_score_dictionary,
+        minions_move_as_usi_and_score_dictionary,
+    ]
 
     # 一番高い評価値を探す。評価値は -593～593 程度を想定
     best_score = -1000
     best_move_list = []
-    for move_as_usi, score in move_as_usi_and_score_dictionary.items():
-        if best_score == score:
-            best_move_list.append(move_as_usi)
-        elif best_score < score:
-            best_score = score
-            best_move_list = [move_as_usi]
-
+    for move_as_usi_and_score_dictionary in all_move_as_usi_and_score_dictionary:
+        for move_as_usi, score in move_as_usi_and_score_dictionary.items():
+            if best_score == score:
+                best_move_list.append(move_as_usi)
+            elif best_score < score:
+                best_score = score
+                best_move_list = [move_as_usi]
 
     return random.choice(best_move_list)
     """候補手の中からランダムに選ぶ。USIの指し手の記法で返却"""
