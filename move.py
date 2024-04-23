@@ -218,10 +218,10 @@ class Move():
         file_or_none = self.get_src_file_or_none()
         rank_or_none = self.get_src_rank_or_none()
 
-        print(f"[get_src_sq_or_none] move_as_usi: {self._move_as_usi}, file_or_none: {file_or_none}, rank_or_none: {rank_or_none}")
+        #print(f"[get_src_sq_or_none] move_as_usi: {self._move_as_usi}, file_or_none: {file_or_none}, rank_or_none: {rank_or_none}")
 
         if file_or_none is not None and rank_or_none is not None:
-            return (rank_or_none - 1) * 9 + (file_or_none - 1)
+            return (file_or_none - 1) * 9 + (rank_or_none - 1)
 
         return None
 

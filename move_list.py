@@ -35,7 +35,7 @@ def create_move_lists(
             continue
 
         # 自玉の指し手か？
-        print(f"［自玉の指し手か？］ move_as_usi: {move_as_usi}, src_sq_or_none: {src_sq_or_none}, k_sq: {k_sq}, board.turn: {board.turn}")
+        #print(f"［自玉の指し手か？］ move_as_usi: {move_as_usi}, src_sq_or_none: {src_sq_or_none}, k_sq: {k_sq}, board.turn: {board.turn}")
         if src_sq_or_none == k_sq:
             sorted_friend_king_legal_move_list_as_usi.append(move_as_usi)
 
