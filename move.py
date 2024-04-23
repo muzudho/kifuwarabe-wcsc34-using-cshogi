@@ -174,14 +174,18 @@ class Move():
         # 移動元
         src_str = self._move_as_usi[0: 2]
 
+        #print(f"[get_src_file_or_none] move_as_usi: {self._move_as_usi}, src_str: {src_str}")
+
         # ［打］は列番号を取得できない
         if src_str in Move._src_drops:
             return None
 
         file_str = src_str[0]
 
+        #print(f"[get_src_file_or_none] move_as_usi: {self._move_as_usi}, file_str: {file_str}")
+
         try:
-            Move._file_str_to_num[file_str]
+            return Move._file_str_to_num[file_str]
         except:
             raise Exception(f"src file error: '{file_str}' in '{self._move_as_usi}'")
 
@@ -189,8 +193,10 @@ class Move():
     def get_src_rank_or_none(self):
         """移動元の段番号　＞　序数。打ではマス番号は取得できない"""
 
-        # 移動先
+        # 移動元
         src_str = self._move_as_usi[0: 2]
+
+        #print(f"[get_src_rank_or_none] move_as_usi: {self._move_as_usi}, src_str: {src_str}")
 
         # ［打］は列番号を取得できない
         if src_str in Move._src_drops:
@@ -198,8 +204,10 @@ class Move():
 
         rank_str = src_str[1]
 
+        #print(f"[get_src_rank_or_none] move_as_usi: {self._move_as_usi}, rank_str: {rank_str}")
+
         try:
-            Move._rank_str_to_num[rank_str]
+            return Move._rank_str_to_num[rank_str]
         except:
             raise Exception(f"src rank error: '{rank_str}' in '{self._move_as_usi}'")
 
@@ -209,6 +217,8 @@ class Move():
 
         file_or_none = self.get_src_file_or_none()
         rank_or_none = self.get_src_rank_or_none()
+
+        print(f"[get_src_sq_or_none] move_as_usi: {self._move_as_usi}, file_or_none: {file_or_none}, rank_or_none: {rank_or_none}")
 
         if file_or_none is not None and rank_or_none is not None:
             return (rank_or_none - 1) * 9 + (file_or_none - 1)
@@ -234,9 +244,9 @@ class Move():
         """移動先の段番号　＞　序数"""
 
         # 移動先
-        src_str = self._move_as_usi[0: 2]
+        dst_str = self._move_as_usi[2: 4]
 
-        rank_str = src_str[1]
+        rank_str = dst_str[1]
 
         try:
             Move._rank_str_to_num[rank_str]
