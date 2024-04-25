@@ -46,7 +46,7 @@ class EvaluationTable():
         self._fmf_plus_fmo_policy_table.save_evaluation_to_file()
 
         # ＦｋＦ＋ＦｋＯポリシー
-        self._fmf_plus_fmo_policy_table.save_evaluation_to_file()
+        self._fkf_plus_fko_policy_table.save_evaluation_to_file()
 
 
     def make_move_as_usi_and_policy_dictionary(

@@ -137,6 +137,7 @@ class EvaluationFkfPlusFkoTable():
 
             # 隙間のないテキストを１文字ずつ分解
             tokens = list(text)
+
             # 整数型へ変換したあと、またリストに入れる
             self._evaluation_ee_table = list(map(int,tokens))
 
@@ -159,15 +160,15 @@ class EvaluationFkfPlusFkoTable():
 
         # バイナリ・ファイル
         try:
-            self._evaluation_ee_table = []
+            # バイナリを数値型へ変換してリストに入れていく
+            self._evaluation_ee_table = list()
 
             with open(self._bin_file_name, 'rb') as f:
-
                 multiple_bytes = f.read(1)
 
                 while multiple_bytes:
-                    number = int.from_bytes(multiple_bytes, signed=False)
-                    self._evaluation_ee_table.append(number)
+                    one_byte = int.from_bytes(multiple_bytes, signed=False)
+                    self._evaluation_ee_table.append(one_byte)
 
                     multiple_bytes = f.read(1)
 
