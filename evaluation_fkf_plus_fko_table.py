@@ -103,7 +103,7 @@ class EvaluationFkfPlusFkoTable():
         return os.path.isfile(self._bin_file_name)
 
 
-    def exists_v2_binary_file(self):
+    def exists_binary_v2_file(self):
         """バイナリV2ファイルは存在するか？"""
         return os.path.isfile(self._bin_v2_file_name)
 
@@ -234,25 +234,27 @@ class EvaluationFkfPlusFkoTable():
                         # byte型配列に変換して書き込む
                         # 1 byte の数 0
                         sum *= 2
-                        sum += 0x0.to_bytes(1)
+                        sum += 0
                         length += 1
                     else:
                         # 1 byte の数 1
                         sum *= 2
-                        sum += 0x1.to_bytes(1)
+                        sum += 1
                         length += 1
 
                     if 8 <= length:
-                        f.write(sum)
+                        # 整数型を、１バイトのバイナリーに変更
+                        f.write(sum.to_bytes(1))
+                        sum = 0
                         length = 0
 
                 # 末端にはみ出た１バイト
-                if length < 8:
+                if 0 < length and length < 8:
                     while length < 8:
                         sum *= 2
                         length += 1
 
-                    f.write(sum)
+                    f.write(sum.to_bytes(1))
 
             self._file_modified = False
 
