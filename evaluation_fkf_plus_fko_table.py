@@ -287,6 +287,8 @@ class EvaluationFkfPlusFkoTable():
 
                 f.write(text)
 
+            print(f"[{datetime.datetime.now()}] {self._file_name} file saved", flush=True)
+
             # バイナリ・ファイルに出力する
             with open(self._bin_file_name, 'wb') as f:
                 for value in self._evaluation_ee_table:
@@ -300,7 +302,7 @@ class EvaluationFkfPlusFkoTable():
 
             self._file_modified = False
 
-            print(f"[{datetime.datetime.now()}] {self._file_name} file saved", flush=True)
+            print(f"[{datetime.datetime.now()}] {self._bin_file_name} file saved", flush=True)
 
         else:
             print(f"[{datetime.datetime.now()}] {self._file_name} file not changed", flush=True)
