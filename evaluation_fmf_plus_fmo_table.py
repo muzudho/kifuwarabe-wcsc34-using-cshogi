@@ -100,6 +100,11 @@ class EvaluationFmfPlusFmoTable():
         return os.path.isfile(self._bin_file_name)
 
 
+    def exists_v2_binary_file(self):
+        """バイナリV2ファイルは存在するか？"""
+        return os.path.isfile(self._bin_v2_file_name)
+
+
     def reset_to_random_table(self):
         """ランダム値の入った評価値テーブルを新規作成する"""
         # ダミーデータを入れる。１分ほどかかる
@@ -159,8 +164,8 @@ class EvaluationFmfPlusFmoTable():
                 multiple_bytes = f.read(1)
 
                 while multiple_bytes:
-                    number = int.from_bytes(multiple_bytes, signed=False)
-                    self._evaluation_ee_table.append(number)
+                    one_byte = int.from_bytes(multiple_bytes, signed=False)
+                    self._evaluation_ee_table.append(one_byte)
 
                     multiple_bytes = f.read(1)
 
@@ -173,8 +178,118 @@ class EvaluationFmfPlusFmoTable():
         self._file_modified = False
 
 
+    def read_evaluation_from_binary_v2_file(self):
+        """バイナリV2ファイルを読込む
+        ファイルの存在チェックを済ませておくこと"""
+
+        # ロードする。１分ほどかかる
+        print(f"[{datetime.datetime.now()}] read {self._bin_v2_file_name} file ...", flush=True)
+
+        try:
+            self._evaluation_ee_table = []
+
+            with open(self._bin_v2_file_name, 'rb') as f:
+
+                multiple_bytes = f.read(1)
+
+                while multiple_bytes:
+                    one_byte = int.from_bytes(multiple_bytes, signed=False)
+
+                    self._evaluation_ee_table.append(one_byte//128 % 2)
+                    self._evaluation_ee_table.append(one_byte// 64 % 2)
+                    self._evaluation_ee_table.append(one_byte// 32 % 2)
+                    self._evaluation_ee_table.append(one_byte// 16 % 2)
+                    self._evaluation_ee_table.append(one_byte//  8 % 2)
+                    self._evaluation_ee_table.append(one_byte//  4 % 2)
+                    self._evaluation_ee_table.append(one_byte//  2 % 2)
+                    self._evaluation_ee_table.append(one_byte//      2)
+
+                    multiple_bytes = f.read(1)
+
+            print(f"[{datetime.datetime.now()}] {self._bin_v2_file_name} file loaded. evaluation table size: {len(self._evaluation_ee_table)}", flush=True)
+
+        except FileNotFoundError as ex:
+            print(f"[evaluation table / load from file] [{self._bin_v2_file_name}] file error. {ex}")
+            raise
+
+        self._file_modified = False
+
+
+    def save_evaluation_to_file(self):
+        """保存する"""
+
+        if self._file_modified:
+            print(f"[{datetime.datetime.now()}] save {self._bin_v2_file_name} file ...", flush=True)
+
+            # バイナリ・ファイルに出力する
+            with open(self._bin_v2_file_name, 'wb') as f:
+
+                length = 0
+                sum = 0
+
+                for value in self._evaluation_ee_table:
+                    if value==0:
+                        # byte型配列に変換して書き込む
+                        # 1 byte の数 0
+                        sum *= 2
+                        sum += 0x0.to_bytes(1)
+                        length += 1
+                    else:
+                        # 1 byte の数 1
+                        sum *= 2
+                        sum += 0x1.to_bytes(1)
+                        length += 1
+
+                    if 8 <= length:
+                        f.write(sum)
+                        length = 0
+
+                # 末端にはみ出た１バイト
+                if length < 8:
+                    while length < 8:
+                        sum *= 2
+                        length += 1
+
+                    f.write(sum)
+
+            self._file_modified = False
+
+            print(f"[{datetime.datetime.now()}] {self._bin_v2_file_name} file saved", flush=True)
+
+        else:
+            print(f"[{datetime.datetime.now()}] {self._bin_v2_file_name} file not changed", flush=True)
+
+
     def load_from_file_or_random_table(self):
         """評価関数テーブルをファイルから読み込む。無ければランダム値の入った物を新規作成する"""
+
+        print(f"[{datetime.datetime.now()}] {self._bin_v2_file_name} file exists check ...", flush=True)
+
+        # バイナリV2ファイルに保存されているとき
+        if self.exists_binary_v2_file():
+            self.read_evaluation_from_binary_v2_file()
+
+            # 旧形式のバイナリ・ファイルは削除
+            try:
+                print(f"[{datetime.datetime.now()}] try {self._bin_file_name} file delete...", flush=True)
+                os.remove(self._bin_file_name)
+                print(f"[{datetime.datetime.now()}] {self._bin_file_name} file deleted", flush=True)
+
+            except FileNotFoundError:
+                # ファイルが無いのなら、削除に失敗しても問題ない
+                pass
+
+            # 旧形式のテキスト・ファイルは削除
+            try:
+                print(f"[{datetime.datetime.now()}] try {self._file_name} file delete...", flush=True)
+                os.remove(self._file_name)
+                print(f"[{datetime.datetime.now()}] {self._file_name} file deleted", flush=True)
+
+            except FileNotFoundError:
+                # ファイルが無いのなら、削除に失敗しても問題ない
+                pass
+
+            return
 
         print(f"[{datetime.datetime.now()}] {self._bin_file_name} file exists check ...", flush=True)
 
@@ -184,7 +299,7 @@ class EvaluationFmfPlusFmoTable():
 
             # 旧形式のテキスト・ファイルは削除
             try:
-                print(f"[{datetime.datetime.now()}] {self._file_name} file delete...", flush=True)
+                print(f"[{datetime.datetime.now()}] try {self._file_name} file delete...", flush=True)
                 os.remove(self._file_name)
                 print(f"[{datetime.datetime.now()}] {self._file_name} file deleted", flush=True)
 
@@ -331,38 +446,3 @@ class EvaluationFmfPlusFmoTable():
                     self._evaluation_ee_table[index] = random.randint(0,1)
 
             self._file_modified = True
-
-
-    def save_evaluation_to_file(self):
-        """保存する"""
-
-        if self._file_modified:
-            print(f"[{datetime.datetime.now()}] save {self._file_name} file ...", flush=True)
-
-            # ファイルに出力する
-            with open(self._file_name, 'w', encoding="utf-8") as f:
-                # 配列の要素の整数型を文字列型に変換して隙間を空けずに連結
-                text = ''.join(map(str,self._evaluation_ee_table))
-                print(f"[{datetime.datetime.now()}] text created ...", flush=True)
-
-                f.write(text)
-
-            print(f"[{datetime.datetime.now()}] {self._file_name} file saved", flush=True)
-
-            # バイナリ・ファイルに出力する
-            with open(self._bin_file_name, 'wb') as f:
-                for value in self._evaluation_ee_table:
-                    if value==0:
-                        # byte型配列に変換して書き込む
-                        # 1 byte の数 0
-                        f.write(0x0.to_bytes(1))
-                    else:
-                        # 1 byte の数 1
-                        f.write(0x1.to_bytes(1))
-
-            self._file_modified = False
-
-            print(f"[{datetime.datetime.now()}] {self._bin_file_name} file saved", flush=True)
-
-        else:
-            print(f"[{datetime.datetime.now()}] {self._file_name} file not changed", flush=True)
