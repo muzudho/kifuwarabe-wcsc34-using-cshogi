@@ -35,8 +35,11 @@ class EvaluationFmfPlusFmoTable():
 
     def __init__(self, file_number):
         self._file_number = file_number
-        self._file_name = f'n{file_number}_eval_fmf_fmo.txt'
-        self._bin_file_name = f'n{file_number}_eval_fmf_fmo.bin'
+
+        self._file_name = f'n{file_number}_eval_fmf_fmo.txt'            # 旧
+        self._bin_file_name = f'n{file_number}_eval_fmf_fmo.bin'        # 旧
+        self._bin_v2_file_name = f'n{file_number}_eval_fmf_fmo_v2.bin'  # 新
+
         self._file_modified = False
 
         self._move_size = 8424
