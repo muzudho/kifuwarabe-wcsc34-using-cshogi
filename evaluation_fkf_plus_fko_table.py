@@ -90,9 +90,14 @@ class EvaluationFkfPlusFkoTable():
         """
 
 
-    def exists_file(self):
-        """ファイルは存在するか？"""
+    def exists_text_file(self):
+        """テキスト・ファイルは存在するか？"""
         return os.path.isfile(self._file_name)
+
+
+    def exists_binary_file(self):
+        """バイナリ・ファイルは存在するか？"""
+        return os.path.isfile(self._bin_file_name)
 
 
     def reset_to_random_table(self):
@@ -108,41 +113,95 @@ class EvaluationFkfPlusFkoTable():
         self._file_modified = True
 
 
-    def load_evaluation_from_file(self):
-        """ファイルを読込む"""
+    def read_evaluation_from_text_file(self):
+        """テキスト・ファイルを読込む"""
 
         # ロードする。１分ほどかかる
         print(f"[{datetime.datetime.now()}] read {self._file_name} file ...", flush=True)
 
+        # ファイルの存在チェックを済ませておくこと
+
+        # テキスト・ファイル
         try:
-            # ファイルの存在チェックを済ませておくこと
             with open(self._file_name, 'r', encoding="utf-8") as f:
                 text = f.read()
                 print(f"[{datetime.datetime.now()}] {self._file_name} read", flush=True)
+
+            # 隙間のないテキストを１文字ずつ分解
+            tokens = list(text)
+            # 整数型へ変換したあと、またリストに入れる
+            self._evaluation_ee_table = list(map(int,tokens))
+
+            print(f"[{datetime.datetime.now()}] {self._file_name} file loaded. evaluation table size: {len(self._evaluation_ee_table)}", flush=True)
 
         except FileNotFoundError as ex:
             print(f"[evaluation table / load from file] [{self._file_name}] file error. {ex}")
             raise
 
-        # 隙間のないテキストを１文字ずつ分解
-        tokens = list(text)
-        # 整数型へ変換したあと、またリストに入れる
-        self._evaluation_ee_table = list(map(int,tokens))
         self._file_modified = False
-        print(f"[{datetime.datetime.now()}] {self._file_name} file loaded", flush=True)
+
+
+    def read_evaluation_from_binary_file(self):
+        """バイナリ・ファイルを読込む"""
+
+        # ロードする。１分ほどかかる
+        print(f"[{datetime.datetime.now()}] read {self._bin_file_name} file ...", flush=True)
+
+        # ファイルの存在チェックを済ませておくこと
+
+        # バイナリ・ファイル
+        try:
+            self._evaluation_ee_table = []
+
+            with open(self._bin_file_name, 'rb') as f:
+
+                multiple_bytes = f.read(1)
+
+                while multiple_bytes:
+                    number = int.from_bytes(multiple_bytes, signed=False)
+                    self._evaluation_ee_table.append(number)
+
+                    multiple_bytes = f.read(1)
+
+            print(f"[{datetime.datetime.now()}] {self._bin_file_name} file loaded. evaluation table size: {len(self._evaluation_ee_table)}", flush=True)
+
+        except FileNotFoundError as ex:
+            print(f"[evaluation table / load from file] [{self._bin_file_name}] file error. {ex}")
+            raise
+
+        self._file_modified = False
 
 
     def load_from_file_or_random_table(self):
         """評価関数テーブルをファイルから読み込む。無ければランダム値の入った物を新規作成する"""
 
+        print(f"[{datetime.datetime.now()}] {self._bin_file_name} file exists check ...", flush=True)
+
+        # バイナリ・ファイルに保存されているとき
+        if self.exists_binary_file():
+            self.read_evaluation_from_binary_file()
+
+            # 旧形式のテキスト・ファイルは削除
+            try:
+                print(f"[{datetime.datetime.now()}] {self._file_name} file delete...", flush=True)
+                os.remove(self._file_name)
+                print(f"[{datetime.datetime.now()}] {self._file_name} file deleted", flush=True)
+
+            except FileNotFoundError:
+                # ファイルが無いのなら、削除に失敗しても問題ない
+                pass
+
+            return
+
         print(f"[{datetime.datetime.now()}] {self._file_name} file exists check ...", flush=True)
 
-        # 評価関数テーブル・ファイルが存在しないとき
-        if not self.exists_file():
-            self.reset_to_random_table()
+        # テキスト・ファイルに保存されているとき
+        if self.exists_text_file():
+            self.read_evaluation_from_text_file()
+            return
 
-        else:
-            self.load_evaluation_from_file()
+        # ファイルが存在しないとき
+        self.reset_to_random_table()
 
 
     def get_table_index(self, move_a_as_usi, move_b_as_usi, turn):
