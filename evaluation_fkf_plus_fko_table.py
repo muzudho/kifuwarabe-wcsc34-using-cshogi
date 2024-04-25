@@ -36,6 +36,7 @@ class EvaluationFkfPlusFkoTable():
     def __init__(self, file_number):
         self._file_number = file_number
         self._file_name = f'n{file_number}_eval_fkf_fko.txt'
+        self._bin_file_name = f'n{file_number}_eval_fkf_fko.bin'
         self._file_modified = False
 
         self._move_size = 8424
@@ -278,13 +279,24 @@ class EvaluationFkfPlusFkoTable():
         if self._file_modified:
             print(f"[{datetime.datetime.now()}] save {self._file_name} file ...", flush=True)
 
-            # ファイルに出力する
+            # テキスト・ファイルに出力する
             with open(self._file_name, 'w', encoding="utf-8") as f:
                 # 配列の要素の整数型を文字列型に変換して隙間を空けずに連結
                 text = ''.join(map(str,self._evaluation_ee_table))
                 print(f"[{datetime.datetime.now()}] text created ...", flush=True)
 
                 f.write(text)
+
+            # バイナリ・ファイルに出力する
+            with open(self._bin_file_name, 'wb') as f:
+                for value in self._evaluation_ee_table:
+                    if value==0:
+                        # byte型配列に変換して書き込む
+                        # 1 byte の数 0
+                        f.write(0x0.to_bytes(1))
+                    else:
+                        # 1 byte の数 1
+                        f.write(0x1.to_bytes(1))
 
             self._file_modified = False
 
