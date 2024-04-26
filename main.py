@@ -1,10 +1,10 @@
 import cshogi
 import random
 import datetime
-from candidates_memory import CandidatesMemory
+from learn_candidates_memory import CandidatesMemory
 from evaluation_configuration import EvaluationConfiguration
 from evaluation_table import EvaluationTable
-from feeling_luckey import choice_lottery
+from lottery import Lottery
 from ko_memory import KoMemory
 from result_file import ResultFile
 from move import Move
@@ -193,7 +193,7 @@ class Kifuwarabe():
                 return
 
         # くじを引く
-        best_move = choice_lottery(
+        best_move = Lottery.choice_best(
                 evaluation_table=self._evaluation_table_obj,
                 legal_move_list=list(self._board.legal_moves),
                 king_canditates_memory=self._king_canditates_memory,
