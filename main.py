@@ -2,10 +2,12 @@ import cshogi
 import random
 import datetime
 from candidates_memory import CandidatesMemory
+from evaluation_configuration import EvaluationConfiguration
 from evaluation_table import EvaluationTable
 from feeling_luckey import choice_lottery
 from ko_memory import KoMemory
 from result_file import ResultFile
+from move import Move
 from move_list import create_move_lists
 
 
@@ -26,8 +28,8 @@ class Kifuwarabe():
         self._king_canditates_memory = None
         self._minions_canditates_memory = None
 
-        # 評価値テーブル
-        self._evaluation_table = None
+        # 評価値テーブル・オブジェクト
+        self._evaluation_table_obj = None
 
         # コウの記憶
         self._ko_memory = None
@@ -125,8 +127,8 @@ class Kifuwarabe():
         self._result_file = ResultFile(self._player_file_number)
 
         # 評価関数テーブルをファイルから読み込む。無ければランダム値の入った物を新規作成する
-        self._evaluation_table = EvaluationTable(self._player_file_number)
-        self._evaluation_table.usinewgame(
+        self._evaluation_table_obj = EvaluationTable(self._player_file_number)
+        self._evaluation_table_obj.usinewgame(
                 self._king_canditates_memory,
                 self._minions_canditates_memory,
                 self._result_file)
@@ -192,7 +194,7 @@ class Kifuwarabe():
 
         # くじを引く
         best_move = choice_lottery(
-                evaluation_table=self._evaluation_table,
+                evaluation_table=self._evaluation_table_obj,
                 legal_move_list=list(self._board.legal_moves),
                 king_canditates_memory=self._king_canditates_memory,
                 minions_canditates_memory=self._minions_canditates_memory,
@@ -234,7 +236,7 @@ class Kifuwarabe():
                 self._minions_canditates_memory.delete()
 
                 # ［評価値］　勝ったら記憶する
-                self._evaluation_table.save_file()
+                self._evaluation_table_obj.save_file()
 
             # 持将棋
             elif cmd[1] == 'draw':
@@ -295,27 +297,53 @@ class Kifuwarabe():
 敵玉の位置：　{sq_of_opponent_king}
 """)
 
+
         # USIプロトコルでの符号表記に変換
+        #
+        #
+        # ＦｋＦ＋ＦｋＯポリシー と ＦｍＦ＋ＦｍＯポリシー を分けて取得
+        #
         sorted_friend_king_legal_move_list_as_usi, sorted_friend_minions_legal_move_list_as_usi = create_move_lists(
                 legal_move_list=list(self._board.legal_moves),
                 ko_memory=self._ko_memory,
                 board=self._board)
+
+
+
         opponent_legal_move_set_as_usi = set()
 
+        #
+        # 評価値テーブルのインデックスを一覧
+        #
 
         number = 1
         print('自玉の合法手一覧：')
         for move_a_as_usi in sorted_friend_king_legal_move_list_as_usi:
-            ee_table_index = self._evaluation_table.get_ee_table_index_from_move_as_usi(move_a_as_usi)
-            print(f'  ({number:3}) {move_a_as_usi:5} = {ee_table_index:5}')
+            k_table_index = EvaluationConfiguration.get_table_index(
+                    move=Move(move_a_as_usi),
+                    is_symmetrical_connected=self._evaluation_table_obj.fkf_plus_fko_policy_table.is_symmetrical_connected)
+
+            m_table_index = EvaluationConfiguration.get_table_index(
+                    move=Move(move_a_as_usi),
+                    is_symmetrical_connected=self._evaluation_table_obj.fmf_plus_fmo_policy_table.is_symmetrical_connected)
+
+            print(f'  ({number:3}) {move_a_as_usi:5} = K{k_table_index:5} M{m_table_index:5}')
             number += 1
+
         print('自軍の玉以外の合法手一覧：')
         for move_a_as_usi in sorted_friend_minions_legal_move_list_as_usi:
-            ee_table_index = self._evaluation_table.get_ee_table_index_from_move_as_usi(move_a_as_usi)
-            print(f'  ({number:3}) {move_a_as_usi:5} = {ee_table_index:5}')
+            k_table_index = EvaluationConfiguration.get_table_index(
+                    move=Move(move_a_as_usi),
+                    is_symmetrical_connected=self._evaluation_table_obj.fkf_plus_fko_policy_table.is_symmetrical_connected)
+
+            m_table_index = EvaluationConfiguration.get_table_index(
+                    move=Move(move_a_as_usi),
+                    is_symmetrical_connected=self._evaluation_table_obj.fmf_plus_fmo_policy_table.is_symmetrical_connected)
+
+            print(f'  ({number:3}) {move_a_as_usi:5} = K{k_table_index:5} M{m_table_index:5}')
             number += 1
 
-
+        #
         # 相手が指せる手の一覧
         #
         #   ヌルムーブをしたいが、 `self._board.push_pass()` が機能しなかったので、合法手を全部指してみることにする
@@ -336,13 +364,23 @@ class Kifuwarabe():
         print('次のいくつもの局面の相手の合法手の集合：')
         number = 1
         for move_a_as_usi in opponent_legal_move_set_as_usi:
-            ee_table_index = self._evaluation_table.get_ee_table_index_from_move_as_usi(move_a_as_usi)
-            print(f'  ({number:3}) {move_a_as_usi:5} = {ee_table_index:5}')
+            k_table_index = EvaluationConfiguration.get_table_index(
+                    move=Move(move_a_as_usi),
+                    is_symmetrical_connected=self._evaluation_table_obj.fkf_plus_fko_policy_table.is_symmetrical_connected)
+
+            m_table_index = EvaluationConfiguration.get_table_index(
+                    move=Move(move_a_as_usi),
+                    is_symmetrical_connected=self._evaluation_table_obj.fmf_plus_fmo_policy_table.is_symmetrical_connected)
+
+            print(f'  ({number:3}) {move_a_as_usi:5} = K{k_table_index:5} M{m_table_index:5}')
             number += 1
 
-
+        #
+        # ポリシー値付きで候補手一覧
+        # =======================
+        #
         # 候補手に評価値を付けた辞書を作成
-        king_move_as_usi_and_score_dictionary, minions_move_as_usi_and_score_dictionary = self._evaluation_table.make_move_as_usi_and_policy_dictionary(
+        king_move_as_usi_and_score_dictionary, minions_move_as_usi_and_score_dictionary = self._evaluation_table_obj.make_move_as_usi_and_policy_dictionary(
                 sorted_friend_king_legal_move_list_as_usi,
                 sorted_friend_minions_legal_move_list_as_usi,
                 opponent_legal_move_set_as_usi,
@@ -351,24 +389,40 @@ class Kifuwarabe():
         # 表示
         number = 1
 
+        #
+        # キングから
+        # ---------
+        #
+
         print('くじ一覧（自玉の合法手）：')
         for move_a_as_usi in sorted_friend_king_legal_move_list_as_usi:
 
             # 指し手の評価値
-            move_value = king_move_as_usi_and_score_dictionary[move_a_as_usi]
+            k_move_value = king_move_as_usi_and_score_dictionary[move_a_as_usi]
 
-            ee_table_index = self._evaluation_table.get_ee_table_index_from_move_as_usi(move_a_as_usi)
-            print(f'  ({number:3}) {move_a_as_usi:5} = {ee_table_index:5} value:{move_value:3}')
+            k_table_index = EvaluationConfiguration.get_table_index(
+                    move=Move(move_a_as_usi),
+                    is_symmetrical_connected=self._evaluation_table_obj.fkf_plus_fko_policy_table.is_symmetrical_connected)
+
+            print(f'  ({number:3}) {move_a_as_usi:5} = K{k_table_index:5} value:{k_move_value:3}')
             number += 1
+
+        #
+        # 次にミニオンズ
+        # ------------
+        #
 
         print('くじ一覧（自軍の玉以外の合法手）：')
         for move_a_as_usi in sorted_friend_minions_legal_move_list_as_usi:
 
             # 指し手の評価値
-            move_value = minions_move_as_usi_and_score_dictionary[move_a_as_usi]
+            m_move_value = minions_move_as_usi_and_score_dictionary[move_a_as_usi]
 
-            ee_table_index = self._evaluation_table.get_ee_table_index_from_move_as_usi(move_a_as_usi)
-            print(f'  ({number:3}) {move_a_as_usi:5} = {ee_table_index:5} value:{move_value:3}')
+            m_table_index = EvaluationConfiguration.get_table_index(
+                    move=Move(move_a_as_usi),
+                    is_symmetrical_connected=self._evaluation_table_obj.fmf_plus_fmo_policy_table.is_symmetrical_connected)
+
+            print(f'  ({number:3}) {move_a_as_usi:5} = M{m_table_index:5} value:{m_move_value:3}')
             number += 1
 
 

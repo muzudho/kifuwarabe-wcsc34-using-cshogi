@@ -2,6 +2,7 @@ import cshogi
 import os
 import random
 import datetime
+from evaluation_configuration import EvaluationConfiguration
 from move import Move
 
 
@@ -119,6 +120,11 @@ class EvaluationEeTable():
 
 
     @property
+    def is_symmetrical_connected(self):
+        return self._is_symmetrical_connected
+
+
+    @property
     def evaluation_ee_table(self):
         return self._evaluation_ee_table
 
@@ -150,10 +156,12 @@ class EvaluationEeTable():
             move_a_as_usi = Move.flip_turn(move_a_as_usi)
             move_b_as_usi = Move.flip_turn(move_b_as_usi)
 
-        index_a = Move(move_a_as_usi).get_table_index(
-                is_symmetrical_board=self._is_symmetrical_connected)
-        index_b = Move(move_b_as_usi).get_table_index(
-                is_symmetrical_board=self._is_symmetrical_connected)
+        index_a = EvaluationConfiguration.get_table_index(
+                move=Move(move_a_as_usi),
+                is_symmetrical_connected=self._is_symmetrical_connected)
+        index_b = EvaluationConfiguration.get_table_index(
+                move=Move(move_b_as_usi),
+                is_symmetrical_connected=self._is_symmetrical_connected)
 
         move_indexes = [index_a, index_b]
         move_indexes.sort()

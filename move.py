@@ -168,6 +168,23 @@ class Move():
         self._move_as_usi = move_as_usi
 
 
+    @property
+    def as_usi(self):
+        return self._move_as_usi
+
+
+    @property
+    def src_str(self):
+        # 移動元
+        return self._move_as_usi[0: 2]
+
+
+    @property
+    def dst_str(self):
+        # 移動先
+        return self._move_as_usi[2: 4]
+
+
     def get_src_file_or_none(self):
         """移動元の列番号　＞　序数。打ではマス番号は取得できない"""
 
@@ -265,48 +282,3 @@ class Move():
             return True
 
         return False
-
-
-    def get_table_index(
-            self,
-            is_symmetrical_board):
-        """将棋盤の筋が左右対称のときの評価値テーブルのセルのインデックス
-
-        Parameters
-        ----------
-        is_symmetrical_board : bool
-            盤は左右対称か？
-        """
-
-        # 移動元
-        src_str = self._move_as_usi[0: 2]
-
-        # 移動先
-        dst_str = self._move_as_usi[2: 4]
-
-        try:
-            if is_symmetrical_board:
-                src_num = Move._src_dst_str_1st_figure_to_index_on_symmetrical_board[src_str[0]] + Move._src_dst_str_2nd_figure_to_index[src_str[1]]
-                dst_num = Move._src_dst_str_1st_figure_to_index_on_symmetrical_board[dst_str[0]] + Move._src_dst_str_2nd_figure_to_index[dst_str[1]]
-            else:
-                src_num = Move._src_dst_str_1st_figure_to_index_on_fully_connected[src_str[0]] + Move._src_dst_str_2nd_figure_to_index[src_str[1]]
-                dst_num = Move._src_dst_str_1st_figure_to_index_on_fully_connected[dst_str[0]] + Move._src_dst_str_2nd_figure_to_index[dst_str[1]]
-
-        except:
-            raise Exception(f"dst dst error in '{self._move_as_usi}'")
-
-        # 成りか？
-        if self.is_promotion():
-            pro_num = 1
-        else:
-            pro_num = 0
-
-        rank_size = 9
-        pro_num_size = 2
-
-        if is_symmetrical_board:
-            file_size = 5
-        else:
-            file_size = 9
-
-        return (src_num * file_size * rank_size * pro_num_size) + (dst_num * pro_num_size) + pro_num

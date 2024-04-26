@@ -71,10 +71,10 @@ class FileVersioning():
 
 
     @staticmethod
-    def read_evaluation_from_binary_v2_file(
-            file_name
-    ):
-        """バイナリV2ファイルを読込む
+    def read_evaluation_from_binary_v2_v3_file(
+            file_name):
+        """バイナリ・ファイルを読込む
+        V2, V3 用
         ファイルの存在チェックを済ませておくこと"""
 
         # ロードする。１分ほどかかる
@@ -112,6 +112,46 @@ class FileVersioning():
 
 
     @staticmethod
+    def read_evaluation_v2_file_and_convert_to_v3(
+            v2_file_name):
+        """TODO バイナリ・ファイル V2 を読込み、V3 にバージョンアップして使う
+        ファイルの存在チェックを済ませておくこと"""
+
+        # ロードする。１分ほどかかる
+        print(f"[{datetime.datetime.now()}] read {v2_file_name} file ...", flush=True)
+
+        evaluation_ee_table = []
+
+        try:
+
+            with open(v2_file_name, 'rb') as f:
+
+                multiple_bytes = f.read(1)
+
+                while multiple_bytes:
+                    one_byte = int.from_bytes(multiple_bytes, signed=False)
+
+                    evaluation_ee_table.append(one_byte//128 % 2)
+                    evaluation_ee_table.append(one_byte// 64 % 2)
+                    evaluation_ee_table.append(one_byte// 32 % 2)
+                    evaluation_ee_table.append(one_byte// 16 % 2)
+                    evaluation_ee_table.append(one_byte//  8 % 2)
+                    evaluation_ee_table.append(one_byte//  4 % 2)
+                    evaluation_ee_table.append(one_byte//  2 % 2)
+                    evaluation_ee_table.append(one_byte//      2)
+
+                    multiple_bytes = f.read(1)
+
+            print(f"[{datetime.datetime.now()}] {v2_file_name} file loaded. evaluation table size: {len(evaluation_ee_table)}", flush=True)
+
+        except FileNotFoundError as ex:
+            print(f"[evaluation table / load from file] [{v2_file_name}] file error. {ex}")
+            raise
+
+        return evaluation_ee_table
+
+
+    @staticmethod
     def delete_file(file_name):
         """ファイル削除"""
         try:
@@ -132,6 +172,7 @@ class FileVersioning():
             f'n{file_number}_eval_{evaluation_kind}.txt',       # 旧 V0
             f'n{file_number}_eval_{evaluation_kind}.bin',       # 旧 V1
             f'n{file_number}_eval_{evaluation_kind}_v2.bin',    # 新 V2
+            f'n{file_number}_eval_{evaluation_kind}_v3.bin',    # 次期 V3
         ]
 
 
@@ -146,6 +187,10 @@ class FileVersioning():
                 evaluation_kind=evaluation_kind)
 
         print(f"[{datetime.datetime.now()}] {file_names_by_version[2]} file exists check ...", flush=True)
+
+        # バイナリV3ファイルに保存されているとき
+        if os.path.isfile(file_names_by_version[3]):
+            return "V3"
 
         # バイナリV2ファイルに保存されているとき
         if os.path.isfile(file_names_by_version[2]):
@@ -180,10 +225,30 @@ class FileVersioning():
 
         print(f"[{datetime.datetime.now()}] {file_names_by_version[2]} file exists check ...", flush=True)
 
+        # バイナリ・ファイル V3 に保存されているとき
+        if file_version == "V3":
+            ee_table = FileVersioning.read_evaluation_from_binary_v2_v3_file(
+                    file_name=file_names_by_version[3])
+
+            # 旧形式のバイナリ・ファイルは削除
+            FileVersioning.delete_file(file_names_by_version[2])
+
+            # 旧形式のバイナリ・ファイルは削除
+            FileVersioning.delete_file(file_names_by_version[1])
+
+            # 旧形式のテキスト・ファイルは削除
+            FileVersioning.delete_file(file_names_by_version[0])
+
+            return ee_table
+
         # バイナリV2ファイルに保存されているとき
         if file_version == "V2":
-            ee_table = FileVersioning.read_evaluation_from_binary_v2_file(
-                    file_name=file_names_by_version[2])
+
+            # TODO バージョンアップしたい
+            ee_table = FileVersioning.read_evaluation_v2_file_and_convert_to_v3(
+                v2_file_name=file_names_by_version[2])
+            #ee_table = FileVersioning.read_evaluation_from_binary_v2_v3_file(
+            #        file_name=file_names_by_version[2])
 
             # 旧形式のバイナリ・ファイルは削除
             FileVersioning.delete_file(file_names_by_version[1])
@@ -242,12 +307,17 @@ class FileVersioning():
             evaluation_kind,
             evaluation_ee_table):
         """最新のバージョンで保存する"""
-        bin_v2_file_name=f'n{file_number}_eval_{evaluation_kind}_v2.bin'    # 新
 
-        print(f"[{datetime.datetime.now()}] save {bin_v2_file_name} file ...", flush=True)
+        file_names_by_version = FileVersioning.create_file_names_each_version(
+                file_number=file_number,
+                evaluation_kind=evaluation_kind)
+
+        file_name = file_names_by_version[3]
+
+        print(f"[{datetime.datetime.now()}] save {file_name} file ...", flush=True)
 
         # バイナリ・ファイルに出力する
-        with open(bin_v2_file_name, 'wb') as f:
+        with open(file_name, 'wb') as f:
 
             length = 0
             sum = 0
@@ -279,4 +349,4 @@ class FileVersioning():
 
                 f.write(sum.to_bytes(1))
 
-        print(f"[{datetime.datetime.now()}] {bin_v2_file_name} file saved", flush=True)
+        print(f"[{datetime.datetime.now()}] {file_name} file saved", flush=True)

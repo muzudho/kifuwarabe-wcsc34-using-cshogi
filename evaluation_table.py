@@ -13,11 +13,23 @@ class EvaluationTable():
     def __init__(self, file_number):
         self._file_number = file_number
 
-        # 評価値テーブル：　ＦｍＦ＋ＦｍＯポリシー
-        self._fmf_plus_fmo_policy_table = None
-
         # 評価値テーブル：　ＦｋＦ＋ＦｋＯポリシー
         self._fkf_plus_fko_policy_table = None
+        self._is_symmetrical_connected_of_fkf_plus_fko = None
+
+        # 評価値テーブル：　ＦｍＦ＋ＦｍＯポリシー
+        self._fmf_plus_fmo_policy_table = None
+        self._is_symmetrical_connected_of_fmf_plus_fmo = None
+
+
+    @property
+    def fkf_plus_fko_policy_table(self):
+        return self._fkf_plus_fko_policy_table
+
+
+    @property
+    def fmf_plus_fmo_policy_table(self):
+        return self._fmf_plus_fmo_policy_table
 
 
     def usinewgame(
@@ -39,10 +51,10 @@ class EvaluationTable():
                 file_version=file_version)
         is_file_modified = ee_table is None
 
-        is_symmetrical_connected = True
+        self._is_symmetrical_connected_of_fkf_plus_fko = True
         if file_version == "V3":
             # TODO 予定
-            is_symmetrical_connected = False
+            self._is_symmetrical_connected_of_fkf_plus_fko = False
 
         if ee_table is None:
             # ファイルが存在しないとき
@@ -55,7 +67,7 @@ class EvaluationTable():
                 file_number=self._file_number,
                 evaluation_ee_table=ee_table,
                 is_file_modified=is_file_modified,
-                is_symmetrical_connected=is_symmetrical_connected)
+                is_symmetrical_connected=self._is_symmetrical_connected_of_fkf_plus_fko)
 
         self._fkf_plus_fko_policy_table.update_evaluation_table(
                 king_canditates_memory, # キング
@@ -73,6 +85,11 @@ class EvaluationTable():
                 file_version=file_version)
         is_file_modified = ee_table is None
 
+        self._is_symmetrical_connected_of_fmf_plus_fmo = True
+        if file_version == "V3":
+            # TODO 予定
+            self._is_symmetrical_connected_of_fmf_plus_fmo = False
+
         if ee_table is None:
             # ファイルが存在しないとき
             ee_table = FileVersioning.reset_to_random_table(
@@ -84,7 +101,7 @@ class EvaluationTable():
                 file_number=self._file_number,
                 evaluation_ee_table=ee_table,
                 is_file_modified=is_file_modified,
-                is_symmetrical_connected=is_symmetrical_connected)
+                is_symmetrical_connected=self._is_symmetrical_connected_of_fmf_plus_fmo)
 
         self._fmf_plus_fmo_policy_table.update_evaluation_table(
                 minions_canditates_memory,  # ミニオンズ
@@ -156,13 +173,3 @@ class EvaluationTable():
                 minions_move_as_usi_and_score_dictionary[fmf_plus_fmo] = policy
 
         return (king_move_as_usi_and_score_dictionary, minions_move_as_usi_and_score_dictionary)
-
-
-    def get_ee_table_index_from_move_as_usi(
-            self,
-            move_as_usi):
-        """内容確認用
-        指し手を１つ指定すると、その評価値が入っているＥＥテーブルのインデックスを返します"""
-        return Move(move_as_usi).get_table_index(
-                is_symmetrical_board=True)
-
