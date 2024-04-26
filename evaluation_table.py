@@ -3,7 +3,6 @@ from evaluation_configuration import EvaluationConfiguration
 from evaluation_fmf_plus_fmo_table import EvaluationFmfPlusFmoTable
 from evaluation_fkf_plus_fko_table import EvaluationFkfPlusFkoTable
 from file_versioning import FileVersioning
-from move import Move
 
 
 class EvaluationTable():

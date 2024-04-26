@@ -319,11 +319,11 @@ class Kifuwarabe():
         number = 1
         print('自玉の合法手一覧：')
         for move_a_as_usi in sorted_friend_king_legal_move_list_as_usi:
-            k_table_index = EvaluationConfiguration.get_table_index(
+            k_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
                     is_symmetrical_connected=self._evaluation_table_obj.fkf_plus_fko_policy_table.is_symmetrical_connected)
 
-            m_table_index = EvaluationConfiguration.get_table_index(
+            m_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
                     is_symmetrical_connected=self._evaluation_table_obj.fmf_plus_fmo_policy_table.is_symmetrical_connected)
 
@@ -332,11 +332,11 @@ class Kifuwarabe():
 
         print('自軍の玉以外の合法手一覧：')
         for move_a_as_usi in sorted_friend_minions_legal_move_list_as_usi:
-            k_table_index = EvaluationConfiguration.get_table_index(
+            k_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
                     is_symmetrical_connected=self._evaluation_table_obj.fkf_plus_fko_policy_table.is_symmetrical_connected)
 
-            m_table_index = EvaluationConfiguration.get_table_index(
+            m_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
                     is_symmetrical_connected=self._evaluation_table_obj.fmf_plus_fmo_policy_table.is_symmetrical_connected)
 
@@ -364,11 +364,11 @@ class Kifuwarabe():
         print('次のいくつもの局面の相手の合法手の集合：')
         number = 1
         for move_a_as_usi in opponent_legal_move_set_as_usi:
-            k_table_index = EvaluationConfiguration.get_table_index(
+            k_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
                     is_symmetrical_connected=self._evaluation_table_obj.fkf_plus_fko_policy_table.is_symmetrical_connected)
 
-            m_table_index = EvaluationConfiguration.get_table_index(
+            m_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
                     is_symmetrical_connected=self._evaluation_table_obj.fmf_plus_fmo_policy_table.is_symmetrical_connected)
 
@@ -400,7 +400,7 @@ class Kifuwarabe():
             # 指し手の評価値
             k_move_value = king_move_as_usi_and_score_dictionary[move_a_as_usi]
 
-            k_table_index = EvaluationConfiguration.get_table_index(
+            k_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
                     is_symmetrical_connected=self._evaluation_table_obj.fkf_plus_fko_policy_table.is_symmetrical_connected)
 
@@ -418,7 +418,7 @@ class Kifuwarabe():
             # 指し手の評価値
             m_move_value = minions_move_as_usi_and_score_dictionary[move_a_as_usi]
 
-            m_table_index = EvaluationConfiguration.get_table_index(
+            m_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
                     is_symmetrical_connected=self._evaluation_table_obj.fmf_plus_fmo_policy_table.is_symmetrical_connected)
 

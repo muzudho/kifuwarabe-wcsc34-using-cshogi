@@ -144,7 +144,7 @@ class EvaluationEeTable():
         return os.path.isfile(self._bin_v2_file_name)
 
 
-    def get_table_index(self, move_a_as_usi, move_b_as_usi, turn):
+    def get_table_index_by_2_moves(self, move_a_as_usi, move_b_as_usi, turn):
         """指し手２つの組み合わせインデックス"""
 
         # 同じ指し手を比較したら 0 とする（総当たりの二重ループとかでここを通る）
@@ -156,10 +156,10 @@ class EvaluationEeTable():
             move_a_as_usi = Move.flip_turn(move_a_as_usi)
             move_b_as_usi = Move.flip_turn(move_b_as_usi)
 
-        index_a = EvaluationConfiguration.get_table_index(
+        index_a = EvaluationConfiguration.get_table_index_by_move(
                 move=Move(move_a_as_usi),
                 is_symmetrical_connected=self._is_symmetrical_connected)
-        index_b = EvaluationConfiguration.get_table_index(
+        index_b = EvaluationConfiguration.get_table_index_by_move(
                 move=Move(move_b_as_usi),
                 is_symmetrical_connected=self._is_symmetrical_connected)
 
@@ -203,7 +203,7 @@ class EvaluationEeTable():
     def get_evaluation_value(self, move_a_as_usi, move_b_as_usi, turn):
         """両方残すなら 0点、インデックスが小さい方を残すなら -1点、インデックスが大きい方を残すなら +1点"""
 
-        index = self.get_table_index(move_a_as_usi, move_b_as_usi, turn)
+        index = self.get_table_index_by_2_moves(move_a_as_usi, move_b_as_usi, turn)
         #print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} index:{index}", flush=True)
 
         # 古いデータには 2 が入っているので、 2 は　1 に変換する
@@ -266,7 +266,7 @@ class EvaluationEeTable():
         if result_text in ('lose', 'draw'):
             for move_a_as_usi in canditates_memory.move_set:
                 for move_b_as_usi in canditates_memory.move_set:
-                    index = self.get_table_index(move_a_as_usi, move_b_as_usi, turn)
+                    index = self.get_table_index_by_2_moves(move_a_as_usi, move_b_as_usi, turn)
 
                     # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
                     self._evaluation_ee_table[index] = random.randint(0,1)

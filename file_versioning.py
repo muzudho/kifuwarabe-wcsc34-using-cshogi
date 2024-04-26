@@ -131,6 +131,8 @@ class FileVersioning():
                 while multiple_bytes:
                     one_byte = int.from_bytes(multiple_bytes, signed=False)
 
+                    # TODO V2 ---> V3 で、インデックスがずれる
+
                     evaluation_ee_table.append(one_byte//128 % 2)
                     evaluation_ee_table.append(one_byte// 64 % 2)
                     evaluation_ee_table.append(one_byte// 32 % 2)
