@@ -59,16 +59,27 @@ class EvaluationConfiguration():
             盤は左右対称か？
         """
 
-        try:
-            if is_symmetrical_connected:
+        if is_symmetrical_connected:
+            try:
                 src_num = Move._src_dst_str_1st_figure_to_index_on_symmetrical_board[move.src_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.src_str[1]]
-                dst_num = Move._src_dst_str_1st_figure_to_index_on_symmetrical_board[move.dst_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.dst_str[1]]
-            else:
-                src_num = Move._src_dst_str_1st_figure_to_index_on_fully_connected[move.src_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.src_str[1]]
-                dst_num = Move._src_dst_str_1st_figure_to_index_on_fully_connected[move.dst_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.dst_str[1]]
+            except Exception as e:
+                raise Exception(f"symmetrical_connected src_num error in '{move.as_usi}'.  ('{move.src_str[0]}', '{move.src_str[1]}')  e: {e}")
 
-        except:
-            raise Exception(f"dst dst error in '{move.as_usi}'")
+            try:
+                dst_num = Move._src_dst_str_1st_figure_to_index_on_symmetrical_board[move.dst_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.dst_str[1]]
+            except Exception as e:
+                raise Exception(f"symmetrical_connected dst_num error in '{move.as_usi}'.  ('{move.dst_str[0]}', '{move.dst_str[1]}')  e: {e}")
+
+        else:
+            try:
+                src_num = Move._src_dst_str_1st_figure_to_index_on_fully_connected[move.src_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.src_str[1]]
+            except Exception as e:
+                raise Exception(f"fully_connected src_num error in '{move.as_usi}'.  ('{move.src_str[0]}', '{move.src_str[1]}')  e: {e}")
+
+            try:
+                dst_num = Move._src_dst_str_1st_figure_to_index_on_fully_connected[move.dst_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.dst_str[1]]
+            except Exception as e:
+                raise Exception(f"fully_connected dst_num error in '{move.as_usi}'.  ('{move.dst_str[0]}', '{move.dst_str[1]}')  e: {e}")
 
         # 成りか？
         if move.is_promotion():
@@ -181,6 +192,7 @@ class EvaluationConfiguration():
             # 45 以上は打
             if 45 <= src_num:
                 src_file = EvaluationConfiguration._src_num_to_file_str_on_symmetrical_connected[src_num]
+                conjugate_src_file = src_file
                 src_rank = '*'
 
             # 盤上
