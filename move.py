@@ -145,6 +145,11 @@ class Move():
     _src_drops = ('R*', 'B*', 'G*', 'S*', 'N*', 'L*', 'P*')
 
 
+    @staticmethod
+    def get_rank_num_to_str(rank_num):
+        return Move._rank_num_to_str[rank_num]
+
+
     @classmethod
     def flip_turn(clazz, move_as_usi):
         """先後をひっくり返します"""

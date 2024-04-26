@@ -121,45 +121,45 @@ class EvaluationConfiguration():
         if is_symmetrical_connected:
             if 36 <= dst_num:
                 dst_file = '5'
-                dst_rank = (dst_num - 36) + 1
+                dst_rank = Move.get_rank_num_to_str(dst_num - 36 + 1)
             elif 27 <= dst_num:
                 dst_file = '4'  # or '6'
-                dst_rank = (dst_num - 27) + 1
+                dst_rank = Move.get_rank_num_to_str(dst_num - 27 + 1)
             elif 18 <= dst_num:
                 dst_file = '3'  # or '7'
-                dst_rank = (dst_num - 18) + 1
+                dst_rank = Move.get_rank_num_to_str(dst_num - 18 + 1)
             elif 9 <= dst_num:
                 dst_file = '2'  # or '8'
-                dst_rank = (dst_num - 9) + 1
+                dst_rank = Move.get_rank_num_to_str(dst_num - 9 + 1)
             else:
                 dst_file = '1'  # or '9'
-                dst_rank = dst_num + 1
+                dst_rank = Move.get_rank_num_to_str(dst_num + 1)
 
         else:
             if 72 <= dst_num:
                 dst_file = '9'
-                dst_rank = (dst_num - 72) + 1
+                dst_rank = Move.get_rank_num_to_str(dst_num - 72 + 1)
             elif 63 <= dst_num:
                 dst_file = '8'
-                dst_rank = (dst_num - 63) + 1
+                dst_rank = Move.get_rank_num_to_str(dst_num - 63 + 1)
             elif 54 <= dst_num:
                 dst_file = '7'
-                dst_rank = (dst_num - 54) + 1
+                dst_rank = Move.get_rank_num_to_str(dst_num - 54 + 1)
             elif 45 <= dst_num:
                 dst_file = '6'
-                dst_rank = (dst_num - 45) + 1
+                dst_rank = Move.get_rank_num_to_str(dst_num - 45 + 1)
             elif 36 <= dst_num:
                 dst_file = '5'
-                dst_rank = (dst_num - 36) + 1
+                dst_rank = Move.get_rank_num_to_str(dst_num - 36 + 1)
             elif 27 <= dst_num:
                 dst_file = '4'
-                dst_rank = (dst_num - 27) + 1
+                dst_rank = Move.get_rank_num_to_str(dst_num - 27 + 1)
             elif 18 <= dst_num:
                 dst_file = '3'
-                dst_rank = (dst_num - 18) + 1
+                dst_rank = Move.get_rank_num_to_str(dst_num - 18 + 1)
             elif 9 <= dst_num:
                 dst_file = '2'
-                dst_rank = (dst_num - 9) + 1
+                dst_rank = Move.get_rank_num_to_str(dst_num - 9 + 1)
             else:
                 dst_file = '1'
                 dst_rank = dst_num + 1
@@ -175,19 +175,19 @@ class EvaluationConfiguration():
             else:
                 if 36 <= src_num:
                     src_file = '5'
-                    src_rank = (src_num - 36) + 1
+                    src_rank = Move.get_rank_num_to_str(src_num - 36 + 1)
                 elif 27 <= src_num:
                     src_file = '4'  # or '6'
-                    src_rank = (src_num - 27) + 1
+                    src_rank = Move.get_rank_num_to_str(src_num - 27 + 1)
                 elif 18 <= src_num:
                     src_file = '3'  # or '7'
-                    src_rank = (src_num - 18) + 1
+                    src_rank = Move.get_rank_num_to_str(src_num - 18 + 1)
                 elif 9 <= src_num:
                     src_file = '2'  # or '8'
-                    src_rank = (src_num - 9) + 1
+                    src_rank = Move.get_rank_num_to_str(src_num - 9 + 1)
                 else:
                     src_file = '1'  # or '9'
-                    src_rank = src_num + 1
+                    src_rank = Move.get_rank_num_to_str(src_num + 1)
 
         else:
             # 81 以上は打
@@ -199,30 +199,30 @@ class EvaluationConfiguration():
             else:
                 if 72 <= src_num:
                     src_file = '9'
-                    src_rank = (src_num - 72) + 1
+                    src_rank = Move.get_rank_num_to_str(src_num - 72 + 1)
                 elif 63 <= src_num:
                     src_file = '8'
-                    src_rank = (src_num - 63) + 1
+                    src_rank = Move.get_rank_num_to_str(src_num - 63 + 1)
                 elif 54 <= src_num:
                     src_file = '7'
-                    src_rank = (src_num - 54) + 1
+                    src_rank = Move.get_rank_num_to_str(src_num - 54 + 1)
                 elif 45 <= src_num:
                     src_file = '6'
-                    src_rank = (src_num - 45) + 1
+                    src_rank = Move.get_rank_num_to_str(src_num - 45 + 1)
                 elif 36 <= src_num:
                     src_file = '5'
-                    src_rank = (src_num - 36) + 1
+                    src_rank = Move.get_rank_num_to_str(src_num - 36 + 1)
                 elif 27 <= src_num:
                     src_file = '4'
-                    src_rank = (src_num - 27) + 1
+                    src_rank = Move.get_rank_num_to_str(src_num - 27 + 1)
                 elif 18 <= src_num:
                     src_file = '3'
-                    src_rank = (src_num - 18) + 1
+                    src_rank = Move.get_rank_num_to_str(src_num - 18 + 1)
                 elif 9 <= src_num:
                     src_file = '2'
-                    src_rank = (src_num - 9) + 1
+                    src_rank = Move.get_rank_num_to_str(src_num - 9 + 1)
                 else:
                     src_file = '1'
-                    src_rank = src_num + 1
+                    src_rank = Move.get_rank_num_to_str(src_num + 1)
 
         return f'{src_file}{src_rank}{dst_file}{dst_rank}{pro_str}'

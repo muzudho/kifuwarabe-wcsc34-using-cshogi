@@ -323,11 +323,19 @@ class Kifuwarabe():
                     move=Move(move_a_as_usi),
                     is_symmetrical_connected=self._evaluation_table_obj.fkf_plus_fko_policy_table.is_symmetrical_connected)
 
+            k_move_as_usi = EvaluationConfiguration.get_move_as_usi_by_table_index(
+                    table_index=k_table_index,
+                    is_symmetrical_connected=self._evaluation_table_obj.fkf_plus_fko_policy_table.is_symmetrical_connected)
+
             m_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
                     is_symmetrical_connected=self._evaluation_table_obj.fmf_plus_fmo_policy_table.is_symmetrical_connected)
 
-            print(f'  ({number:3}) {move_a_as_usi:5} = K{k_table_index:5} M{m_table_index:5}')
+            m_move_as_usi = EvaluationConfiguration.get_move_as_usi_by_table_index(
+                    table_index=m_table_index,
+                    is_symmetrical_connected=self._evaluation_table_obj.fmf_plus_fmo_policy_table.is_symmetrical_connected)
+
+            print(f'  ({number:3}) {move_a_as_usi:5} = K{k_table_index:5} M{m_table_index:5} 検算 K {k_move_as_usi:5} M {m_move_as_usi:5}')
             number += 1
 
         print('自軍の玉以外の合法手一覧：')
@@ -336,11 +344,19 @@ class Kifuwarabe():
                     move=Move(move_a_as_usi),
                     is_symmetrical_connected=self._evaluation_table_obj.fkf_plus_fko_policy_table.is_symmetrical_connected)
 
+            k_move_as_usi = EvaluationConfiguration.get_move_as_usi_by_table_index(
+                    table_index=k_table_index,
+                    is_symmetrical_connected=self._evaluation_table_obj.fkf_plus_fko_policy_table.is_symmetrical_connected)
+
             m_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
                     is_symmetrical_connected=self._evaluation_table_obj.fmf_plus_fmo_policy_table.is_symmetrical_connected)
 
-            print(f'  ({number:3}) {move_a_as_usi:5} = K{k_table_index:5} M{m_table_index:5}')
+            m_move_as_usi = EvaluationConfiguration.get_move_as_usi_by_table_index(
+                    table_index=m_table_index,
+                    is_symmetrical_connected=self._evaluation_table_obj.fmf_plus_fmo_policy_table.is_symmetrical_connected)
+
+            print(f'  ({number:3}) {move_a_as_usi:5} = K{k_table_index:5} M{m_table_index:5} 検算 K {k_move_as_usi:5} M {m_move_as_usi:5}')
             number += 1
 
         #
@@ -368,11 +384,19 @@ class Kifuwarabe():
                     move=Move(move_a_as_usi),
                     is_symmetrical_connected=self._evaluation_table_obj.fkf_plus_fko_policy_table.is_symmetrical_connected)
 
+            k_move_as_usi = EvaluationConfiguration.get_move_as_usi_by_table_index(
+                    table_index=k_table_index,
+                    is_symmetrical_connected=self._evaluation_table_obj.fkf_plus_fko_policy_table.is_symmetrical_connected)
+
             m_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
                     is_symmetrical_connected=self._evaluation_table_obj.fmf_plus_fmo_policy_table.is_symmetrical_connected)
 
-            print(f'  ({number:3}) {move_a_as_usi:5} = K{k_table_index:5} M{m_table_index:5}')
+            m_move_as_usi = EvaluationConfiguration.get_move_as_usi_by_table_index(
+                    table_index=m_table_index,
+                    is_symmetrical_connected=self._evaluation_table_obj.fmf_plus_fmo_policy_table.is_symmetrical_connected)
+
+            print(f'  ({number:3}) {move_a_as_usi:5} = K{k_table_index:5} M{m_table_index:5} 検算 K {k_move_as_usi:5} M {m_move_as_usi:5}')
             number += 1
 
         #
@@ -404,7 +428,11 @@ class Kifuwarabe():
                     move=Move(move_a_as_usi),
                     is_symmetrical_connected=self._evaluation_table_obj.fkf_plus_fko_policy_table.is_symmetrical_connected)
 
-            print(f'  ({number:3}) {move_a_as_usi:5} = K{k_table_index:5} value:{k_move_value:3}')
+            k_move_as_usi = EvaluationConfiguration.get_move_as_usi_by_table_index(
+                    table_index=k_table_index,
+                    is_symmetrical_connected=self._evaluation_table_obj.fkf_plus_fko_policy_table.is_symmetrical_connected)
+
+            print(f'  ({number:3}) {move_a_as_usi:5} = K{k_table_index:5} value:{k_move_value:3} 検算 K {k_move_as_usi:5}')
             number += 1
 
         #
@@ -422,7 +450,11 @@ class Kifuwarabe():
                     move=Move(move_a_as_usi),
                     is_symmetrical_connected=self._evaluation_table_obj.fmf_plus_fmo_policy_table.is_symmetrical_connected)
 
-            print(f'  ({number:3}) {move_a_as_usi:5} = M{m_table_index:5} value:{m_move_value:3}')
+            m_move_as_usi = EvaluationConfiguration.get_move_as_usi_by_table_index(
+                    table_index=m_table_index,
+                    is_symmetrical_connected=self._evaluation_table_obj.fmf_plus_fmo_policy_table.is_symmetrical_connected)
+
+            print(f'  ({number:3}) {move_a_as_usi:5} = M{m_table_index:5} value:{m_move_value:3} 検算 M {m_move_as_usi:5}')
             number += 1
 
 
