@@ -222,9 +222,12 @@ class Kifuwarabe():
                 # ［対局結果］　常に記憶する
                 self._result_file.save_lose(self._my_turn)
 
-                # ［指した手］　勝っていないなら追加していく
+                # ［指した手］　勝っていないなら追加していく（旧称のファイルがあれば削除する）
                 self._king_canditates_memory.save()
+                self._king_canditates_memory.delete_old_version_file()
+
                 self._pieces_canditates_memory.save()
+                self._pieces_canditates_memory.delete_old_version_file()
 
             # 勝ち
             elif cmd[1] == 'win':
@@ -244,18 +247,24 @@ class Kifuwarabe():
                 # ［対局結果］　常に記憶する
                 self._result_file.save_draw(self._my_turn)
 
-                # ［指した手］　勝っていないなら追加していく
+                # ［指した手］　勝っていないなら追加していく（旧称のファイルがあれば削除する）
                 self._king_canditates_memory.save()
+                self._king_canditates_memory.delete_old_version_file()
+
                 self._pieces_canditates_memory.save()
+                self._pieces_canditates_memory.delete_old_version_file()
 
             # その他
             else:
                 # ［対局結果］　常に記憶する
                 self._result_file.save_otherwise(cmd[1], self._my_turn)
 
-                # ［指した手］　勝っていないなら追加していく
+                # ［指した手］　勝っていないなら追加していく（旧称のファイルがあれば削除する）
                 self._king_canditates_memory.save()
+                self._king_canditates_memory.delete_old_version_file()
+
                 self._pieces_canditates_memory.save()
+                self._pieces_canditates_memory.delete_old_version_file()
 
 
     def do(self, cmd):

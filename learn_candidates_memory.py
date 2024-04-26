@@ -95,6 +95,21 @@ class CandidatesMemory():
             pass
 
 
+    def delete_old_version_file(self):
+        """旧バージョンのファイルを削除"""
+        try:
+            # 旧称のファイルが存在するとき
+            file_name = f'n{self._file_number}_canditates_memory_minions.txt'
+            if os.path.isfile(file_name):
+                print(f"[{datetime.datetime.now()}] {file_name} file delete...", flush=True)
+                os.remove(self.file_name)
+                print(f"[{datetime.datetime.now()}] {file_name} file deleted", flush=True)
+
+        except FileNotFoundError:
+            # ファイルが無いのなら、削除に失敗しても問題ない
+            pass
+
+
     def save(self):
         """保存"""
         print(f"[{datetime.datetime.now()}] save {self.file_name} file ...", flush=True)
