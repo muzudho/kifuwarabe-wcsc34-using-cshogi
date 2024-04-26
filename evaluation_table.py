@@ -1,5 +1,7 @@
+import datetime
 from evaluation_fmf_plus_fmo_table import EvaluationFmfPlusFmoTable
 from evaluation_fkf_plus_fko_table import EvaluationFkfPlusFkoTable
+from file_versioning import FileVersioning
 from move import Move
 
 
@@ -24,29 +26,73 @@ class EvaluationTable():
             result_file):
         """新規対局の準備"""
 
-        # ＦｍＦ＋ＦｍＯポリシー
-        self._fmf_plus_fmo_policy_table = EvaluationFmfPlusFmoTable(file_number=self._file_number)
-        self._fmf_plus_fmo_policy_table.load_from_file_or_random_table()
-        self._fmf_plus_fmo_policy_table.update_evaluation_table(
-                minions_canditates_memory,  # ミニオンズ
-                result_file)
-
+        #
         # ＦｋＦ＋ＦｋＯポリシー
-        self._fkf_plus_fko_policy_table = EvaluationFkfPlusFkoTable(file_number=self._file_number)
-        self._fkf_plus_fko_policy_table.load_from_file_or_random_table()
+        #
+        ee_table = FileVersioning.load_from_file_or_random_table(
+                file_number=self._file_number,
+                evaluation_kind="fkf_fko")
+
+        if ee_table is None:
+            # ファイルが存在しないとき
+            ee_table = FileVersioning.reset_to_random_table(
+                file_number=self._file_number,
+                evaluation_kind="fkf_fko",
+                table_size=EvaluationFkfPlusFkoTable.get_symmetrical_connected_table_size())
+
+        self._fkf_plus_fko_policy_table = EvaluationFkfPlusFkoTable(
+                file_number=self._file_number,
+                evaluation_ee_table=ee_table)
+
         self._fkf_plus_fko_policy_table.update_evaluation_table(
                 king_canditates_memory, # キング
+                result_file)
+
+        #
+        # ＦｍＦ＋ＦｍＯポリシー
+        #
+        ee_table = FileVersioning.load_from_file_or_random_table(
+                file_number=self._file_number,
+                evaluation_kind="fmf_fmo")
+
+        if ee_table is None:
+            # ファイルが存在しないとき
+            ee_table = FileVersioning.reset_to_random_table(
+                file_number=self._file_number,
+                evaluation_kind="fmf_fmo",
+                table_size=EvaluationFmfPlusFmoTable.get_symmetrical_connected_table_size())
+
+        self._fmf_plus_fmo_policy_table = EvaluationFmfPlusFmoTable(
+                file_number=self._file_number,
+                evaluation_ee_table=ee_table)
+
+        self._fmf_plus_fmo_policy_table.update_evaluation_table(
+                minions_canditates_memory,  # ミニオンズ
                 result_file)
 
 
     def save_file(self):
         """ファイルの保存"""
 
-        # ＦｍＦ＋ＦｍＯポリシー
-        self._fmf_plus_fmo_policy_table.save_evaluation_to_file()
+        # 保存するかどうかは先に判定しておくこと
+        if self._fkf_plus_fko_policy_table.file_modified:
+            # ＦｋＦ＋ＦｋＯポリシー
+            FileVersioning.save_evaluation_to_file(
+                    file_number=self._file_number,
+                    evalueation_kind="fkf_fko",
+                    evalueation_ee_table=self._fkf_plus_fko_policy_table.evalueation_ee_table)
+        else:
+            print(f"[{datetime.datetime.now()}] fkf_fko file not changed", flush=True)
 
-        # ＦｋＦ＋ＦｋＯポリシー
-        self._fkf_plus_fko_policy_table.save_evaluation_to_file()
+        # 保存するかどうかは先に判定しておくこと
+        if self._fmf_plus_fmo_policy_table.file_modified:
+            # ＦｍＦ＋ＦｍＯポリシー
+            FileVersioning.save_evaluation_to_file(
+                    file_number=self._file_number,
+                    evalueation_kind="fmf_fmo",
+                    evalueation_ee_table=self._fmf_plus_fmo_policy_table.evalueation_ee_table)
+        else:
+            print(f"[{datetime.datetime.now()}] fmf_fmo file not changed", flush=True)
 
 
     def make_move_as_usi_and_policy_dictionary(
