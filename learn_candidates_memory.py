@@ -99,11 +99,11 @@ class CandidatesMemory():
         """旧バージョンのファイルを削除"""
         try:
             # 旧称のファイルが存在するとき
-            file_name = f'n{self._file_number}_canditates_memory_minions.txt'
-            if os.path.isfile(file_name):
-                print(f"[{datetime.datetime.now()}] {file_name} file delete...", flush=True)
-                os.remove(self.file_name)
-                print(f"[{datetime.datetime.now()}] {file_name} file deleted", flush=True)
+            old_file_name = f'n{self._file_number}_canditates_memory_minions.txt'
+            if os.path.isfile(old_file_name):
+                print(f"[{datetime.datetime.now()}] (old version) {old_file_name} file delete...", flush=True)
+                os.remove(old_file_name)
+                print(f"[{datetime.datetime.now()}] (old version) {old_file_name} file deleted", flush=True)
 
         except FileNotFoundError:
             # ファイルが無いのなら、削除に失敗しても問題ない
