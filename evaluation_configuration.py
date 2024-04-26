@@ -88,14 +88,14 @@ class EvaluationConfiguration():
             pro_num = 0
 
         rank_size = 9
-        pro_num_size = 2
+        pro_size = 2
 
         if is_symmetrical_connected:
             file_size = 5
         else:
             file_size = 9
 
-        return (src_num * file_size * rank_size * pro_num_size) + (dst_num * pro_num_size) + pro_num
+        return (src_num * file_size * rank_size * pro_size) + (dst_num * pro_size) + pro_num
 
 
     @staticmethod
@@ -106,7 +106,7 @@ class EvaluationConfiguration():
 
         指し手１つ分。ただし鏡面の場合、共役が付いて２つ返ってくる
         """
-        pro_num_size = 2
+        pro_size = 2
         rank_size = 9
 
         if is_symmetrical_connected:
@@ -114,17 +114,27 @@ class EvaluationConfiguration():
         else:
             file_size = 9
 
+        #     45 =         5 *         9
         dst_size = file_size * rank_size
 
-        drops = 7
+        drop_kind = 7
+        src_size = (file_size * rank_size) + drop_kind
+        move_size = src_size * dst_size * pro_size
 
+        #             4680
         bits = table_index
-        pro_num = bits % pro_num_size
-        bits //= pro_num_size
 
+        #     0 = 4680 %            2
+        pro_num = bits % pro_size
+        # 2340
+        bits //= pro_size
+
+        #     0 = 2340 %       45
         dst_num = bits % dst_size
+        # 52 = 2340 / 45
         bits //= dst_size
 
+        # 52
         src_num = bits
 
         # 共役の移動元の筋。左右対称の盤で、反対側の方の筋
@@ -198,8 +208,9 @@ class EvaluationConfiguration():
                 try:
                     src_file = EvaluationConfiguration._src_num_to_file_str_on_symmetrical_connected[src_num]
                 except KeyError as e:
-                    # 例： src_num: 52  dst_num: 0  pro_num: 0  table_index: 4680  bits: 52  file_size: 5  rank_size: 9  dst_size: 45  pro_num_size: 2
-                    print(f"src_num: {src_num}  dst_num: {dst_num}  pro_num: {pro_num}  table_index: {table_index}  bits: {bits}  file_size: {file_size}  rank_size: {rank_size}  dst_size: {dst_size}  pro_num_size: {pro_num_size}  e: {e}")
+                    # 例： single_move error.  src_num:52  dst_num:0  pro_num:0  table_index:4680  move_size:28350  bits:52  file_size:5  rank_size:9  dst_size:45  pro_size:2  e:52
+                    # 例： single_move error.  src_num:52  dst_num:0  pro_num:0  table_index:4680  move_size:28350  (src_size:315  dst_size:45  pro_size:2)  bits:52  drop_kind:7  file_size:5  rank_size:9  e:52
+                    print(f"single_move error.  src_num:{src_num}  dst_num:{dst_num}  pro_num:{pro_num}  table_index:{table_index}  move_size:{move_size}  (src_size:{src_size}  dst_size:{dst_size}  pro_size:{pro_size})  bits:{bits}  drop_kind:{drop_kind}  file_size:{file_size}  rank_size:{rank_size}  e:{e}")
                     raise
 
                 conjugate_src_file = src_file
@@ -292,10 +303,10 @@ class EvaluationConfiguration():
 
         rank_size = 9
 
-        dst_size = rank_size * file_size
+        dst_size = file_size * rank_size
 
         drop_kind = 7
-        src_size = drop_kind * rank_size * file_size
+        src_size = (file_size * rank_size) + drop_kind
 
         move_size = src_size * dst_size * pro_size
 
@@ -306,14 +317,22 @@ class EvaluationConfiguration():
 
         b_move_bits = bits
 
-        a_moves = EvaluationConfiguration.get_moves_single_as_usi_by_table_index(
-                a_move_bits,
-                is_symmetrical_connected)
+        try:
+            a_moves = EvaluationConfiguration.get_moves_single_as_usi_by_table_index(
+                    a_move_bits,
+                    is_symmetrical_connected)
+        except Exception as e:
+            # 例： a_moves error.  a_move_bits:4680  b_move_bits:0  move_size:28350  src_size:315  dst_size:45  pro_size:2  drop_kind:7  rank_size:9  file_size:5  pro_size:2  e:52
+            print(f"a_moves error.  a_move_bits:{a_move_bits}  b_move_bits:{b_move_bits}  move_size:{move_size}  ( src_size:{src_size}  dst_size:{dst_size}  pro_size:{pro_size} )  drop_kind:{drop_kind}  rank_size:{rank_size}  file_size:{file_size}  e:{e}")
+            raise
 
-
-        b_moves = EvaluationConfiguration.get_moves_single_as_usi_by_table_index(
-                b_move_bits,
-                is_symmetrical_connected)
+        try:
+            b_moves = EvaluationConfiguration.get_moves_single_as_usi_by_table_index(
+                    b_move_bits,
+                    is_symmetrical_connected)
+        except Exception as e:
+            print(f"b_moves error.  a_move_bits:{a_move_bits}  b_move_bits:{b_move_bits}  move_size:{move_size}  ( src_size:{src_size}  dst_size:{dst_size}  pro_size:{pro_size} )  drop_kind:{drop_kind}  rank_size:{rank_size}  file_size:{file_size}  e:{e}")
+            raise
 
         return [a_moves, b_moves]
 
