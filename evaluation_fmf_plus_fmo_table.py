@@ -2,10 +2,11 @@ import cshogi
 import os
 import random
 import datetime
+from evaluation_ee_table import EvaluationEeTable
 from move import Move
 
 
-class EvaluationFmfPlusFmoTable():
+class EvaluationFmfPlusFmoTable(EvaluationEeTable):
     """評価値ＦｍＦ＋ＦｍＯテーブル
 
     合法手（つまり利き）を E （Effect）と呼ぶとし、
@@ -33,18 +34,9 @@ class EvaluationFmfPlusFmoTable():
     このテーブルを使って FmF + FmO の評価値を返す
     """
 
-    def __init__(self, file_number):
-        self._file_number = file_number
-
-        self._file_name = f'n{file_number}_eval_fmf_fmo.txt'            # 旧
-        self._bin_file_name = f'n{file_number}_eval_fmf_fmo.bin'        # 旧
-        self._bin_v2_file_name = f'n{file_number}_eval_fmf_fmo_v2.bin'  # 新
-
-        self._file_modified = False
-
-        self._move_size = 8424
-        self._table_size = 70_955_352
-        self._evaluation_ee_table = [0] * self._table_size
+    def __init__(
+            self,
+            file_number):
         """評価値EEテーブル
 
             指し手の種類は、 src, dst, pro で構成されるものの他、 resign 等の文字列がいくつかある。
@@ -92,33 +84,17 @@ class EvaluationFmfPlusFmoTable():
 
         """
 
+        evaluation_kind = "fmf_fmo"
 
-    def exists_text_file(self):
-        """テキスト・ファイルは存在するか？"""
-        return os.path.isfile(self._file_name)
-
-
-    def exists_binary_file(self):
-        """バイナリ・ファイルは存在するか？"""
-        return os.path.isfile(self._bin_file_name)
-
-
-    def exists_binary_v2_file(self):
-        """バイナリV2ファイルは存在するか？"""
-        return os.path.isfile(self._bin_v2_file_name)
-
-
-    def reset_to_random_table(self):
-        """ランダム値の入った評価値テーブルを新規作成する"""
-        # ダミーデータを入れる。１分ほどかかる
-        print(f"[{datetime.datetime.now()}] make random fmf_plus_fmo evaluation table in memory ...", flush=True)
-
-        for index in range(0, self._table_size):
-            # 値は 0, 1 の２値
-            self._evaluation_ee_table[index] = random.randint(0,1)
-
-        print(f"[{datetime.datetime.now()}] evaluation table maked in memory", flush=True)
-        self._file_modified = True
+        EvaluationEeTable.__init__(
+                self,
+                file_number=file_number,
+                evaluation_kind=evaluation_kind,
+                file_name=f'n{file_number}_eval_{evaluation_kind}.txt',            # 旧
+                bin_file_name=f'n{file_number}_eval_{evaluation_kind}.bin',        # 旧
+                bin_v2_file_name=f'n{file_number}_eval_{evaluation_kind}_v2.bin',  # 新
+                move_size=8424,
+                table_size = 70_955_352)
 
 
     def read_evaluation_from_text_file(self):
