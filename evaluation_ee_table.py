@@ -1,10 +1,10 @@
 import cshogi
 import os
-import random
 import datetime
 from evaluation_configuration import EvaluationConfiguration
 from move import Move
 from move_helper import MoveHelper
+from learn import Learn
 
 class EvaluationEeTable():
     """評価値ＥＥテーブル
@@ -121,6 +121,11 @@ class EvaluationEeTable():
         return self._is_file_modified
 
 
+    @is_file_modified.setter
+    def is_file_modified(self, value):
+        self._is_file_modified = value
+
+
     @property
     def is_symmetrical_connected(self):
         return self._is_symmetrical_connected
@@ -206,7 +211,10 @@ class EvaluationEeTable():
 
             # 前回の対局で、負けるか、引き分けなら、内容を変えます
             if result_text in ('lose', 'draw'):
-                self.modify_table(canditates_memory, turn)
+                Learn.modify_table(
+                        evaluation_ee_table_obj=self,
+                        canditates_memory=canditates_memory,
+                        turn=turn)
                 print(f"[{datetime.datetime.now()}] {self._file_name} file updated", flush=True)
 
 
@@ -280,38 +288,3 @@ class EvaluationEeTable():
                 move_as_usi_and_score_dictionary[move_a_as_usi] = sum_value
 
         return move_as_usi_and_score_dictionary
-
-
-    def modify_table(self, canditates_memory, turn):
-        """指した手の評価値を適当に変更します"""
-
-        for move_a_as_usi in canditates_memory.move_set:
-            for move_b_as_usi in canditates_memory.move_set:
-
-                move_a_obj = Move(move_a_as_usi)
-                move_b_obj = Move(move_b_as_usi)
-
-                index = self.get_table_index_by_2_moves(
-                        move_a_obj,
-                        move_b_obj,
-                        turn)
-
-                # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
-                self._evaluation_ee_table[index] = random.randint(0,1)
-
-                #
-                # TODO 左右反転して、同じようにしたい
-                #
-                reversed_move_a_obj = MoveHelper.flip_horizontal(move_a_obj)
-                reversed_move_b_obj = MoveHelper.flip_horizontal(move_b_obj)
-
-                index = self.get_table_index_by_2_moves(
-                        reversed_move_a_obj,
-                        reversed_move_b_obj,
-                        turn)
-
-                # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
-                self._evaluation_ee_table[index] = random.randint(0,1)
-
-
-        self._is_file_modified = True
