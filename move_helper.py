@@ -32,13 +32,43 @@ class MoveHelper():
     """先後逆さの段符号"""
 
 
-    _src_drops = ('R*', 'B*', 'G*', 'S*', 'N*', 'L*', 'P*')
-
-
     @staticmethod
-    def flip_horizontal(move_as_usi):
-        """左右反転した盤上の指し手を返します"""
-        pass
+    def flip_horizontal(move):
+        """左右反転した盤上の指し手を返します
+
+        Parameters
+        ----------
+        move : Move
+            指し手
+        """
+        # 移動元
+        #
+        # ［打］は先後で表記は同じ
+        if move.src_str in Move._src_drops:
+            reversed_src_str = move.src_str
+
+        else:
+
+            reversed_file_str = MoveHelper._flip_turn_files[move.src_str[0]]
+
+            rank_str = move.src_str[1]
+
+            reversed_src_str = f"{reversed_file_str}{rank_str}"
+
+        # 移動先
+        reversed_file_str = MoveHelper._flip_turn_files[move.dst_str[0]]
+
+        rank_str = move.dst_str[1]
+
+        reversed_dst_str = f"{reversed_file_str}{rank_str}"
+
+        # 成りかそれ以外（５文字なら成りだろう）
+        if 4 < len(move.as_usi):
+            pro = "+"
+        else:
+            pro = ""
+
+        return Move(f"{reversed_src_str}{reversed_dst_str}{pro}")
 
 
     @staticmethod
@@ -54,23 +84,23 @@ class MoveHelper():
         # 移動元
         #
         # ［打］は先後で表記は同じ
-        if move.src_str in MoveHelper._src_drops:
+        if move.src_str in Move._src_drops:
             reversed_src_str = move.src_str
 
         else:
 
-            file_str = MoveHelper._flip_turn_files[move.src_str[0]]
+            reversed_file_str = MoveHelper._flip_turn_files[move.src_str[0]]
 
-            rank_str = MoveHelper._flip_turn_ranks[move.src_str[1]]
+            reversed_rank_str = MoveHelper._flip_turn_ranks[move.src_str[1]]
 
-            reversed_src_str = f"{file_str}{rank_str}"
+            reversed_src_str = f"{reversed_file_str}{reversed_rank_str}"
 
         # 移動先
-        file_str = MoveHelper._flip_turn_files[move.dst_str[0]]
+        reversed_file_str = MoveHelper._flip_turn_files[move.dst_str[0]]
 
-        rank_str = MoveHelper._flip_turn_ranks[move.dst_str[1]]
+        reversed_rank_str = MoveHelper._flip_turn_ranks[move.dst_str[1]]
 
-        reversed_dst_str = f"{file_str}{rank_str}"
+        reversed_dst_str = f"{reversed_file_str}{reversed_rank_str}"
 
         # 成りかそれ以外（５文字なら成りだろう）
         if 4 < len(move.as_usi):

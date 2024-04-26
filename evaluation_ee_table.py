@@ -146,15 +146,16 @@ class EvaluationEeTable():
         return os.path.isfile(self._bin_v2_file_name)
 
 
-    def get_table_index_by_2_moves(self, move_a_as_usi, move_b_as_usi, turn):
+    def get_table_index_by_2_moves(
+            self,
+            move_a_obj,
+            move_b_obj,
+            turn):
         """指し手２つの組み合わせインデックス"""
 
         # 同じ指し手を比較したら 0 とする（総当たりの二重ループとかでここを通る）
-        if move_a_as_usi == move_b_as_usi:
+        if move_a_obj.as_usi == move_b_obj.as_usi:
             return 0
-
-        move_a_obj = Move(move_a_as_usi)
-        move_b_obj = Move(move_b_as_usi)
 
         # 後手なら、指し手の先後をひっくり返す（将棋盤を１８０°回転させるのと同等）
         if turn == cshogi.WHITE:
@@ -209,10 +210,13 @@ class EvaluationEeTable():
                 print(f"[{datetime.datetime.now()}] {self._file_name} file updated", flush=True)
 
 
-    def get_evaluation_value(self, move_a_as_usi, move_b_as_usi, turn):
+    def get_evaluation_value(self, move_a_obj, move_b_obj, turn):
         """両方残すなら 0点、インデックスが小さい方を残すなら -1点、インデックスが大きい方を残すなら +1点"""
 
-        index = self.get_table_index_by_2_moves(move_a_as_usi, move_b_as_usi, turn)
+        index = self.get_table_index_by_2_moves(
+                move_a_obj,
+                move_b_obj,
+                turn)
         #print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} index:{index}", flush=True)
 
         try:
@@ -258,17 +262,20 @@ class EvaluationEeTable():
 
         for sorted_friend_legal_move_list_as_usi in list_of_sorted_friend_legal_move_list_as_usi:
             for move_a_as_usi in sorted_friend_legal_move_list_as_usi:
+                move_a_obj = Move(move_a_as_usi)
                 # 総当たりで評価値を計算
                 sum_value = 0
 
                 # （ＦＦ）：　自軍の指し手Ａと、自軍の指し手Ｂ
                 for sorted_king_legal_move_list_as_usi_2 in list_of_sorted_friend_legal_move_list_as_usi:
                     for move_b_as_usi in sorted_king_legal_move_list_as_usi_2:
-                        sum_value += self.get_evaluation_value(move_a_as_usi, move_b_as_usi, turn)
+                        move_b_obj = Move(move_b_as_usi)
+                        sum_value += self.get_evaluation_value(move_a_obj, move_b_obj, turn)
 
                 # （ＦＯ）：　自軍の指し手Ａと、相手の指し手Ｂ
                 for move_b_as_usi in opponent_legal_move_set_as_usi:
-                    sum_value += self.get_evaluation_value(move_a_as_usi, move_b_as_usi, turn)
+                    move_b_obj = Move(move_b_as_usi)
+                    sum_value += self.get_evaluation_value(move_a_obj, move_b_obj, turn)
 
                 move_as_usi_and_score_dictionary[move_a_as_usi] = sum_value
 
@@ -281,7 +288,13 @@ class EvaluationEeTable():
         for move_a_as_usi in canditates_memory.move_set:
             for move_b_as_usi in canditates_memory.move_set:
 
-                index = self.get_table_index_by_2_moves(move_a_as_usi, move_b_as_usi, turn)
+                move_a_obj = Move(move_a_as_usi)
+                move_b_obj = Move(move_b_as_usi)
+
+                index = self.get_table_index_by_2_moves(
+                        move_a_obj,
+                        move_b_obj,
+                        turn)
 
                 # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
                 self._evaluation_ee_table[index] = random.randint(0,1)
@@ -289,7 +302,16 @@ class EvaluationEeTable():
                 #
                 # TODO 左右反転して、同じようにしたい
                 #
+                reversed_move_a_obj = MoveHelper.flip_horizontal(move_a_obj)
+                reversed_move_b_obj = MoveHelper.flip_horizontal(move_b_obj)
 
+                index = self.get_table_index_by_2_moves(
+                        reversed_move_a_obj,
+                        reversed_move_b_obj,
+                        turn)
+
+                # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
+                self._evaluation_ee_table[index] = random.randint(0,1)
 
 
         self._is_file_modified = True

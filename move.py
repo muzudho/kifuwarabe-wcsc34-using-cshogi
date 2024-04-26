@@ -1,6 +1,3 @@
-from move_helper import MoveHelper
-
-
 class Move():
     """指し手"""
 
@@ -117,6 +114,9 @@ class Move():
     """移動元、移動先の２文字目をインデックスへ変換"""
 
 
+    _src_drops = ('R*', 'B*', 'G*', 'S*', 'N*', 'L*', 'P*')
+
+
     @staticmethod
     def get_rank_num_to_str(rank_num):
         return Move._rank_num_to_str[rank_num]
@@ -159,7 +159,7 @@ class Move():
         #print(f"[get_src_file_or_none] move_as_usi: {self._move_as_usi}, src_str: {src_str}")
 
         # ［打］は列番号を取得できない
-        if src_str in MoveHelper._src_drops:
+        if src_str in Move._src_drops:
             return None
 
         file_str = src_str[0]
@@ -181,7 +181,7 @@ class Move():
         #print(f"[get_src_rank_or_none] move_as_usi: {self._move_as_usi}, src_str: {src_str}")
 
         # ［打］は列番号を取得できない
-        if src_str in MoveHelper._src_drops:
+        if src_str in Move._src_drops:
             return None
 
         rank_str = src_str[1]
