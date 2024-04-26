@@ -17,8 +17,8 @@ class EvaluationFkfPlusFkoTable(EvaluationEeTable):
                 self,
                 file_number=file_number,
                 evaluation_kind=evaluation_kind,
-                file_name=f'n{file_number}_eval_{evaluation_kind}.txt',    # 旧
-                bin_file_name=f'n{file_number}_eval_{evaluation_kind}.bin',        # 旧
-                bin_v2_file_name=f'n{file_number}_eval_{evaluation_kind}_v2.bin',  # 新
+                file_name=f'n{file_number}_eval_{evaluation_kind}.txt',             # 旧
+                bin_file_name=f'n{file_number}_eval_{evaluation_kind}.bin',         # 旧
+                bin_v2_file_name=f'n{file_number}_eval_{evaluation_kind}_v2.bin',   # 新
                 move_size=8424,
                 table_size = 70_955_352)
