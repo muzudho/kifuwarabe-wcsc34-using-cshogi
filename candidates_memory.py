@@ -55,7 +55,7 @@ class CandidatesMemory():
             self._file_name = f'n{self._file_number}_canditates_memory_minions.txt'
 
         self._move_set = set()
-        self._file_modified = False
+        self._is_file_modified = False
 
 
     @property
@@ -98,7 +98,7 @@ class CandidatesMemory():
 
             f.write(text)
 
-        self._file_modified = False
+        self._is_file_modified = False
 
         print(f"[{datetime.datetime.now()}] {self.file_name} file saved", flush=True)
 
@@ -120,7 +120,7 @@ class CandidatesMemory():
         after_size = len(self._move_set)
 
         # 変わってないかも知らんけど
-        self._file_modified = before_size != after_size
+        self._is_file_modified = before_size != after_size
 
         print(f"[{datetime.datetime.now()}] (after size:{after_size}) candidates moves merged", flush=True)
 
@@ -145,7 +145,7 @@ class CandidatesMemory():
         after_size = len(self._move_set)
 
         # 変わってないかも知らんけど
-        self._file_modified = before_size != after_size
+        self._is_file_modified = before_size != after_size
 
         print(f"[{datetime.datetime.now()}] (after size:{after_size}) candidates moves merged", flush=True)
 

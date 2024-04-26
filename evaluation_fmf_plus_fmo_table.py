@@ -9,8 +9,15 @@ class EvaluationFmfPlusFmoTable(EvaluationEeTable):
     def __init__(
             self,
             file_number,
-            evaluation_ee_table):
-        """初期化"""
+            evaluation_ee_table,
+            is_file_modified):
+        """初期化
+
+        Parameters
+        ----------
+        is_file_modified : bool
+            保存されていない評価値テーブルを引数で渡したなら真
+        """
 
         evaluation_kind = "fmf_fmo"
 
@@ -24,7 +31,8 @@ class EvaluationFmfPlusFmoTable(EvaluationEeTable):
                 move_size=EvaluationFmfPlusFmoTable.get_symmetrical_connected_move_number(),
                 table_size=EvaluationFmfPlusFmoTable.get_symmetrical_connected_table_size(),
                 is_symmetrical_connected=True,
-                evaluation_ee_table=evaluation_ee_table)
+                evaluation_ee_table=evaluation_ee_table,
+                is_file_modified=is_file_modified)
 
 
     @staticmethod

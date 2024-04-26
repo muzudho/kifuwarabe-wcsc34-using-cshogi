@@ -42,13 +42,16 @@ class EvaluationEeTable():
             move_size,
             table_size,
             is_symmetrical_connected,
-            evaluation_ee_table):
+            evaluation_ee_table,
+            is_file_modified):
         """初期化
 
         Parameters
         ----------
         is_symmetrical_connected : bool
             左右対称の盤か？
+        is_file_modified : bool
+            保存されていない評価値テーブルを引数で渡したなら真
 
         指し手は２種類
         ============
@@ -107,14 +110,12 @@ class EvaluationEeTable():
         self._table_size = table_size
         self._is_symmetrical_connected = is_symmetrical_connected
         self._evaluation_ee_table = evaluation_ee_table
-        #self._evaluation_ee_table = [0] * self._table_size
-
-        self._file_modified = False
+        self._is_file_modified = is_file_modified
 
 
     @property
-    def file_modified(self):
-        return self._file_modified
+    def is_file_modified(self):
+        return self._is_file_modified
 
 
     @property
@@ -262,4 +263,4 @@ class EvaluationEeTable():
                     # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
                     self._evaluation_ee_table[index] = random.randint(0,1)
 
-            self._file_modified = True
+            self._is_file_modified = True

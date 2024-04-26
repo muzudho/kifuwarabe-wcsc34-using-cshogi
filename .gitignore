@@ -1,7 +1,9 @@
 # (^q^)
 
-n*_eval.txt
+n*_eval_*.txt
 n*_canditates_memory.txt
+n*_canditates_memory_king.txt
+n*_canditates_memory_minions.txt
 n*_result.txt
 
 # Byte-compiled / optimized / DLL files

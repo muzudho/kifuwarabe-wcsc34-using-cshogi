@@ -32,6 +32,7 @@ class EvaluationTable():
         ee_table = FileVersioning.load_from_file_or_random_table(
                 file_number=self._file_number,
                 evaluation_kind="fkf_fko")
+        is_file_modified = ee_table is None
 
         if ee_table is None:
             # ファイルが存在しないとき
@@ -42,7 +43,8 @@ class EvaluationTable():
 
         self._fkf_plus_fko_policy_table = EvaluationFkfPlusFkoTable(
                 file_number=self._file_number,
-                evaluation_ee_table=ee_table)
+                evaluation_ee_table=ee_table,
+                is_file_modified=is_file_modified)
 
         self._fkf_plus_fko_policy_table.update_evaluation_table(
                 king_canditates_memory, # キング
@@ -54,6 +56,7 @@ class EvaluationTable():
         ee_table = FileVersioning.load_from_file_or_random_table(
                 file_number=self._file_number,
                 evaluation_kind="fmf_fmo")
+        is_file_modified = ee_table is None
 
         if ee_table is None:
             # ファイルが存在しないとき
@@ -64,7 +67,8 @@ class EvaluationTable():
 
         self._fmf_plus_fmo_policy_table = EvaluationFmfPlusFmoTable(
                 file_number=self._file_number,
-                evaluation_ee_table=ee_table)
+                evaluation_ee_table=ee_table,
+                is_file_modified=is_file_modified)
 
         self._fmf_plus_fmo_policy_table.update_evaluation_table(
                 minions_canditates_memory,  # ミニオンズ
@@ -75,22 +79,22 @@ class EvaluationTable():
         """ファイルの保存"""
 
         # 保存するかどうかは先に判定しておくこと
-        if self._fkf_plus_fko_policy_table.file_modified:
+        if self._fkf_plus_fko_policy_table.is_file_modified:
             # ＦｋＦ＋ＦｋＯポリシー
             FileVersioning.save_evaluation_to_file(
                     file_number=self._file_number,
-                    evalueation_kind="fkf_fko",
-                    evalueation_ee_table=self._fkf_plus_fko_policy_table.evalueation_ee_table)
+                    evaluation_kind="fkf_fko",
+                    evaluation_ee_table=self._fkf_plus_fko_policy_table.evaluation_ee_table)
         else:
             print(f"[{datetime.datetime.now()}] fkf_fko file not changed", flush=True)
 
         # 保存するかどうかは先に判定しておくこと
-        if self._fmf_plus_fmo_policy_table.file_modified:
+        if self._fmf_plus_fmo_policy_table.is_file_modified:
             # ＦｍＦ＋ＦｍＯポリシー
             FileVersioning.save_evaluation_to_file(
                     file_number=self._file_number,
-                    evalueation_kind="fmf_fmo",
-                    evalueation_ee_table=self._fmf_plus_fmo_policy_table.evalueation_ee_table)
+                    evaluation_kind="fmf_fmo",
+                    evaluation_ee_table=self._fmf_plus_fmo_policy_table.evaluation_ee_table)
         else:
             print(f"[{datetime.datetime.now()}] fmf_fmo file not changed", flush=True)
 

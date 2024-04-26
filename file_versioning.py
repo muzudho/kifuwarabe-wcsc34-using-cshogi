@@ -34,7 +34,6 @@ class FileVersioning():
             print(f"[evaluation table / load from file] [{file_name}] file error. {ex}")
             raise
 
-        #self._file_modified = False
         return evaluation_ee_table
 
 
@@ -68,7 +67,6 @@ class FileVersioning():
             print(f"[evaluation table / load from file] [{file_name}] file error. {ex}")
             raise
 
-        #self._file_modified = False
         return evaluation_ee_table
 
 
@@ -110,7 +108,6 @@ class FileVersioning():
             print(f"[evaluation table / load from file] [{file_name}] file error. {ex}")
             raise
 
-        #self._file_modified = False
         return evaluation_ee_table
 
 
@@ -191,7 +188,6 @@ class FileVersioning():
             evaluation_ee_table.append(random.randint(0,1))
 
         print(f"[{datetime.datetime.now()}] {evaluation_kind} evaluation table maked in memory", flush=True)
-        #self._file_modified = True
         return evaluation_ee_table
 
 
@@ -201,7 +197,7 @@ class FileVersioning():
             evaluation_kind,
             evaluation_ee_table):
         """最新のバージョンで保存する"""
-        bin_v2_file_name=f'n{file_number}_eval_{evaluation_kind}_v2.bin',   # 新
+        bin_v2_file_name=f'n{file_number}_eval_{evaluation_kind}_v2.bin'    # 新
 
         print(f"[{datetime.datetime.now()}] save {bin_v2_file_name} file ...", flush=True)
 
@@ -237,7 +233,5 @@ class FileVersioning():
                     length += 1
 
                 f.write(sum.to_bytes(1))
-
-        #TODO self._file_modified = False
 
         print(f"[{datetime.datetime.now()}] {bin_v2_file_name} file saved", flush=True)
