@@ -37,12 +37,12 @@ class EvaluationConfiguration():
 
     @staticmethod
     def get_symmetrical_connected_move_number():
-        return 8_424
+        return 4_680
 
 
     @staticmethod
     def get_symmetrical_connected_table_size():
-        return 70_955_352
+        return 21_897_720
 
 
     @staticmethod
@@ -96,6 +96,59 @@ class EvaluationConfiguration():
             file_size = 9
 
         return (src_num * file_size * rank_size * pro_size) + (dst_num * pro_size) + pro_num
+
+
+    @staticmethod
+    def get_moves_pair_as_usi_by_table_index(
+            table_index,
+            is_symmetrical_connected):
+        """逆関数
+
+        指し手２つ分返す
+        """
+
+        pro_size = 2
+
+        if is_symmetrical_connected:
+            file_size = 5
+        else:
+            file_size = 9
+
+        rank_size = 9
+
+        dst_size = file_size * rank_size
+
+        drop_kind = 7
+        src_size = (file_size * rank_size) + drop_kind
+
+        move_size = src_size * dst_size * pro_size
+
+        bits = table_index
+
+        a_move_bits = bits % move_size
+        bits //= move_size
+
+        b_move_bits = bits
+
+        try:
+            a_moves = EvaluationConfiguration.get_moves_single_as_usi_by_table_index(
+                    a_move_bits,
+                    is_symmetrical_connected)
+        except Exception as e:
+            # 例： a_moves error.  a_move_bits:4680  b_move_bits:0  move_size:28350  src_size:315  dst_size:45  pro_size:2  drop_kind:7  rank_size:9  file_size:5  pro_size:2  e:52
+            print(f"a_moves error.  a_move_bits:{a_move_bits}  b_move_bits:{b_move_bits}  table_index:{table_index}  move_size:{move_size}  ( src_size:{src_size}  dst_size:{dst_size}  pro_size:{pro_size} )  drop_kind:{drop_kind}  rank_size:{rank_size}  file_size:{file_size}  e:{e}")
+            raise
+
+        try:
+            b_moves = EvaluationConfiguration.get_moves_single_as_usi_by_table_index(
+                    b_move_bits,
+                    is_symmetrical_connected)
+        except Exception as e:
+            # 例： b_moves error.  a_move_bits:0  b_move_bits:4680  table_index:21902400  move_size:4680  ( src_size:52  dst_size:45  pro_size:2 )  drop_kind:7  rank_size:9  file_size:5  e:52
+            print(f"b_moves error.  a_move_bits:{a_move_bits}  b_move_bits:{b_move_bits}  table_index:{table_index}  move_size:{move_size}  ( src_size:{src_size}  dst_size:{dst_size}  pro_size:{pro_size} )  drop_kind:{drop_kind}  rank_size:{rank_size}  file_size:{file_size}  e:{e}")
+            raise
+
+        return [a_moves, b_moves]
 
 
     @staticmethod
@@ -208,8 +261,8 @@ class EvaluationConfiguration():
                 try:
                     src_file = EvaluationConfiguration._src_num_to_file_str_on_symmetrical_connected[src_num]
                 except KeyError as e:
-                    # 例： single_move error.  src_num:52  dst_num:0  pro_num:0  table_index:4680  move_size:28350  bits:52  file_size:5  rank_size:9  dst_size:45  pro_size:2  e:52
-                    # 例： single_move error.  src_num:52  dst_num:0  pro_num:0  table_index:4680  move_size:28350  (src_size:315  dst_size:45  pro_size:2)  bits:52  drop_kind:7  file_size:5  rank_size:9  e:52
+                    # 例： single_move error.  src_num:52  dst_num:0  pro_num:0  table_index:4680  move_size:4680  (src_size:52  dst_size:45  pro_size:2)  bits:52  drop_kind:7  file_size:5  rank_size:9  e:52
+                    # 例： single_move error.  src_num:52  dst_num:0  pro_num:0  table_index:4680  move_size:4680  (src_size:52  dst_size:45  pro_size:2)  bits:52  drop_kind:7  file_size:5  rank_size:9  e:52
                     print(f"single_move error.  src_num:{src_num}  dst_num:{dst_num}  pro_num:{pro_num}  table_index:{table_index}  move_size:{move_size}  (src_size:{src_size}  dst_size:{dst_size}  pro_size:{pro_size})  bits:{bits}  drop_kind:{drop_kind}  file_size:{file_size}  rank_size:{rank_size}  e:{e}")
                     raise
 
@@ -242,7 +295,7 @@ class EvaluationConfiguration():
         else:
             # 81 以上は打
             if 81 <= src_num:
-                src_str = EvaluationConfiguration._src_num_to_file_str_on_fully_connected[src_num]
+                src_file = EvaluationConfiguration._src_num_to_file_str_on_fully_connected[src_num]
                 src_rank = '*'
 
             # 盤上
@@ -283,56 +336,3 @@ class EvaluationConfiguration():
             moves_single.append(f'{conjugate_src_file}{src_rank}{conjugate_dst_file}{dst_rank}{pro_str}')
 
         return moves_single
-
-
-    @staticmethod
-    def get_moves_pair_as_usi_by_table_index(
-            table_index,
-            is_symmetrical_connected):
-        """逆関数
-
-        指し手２つ分返す
-        """
-
-        pro_size = 2
-
-        if is_symmetrical_connected:
-            file_size = 5
-        else:
-            file_size = 9
-
-        rank_size = 9
-
-        dst_size = file_size * rank_size
-
-        drop_kind = 7
-        src_size = (file_size * rank_size) + drop_kind
-
-        move_size = src_size * dst_size * pro_size
-
-        bits = table_index
-
-        a_move_bits = bits % move_size
-        bits //= move_size
-
-        b_move_bits = bits
-
-        try:
-            a_moves = EvaluationConfiguration.get_moves_single_as_usi_by_table_index(
-                    a_move_bits,
-                    is_symmetrical_connected)
-        except Exception as e:
-            # 例： a_moves error.  a_move_bits:4680  b_move_bits:0  move_size:28350  src_size:315  dst_size:45  pro_size:2  drop_kind:7  rank_size:9  file_size:5  pro_size:2  e:52
-            print(f"a_moves error.  a_move_bits:{a_move_bits}  b_move_bits:{b_move_bits}  move_size:{move_size}  ( src_size:{src_size}  dst_size:{dst_size}  pro_size:{pro_size} )  drop_kind:{drop_kind}  rank_size:{rank_size}  file_size:{file_size}  e:{e}")
-            raise
-
-        try:
-            b_moves = EvaluationConfiguration.get_moves_single_as_usi_by_table_index(
-                    b_move_bits,
-                    is_symmetrical_connected)
-        except Exception as e:
-            print(f"b_moves error.  a_move_bits:{a_move_bits}  b_move_bits:{b_move_bits}  move_size:{move_size}  ( src_size:{src_size}  dst_size:{dst_size}  pro_size:{pro_size} )  drop_kind:{drop_kind}  rank_size:{rank_size}  file_size:{file_size}  e:{e}")
-            raise
-
-        return [a_moves, b_moves]
-

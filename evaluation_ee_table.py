@@ -89,8 +89,10 @@ class EvaluationEeTable():
         しかし、家のＰＣでこのサイズの配列を２つ読み込んで２つのエンジンで対局させることはできなかったので、
         左右対称と仮定して、９筋ではなく、５筋にする。
 
-            (5 * 9 + 7) * 81 * 2 = 8_424     ... symmetrical_connected_move 数
-            (8424 - 1) * 8424 = 70_955_352  ... symmetrical_connected_table_size 数
+            (5 * 9 + 7) * (5 * 9) * 2 = 4_680     ... symmetrical_connected_move 数
+
+
+            (4_680 - 1) * 4_680 = 21_897_720  ... symmetrical_connected_table_size 数
 
         ----------
 

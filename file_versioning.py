@@ -139,7 +139,10 @@ class FileVersioning():
                     #
                     two_powers = [128, 64, 32, 16, 8, 4, 2, 1]
                     for two_power in two_powers:
-                        bit = one_byte//two_power % 2
+
+                        # ビットフィールドを全て使わず、途中で切れるケース
+                        if EvaluationConfiguration.get_symmetrical_connected_table_size() <= table_index:
+                            break
 
                         moves_as_usi_pair = EvaluationConfiguration.get_moves_pair_as_usi_by_table_index(
                                 table_index=table_index,
@@ -154,10 +157,11 @@ class FileVersioning():
                                         is_symmetrical_connected=False)
 
                                 try:
+                                    bit = one_byte//two_power % 2
                                     evaluation_ee_table[converted_table_index] = bit
 
                                 except IndexError as e:
-                                    print(f"table length: {len(evaluation_ee_table)}  index: {converted_table_index}  except: {e}")
+                                    print(f"table length:{len(evaluation_ee_table)}  table_index:{table_index}  converted_table_index:{converted_table_index}  except:{e}")
                                     raise
 
 
