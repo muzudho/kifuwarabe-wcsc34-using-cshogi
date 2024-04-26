@@ -1,5 +1,5 @@
 import datetime
-from evaluation_ee_table import EvaluationEeTable
+from evaluation_configuration import EvaluationConfiguration
 from evaluation_fmf_plus_fmo_table import EvaluationFmfPlusFmoTable
 from evaluation_fkf_plus_fko_table import EvaluationFkfPlusFkoTable
 from file_versioning import FileVersioning
@@ -49,7 +49,7 @@ class EvaluationTable():
             ee_table = FileVersioning.reset_to_random_table(
                 file_number=self._file_number,
                 evaluation_kind="fkf_fko",
-                table_size=EvaluationEeTable.get_symmetrical_connected_table_size())
+                table_size=EvaluationConfiguration.get_symmetrical_connected_table_size())
 
         self._fkf_plus_fko_policy_table = EvaluationFkfPlusFkoTable(
                 file_number=self._file_number,
@@ -78,7 +78,7 @@ class EvaluationTable():
             ee_table = FileVersioning.reset_to_random_table(
                 file_number=self._file_number,
                 evaluation_kind="fmf_fmo",
-                table_size=EvaluationEeTable.get_symmetrical_connected_table_size())
+                table_size=EvaluationConfiguration.get_symmetrical_connected_table_size())
 
         self._fmf_plus_fmo_policy_table = EvaluationFmfPlusFmoTable(
                 file_number=self._file_number,
