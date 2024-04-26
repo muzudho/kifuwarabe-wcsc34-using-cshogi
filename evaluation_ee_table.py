@@ -73,7 +73,7 @@ class EvaluationEeTable():
 
         上記(1),(2),(3) の組み合わせの数は、以下の通り
 
-            (81 + 7) * 81 * 2 = 14256       ... fully_connected_move 数
+            (81 + 7) * 81 * 2 = 14_256       ... fully_connected_move 数
 
         実用上、駒はワープできるわけではないので本当はこの数より少なくできるはずですが、
         実装方法が思い浮かばないので、このまま全結合とします
@@ -88,7 +88,7 @@ class EvaluationEeTable():
         しかし、家のＰＣでこのサイズの配列を２つ読み込んで２つのエンジンで対局させることはできなかったので、
         左右対称と仮定して、９筋ではなく、５筋にする。
 
-            (5 * 9 + 7) * 81 * 2 = 8424     ... symmetrical_connected_move 数
+            (5 * 9 + 7) * 81 * 2 = 8_424     ... symmetrical_connected_move 数
             (8424 - 1) * 8424 = 70_955_352  ... symmetrical_connected_table_size 数
 
         ----------
@@ -151,9 +151,9 @@ class EvaluationEeTable():
             move_b_as_usi = Move.flip_turn(move_b_as_usi)
 
         index_a = Move(move_a_as_usi).get_table_index(
-                is_symmetrical_board=True)
+                is_symmetrical_board=self._is_symmetrical_connected)
         index_b = Move(move_b_as_usi).get_table_index(
-                is_symmetrical_board=True)
+                is_symmetrical_board=self._is_symmetrical_connected)
 
         move_indexes = [index_a, index_b]
         move_indexes.sort()

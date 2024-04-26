@@ -125,47 +125,92 @@ class FileVersioning():
 
 
     @staticmethod
-    def load_from_file_or_random_table(
+    def create_file_names_each_version(
+            file_number,
+            evaluation_kind):
+        return [
+            f'n{file_number}_eval_{evaluation_kind}.txt',       # 旧 V0
+            f'n{file_number}_eval_{evaluation_kind}.bin',       # 旧 V1
+            f'n{file_number}_eval_{evaluation_kind}_v2.bin',    # 新 V2
+        ]
+
+
+    @staticmethod
+    def check_file_version(
             file_number,
             evaluation_kind):
         """評価関数テーブルをファイルから読み込む。無ければランダム値の入った物を新規作成する"""
-        text_file_name=f'n{file_number}_eval_{evaluation_kind}.txt'         # 旧
-        bin_file_name=f'n{file_number}_eval_{evaluation_kind}.bin'          # 旧
-        bin_v2_file_name=f'n{file_number}_eval_{evaluation_kind}_v2.bin'    # 新
 
-        print(f"[{datetime.datetime.now()}] {bin_v2_file_name} file exists check ...", flush=True)
+        file_names_by_version = FileVersioning.create_file_names_each_version(
+                file_number=file_number,
+                evaluation_kind=evaluation_kind)
+
+        print(f"[{datetime.datetime.now()}] {file_names_by_version[2]} file exists check ...", flush=True)
 
         # バイナリV2ファイルに保存されているとき
-        if os.path.isfile(bin_v2_file_name):
-            ee_table = FileVersioning.read_evaluation_from_binary_v2_file(
-                    file_name=bin_v2_file_name)
+        if os.path.isfile(file_names_by_version[2]):
+            return "V2"
 
-            # 旧形式のバイナリ・ファイルは削除
-            FileVersioning.delete_file(bin_file_name)
-
-            # 旧形式のテキスト・ファイルは削除
-            FileVersioning.delete_file(text_file_name)
-
-            return ee_table
-
-        print(f"[{datetime.datetime.now()}] {bin_file_name} file exists check ...", flush=True)
+        print(f"[{datetime.datetime.now()}] {file_names_by_version[1]} file exists check ...", flush=True)
 
         # バイナリ・ファイルに保存されているとき
-        if os.path.isfile(bin_file_name):
-            ee_table = FileVersioning.read_evaluation_from_binary_file(
-                    file_name=bin_file_name)
+        if os.path.isfile(file_names_by_version[1]):
+            return "V1"
+
+        print(f"[{datetime.datetime.now()}] {file_names_by_version[0]} file exists check ...", flush=True)
+
+        # テキスト・ファイルに保存されているとき
+        if os.path.isfile(file_names_by_version[0]):
+            return "V0"
+
+        # ファイルが存在しないとき
+        return None
+
+
+    @staticmethod
+    def load_from_file_or_random_table(
+            file_number,
+            evaluation_kind,
+            file_version):
+        """評価関数テーブルをファイルから読み込む。無ければランダム値の入った物を新規作成する"""
+
+        file_names_by_version = FileVersioning.create_file_names_each_version(
+                file_number=file_number,
+                evaluation_kind=evaluation_kind)
+
+        print(f"[{datetime.datetime.now()}] {file_names_by_version[2]} file exists check ...", flush=True)
+
+        # バイナリV2ファイルに保存されているとき
+        if file_version == "V2":
+            ee_table = FileVersioning.read_evaluation_from_binary_v2_file(
+                    file_name=file_names_by_version[2])
+
+            # 旧形式のバイナリ・ファイルは削除
+            FileVersioning.delete_file(file_names_by_version[1])
 
             # 旧形式のテキスト・ファイルは削除
-            FileVersioning.delete_file(text_file_name)
+            FileVersioning.delete_file(file_names_by_version[0])
 
             return ee_table
 
-        print(f"[{datetime.datetime.now()}] {text_file_name} file exists check ...", flush=True)
+        print(f"[{datetime.datetime.now()}] {file_names_by_version[1]} file exists check ...", flush=True)
+
+        # バイナリ・ファイルに保存されているとき
+        if file_version == "V1":
+            ee_table = FileVersioning.read_evaluation_from_binary_file(
+                    file_name=file_names_by_version[1])
+
+            # 旧形式のテキスト・ファイルは削除
+            FileVersioning.delete_file(file_names_by_version[0])
+
+            return ee_table
+
+        print(f"[{datetime.datetime.now()}] {file_names_by_version[0]} file exists check ...", flush=True)
 
         # テキスト・ファイルに保存されているとき
-        if os.path.isfile(text_file_name):
+        if file_version == "V0":
             ee_table = FileVersioning.read_evaluation_from_text_file(
-                    file_name=text_file_name)
+                    file_name=file_names_by_version[0])
 
             return ee_table
 

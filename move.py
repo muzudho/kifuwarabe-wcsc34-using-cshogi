@@ -58,7 +58,7 @@ class Move():
     """逆さの段符号"""
 
 
-    _src_dst_str_1st_figure_to_index = {
+    _src_dst_str_1st_figure_to_index_on_fully_connected = {
         'R' : 45,   # 'R*' 移動元の打
         'B' : 46,   # 'B*'
         'G' : 47,   # 'G*'
@@ -289,8 +289,8 @@ class Move():
                 src_num = Move._src_dst_str_1st_figure_to_index_on_symmetrical_board[src_str[0]] + Move._src_dst_str_2nd_figure_to_index[src_str[1]]
                 dst_num = Move._src_dst_str_1st_figure_to_index_on_symmetrical_board[dst_str[0]] + Move._src_dst_str_2nd_figure_to_index[dst_str[1]]
             else:
-                src_num = Move._src_dst_str_1st_figure_to_index[src_str[0]] + Move._src_dst_str_2nd_figure_to_index[src_str[1]]
-                dst_num = Move._src_dst_str_1st_figure_to_index[dst_str[0]] + Move._src_dst_str_2nd_figure_to_index[dst_str[1]]
+                src_num = Move._src_dst_str_1st_figure_to_index_on_fully_connected[src_str[0]] + Move._src_dst_str_2nd_figure_to_index[src_str[1]]
+                dst_num = Move._src_dst_str_1st_figure_to_index_on_fully_connected[dst_str[0]] + Move._src_dst_str_2nd_figure_to_index[dst_str[1]]
 
         except:
             raise Exception(f"dst dst error in '{self._move_as_usi}'")
@@ -301,4 +301,12 @@ class Move():
         else:
             pro_num = 0
 
-        return (2 * 5 * 9 * src_num) + (2 * dst_num) + pro_num
+        rank_size = 9
+        pro_num_size = 2
+
+        if is_symmetrical_board:
+            file_size = 5
+        else:
+            file_size = 9
+
+        return (src_num * file_size * rank_size * pro_num_size) + (dst_num * pro_num_size) + pro_num

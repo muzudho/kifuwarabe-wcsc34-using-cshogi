@@ -1,4 +1,5 @@
 import datetime
+from evaluation_ee_table import EvaluationEeTable
 from evaluation_fmf_plus_fmo_table import EvaluationFmfPlusFmoTable
 from evaluation_fkf_plus_fko_table import EvaluationFkfPlusFkoTable
 from file_versioning import FileVersioning
@@ -29,22 +30,32 @@ class EvaluationTable():
         #
         # ＦｋＦ＋ＦｋＯポリシー
         #
-        ee_table = FileVersioning.load_from_file_or_random_table(
+        file_version = FileVersioning.check_file_version(
                 file_number=self._file_number,
                 evaluation_kind="fkf_fko")
+        ee_table = FileVersioning.load_from_file_or_random_table(
+                file_number=self._file_number,
+                evaluation_kind="fkf_fko",
+                file_version=file_version)
         is_file_modified = ee_table is None
+
+        is_symmetrical_connected = True
+        if file_version == "V3":
+            # TODO 予定
+            is_symmetrical_connected = False
 
         if ee_table is None:
             # ファイルが存在しないとき
             ee_table = FileVersioning.reset_to_random_table(
                 file_number=self._file_number,
                 evaluation_kind="fkf_fko",
-                table_size=EvaluationFkfPlusFkoTable.get_symmetrical_connected_table_size())
+                table_size=EvaluationEeTable.get_symmetrical_connected_table_size())
 
         self._fkf_plus_fko_policy_table = EvaluationFkfPlusFkoTable(
                 file_number=self._file_number,
                 evaluation_ee_table=ee_table,
-                is_file_modified=is_file_modified)
+                is_file_modified=is_file_modified,
+                is_symmetrical_connected=is_symmetrical_connected)
 
         self._fkf_plus_fko_policy_table.update_evaluation_table(
                 king_canditates_memory, # キング
@@ -53,9 +64,13 @@ class EvaluationTable():
         #
         # ＦｍＦ＋ＦｍＯポリシー
         #
-        ee_table = FileVersioning.load_from_file_or_random_table(
+        file_version = FileVersioning.check_file_version(
                 file_number=self._file_number,
                 evaluation_kind="fmf_fmo")
+        ee_table = FileVersioning.load_from_file_or_random_table(
+                file_number=self._file_number,
+                evaluation_kind="fmf_fmo",
+                file_version=file_version)
         is_file_modified = ee_table is None
 
         if ee_table is None:
@@ -63,12 +78,13 @@ class EvaluationTable():
             ee_table = FileVersioning.reset_to_random_table(
                 file_number=self._file_number,
                 evaluation_kind="fmf_fmo",
-                table_size=EvaluationFmfPlusFmoTable.get_symmetrical_connected_table_size())
+                table_size=EvaluationEeTable.get_symmetrical_connected_table_size())
 
         self._fmf_plus_fmo_policy_table = EvaluationFmfPlusFmoTable(
                 file_number=self._file_number,
                 evaluation_ee_table=ee_table,
-                is_file_modified=is_file_modified)
+                is_file_modified=is_file_modified,
+                is_symmetrical_connected=is_symmetrical_connected)
 
         self._fmf_plus_fmo_policy_table.update_evaluation_table(
                 minions_canditates_memory,  # ミニオンズ

@@ -1,3 +1,4 @@
+from evaluation_configuration import EvaluationConfiguration
 from evaluation_ee_table import EvaluationEeTable
 
 
@@ -10,7 +11,8 @@ class EvaluationFkfPlusFkoTable(EvaluationEeTable):
             self,
             file_number,
             evaluation_ee_table,
-            is_file_modified):
+            is_file_modified,
+            is_symmetrical_connected):
         """初期化
 
         Parameters
@@ -21,6 +23,13 @@ class EvaluationFkfPlusFkoTable(EvaluationEeTable):
 
         evaluation_kind = "fkf_fko"
 
+        if is_symmetrical_connected:
+            move_size = EvaluationConfiguration.get_symmetrical_connected_move_number()
+            table_size = EvaluationConfiguration.get_symmetrical_connected_table_size()
+        else:
+            move_size = EvaluationConfiguration.get_fully_connected_move_number()
+            table_size = EvaluationConfiguration.get_fully_connected_table_size()
+
         EvaluationEeTable.__init__(
                 self,
                 file_number=file_number,
@@ -28,17 +37,8 @@ class EvaluationFkfPlusFkoTable(EvaluationEeTable):
                 file_name=f'n{file_number}_eval_{evaluation_kind}.txt',             # 旧
                 bin_file_name=f'n{file_number}_eval_{evaluation_kind}.bin',         # 旧
                 bin_v2_file_name=f'n{file_number}_eval_{evaluation_kind}_v2.bin',   # 新
-                move_size=EvaluationFkfPlusFkoTable.get_symmetrical_connected_move_number(),
-                table_size=EvaluationFkfPlusFkoTable.get_symmetrical_connected_table_size(),
-                is_symmetrical_connected=True,
+                move_size=move_size,
+                table_size=table_size,
+                is_symmetrical_connected=is_symmetrical_connected,
                 evaluation_ee_table=evaluation_ee_table,
                 is_file_modified=is_file_modified)
-
-
-    @staticmethod
-    def get_symmetrical_connected_move_number():
-        return 8424
-
-    @staticmethod
-    def get_symmetrical_connected_table_size():
-        return 70_955_352
