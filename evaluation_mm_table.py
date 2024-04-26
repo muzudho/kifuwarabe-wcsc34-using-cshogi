@@ -33,6 +33,7 @@ class EvaluationMmTable():
     def __init__(
             self,
             file_number,
+            file_name,
             move_size,
             table_size,
             is_symmetrical_connected,
@@ -98,11 +99,17 @@ class EvaluationMmTable():
         ----------
         """
         self._file_number = file_number
+        self._file_name = file_name
         self._move_size = move_size
         self._table_size = table_size
         self._is_symmetrical_connected = is_symmetrical_connected
         self._evaluation_mm_table = evaluation_mm_table
         self._is_file_modified = is_file_modified
+
+
+    @property
+    def file_name(self):
+        return self._file_name
 
 
     @property

@@ -2,16 +2,14 @@ from evaluation_configuration import EvaluationConfiguration
 from evaluation_mm_table import EvaluationMmTable
 
 
-class EvaluationKpPlusKoTable(EvaluationMmTable):
-    """評価値テーブル　ＫＰ＋ＫＯ
-
-    TODO ｆｋｆ は kp へリネーム
-    TODO ｆｋｏ は ko へリネーム
+class EvaluationPpPoTable(EvaluationMmTable):
+    """評価値テーブル　ＰＰ＋ＰＯ
     """
 
     def __init__(
             self,
             file_number,
+            file_name,
             evaluation_mm_table,
             is_file_modified,
             is_symmetrical_connected):
@@ -33,6 +31,7 @@ class EvaluationKpPlusKoTable(EvaluationMmTable):
         EvaluationMmTable.__init__(
                 self,
                 file_number=file_number,
+                file_name=file_name,
                 move_size=move_size,
                 table_size=table_size,
                 is_symmetrical_connected=is_symmetrical_connected,

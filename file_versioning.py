@@ -205,10 +205,10 @@ class FileVersioning():
 
 
     @staticmethod
-    def check_file_version(
+    def check_file_version_and_name(
             file_number,
             evaluation_kind):
-        """評価関数テーブルをファイルから読み込む。無ければランダム値の入った物を新規作成する"""
+        """ファイルのバージョンと、ファイル名のタプルを返す。無ければナン"""
 
         file_names_by_version = FileVersioning.create_file_names_each_version(
                 file_number=file_number,
@@ -217,24 +217,28 @@ class FileVersioning():
         print(f"[{datetime.datetime.now()}] {file_names_by_version[2]} file exists check ...", flush=True)
 
         # バイナリV3ファイルに保存されているとき
-        if os.path.isfile(file_names_by_version[3]):
-            return "V3"
+        file_name = file_names_by_version[3]
+        if os.path.isfile(file_name):
+            return ("V3", file_name)
 
         # バイナリV2ファイルに保存されているとき
-        if os.path.isfile(file_names_by_version[2]):
-            return "V2"
+        file_name = file_names_by_version[2]
+        if os.path.isfile(file_name):
+            return ("V2", file_name)
 
         print(f"[{datetime.datetime.now()}] {file_names_by_version[1]} file exists check ...", flush=True)
 
         # バイナリ・ファイルに保存されているとき
-        if os.path.isfile(file_names_by_version[1]):
-            return "V1"
+        file_name = file_names_by_version[1]
+        if os.path.isfile(file_name):
+            return ("V1", file_name)
 
         print(f"[{datetime.datetime.now()}] {file_names_by_version[0]} file exists check ...", flush=True)
 
         # テキスト・ファイルに保存されているとき
-        if os.path.isfile(file_names_by_version[0]):
-            return "V0"
+        file_name = file_names_by_version[0]
+        if os.path.isfile(file_name):
+            return ("V0", file_name)
 
         # ファイルが存在しないとき
         return None
