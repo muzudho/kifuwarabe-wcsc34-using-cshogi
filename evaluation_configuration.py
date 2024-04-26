@@ -4,6 +4,27 @@ from move import Move
 class EvaluationConfiguration():
 
 
+    _src_num_to_file_str_on_symmetrical_connected = {
+        45:'R',   # 'R*' 移動元の打 36+9=45
+        46:'B',   # 'B*'
+        47:'G',   # 'G*'
+        48:'S',   # 'S*'
+        49:'N',   # 'N*'
+        50:'L',   # 'L*'
+        51:'P',   # 'P*'
+    }
+
+    _src_num_to_file_str_on_fully_connected = {
+        81:'R',   # 'R*' 移動元の打 72+9=81
+        82:'B',   # 'B*'
+        83:'G',   # 'G*'
+        84:'S',   # 'S*'
+        85:'N',   # 'N*'
+        86:'L',   # 'L*'
+        87:'P',   # 'P*'
+    }
+
+
     @staticmethod
     def get_fully_connected_move_number():
         return 14_256
@@ -64,27 +85,6 @@ class EvaluationConfiguration():
             file_size = 9
 
         return (src_num * file_size * rank_size * pro_num_size) + (dst_num * pro_num_size) + pro_num
-
-
-    _src_num_to_file_str_on_symmetrical_connected = {
-        45:'R',   # 'R*' 移動元の打 36+9=45
-        46:'B',   # 'B*'
-        47:'G',   # 'G*'
-        48:'S',   # 'S*'
-        49:'N',   # 'N*'
-        50:'L',   # 'L*'
-        51:'P',   # 'P*'
-    }
-
-    _src_num_to_file_str_on_fully_connected = {
-        81:'R',   # 'R*' 移動元の打 72+9=81
-        82:'B',   # 'B*'
-        83:'G',   # 'G*'
-        84:'S',   # 'S*'
-        85:'N',   # 'N*'
-        86:'L',   # 'L*'
-        87:'P',   # 'P*'
-    }
 
 
     @staticmethod

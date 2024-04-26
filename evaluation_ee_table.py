@@ -206,9 +206,14 @@ class EvaluationEeTable():
         index = self.get_table_index_by_2_moves(move_a_as_usi, move_b_as_usi, turn)
         #print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} index:{index}", flush=True)
 
-        # 古いデータには 2 が入っているので、 2 は　1 に変換する
-        if self._evaluation_ee_table[index] == 2:
-            self._evaluation_ee_table[index] = 1
+        try:
+            # 古いデータには 2 が入っているので、 2 は　1 に変換する
+            if self._evaluation_ee_table[index] == 2:
+                self._evaluation_ee_table[index] = 1
+
+        except IndexError as e:
+            print(f"table length: {len(self._evaluation_ee_table)}  index: {index}  except: {e}")
+            raise
 
         return self._evaluation_ee_table[index]
 

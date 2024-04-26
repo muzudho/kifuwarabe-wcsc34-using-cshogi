@@ -1,6 +1,8 @@
 import os
 import datetime
 import random
+from evaluation_configuration import EvaluationConfiguration
+from move import Move
 
 
 class FileVersioning():
@@ -120,9 +122,11 @@ class FileVersioning():
         # ロードする。１分ほどかかる
         print(f"[{datetime.datetime.now()}] read {v2_file_name} file ...", flush=True)
 
-        evaluation_ee_table = []
+        evaluation_ee_table = [0] * EvaluationConfiguration.get_fully_connected_table_size()
 
         try:
+
+            table_index = 0
 
             with open(v2_file_name, 'rb') as f:
 
@@ -131,16 +135,33 @@ class FileVersioning():
                 while multiple_bytes:
                     one_byte = int.from_bytes(multiple_bytes, signed=False)
 
-                    # TODO V2 ---> V3 で、インデックスがずれる
+                    #
+                    # V2 ---> V3 で、インデックスがずれる
+                    #
+                    two_powers = [128, 64, 32, 16, 8, 4, 2, 1]
+                    for two_power in two_powers:
+                        bit = one_byte//two_power % 2
 
-                    evaluation_ee_table.append(one_byte//128 % 2)
-                    evaluation_ee_table.append(one_byte// 64 % 2)
-                    evaluation_ee_table.append(one_byte// 32 % 2)
-                    evaluation_ee_table.append(one_byte// 16 % 2)
-                    evaluation_ee_table.append(one_byte//  8 % 2)
-                    evaluation_ee_table.append(one_byte//  4 % 2)
-                    evaluation_ee_table.append(one_byte//  2 % 2)
-                    evaluation_ee_table.append(one_byte//      2)
+                        moves_as_usi = EvaluationConfiguration.get_moves_as_usi_by_table_index(
+                                table_index=table_index,
+                                # 左右対称の盤
+                                is_symmetrical_connected=True)
+
+                        for move_as_usi in moves_as_usi:
+                            converted_table_index = EvaluationConfiguration.get_table_index_by_move(
+                                    move=Move(move_as_usi),
+                                    # 左右が異なる盤
+                                    is_symmetrical_connected=False)
+
+                            try:
+                                evaluation_ee_table[converted_table_index] = bit
+
+                            except IndexError as e:
+                                print(f"table length: {len(evaluation_ee_table)}  index: {converted_table_index}  except: {e}")
+                                raise
+
+
+                        table_index+=1
 
                     multiple_bytes = f.read(1)
 
