@@ -4,7 +4,7 @@ import random
 import datetime
 from evaluation_configuration import EvaluationConfiguration
 from move import Move
-
+from move_helper import MoveHelper
 
 class EvaluationEeTable():
     """評価値ＥＥテーブル
@@ -92,7 +92,7 @@ class EvaluationEeTable():
             (5 * 9 + 7) * (5 * 9) * 2 = 4_680     ... symmetrical_connected_move 数
 
 
-            (4_680 - 1) * 4_680 = 21_897_720  ... symmetrical_connected_table_size 数
+            (4_680 - 1) * 4_680 = 21_897_720    ... symmetrical_connected_table_size 数
 
         ----------
 
@@ -153,16 +153,19 @@ class EvaluationEeTable():
         if move_a_as_usi == move_b_as_usi:
             return 0
 
+        move_a_obj = Move(move_a_as_usi)
+        move_b_obj = Move(move_b_as_usi)
+
         # 後手なら、指し手の先後をひっくり返す（将棋盤を１８０°回転させるのと同等）
         if turn == cshogi.WHITE:
-            move_a_as_usi = Move.flip_turn(move_a_as_usi)
-            move_b_as_usi = Move.flip_turn(move_b_as_usi)
+            move_a_obj = MoveHelper.flip_turn(move_a_obj)
+            move_b_obj = MoveHelper.flip_turn(move_b_obj)
 
         index_a = EvaluationConfiguration.get_table_index_by_move(
-                move=Move(move_a_as_usi),
+                move=move_a_obj,
                 is_symmetrical_connected=self._is_symmetrical_connected)
         index_b = EvaluationConfiguration.get_table_index_by_move(
-                move=Move(move_b_as_usi),
+                move=move_b_obj,
                 is_symmetrical_connected=self._is_symmetrical_connected)
 
         move_indexes = [index_a, index_b]
@@ -180,8 +183,12 @@ class EvaluationEeTable():
         return index
 
 
-    def update_evaluation_table(self, canditates_memory, result_file):
-        """結果ファイルを読み込んで、持将棋や、負けていれば、内容をランダムに変更してみる"""
+    def update_evaluation_table(
+            self,
+            canditates_memory,
+            result_file):
+        """結果ファイルを読み込んで、持将棋や、負けかどうか判定する。
+        そうなら、評価値テーブルのうち、指した手（CanditatesMemory）に関連する箇所をランダムに変更してみる"""
 
         if result_file.exists():
             # 結果ファイルを読込
@@ -198,7 +205,7 @@ class EvaluationEeTable():
 
             # 前回の対局で、負けるか、引き分けなら、内容を変えます
             if result_text in ('lose', 'draw'):
-                self.modify_table(result_text, canditates_memory, turn)
+                self.modify_table(canditates_memory, turn)
                 print(f"[{datetime.datetime.now()}] {self._file_name} file updated", flush=True)
 
 
@@ -268,15 +275,21 @@ class EvaluationEeTable():
         return move_as_usi_and_score_dictionary
 
 
-    def modify_table(self, result_text, canditates_memory, turn):
-        """指した手の評価値を適当に変更します。負けたときか、引き分けのときに限る"""
+    def modify_table(self, canditates_memory, turn):
+        """指した手の評価値を適当に変更します"""
 
-        if result_text in ('lose', 'draw'):
-            for move_a_as_usi in canditates_memory.move_set:
-                for move_b_as_usi in canditates_memory.move_set:
-                    index = self.get_table_index_by_2_moves(move_a_as_usi, move_b_as_usi, turn)
+        for move_a_as_usi in canditates_memory.move_set:
+            for move_b_as_usi in canditates_memory.move_set:
 
-                    # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
-                    self._evaluation_ee_table[index] = random.randint(0,1)
+                index = self.get_table_index_by_2_moves(move_a_as_usi, move_b_as_usi, turn)
 
-            self._is_file_modified = True
+                # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
+                self._evaluation_ee_table[index] = random.randint(0,1)
+
+                #
+                # TODO 左右反転して、同じようにしたい
+                #
+
+
+
+        self._is_file_modified = True

@@ -86,6 +86,7 @@ class CandidatesMemory():
             # ファイルが無いのなら、削除に失敗しても問題ない
             pass
 
+
     def save(self):
         """保存"""
         print(f"[{datetime.datetime.now()}] save {self.file_name} file ...", flush=True)
@@ -104,6 +105,7 @@ class CandidatesMemory():
 
 
     def union_dictionary(self, move_score_dictionary):
+        """和集合"""
         before_size = len(self._move_set)
         print(f"[{datetime.datetime.now()}] (before size:{before_size}) merge candidates moves...", flush=True)
 
@@ -128,7 +130,9 @@ class CandidatesMemory():
         #for move in self._move_set:
         #    print(f"[{datetime.datetime.now()}] (after) move:{move}", flush=True)
 
+
     def union_set(self, move_set):
+        """和集合"""
         before_size = len(self._move_set)
         print(f"[{datetime.datetime.now()}] (before size:{before_size}) merge candidates moves...", flush=True)
 

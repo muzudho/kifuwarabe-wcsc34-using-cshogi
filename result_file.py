@@ -1,4 +1,3 @@
-import cshogi
 import os
 import datetime
 from turn import Turn

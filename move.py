@@ -1,3 +1,6 @@
+from move_helper import MoveHelper
+
+
 class Move():
     """指し手"""
 
@@ -58,34 +61,6 @@ class Move():
     """段数を英字に変換"""
 
 
-    _flip_files = {
-        '1':'9',
-        '2':'8',
-        '3':'7',
-        '4':'6',
-        '5':'5',
-        '6':'4',
-        '7':'3',
-        '8':'2',
-        '9':'1',
-    }
-    """逆さの筋番号"""
-
-
-    _flip_ranks = {
-        'a':'i',
-        'b':'h',
-        'c':'g',
-        'd':'f',
-        'e':'e',
-        'f':'d',
-        'g':'c',
-        'h':'b',
-        'i':'a',
-    }
-    """逆さの段符号"""
-
-
     _src_dst_str_1st_figure_to_index_on_fully_connected = {
         'R' : 81,   # 'R*' 移動元の打 72+9=81
         'B' : 82,   # 'B*'
@@ -142,52 +117,9 @@ class Move():
     """移動元、移動先の２文字目をインデックスへ変換"""
 
 
-    _src_drops = ('R*', 'B*', 'G*', 'S*', 'N*', 'L*', 'P*')
-
-
     @staticmethod
     def get_rank_num_to_str(rank_num):
         return Move._rank_num_to_str[rank_num]
-
-
-    @classmethod
-    def flip_turn(clazz, move_as_usi):
-        """先後をひっくり返します"""
-
-        # 移動元
-        src_str = move_as_usi[0: 2]
-
-        # 移動先
-        dst_str = move_as_usi[2: 4]
-
-        # 移動元
-        #
-        # ［打］は先後で表記は同じ
-        if src_str in Move._src_drops:
-            pass
-
-        else:
-
-            file_str = Move._flip_files[src_str[0]]
-
-            rank_str = Move._flip_ranks[src_str[1]]
-
-            src_str = f"{file_str}{rank_str}"
-
-        # 移動先
-        file_str = Move._flip_files[dst_str[0]]
-
-        rank_str = Move._flip_ranks[dst_str[1]]
-
-        dst_str = f"{file_str}{rank_str}"
-
-        # 成りかそれ以外（５文字なら成りだろう）
-        if 4 < len(move_as_usi):
-            pro = "+"
-        else:
-            pro = ""
-
-        return f"{src_str}{dst_str}{pro}"
 
 
     def __init__(self, move_as_usi):
@@ -227,7 +159,7 @@ class Move():
         #print(f"[get_src_file_or_none] move_as_usi: {self._move_as_usi}, src_str: {src_str}")
 
         # ［打］は列番号を取得できない
-        if src_str in Move._src_drops:
+        if src_str in MoveHelper._src_drops:
             return None
 
         file_str = src_str[0]
@@ -249,7 +181,7 @@ class Move():
         #print(f"[get_src_rank_or_none] move_as_usi: {self._move_as_usi}, src_str: {src_str}")
 
         # ［打］は列番号を取得できない
-        if src_str in Move._src_drops:
+        if src_str in MoveHelper._src_drops:
             return None
 
         rank_str = src_str[1]

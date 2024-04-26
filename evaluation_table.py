@@ -36,7 +36,17 @@ class EvaluationTable():
             king_canditates_memory,
             minions_canditates_memory,
             result_file):
-        """新規対局の準備"""
+        """新規対局の準備
+
+        Parameters
+        ----------
+        king_canditates_memory : CanditatesMemory
+            自玉の指し手
+        minions_canditates_memory : CanditatesMemory
+            自軍の玉以外の指し手
+        result_file : ResultFile
+            結果
+        """
 
         #
         # ＦｋＦ＋ＦｋＯポリシー
