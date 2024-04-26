@@ -61,33 +61,33 @@ class EvaluationTable():
                 file_version=file_version)
 
         if tuple is None:
-            ee_table = None
+            mm_table = None
             is_file_modified = True     # 新規作成だから
         else:
-            ee_table, file_version = tuple
-            is_file_modified = ee_table is None
+            mm_table, file_version = tuple
+            is_file_modified = mm_table is None
 
         self._is_symmetrical_connected_of_fkf_plus_fko = True
         if file_version == "V3":
             # TODO 予定
             self._is_symmetrical_connected_of_fkf_plus_fko = False
 
-        if ee_table is None:
+        if mm_table is None:
             # ファイルが存在しないとき
-            ee_table = FileVersioning.reset_to_random_table(
+            mm_table = FileVersioning.reset_to_random_table(
                 file_number=self._file_number,
                 evaluation_kind="fkf_fko",
                 table_size=EvaluationConfiguration.get_symmetrical_connected_table_size())
 
         self._fkf_plus_fko_policy_table = EvaluationFkfPlusFkoTable(
                 file_number=self._file_number,
-                evaluation_ee_table=ee_table,
+                evaluation_mm_table=mm_table,
                 is_file_modified=is_file_modified,
                 is_symmetrical_connected=self._is_symmetrical_connected_of_fkf_plus_fko)
 
         # 学習
         Learn.update_evaluation_table(
-                evaluation_ee_table_obj=self._fkf_plus_fko_policy_table,
+                evaluation_mm_table_obj=self._fkf_plus_fko_policy_table,
                 canditates_memory=king_canditates_memory, # キング
                 result_file=result_file)
 
@@ -103,33 +103,33 @@ class EvaluationTable():
                 file_version=file_version)
 
         if tuple is None:
-            ee_table = None
+            mm_table = None
             is_file_modified = True     # 新規作成だから
         else:
-            ee_table, file_version = tuple
-            is_file_modified = ee_table is None
+            mm_table, file_version = tuple
+            is_file_modified = mm_table is None
 
         self._is_symmetrical_connected_of_fmf_plus_fmo = True
         if file_version == "V3":
             # TODO 予定
             self._is_symmetrical_connected_of_fmf_plus_fmo = False
 
-        if ee_table is None:
+        if mm_table is None:
             # ファイルが存在しないとき
-            ee_table = FileVersioning.reset_to_random_table(
+            mm_table = FileVersioning.reset_to_random_table(
                 file_number=self._file_number,
                 evaluation_kind="fmf_fmo",
                 table_size=EvaluationConfiguration.get_symmetrical_connected_table_size())
 
         self._fmf_plus_fmo_policy_table = EvaluationFmfPlusFmoTable(
                 file_number=self._file_number,
-                evaluation_ee_table=ee_table,
+                evaluation_mm_table=mm_table,
                 is_file_modified=is_file_modified,
                 is_symmetrical_connected=self._is_symmetrical_connected_of_fmf_plus_fmo)
 
         # 学習
         Learn.update_evaluation_table(
-                evaluation_ee_table_obj=self._fmf_plus_fmo_policy_table,
+                evaluation_mm_table_obj=self._fmf_plus_fmo_policy_table,
                 canditates_memory=minions_canditates_memory,  # ミニオンズ
                 result_file=result_file)
 
@@ -143,7 +143,7 @@ class EvaluationTable():
             FileVersioning.save_evaluation_to_file(
                     file_number=self._file_number,
                     evaluation_kind="fkf_fko",
-                    evaluation_ee_table=self._fkf_plus_fko_policy_table.evaluation_ee_table)
+                    evaluation_mm_table=self._fkf_plus_fko_policy_table.evaluation_mm_table)
         else:
             print(f"[{datetime.datetime.now()}] fkf_fko file not changed", flush=True)
 
@@ -153,7 +153,7 @@ class EvaluationTable():
             FileVersioning.save_evaluation_to_file(
                     file_number=self._file_number,
                     evaluation_kind="fmf_fmo",
-                    evaluation_ee_table=self._fmf_plus_fmo_policy_table.evaluation_ee_table)
+                    evaluation_mm_table=self._fmf_plus_fmo_policy_table.evaluation_mm_table)
         else:
             print(f"[{datetime.datetime.now()}] fmf_fmo file not changed", flush=True)
 

@@ -11,7 +11,7 @@ class Learn():
 
     @staticmethod
     def update_evaluation_table(
-            evaluation_ee_table_obj,
+            evaluation_mm_table_obj,
             canditates_memory,
             result_file):
         """結果ファイルを読み込んで、持将棋や、負けかどうか判定する。
@@ -33,14 +33,14 @@ class Learn():
             # 前回の対局で、負けるか、引き分けなら、内容を変えます
             if result_text in ('lose', 'draw'):
                 Learn.modify_table(
-                        evaluation_ee_table_obj=evaluation_ee_table_obj,
+                        evaluation_mm_table_obj=evaluation_mm_table_obj,
                         canditates_memory=canditates_memory,
                         turn=turn)
-                print(f"[{datetime.datetime.now()}] {evaluation_ee_table_obj._file_name} file updated", flush=True)
+                print(f"[{datetime.datetime.now()}] {evaluation_mm_table_obj._file_name} file updated", flush=True)
 
 
     @staticmethod
-    def modify_table(evaluation_ee_table_obj, canditates_memory, turn):
+    def modify_table(evaluation_mm_table_obj, canditates_memory, turn):
         """指した手の評価値を適当に変更します"""
 
         for move_a_as_usi in canditates_memory.move_set:
@@ -49,13 +49,13 @@ class Learn():
                 move_a_obj = Move(move_a_as_usi)
                 move_b_obj = Move(move_b_as_usi)
 
-                index = evaluation_ee_table_obj.get_table_index_by_2_moves(
+                index = evaluation_mm_table_obj.get_table_index_by_2_moves(
                         move_a_obj,
                         move_b_obj,
                         turn)
 
                 # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
-                evaluation_ee_table_obj.evaluation_ee_table[index] = random.randint(0,1)
+                evaluation_mm_table_obj.evaluation_mm_table[index] = random.randint(0,1)
 
                 #
                 # 左右反転して、同じようにしたい
@@ -63,13 +63,13 @@ class Learn():
                 reversed_move_a_obj = MoveHelper.flip_horizontal(move_a_obj)
                 reversed_move_b_obj = MoveHelper.flip_horizontal(move_b_obj)
 
-                index = evaluation_ee_table_obj.get_table_index_by_2_moves(
+                index = evaluation_mm_table_obj.get_table_index_by_2_moves(
                         reversed_move_a_obj,
                         reversed_move_b_obj,
                         turn)
 
                 # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
-                evaluation_ee_table_obj.evaluation_ee_table[index] = random.randint(0,1)
+                evaluation_mm_table_obj.evaluation_mm_table[index] = random.randint(0,1)
 
 
-        evaluation_ee_table_obj.is_file_modified = True
+        evaluation_mm_table_obj.is_file_modified = True

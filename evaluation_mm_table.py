@@ -1,15 +1,14 @@
 import cshogi
 import os
-import datetime
 from evaluation_configuration import EvaluationConfiguration
 from move import Move
 from move_helper import MoveHelper
-from learn import Learn
 
-class EvaluationEeTable():
-    """評価値ＥＥテーブル
+class EvaluationMmTable():
+    """評価値ＭＭテーブル
 
-    合法手（つまり利き）を E （Effect）と呼ぶとし、
+    旧：　合法手（つまり利き）を E （Effect）と呼ぶとし、
+    新：　USIプロトコルの指し手の符号を M (Move) と呼ぶとし、
 
     現局面（自分の手番）の合法手を E1、
     E1 を指したときの局目（相手の手番）の合法手を E2 とする
@@ -23,12 +22,27 @@ class EvaluationEeTable():
     en en
     の形を取る。これを EE と呼ぶとする
 
-    さらに自軍を F（Friend）、相手を O（Opponent） と呼ぶとし、
-    玉の合法手を K（King）、玉以外の合法手を M (Minions) と呼ぶとする。
-    Fk（自玉の合法手）と F（自分の合法手）の関係を FkF、
-    Fm（自軍の玉以外の合法手）と F（自分の合法手）の関係を FmF、
-    Fk（自玉の合法手）と O（相手の合法手）の関係を FkO、
-    Fm（自軍の玉以外の合法手）と O（相手の合法手）の関係を FmO、
+    旧：　さらに自軍を F（Friend）、相手を O（Opponent） と呼ぶとし、
+    旧：　敵軍を O（Opponent） と呼ぶとし、
+
+    旧：　玉の合法手を K（King）、
+    新：　自玉の合法手を K（King）、
+
+    旧：　玉以外の合法手を M (Minions) と呼ぶとする。
+    新：　自軍の玉以外の合法手を 大文字のP (Piece) と呼ぶとする
+
+    旧：　Fk（自玉の合法手）と F（自分の合法手）の関係を FkF、
+    新：　K と P の関係を KP、
+
+    旧：　Fm（自軍の玉以外の合法手）と F（自分の合法手）の関係を FmF、
+    新：　P と P の関係を PP、
+
+    旧：　Fk（自玉の合法手）と O（相手の合法手）の関係を FkO、
+    新：　K と O の関係を KO、
+
+    旧：　Fm（自軍の玉以外の合法手）と O（相手の合法手）の関係を FmO、
+    新：　P と O の関係を PO
+
     と呼ぶ
     """
 
@@ -43,7 +57,7 @@ class EvaluationEeTable():
             move_size,
             table_size,
             is_symmetrical_connected,
-            evaluation_ee_table,
+            evaluation_mm_table,
             is_file_modified):
         """初期化
 
@@ -112,7 +126,7 @@ class EvaluationEeTable():
         self._move_size = move_size
         self._table_size = table_size
         self._is_symmetrical_connected = is_symmetrical_connected
-        self._evaluation_ee_table = evaluation_ee_table
+        self._evaluation_mm_table = evaluation_mm_table
         self._is_file_modified = is_file_modified
 
 
@@ -132,8 +146,8 @@ class EvaluationEeTable():
 
 
     @property
-    def evaluation_ee_table(self):
-        return self._evaluation_ee_table
+    def evaluation_mm_table(self):
+        return self._evaluation_mm_table
 
 
     def exists_text_file(self):
@@ -200,15 +214,15 @@ class EvaluationEeTable():
 
         try:
             # 古いデータには 2 が入っているので、 2 は　1 に変換する
-            if self._evaluation_ee_table[index] == 2:
-                self._evaluation_ee_table[index] = 1
+            if self._evaluation_mm_table[index] == 2:
+                self._evaluation_mm_table[index] = 1
 
         except IndexError as e:
             # 例： table length: 70955352  index: 102593390  except: list index out of range
-            print(f"table length: {len(self._evaluation_ee_table)}  index: {index}  except: {e}")
+            print(f"table length: {len(self._evaluation_mm_table)}  index: {index}  except: {e}")
             raise
 
-        return self._evaluation_ee_table[index]
+        return self._evaluation_mm_table[index]
 
 
     def make_move_as_usi_and_policy_dictionary(

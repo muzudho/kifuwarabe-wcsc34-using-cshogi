@@ -1,8 +1,8 @@
 from evaluation_configuration import EvaluationConfiguration
-from evaluation_ee_table import EvaluationEeTable
+from evaluation_mm_table import EvaluationMmTable
 
 
-class EvaluationFkfPlusFkoTable(EvaluationEeTable):
+class EvaluationFkfPlusFkoTable(EvaluationMmTable):
     """評価値ＦｋＦ＋ＦｋＯテーブル
     このテーブルを使って FkF + FkO の評価値を返す
     """
@@ -10,7 +10,7 @@ class EvaluationFkfPlusFkoTable(EvaluationEeTable):
     def __init__(
             self,
             file_number,
-            evaluation_ee_table,
+            evaluation_mm_table,
             is_file_modified,
             is_symmetrical_connected):
         """初期化
@@ -30,7 +30,7 @@ class EvaluationFkfPlusFkoTable(EvaluationEeTable):
             move_size = EvaluationConfiguration.get_fully_connected_move_number()
             table_size = EvaluationConfiguration.get_fully_connected_table_size()
 
-        EvaluationEeTable.__init__(
+        EvaluationMmTable.__init__(
                 self,
                 file_number=file_number,
                 evaluation_kind=evaluation_kind,
@@ -40,5 +40,5 @@ class EvaluationFkfPlusFkoTable(EvaluationEeTable):
                 move_size=move_size,
                 table_size=table_size,
                 is_symmetrical_connected=is_symmetrical_connected,
-                evaluation_ee_table=evaluation_ee_table,
+                evaluation_mm_table=evaluation_mm_table,
                 is_file_modified=is_file_modified)
