@@ -38,14 +38,14 @@ class CandidatesMemory():
         """読込"""
         candidates_memory = CandidatesMemory(file_number, is_king)
 
-        # 旧称のファイルが存在するとき
-        file_name = f'n{candidates_memory._file_number}_canditates_memory_minions.txt'
+        # 新称のファイルが存在するとき
+        file_name = candidates_memory._file_name
         if os.path.isfile(file_name):
             CandidatesMemory.read_file(candidates_memory, file_name)
             return candidates_memory
 
-        # 新称のファイルが存在するとき
-        file_name = candidates_memory._file_name
+        # 旧称のファイルが存在するとき
+        file_name = f'n{candidates_memory._file_number}_canditates_memory_minions.txt'
         if os.path.isfile(file_name):
             CandidatesMemory.read_file(candidates_memory, file_name)
             return candidates_memory
@@ -112,7 +112,7 @@ class CandidatesMemory():
 
     def save(self):
         """保存"""
-        print(f"[{datetime.datetime.now()}] save {self.file_name} file ...", flush=True)
+        print(f"[{datetime.datetime.now()}] save '{self.file_name}' file ...", flush=True)
 
         # ファイルに出力する
         with open(self.file_name, 'w', encoding="utf-8") as f:
@@ -124,7 +124,7 @@ class CandidatesMemory():
 
         self._is_file_modified = False
 
-        print(f"[{datetime.datetime.now()}] {self.file_name} file saved", flush=True)
+        print(f"[{datetime.datetime.now()}] '{self.file_name}' file saved", flush=True)
 
 
     def union_dictionary(self, move_score_dictionary):
