@@ -35,7 +35,7 @@ class EvaluationTable():
     def usinewgame(
             self,
             king_canditates_memory,
-            minions_canditates_memory,
+            pieces_canditates_memory,
             result_file):
         """新規対局の準備
 
@@ -43,7 +43,7 @@ class EvaluationTable():
         ----------
         king_canditates_memory : CanditatesMemory
             自玉の指し手
-        minions_canditates_memory : CanditatesMemory
+        pieces_canditates_memory : CanditatesMemory
             自軍の玉以外の指し手
         result_file : ResultFile
             結果
@@ -147,7 +147,7 @@ class EvaluationTable():
         # 学習
         Learn.update_evaluation_table(
                 evaluation_mm_table_obj=self._pp_plus_po_policy_table,
-                canditates_memory=minions_canditates_memory,  # ミニオンズ
+                canditates_memory=pieces_canditates_memory,  # 自軍の玉以外の合法手
                 result_file=result_file)
 
 
@@ -182,19 +182,19 @@ class EvaluationTable():
     def make_move_as_usi_and_policy_dictionary(
             self,
             sorted_friend_king_legal_move_list_as_usi,
-            sorted_friend_minions_legal_move_list_as_usi,
+            sorted_friend_pieces_legal_move_list_as_usi,
             opponent_legal_move_set_as_usi,
             turn):
         """指し手にスコアが紐づく辞書を作成"""
 
         # 指し手に評価値を付ける
         king_move_as_usi_and_score_dictionary = {}
-        minions_move_as_usi_and_score_dictionary = {}
+        pieces_move_as_usi_and_score_dictionary = {}
 
         # ＫＰ＋ＫＯポリシー
         kp_plus_ko_policy_dictionary = self._kp_plus_ko_policy_table.make_move_as_usi_and_policy_dictionary(
                 sorted_friend_king_legal_move_list_as_usi,
-                sorted_friend_minions_legal_move_list_as_usi,
+                sorted_friend_pieces_legal_move_list_as_usi,
                 opponent_legal_move_set_as_usi,
                 turn)
 
@@ -208,15 +208,15 @@ class EvaluationTable():
         # ＰＰ＋ＰＯポリシー
         pp_plus_po_policy_dictionary = self._pp_plus_po_policy_table.make_move_as_usi_and_policy_dictionary(
                 sorted_friend_king_legal_move_list_as_usi,
-                sorted_friend_minions_legal_move_list_as_usi,
+                sorted_friend_pieces_legal_move_list_as_usi,
                 opponent_legal_move_set_as_usi,
                 turn)
 
         ## 評価値をマージ
         for pp_plus_po, policy in pp_plus_po_policy_dictionary.items():
-            if pp_plus_po in minions_move_as_usi_and_score_dictionary:
-                minions_move_as_usi_and_score_dictionary[pp_plus_po] += policy
+            if pp_plus_po in pieces_move_as_usi_and_score_dictionary:
+                pieces_move_as_usi_and_score_dictionary[pp_plus_po] += policy
             else:
-                minions_move_as_usi_and_score_dictionary[pp_plus_po] = policy
+                pieces_move_as_usi_and_score_dictionary[pp_plus_po] = policy
 
-        return (king_move_as_usi_and_score_dictionary, minions_move_as_usi_and_score_dictionary)
+        return (king_move_as_usi_and_score_dictionary, pieces_move_as_usi_and_score_dictionary)

@@ -9,35 +9,46 @@ class CandidatesMemory():
     """
 
 
-    @classmethod
+    @staticmethod
+    def read_file(candidates_memory, file_name):
+        print(f"[{datetime.datetime.now()}] read {file_name} file ...", flush=True)
+
+        try:
+            with open(file_name, 'r', encoding="utf-8") as f:
+                text = f.read().strip()
+
+        except FileNotFoundError as ex:
+            print(f"[canditates memory / load from file] [{file_name}] file error. {ex}")
+            raise
+
+        print(f"[{datetime.datetime.now()}] {file_name} read", flush=True)
+
+        if text != "":
+            candidates_memory._move_set = set(text.split(' '))
+
+            ## （読込直後の）中身の確認
+            #for move in candidates_memory._move_set:
+            #    print(f"[{datetime.datetime.now()}] (loaded) move:{move}", flush=True)
+
+
+    @staticmethod
     def load_from_file(
-            clazz,
             file_number,
             is_king):
         """読込"""
         candidates_memory = CandidatesMemory(file_number, is_king)
 
-        # ファイルが存在するとき
-        if candidates_memory.exists_file():
-            print(f"[{datetime.datetime.now()}] read {candidates_memory.file_name} file ...", flush=True)
+        # 旧称のファイルが存在するとき
+        file_name = f'n{candidates_memory._file_number}_canditates_memory_minions.txt'
+        if os.path.isfile(file_name):
+            CandidatesMemory.read_file(candidates_memory, file_name)
+            return candidates_memory
 
-            try:
-                with open(candidates_memory.file_name, 'r', encoding="utf-8") as f:
-                    text = f.read().strip()
-
-            except FileNotFoundError as ex:
-                print(f"[canditates memory / load from file] [{candidates_memory.file_name}] file error. {ex}")
-                raise
-
-            print(f"[{datetime.datetime.now()}] {candidates_memory.file_name} read", flush=True)
-
-            if text != "":
-                candidates_memory._move_set = set(text.split(' '))
-
-                ## （読込直後の）中身の確認
-                #for move in candidates_memory._move_set:
-                #    print(f"[{datetime.datetime.now()}] (loaded) move:{move}", flush=True)
-
+        # 新称のファイルが存在するとき
+        file_name = candidates_memory._file_name
+        if os.path.isfile(file_name):
+            CandidatesMemory.read_file(candidates_memory, file_name)
+            return candidates_memory
 
         return candidates_memory
 
@@ -52,7 +63,9 @@ class CandidatesMemory():
         if is_king:
             self._file_name = f'n{self._file_number}_canditates_memory_king.txt'
         else:
-            self._file_name = f'n{self._file_number}_canditates_memory_minions.txt'
+            # 旧名：　ｍｉｎｉｏｎｓ
+            # 新名：　ｐｉｅｃｅｓ
+            self._file_name = f'n{self._file_number}_canditates_memory_pieces.txt'
 
         self._move_set = set()
         self._is_file_modified = False
@@ -68,11 +81,6 @@ class CandidatesMemory():
     def move_set(self):
         """指し手の集合"""
         return self._move_set
-
-
-    def exists_file(self):
-        """"ファイルが存在するか？"""
-        return os.path.isfile(self._file_name)
 
 
     def delete(self):

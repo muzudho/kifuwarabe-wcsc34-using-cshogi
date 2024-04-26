@@ -21,14 +21,9 @@ class EvaluationMmTable():
     新：　自軍の玉以外の合法手を P (Piece) と呼ぶとする
     新：　敵軍の玉以外の合法手を Q (next P) と呼ぶとする
 
-    旧：　Fk（自玉の合法手）と F（自分の合法手）の関係を ＦｋＦ、 TODO ｆｋｆ は kp にリネーム
     新：　K と P の関係を KP、
-
     新：　P と P の関係を PP、
-
-    旧：　Fk（自玉の合法手）と O（相手の合法手）の関係を ＦｋＯ、 TODO ｆｋｏ は ko にリネーム
     新：　K と O の関係を KO、
-
     新：　P と O の関係を PO
 
     と呼ぶ
@@ -193,7 +188,7 @@ class EvaluationMmTable():
     def make_move_as_usi_and_policy_dictionary(
             self,
             sorted_friend_king_legal_move_list_as_usi,
-            sorted_friend_minions_legal_move_list_as_usi,
+            sorted_friend_pieces_legal_move_list_as_usi,
             opponent_legal_move_set_as_usi,
             turn):
         """指し手に評価値を付ける
@@ -202,7 +197,7 @@ class EvaluationMmTable():
         ----------
         sorted_friend_king_legal_move_list_as_usi : list
             USIプロトコルでの符号表記の指し手の配列。辞書順で昇順にソート済み
-        sorted_friend_minions_legal_move_list_as_usi : list
+        sorted_friend_pieces_legal_move_list_as_usi : list
             USIプロトコルでの符号表記の指し手の配列。辞書順で昇順にソート済み
         sorted_opponent_legal_move_set_as_usi : set
             相手の指し手
@@ -215,7 +210,7 @@ class EvaluationMmTable():
 
         list_of_sorted_friend_legal_move_list_as_usi = [
             sorted_friend_king_legal_move_list_as_usi,
-            sorted_friend_minions_legal_move_list_as_usi,
+            sorted_friend_pieces_legal_move_list_as_usi,
         ]
 
         for sorted_friend_legal_move_list_as_usi in list_of_sorted_friend_legal_move_list_as_usi:

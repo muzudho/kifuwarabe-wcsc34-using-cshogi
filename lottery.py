@@ -11,12 +11,12 @@ class Lottery():
             evaluation_table,
             legal_move_list,
             king_canditates_memory,
-            minions_canditates_memory,
+            pieces_canditates_memory,
             ko_memory,
             board):
         """くじを引く"""
 
-        sorted_friend_king_legal_move_list_as_usi, sorted_friend_minions_legal_move_list_as_usi = create_move_lists(
+        sorted_friend_king_legal_move_list_as_usi, sorted_friend_pieces_legal_move_list_as_usi = create_move_lists(
                 legal_move_list,
                 ko_memory,
                 board)
@@ -28,7 +28,7 @@ class Lottery():
         #
         list_of_sorted_friend_legal_move_list_as_usi = [
             sorted_friend_king_legal_move_list_as_usi,
-            sorted_friend_minions_legal_move_list_as_usi,
+            sorted_friend_pieces_legal_move_list_as_usi,
         ]
 
         for sorted_friend_legal_move_list_as_usi in list_of_sorted_friend_legal_move_list_as_usi:
@@ -40,21 +40,21 @@ class Lottery():
                 board.pop()
 
         # 候補手に評価値を付けた辞書を作成
-        king_move_as_usi_and_score_dictionary, minions_move_as_usi_and_score_dictionary = evaluation_table.make_move_as_usi_and_policy_dictionary(
+        king_move_as_usi_and_score_dictionary, pieces_move_as_usi_and_score_dictionary = evaluation_table.make_move_as_usi_and_policy_dictionary(
                 sorted_friend_king_legal_move_list_as_usi,
-                sorted_friend_minions_legal_move_list_as_usi,
+                sorted_friend_pieces_legal_move_list_as_usi,
                 opponent_legal_move_set_as_usi,
                 board.turn)
 
         # 候補に挙がった指し手は全て記憶しておく
         king_canditates_memory.union_dictionary(king_move_as_usi_and_score_dictionary)
         king_canditates_memory.union_set(opponent_legal_move_set_as_usi)
-        minions_canditates_memory.union_dictionary(minions_move_as_usi_and_score_dictionary)
-        minions_canditates_memory.union_set(opponent_legal_move_set_as_usi)
+        pieces_canditates_memory.union_dictionary(pieces_move_as_usi_and_score_dictionary)
+        pieces_canditates_memory.union_set(opponent_legal_move_set_as_usi)
 
         all_move_as_usi_and_score_dictionary = [
             king_move_as_usi_and_score_dictionary,
-            minions_move_as_usi_and_score_dictionary,
+            pieces_move_as_usi_and_score_dictionary,
         ]
 
         # 一番高い評価値を探す。評価値は -593～593 程度を想定

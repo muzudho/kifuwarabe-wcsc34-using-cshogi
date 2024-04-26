@@ -26,7 +26,7 @@ class Kifuwarabe():
 
         # 候補に挙がった手は全て覚えておく
         self._king_canditates_memory = None
-        self._minions_canditates_memory = None
+        self._pieces_canditates_memory = None
 
         # 評価値テーブル・オブジェクト
         self._evaluation_table_obj = None
@@ -118,7 +118,7 @@ class Kifuwarabe():
 
         # 前回の対局の指し手の候補手の記憶
         self._king_canditates_memory = CandidatesMemory.load_from_file(self._player_file_number, is_king=True)
-        self._minions_canditates_memory = CandidatesMemory.load_from_file(self._player_file_number, is_king=False)
+        self._pieces_canditates_memory = CandidatesMemory.load_from_file(self._player_file_number, is_king=False)
 
         # コウの記録
         self._ko_memory = KoMemory()
@@ -130,7 +130,7 @@ class Kifuwarabe():
         self._evaluation_table_obj = EvaluationTable(self._player_file_number)
         self._evaluation_table_obj.usinewgame(
                 self._king_canditates_memory,
-                self._minions_canditates_memory,
+                self._pieces_canditates_memory,
                 self._result_file)
 
         print(f"[{datetime.datetime.now()}] usinewgame end", flush=True)
@@ -197,7 +197,7 @@ class Kifuwarabe():
                 evaluation_table=self._evaluation_table_obj,
                 legal_move_list=list(self._board.legal_moves),
                 king_canditates_memory=self._king_canditates_memory,
-                minions_canditates_memory=self._minions_canditates_memory,
+                pieces_canditates_memory=self._pieces_canditates_memory,
                 ko_memory=self._ko_memory,
                 board=self._board)
 
@@ -224,7 +224,7 @@ class Kifuwarabe():
 
                 # ［指した手］　勝っていないなら追加していく
                 self._king_canditates_memory.save()
-                self._minions_canditates_memory.save()
+                self._pieces_canditates_memory.save()
 
             # 勝ち
             elif cmd[1] == 'win':
@@ -233,7 +233,7 @@ class Kifuwarabe():
 
                 # ［指した手］　勝ったら全部忘れる
                 self._king_canditates_memory.delete()
-                self._minions_canditates_memory.delete()
+                self._pieces_canditates_memory.delete()
 
                 # ［評価値］　勝ったら記憶する
                 self._evaluation_table_obj.save_file_as_kp_ko()
@@ -246,7 +246,7 @@ class Kifuwarabe():
 
                 # ［指した手］　勝っていないなら追加していく
                 self._king_canditates_memory.save()
-                self._minions_canditates_memory.save()
+                self._pieces_canditates_memory.save()
 
             # その他
             else:
@@ -255,7 +255,7 @@ class Kifuwarabe():
 
                 # ［指した手］　勝っていないなら追加していく
                 self._king_canditates_memory.save()
-                self._minions_canditates_memory.save()
+                self._pieces_canditates_memory.save()
 
 
     def do(self, cmd):
@@ -304,7 +304,7 @@ class Kifuwarabe():
         #
         # ＦｋＦ＋ＦｋＯポリシー と ＦｍＦ＋ＦｍＯポリシー を分けて取得
         #
-        sorted_friend_king_legal_move_list_as_usi, sorted_friend_minions_legal_move_list_as_usi = create_move_lists(
+        sorted_friend_king_legal_move_list_as_usi, sorted_friend_pieces_legal_move_list_as_usi = create_move_lists(
                 legal_move_list=list(self._board.legal_moves),
                 ko_memory=self._ko_memory,
                 board=self._board)
@@ -340,7 +340,7 @@ class Kifuwarabe():
             number += 1
 
         print('自軍の玉以外の合法手一覧：')
-        for move_a_as_usi in sorted_friend_minions_legal_move_list_as_usi:
+        for move_a_as_usi in sorted_friend_pieces_legal_move_list_as_usi:
             k_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
                     is_symmetrical_connected=self._evaluation_table_obj.kp_plus_ko_policy_table.is_symmetrical_connected)
@@ -367,7 +367,7 @@ class Kifuwarabe():
         #
         list_of_sorted_friend_legal_move_list_as_usi = [
             sorted_friend_king_legal_move_list_as_usi,
-            sorted_friend_minions_legal_move_list_as_usi,
+            sorted_friend_pieces_legal_move_list_as_usi,
         ]
 
         for sorted_friend_legal_move_list_as_usi in list_of_sorted_friend_legal_move_list_as_usi:
@@ -405,9 +405,9 @@ class Kifuwarabe():
         # =======================
         #
         # 候補手に評価値を付けた辞書を作成
-        king_move_as_usi_and_score_dictionary, minions_move_as_usi_and_score_dictionary = self._evaluation_table_obj.make_move_as_usi_and_policy_dictionary(
+        king_move_as_usi_and_score_dictionary, pieces_move_as_usi_and_score_dictionary = self._evaluation_table_obj.make_move_as_usi_and_policy_dictionary(
                 sorted_friend_king_legal_move_list_as_usi,
-                sorted_friend_minions_legal_move_list_as_usi,
+                sorted_friend_pieces_legal_move_list_as_usi,
                 opponent_legal_move_set_as_usi,
                 self._board.turn)
 
@@ -442,10 +442,10 @@ class Kifuwarabe():
         #
 
         print('くじ一覧（自軍の玉以外の合法手）：')
-        for move_a_as_usi in sorted_friend_minions_legal_move_list_as_usi:
+        for move_a_as_usi in sorted_friend_pieces_legal_move_list_as_usi:
 
             # 指し手の評価値
-            m_move_value = minions_move_as_usi_and_score_dictionary[move_a_as_usi]
+            m_move_value = pieces_move_as_usi_and_score_dictionary[move_a_as_usi]
 
             m_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),

@@ -18,7 +18,7 @@ def create_move_lists(
 
     # USIプロトコルでの符号表記に変換
     sorted_friend_king_legal_move_list_as_usi = []
-    sorted_friend_minions_legal_move_list_as_usi = []
+    sorted_friend_pieces_legal_move_list_as_usi = []
     ko_move_as_usi = ko_memory.get_head()
 
     for move in legal_move_list:
@@ -40,17 +40,17 @@ def create_move_lists(
             sorted_friend_king_legal_move_list_as_usi.append(move_as_usi)
 
         else:
-            sorted_friend_minions_legal_move_list_as_usi.append(move_as_usi)
+            sorted_friend_pieces_legal_move_list_as_usi.append(move_as_usi)
 
     # コウを省いて投了になるぐらいなら、コウを指す
-    if has_ko and len(sorted_friend_king_legal_move_list_as_usi) + len(sorted_friend_minions_legal_move_list_as_usi) < 1:
+    if has_ko and len(sorted_friend_king_legal_move_list_as_usi) + len(sorted_friend_pieces_legal_move_list_as_usi) < 1:
         if ko_is_king:
             sorted_friend_king_legal_move_list_as_usi.append(ko_move_as_usi)
         else:
-            sorted_friend_minions_legal_move_list_as_usi.append(ko_move_as_usi)
+            sorted_friend_pieces_legal_move_list_as_usi.append(ko_move_as_usi)
 
     # ソート
     sorted_friend_king_legal_move_list_as_usi.sort()
-    sorted_friend_minions_legal_move_list_as_usi.sort()
+    sorted_friend_pieces_legal_move_list_as_usi.sort()
 
-    return (sorted_friend_king_legal_move_list_as_usi, sorted_friend_minions_legal_move_list_as_usi)
+    return (sorted_friend_king_legal_move_list_as_usi, sorted_friend_pieces_legal_move_list_as_usi)
