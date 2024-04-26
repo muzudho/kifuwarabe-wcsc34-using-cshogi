@@ -236,7 +236,8 @@ class Kifuwarabe():
                 self._minions_canditates_memory.delete()
 
                 # ［評価値］　勝ったら記憶する
-                self._evaluation_table_obj.save_file()
+                self._evaluation_table_obj.save_file_as_kp_ko()
+                self._evaluation_table_obj.save_file_as_pp_po()
 
             # 持将棋
             elif cmd[1] == 'draw':
@@ -321,19 +322,19 @@ class Kifuwarabe():
         for move_a_as_usi in sorted_friend_king_legal_move_list_as_usi:
             k_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
-                    is_symmetrical_connected=self._evaluation_table_obj.fkf_plus_fko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_table_obj.kp_plus_ko_policy_table.is_symmetrical_connected)
 
             k_moves_pair_as_usi = EvaluationConfiguration.get_moves_pair_as_usi_by_table_index(
                     table_index=k_table_index,
-                    is_symmetrical_connected=self._evaluation_table_obj.fkf_plus_fko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_table_obj.kp_plus_ko_policy_table.is_symmetrical_connected)
 
             m_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
-                    is_symmetrical_connected=self._evaluation_table_obj.fmf_plus_fmo_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_table_obj.pp_plus_po_policy_table.is_symmetrical_connected)
 
             m_moves_pair_as_usi = EvaluationConfiguration.get_moves_pair_as_usi_by_table_index(
                     table_index=m_table_index,
-                    is_symmetrical_connected=self._evaluation_table_obj.fmf_plus_fmo_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_table_obj.pp_plus_po_policy_table.is_symmetrical_connected)
 
             print(f'  ({number:3}) {move_a_as_usi:5} = K{k_table_index:5} M{m_table_index:5}  検算 Ka:{",".join(k_moves_pair_as_usi[0]):11}  b:{",".join(k_moves_pair_as_usi[1]):11}  Ma:{",".join(m_moves_pair_as_usi[0]):11}  b:{",".join(m_moves_pair_as_usi[1]):11}')
             number += 1
@@ -342,19 +343,19 @@ class Kifuwarabe():
         for move_a_as_usi in sorted_friend_minions_legal_move_list_as_usi:
             k_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
-                    is_symmetrical_connected=self._evaluation_table_obj.fkf_plus_fko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_table_obj.kp_plus_ko_policy_table.is_symmetrical_connected)
 
             k_moves_pair_as_usi = EvaluationConfiguration.get_moves_pair_as_usi_by_table_index(
                     table_index=k_table_index,
-                    is_symmetrical_connected=self._evaluation_table_obj.fkf_plus_fko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_table_obj.kp_plus_ko_policy_table.is_symmetrical_connected)
 
             m_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
-                    is_symmetrical_connected=self._evaluation_table_obj.fmf_plus_fmo_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_table_obj.pp_plus_po_policy_table.is_symmetrical_connected)
 
             m_moves_pair_as_usi = EvaluationConfiguration.get_moves_pair_as_usi_by_table_index(
                     table_index=m_table_index,
-                    is_symmetrical_connected=self._evaluation_table_obj.fmf_plus_fmo_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_table_obj.pp_plus_po_policy_table.is_symmetrical_connected)
 
             print(f'  ({number:3}) {move_a_as_usi:5} = K{k_table_index:5} M{m_table_index:5}  検算 Ka:{",".join(k_moves_pair_as_usi[0]):11}  b:{",".join(k_moves_pair_as_usi[1]):11}  Ma:{",".join(m_moves_pair_as_usi[0]):11}  b:{",".join(m_moves_pair_as_usi[1]):11}')
             number += 1
@@ -382,19 +383,19 @@ class Kifuwarabe():
         for move_a_as_usi in opponent_legal_move_set_as_usi:
             k_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
-                    is_symmetrical_connected=self._evaluation_table_obj.fkf_plus_fko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_table_obj.kp_plus_ko_policy_table.is_symmetrical_connected)
 
             k_moves_pair_as_usi = EvaluationConfiguration.get_moves_pair_as_usi_by_table_index(
                     table_index=k_table_index,
-                    is_symmetrical_connected=self._evaluation_table_obj.fkf_plus_fko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_table_obj.kp_plus_ko_policy_table.is_symmetrical_connected)
 
             m_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
-                    is_symmetrical_connected=self._evaluation_table_obj.fmf_plus_fmo_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_table_obj.pp_plus_po_policy_table.is_symmetrical_connected)
 
             m_moves_pair_as_usi = EvaluationConfiguration.get_moves_pair_as_usi_by_table_index(
                     table_index=m_table_index,
-                    is_symmetrical_connected=self._evaluation_table_obj.fmf_plus_fmo_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_table_obj.pp_plus_po_policy_table.is_symmetrical_connected)
 
             print(f'  ({number:3}) {move_a_as_usi:5} = K{k_table_index:5} M{m_table_index:5}  検算 Ka:{",".join(k_moves_pair_as_usi[0]):11}  b:{",".join(k_moves_pair_as_usi[1]):11}  Ma:{",".join(m_moves_pair_as_usi[0]):11}  b:{",".join(m_moves_pair_as_usi[1]):11}')
             number += 1
@@ -426,11 +427,11 @@ class Kifuwarabe():
 
             k_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
-                    is_symmetrical_connected=self._evaluation_table_obj.fkf_plus_fko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_table_obj.kp_plus_ko_policy_table.is_symmetrical_connected)
 
             k_moves_pair_as_usi = EvaluationConfiguration.get_moves_pair_as_usi_by_table_index(
                     table_index=k_table_index,
-                    is_symmetrical_connected=self._evaluation_table_obj.fkf_plus_fko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_table_obj.kp_plus_ko_policy_table.is_symmetrical_connected)
 
             print(f'  ({number:3}) {move_a_as_usi:5} = K{k_table_index:5} value:{k_move_value:3}  検算 Ka:{",".join(k_moves_pair_as_usi[0]):11}  b:{",".join(k_moves_pair_as_usi[1]):11}')
             number += 1
@@ -448,11 +449,11 @@ class Kifuwarabe():
 
             m_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
-                    is_symmetrical_connected=self._evaluation_table_obj.fmf_plus_fmo_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_table_obj.pp_plus_po_policy_table.is_symmetrical_connected)
 
             m_moves_pair_as_usi = EvaluationConfiguration.get_moves_pair_as_usi_by_table_index(
                     table_index=m_table_index,
-                    is_symmetrical_connected=self._evaluation_table_obj.fmf_plus_fmo_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_table_obj.pp_plus_po_policy_table.is_symmetrical_connected)
 
             print(f'  ({number:3}) {move_a_as_usi:5} = M{m_table_index:5} value:{m_move_value:3}  検算 Ma:{",".join(m_moves_pair_as_usi[0]):11}  b:{",".join(m_moves_pair_as_usi[1]):11}')
             number += 1

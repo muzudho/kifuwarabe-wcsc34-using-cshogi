@@ -7,40 +7,28 @@ from move_helper import MoveHelper
 class EvaluationMmTable():
     """評価値ＭＭテーブル
 
-    旧：　合法手（つまり利き）を E （Effect）と呼ぶとし、
-    新：　USIプロトコルの指し手の符号を M (Move) と呼ぶとし、
+    USIプロトコルの指し手の符号を M (Move) と呼ぶとする
+    M と M の関係を MM と呼ぶとする
 
-    現局面（自分の手番）の合法手を E1、
-    E1 を指したときの局目（相手の手番）の合法手を E2 とする
-
-    Eは e1, e2, ... en の集合とし、
-    評価値テーブルは
-    e1 e1
-    e1 e2
-    e1 e3
-    ...
-    en en
-    の形を取る。これを EE と呼ぶとする
+    評価値テーブルは MM である
 
     旧：　さらに自軍を F（Friend）、相手を O（Opponent） と呼ぶとし、
-    旧：　敵軍を O（Opponent） と呼ぶとし、
 
     旧：　玉の合法手を K（King）、
-    新：　自玉の合法手を K（King）、
+    新：　自玉の合法手を K（King）、敵玉の合法手を L（next K） と呼ぶ
 
     旧：　玉以外の合法手を M (Minions) と呼ぶとする。
-    新：　自軍の玉以外の合法手を 大文字のP (Piece) と呼ぶとする
+    新：　自軍の玉以外の合法手を P (Piece) と呼ぶとする
+    新：　敵軍の玉以外の合法手を Q (next P) と呼ぶとする
 
-    旧：　Fk（自玉の合法手）と F（自分の合法手）の関係を FkF、
+    旧：　Fk（自玉の合法手）と F（自分の合法手）の関係を ＦｋＦ、 TODO ｆｋｆ は kp にリネーム
     新：　K と P の関係を KP、
 
-    旧：　Fm（自軍の玉以外の合法手）と F（自分の合法手）の関係を FmF、
     新：　P と P の関係を PP、
 
-    旧：　Fk（自玉の合法手）と O（相手の合法手）の関係を FkO、
+    旧：　Fk（自玉の合法手）と O（相手の合法手）の関係を ＦｋＯ、 TODO ｆｋｏ は ko にリネーム
     新：　K と O の関係を KO、
 
-    旧：　Fm（自軍の玉以外の合法手）と O（相手の合法手）の関係を FmO、
     新：　P と O の関係を PO
 
     と呼ぶ
@@ -50,10 +38,6 @@ class EvaluationMmTable():
     def __init__(
             self,
             file_number,
-            evaluation_kind,
-            file_name,
-            bin_file_name,
-            bin_v2_file_name,
             move_size,
             table_size,
             is_symmetrical_connected,
@@ -119,10 +103,6 @@ class EvaluationMmTable():
         ----------
         """
         self._file_number = file_number
-        self._evaluation_kind = evaluation_kind
-        self._file_name = file_name                 # 旧
-        self._bin_file_name = bin_file_name         # 旧
-        self._bin_v2_file_name = bin_v2_file_name   # 新
         self._move_size = move_size
         self._table_size = table_size
         self._is_symmetrical_connected = is_symmetrical_connected
@@ -148,21 +128,6 @@ class EvaluationMmTable():
     @property
     def evaluation_mm_table(self):
         return self._evaluation_mm_table
-
-
-    def exists_text_file(self):
-        """テキスト・ファイルは存在するか？"""
-        return os.path.isfile(self._file_name)
-
-
-    def exists_binary_file(self):
-        """バイナリ・ファイルは存在するか？"""
-        return os.path.isfile(self._bin_file_name)
-
-
-    def exists_binary_v2_file(self):
-        """バイナリV2ファイルは存在するか？"""
-        return os.path.isfile(self._bin_v2_file_name)
 
 
     def get_table_index_by_2_moves(

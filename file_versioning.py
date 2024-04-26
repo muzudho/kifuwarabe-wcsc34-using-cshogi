@@ -312,20 +312,19 @@ class FileVersioning():
 
 
     def reset_to_random_table(
-            file_number,
-            evaluation_kind,
+            hint,
             table_size):
         """ランダム値の入った評価値テーブルを新規作成する"""
         # ダミーデータを入れる。１分ほどかかる
-        print(f"[{datetime.datetime.now()}] make random {evaluation_kind} evaluation table in memory ...", flush=True)
+        print(f"[{datetime.datetime.now()}] make random evaluation table in memory. hint: '{hint}' ...", flush=True)
 
         evaluation_mm_table = []
 
-        for index in range(0, table_size):
+        for _index in range(0, table_size):
             # 値は 0, 1 の２値
             evaluation_mm_table.append(random.randint(0,1))
 
-        print(f"[{datetime.datetime.now()}] {evaluation_kind} evaluation table maked in memory", flush=True)
+        print(f"[{datetime.datetime.now()}] random evaluation table maked in memory. hint: '{hint}'", flush=True)
         return evaluation_mm_table
 
 
