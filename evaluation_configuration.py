@@ -99,14 +99,14 @@ class EvaluationConfiguration():
 
 
     @staticmethod
-    def get_moves_as_usi_by_table_index(
+    def get_moves_single_as_usi_by_table_index(
             table_index,
             is_symmetrical_connected):
         """逆関数
 
-        返り値は配列で返ってくる。要素数は１か２
+        指し手１つ分。ただし鏡面の場合、共役が付いて２つ返ってくる
         """
-
+        pro_num_size = 2
         rank_size = 9
 
         if is_symmetrical_connected:
@@ -115,15 +115,17 @@ class EvaluationConfiguration():
             file_size = 9
 
         dst_size = file_size * rank_size
-        pro_num_size = 2
 
-        pro_num = table_index % 2
-        table_index //= pro_num_size
+        drops = 7
 
-        dst_num = table_index % dst_size
-        table_index //= dst_size
+        bits = table_index
+        pro_num = bits % pro_num_size
+        bits //= pro_num_size
 
-        src_num = table_index
+        dst_num = bits % dst_size
+        bits //= dst_size
+
+        src_num = bits
 
         # 共役の移動元の筋。左右対称の盤で、反対側の方の筋
         conjugate_src_file = None
@@ -189,9 +191,17 @@ class EvaluationConfiguration():
 
         # 移動元（列は左右対称）
         if is_symmetrical_connected:
-            # 45 以上は打
+            # FIXME 52 以上は何？
+
+            # 45 ～ 51 は打
             if 45 <= src_num:
-                src_file = EvaluationConfiguration._src_num_to_file_str_on_symmetrical_connected[src_num]
+                try:
+                    src_file = EvaluationConfiguration._src_num_to_file_str_on_symmetrical_connected[src_num]
+                except KeyError as e:
+                    # 例： src_num: 52  dst_num: 0  pro_num: 0  table_index: 4680  bits: 52  file_size: 5  rank_size: 9  dst_size: 45  pro_num_size: 2
+                    print(f"src_num: {src_num}  dst_num: {dst_num}  pro_num: {pro_num}  table_index: {table_index}  bits: {bits}  file_size: {file_size}  rank_size: {rank_size}  dst_size: {dst_size}  pro_num_size: {pro_num_size}  e: {e}")
+                    raise
+
                 conjugate_src_file = src_file
                 src_rank = '*'
 
@@ -254,11 +264,56 @@ class EvaluationConfiguration():
                     src_file = '1'
                     src_rank = Move.get_rank_num_to_str(src_num + 1)
 
-        return_values = [
+        moves_single = [
             f'{src_file}{src_rank}{dst_file}{dst_rank}{pro_str}'
         ]
 
         if conjugate_src_file is not None or conjugate_dst_file is not None:
-            return_values.append(f'{conjugate_src_file}{src_rank}{conjugate_dst_file}{dst_rank}{pro_str}')
+            moves_single.append(f'{conjugate_src_file}{src_rank}{conjugate_dst_file}{dst_rank}{pro_str}')
 
-        return return_values
+        return moves_single
+
+
+    @staticmethod
+    def get_moves_pair_as_usi_by_table_index(
+            table_index,
+            is_symmetrical_connected):
+        """逆関数
+
+        指し手２つ分返す
+        """
+
+        pro_size = 2
+
+        if is_symmetrical_connected:
+            file_size = 5
+        else:
+            file_size = 9
+
+        rank_size = 9
+
+        dst_size = rank_size * file_size
+
+        drop_kind = 7
+        src_size = drop_kind * rank_size * file_size
+
+        move_size = src_size * dst_size * pro_size
+
+        bits = table_index
+
+        a_move_bits = bits % move_size
+        bits //= move_size
+
+        b_move_bits = bits
+
+        a_moves = EvaluationConfiguration.get_moves_single_as_usi_by_table_index(
+                a_move_bits,
+                is_symmetrical_connected)
+
+
+        b_moves = EvaluationConfiguration.get_moves_single_as_usi_by_table_index(
+                b_move_bits,
+                is_symmetrical_connected)
+
+        return [a_moves, b_moves]
+

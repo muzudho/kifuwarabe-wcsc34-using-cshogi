@@ -142,23 +142,24 @@ class FileVersioning():
                     for two_power in two_powers:
                         bit = one_byte//two_power % 2
 
-                        moves_as_usi = EvaluationConfiguration.get_moves_as_usi_by_table_index(
+                        moves_as_usi_pair = EvaluationConfiguration.get_moves_pair_as_usi_by_table_index(
                                 table_index=table_index,
                                 # 左右対称の盤
                                 is_symmetrical_connected=True)
 
-                        for move_as_usi in moves_as_usi:
-                            converted_table_index = EvaluationConfiguration.get_table_index_by_move(
-                                    move=Move(move_as_usi),
-                                    # 左右が異なる盤
-                                    is_symmetrical_connected=False)
+                        for moves_as_usi in moves_as_usi_pair:
+                            for move_as_usi in moves_as_usi:
+                                converted_table_index = EvaluationConfiguration.get_table_index_by_move(
+                                        move=Move(move_as_usi),
+                                        # 左右が異なる盤
+                                        is_symmetrical_connected=False)
 
-                            try:
-                                evaluation_ee_table[converted_table_index] = bit
+                                try:
+                                    evaluation_ee_table[converted_table_index] = bit
 
-                            except IndexError as e:
-                                print(f"table length: {len(evaluation_ee_table)}  index: {converted_table_index}  except: {e}")
-                                raise
+                                except IndexError as e:
+                                    print(f"table length: {len(evaluation_ee_table)}  index: {converted_table_index}  except: {e}")
+                                    raise
 
 
                         table_index+=1
