@@ -88,10 +88,13 @@ class EvaluationConfiguration():
 
 
     @staticmethod
-    def get_move_as_usi_by_table_index(
+    def get_moves_as_usi_by_table_index(
             table_index,
             is_symmetrical_connected):
-        """逆関数"""
+        """逆関数
+
+        返り値は配列で返ってくる。要素数は１か２
+        """
 
         rank_size = 9
 
@@ -111,6 +114,10 @@ class EvaluationConfiguration():
 
         src_num = table_index
 
+        # 共役の移動元の筋。左右対称の盤で、反対側の方の筋
+        conjugate_src_file = None
+        conjugate_dst_file = None
+
         # 成りか？
         if pro_num == 1:
             pro_str = '+'
@@ -121,18 +128,23 @@ class EvaluationConfiguration():
         if is_symmetrical_connected:
             if 36 <= dst_num:
                 dst_file = '5'
+                conjugate_dst_file = '5'
                 dst_rank = Move.get_rank_num_to_str(dst_num - 36 + 1)
             elif 27 <= dst_num:
-                dst_file = '4'  # or '6'
+                dst_file = '4'
+                conjugate_dst_file = '6'
                 dst_rank = Move.get_rank_num_to_str(dst_num - 27 + 1)
             elif 18 <= dst_num:
-                dst_file = '3'  # or '7'
+                dst_file = '3'
+                conjugate_dst_file = '7'
                 dst_rank = Move.get_rank_num_to_str(dst_num - 18 + 1)
             elif 9 <= dst_num:
-                dst_file = '2'  # or '8'
+                dst_file = '2'
+                conjugate_dst_file = '8'
                 dst_rank = Move.get_rank_num_to_str(dst_num - 9 + 1)
             else:
-                dst_file = '1'  # or '9'
+                dst_file = '1'
+                conjugate_dst_file = '9'
                 dst_rank = Move.get_rank_num_to_str(dst_num + 1)
 
         else:
@@ -175,18 +187,23 @@ class EvaluationConfiguration():
             else:
                 if 36 <= src_num:
                     src_file = '5'
+                    conjugate_src_file = '5'
                     src_rank = Move.get_rank_num_to_str(src_num - 36 + 1)
                 elif 27 <= src_num:
-                    src_file = '4'  # or '6'
+                    src_file = '4'
+                    conjugate_src_file = '6'
                     src_rank = Move.get_rank_num_to_str(src_num - 27 + 1)
                 elif 18 <= src_num:
-                    src_file = '3'  # or '7'
+                    src_file = '3'
+                    conjugate_src_file = '7'
                     src_rank = Move.get_rank_num_to_str(src_num - 18 + 1)
                 elif 9 <= src_num:
-                    src_file = '2'  # or '8'
+                    src_file = '2'
+                    conjugate_src_file = '8'
                     src_rank = Move.get_rank_num_to_str(src_num - 9 + 1)
                 else:
-                    src_file = '1'  # or '9'
+                    src_file = '1'
+                    conjugate_src_file = '9'
                     src_rank = Move.get_rank_num_to_str(src_num + 1)
 
         else:
@@ -225,4 +242,11 @@ class EvaluationConfiguration():
                     src_file = '1'
                     src_rank = Move.get_rank_num_to_str(src_num + 1)
 
-        return f'{src_file}{src_rank}{dst_file}{dst_rank}{pro_str}'
+        return_values = [
+            f'{src_file}{src_rank}{dst_file}{dst_rank}{pro_str}'
+        ]
+
+        if conjugate_src_file is not None or conjugate_dst_file is not None:
+            return_values.append(f'{conjugate_src_file}{src_rank}{conjugate_dst_file}{dst_rank}{pro_str}')
+
+        return return_values
