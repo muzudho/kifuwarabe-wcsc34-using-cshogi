@@ -1,10 +1,42 @@
+import cshogi
 import random
+import datetime
 from move import Move
 from move_helper import MoveHelper
 
 
 class Learn():
     """学習部"""
+
+
+    @staticmethod
+    def update_evaluation_table(
+            evaluation_ee_table_obj,
+            canditates_memory,
+            result_file):
+        """結果ファイルを読み込んで、持将棋や、負けかどうか判定する。
+        そうなら、評価値テーブルのうち、指した手（CanditatesMemory）に関連する箇所をランダムに変更してみる"""
+
+        if result_file.exists():
+            # 結果ファイルを読込
+            tokens = result_file.read().split(' ')
+            result_text = tokens[0]
+            turn_text = tokens[1]
+
+            if turn_text == 'black':
+                turn = cshogi.BLACK
+            elif turn_text == 'white':
+                turn = cshogi.WHITE
+            else:
+                raise ValueError(f"failed to turn: '{turn_text}'")
+
+            # 前回の対局で、負けるか、引き分けなら、内容を変えます
+            if result_text in ('lose', 'draw'):
+                Learn.modify_table(
+                        evaluation_ee_table_obj=evaluation_ee_table_obj,
+                        canditates_memory=canditates_memory,
+                        turn=turn)
+                print(f"[{datetime.datetime.now()}] {evaluation_ee_table_obj._file_name} file updated", flush=True)
 
 
     @staticmethod

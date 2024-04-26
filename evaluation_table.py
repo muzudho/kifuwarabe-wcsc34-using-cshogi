@@ -3,6 +3,7 @@ from evaluation_configuration import EvaluationConfiguration
 from evaluation_fmf_plus_fmo_table import EvaluationFmfPlusFmoTable
 from evaluation_fkf_plus_fko_table import EvaluationFkfPlusFkoTable
 from file_versioning import FileVersioning
+from learn import Learn
 
 
 class EvaluationTable():
@@ -84,9 +85,11 @@ class EvaluationTable():
                 is_file_modified=is_file_modified,
                 is_symmetrical_connected=self._is_symmetrical_connected_of_fkf_plus_fko)
 
-        self._fkf_plus_fko_policy_table.update_evaluation_table(
-                king_canditates_memory, # キング
-                result_file)
+        # 学習
+        Learn.update_evaluation_table(
+                evaluation_ee_table_obj=self._fkf_plus_fko_policy_table,
+                canditates_memory=king_canditates_memory, # キング
+                result_file=result_file)
 
         #
         # ＦｍＦ＋ＦｍＯポリシー
@@ -124,9 +127,11 @@ class EvaluationTable():
                 is_file_modified=is_file_modified,
                 is_symmetrical_connected=self._is_symmetrical_connected_of_fmf_plus_fmo)
 
-        self._fmf_plus_fmo_policy_table.update_evaluation_table(
-                minions_canditates_memory,  # ミニオンズ
-                result_file)
+        # 学習
+        Learn.update_evaluation_table(
+                evaluation_ee_table_obj=self._fmf_plus_fmo_policy_table,
+                canditates_memory=minions_canditates_memory,  # ミニオンズ
+                result_file=result_file)
 
 
     def save_file(self):
