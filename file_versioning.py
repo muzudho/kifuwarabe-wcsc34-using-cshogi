@@ -11,7 +11,7 @@ class FileVersioning():
     @staticmethod
     def read_evaluation_from_text_file(
             file_name):
-        """テキスト・ファイルを読込む"""
+        """テキスト・ファイル V0 を読込む"""
 
         # ロードする。１分ほどかかる
         print(f"[{datetime.datetime.now()}] read {file_name} file ...", flush=True)
@@ -30,7 +30,7 @@ class FileVersioning():
             # 整数型へ変換したあと、またリストに入れる
             evaluation_ee_table = list(map(int,tokens))
 
-            print(f"[{datetime.datetime.now()}] {file_name} file loaded. evaluation table size: {len(evaluation_ee_table)}", flush=True)
+            print(f"[{datetime.datetime.now()}] (v0) '{file_name}' file loaded. evaluation table size: {len(evaluation_ee_table)}", flush=True)
 
         except FileNotFoundError as ex:
             print(f"[evaluation table / load from file] [{file_name}] file error. {ex}")
@@ -42,7 +42,7 @@ class FileVersioning():
     @staticmethod
     def read_evaluation_from_binary_file(
             file_name):
-        """バイナリ・ファイルを読込む"""
+        """バイナリ・ファイル V1 を読込む"""
 
         # ロードする。１分ほどかかる
         print(f"[{datetime.datetime.now()}] read {file_name} file ...", flush=True)
@@ -63,7 +63,7 @@ class FileVersioning():
 
                     multiple_bytes = f.read(1)
 
-            print(f"[{datetime.datetime.now()}] {file_name} file loaded. evaluation table size: {len(evaluation_ee_table)}", flush=True)
+            print(f"[{datetime.datetime.now()}] (v1) '{file_name}' file loaded. evaluation table size: {len(evaluation_ee_table)}", flush=True)
 
         except FileNotFoundError as ex:
             print(f"[evaluation table / load from file] [{file_name}] file error. {ex}")
@@ -75,8 +75,7 @@ class FileVersioning():
     @staticmethod
     def read_evaluation_from_binary_v2_v3_file(
             file_name):
-        """バイナリ・ファイルを読込む
-        V2, V3 用
+        """バイナリ・ファイル V2, V3 を読込む
         ファイルの存在チェックを済ませておくこと"""
 
         # ロードする。１分ほどかかる
@@ -104,7 +103,7 @@ class FileVersioning():
 
                     multiple_bytes = f.read(1)
 
-            print(f"[{datetime.datetime.now()}] {file_name} file loaded. evaluation table size: {len(evaluation_ee_table)}", flush=True)
+            print(f"[{datetime.datetime.now()}] (v2,v3) '{file_name}' file loaded. evaluation table size: {len(evaluation_ee_table)}", flush=True)
 
         except FileNotFoundError as ex:
             print(f"[evaluation table / load from file] [{file_name}] file error. {ex}")
@@ -166,7 +165,7 @@ class FileVersioning():
 
                     multiple_bytes = f.read(1)
 
-            print(f"[{datetime.datetime.now()}] {v2_file_name} file loaded. evaluation table size: {len(evaluation_ee_table)}", flush=True)
+            print(f"[{datetime.datetime.now()}] (v2 to v3) '{v2_file_name}' file loaded. evaluation table size: {len(evaluation_ee_table)}", flush=True)
 
         except FileNotFoundError as ex:
             print(f"[evaluation table / load from file] [{v2_file_name}] file error. {ex}")
@@ -241,7 +240,9 @@ class FileVersioning():
             file_number,
             evaluation_kind,
             file_version):
-        """評価関数テーブルをファイルから読み込む。無ければランダム値の入った物を新規作成する"""
+        """評価関数テーブルをファイルから読み込む。無ければランダム値の入った物を新規作成する。
+
+        ファイルのバージョンがアップすることがある"""
 
         file_names_by_version = FileVersioning.create_file_names_each_version(
                 file_number=file_number,
@@ -263,7 +264,7 @@ class FileVersioning():
             # 旧形式のテキスト・ファイルは削除
             FileVersioning.delete_file(file_names_by_version[0])
 
-            return ee_table
+            return (ee_table, "V3")
 
         # バイナリV2ファイルに保存されているとき
         if file_version == "V2":
@@ -271,8 +272,6 @@ class FileVersioning():
             # TODO バージョンアップしたい
             ee_table = FileVersioning.read_evaluation_v2_file_and_convert_to_v3(
                 v2_file_name=file_names_by_version[2])
-            #ee_table = FileVersioning.read_evaluation_from_binary_v2_v3_file(
-            #        file_name=file_names_by_version[2])
 
             # 旧形式のバイナリ・ファイルは削除
             FileVersioning.delete_file(file_names_by_version[1])
@@ -280,7 +279,7 @@ class FileVersioning():
             # 旧形式のテキスト・ファイルは削除
             FileVersioning.delete_file(file_names_by_version[0])
 
-            return ee_table
+            return (ee_table, "V3")
 
         print(f"[{datetime.datetime.now()}] {file_names_by_version[1]} file exists check ...", flush=True)
 
@@ -292,7 +291,7 @@ class FileVersioning():
             # 旧形式のテキスト・ファイルは削除
             FileVersioning.delete_file(file_names_by_version[0])
 
-            return ee_table
+            return (ee_table, "V1")
 
         print(f"[{datetime.datetime.now()}] {file_names_by_version[0]} file exists check ...", flush=True)
 
@@ -301,7 +300,7 @@ class FileVersioning():
             ee_table = FileVersioning.read_evaluation_from_text_file(
                     file_name=file_names_by_version[0])
 
-            return ee_table
+            return (ee_table, "V0")
 
         # ファイルが存在しないとき
         return None

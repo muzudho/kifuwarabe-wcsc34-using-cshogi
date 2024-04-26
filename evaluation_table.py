@@ -44,11 +44,17 @@ class EvaluationTable():
         file_version = FileVersioning.check_file_version(
                 file_number=self._file_number,
                 evaluation_kind="fkf_fko")
-        ee_table = FileVersioning.load_from_file_or_random_table(
+        tuple = FileVersioning.load_from_file_or_random_table(
                 file_number=self._file_number,
                 evaluation_kind="fkf_fko",
                 file_version=file_version)
-        is_file_modified = ee_table is None
+
+        if tuple is None:
+            ee_table = None
+            is_file_modified = True     # 新規作成だから
+        else:
+            ee_table, file_version = tuple
+            is_file_modified = ee_table is None
 
         self._is_symmetrical_connected_of_fkf_plus_fko = True
         if file_version == "V3":
@@ -78,11 +84,17 @@ class EvaluationTable():
         file_version = FileVersioning.check_file_version(
                 file_number=self._file_number,
                 evaluation_kind="fmf_fmo")
-        ee_table = FileVersioning.load_from_file_or_random_table(
+        tuple = FileVersioning.load_from_file_or_random_table(
                 file_number=self._file_number,
                 evaluation_kind="fmf_fmo",
                 file_version=file_version)
-        is_file_modified = ee_table is None
+
+        if tuple is None:
+            ee_table = None
+            is_file_modified = True     # 新規作成だから
+        else:
+            ee_table, file_version = tuple
+            is_file_modified = ee_table is None
 
         self._is_symmetrical_connected_of_fmf_plus_fmo = True
         if file_version == "V3":

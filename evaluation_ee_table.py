@@ -212,6 +212,7 @@ class EvaluationEeTable():
                 self._evaluation_ee_table[index] = 1
 
         except IndexError as e:
+            # 例： table length: 70955352  index: 102593390  except: list index out of range
             print(f"table length: {len(self._evaluation_ee_table)}  index: {index}  except: {e}")
             raise
 
