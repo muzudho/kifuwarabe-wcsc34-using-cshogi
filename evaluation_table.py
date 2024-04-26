@@ -144,7 +144,7 @@ class EvaluationTable():
         minions_move_as_usi_and_score_dictionary = {}
 
         # ＦｋＦ＋ＦｋＯポリシー
-        fkf_plus_fko_policy_dictionary = self._fmf_plus_fmo_policy_table.make_move_as_usi_and_policy_dictionary(
+        fkf_plus_fko_policy_dictionary = self._fkf_plus_fko_policy_table.make_move_as_usi_and_policy_dictionary(
                 sorted_friend_king_legal_move_list_as_usi,
                 sorted_friend_minions_legal_move_list_as_usi,
                 opponent_legal_move_set_as_usi,
