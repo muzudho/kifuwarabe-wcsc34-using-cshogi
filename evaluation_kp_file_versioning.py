@@ -218,6 +218,8 @@ class EvaluationKpFileVersioning():
 
             # バージョンアップする
             mm_table = EvaluationFileVersionUp.read_evaluation_v3_file_and_convert_to_v4(
+                is_king_of_a=True,  # KP だから
+                is_king_of_b=False, # KP だから
                 file_name=file_names_by_version[3])
 
             # 旧形式のバイナリ・ファイルは削除

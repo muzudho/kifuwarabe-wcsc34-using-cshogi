@@ -208,6 +208,8 @@ class EvaluationPpFileVersioning():
 
             # バージョンアップする
             mm_table = EvaluationFileVersionUp.read_evaluation_v3_file_and_convert_to_v4(
+                is_king_of_a=False, # PP だから
+                is_king_of_b=False, # PP だから
                 file_name=file_names_by_version[3])
 
             # 旧形式のバイナリ・ファイルは削除

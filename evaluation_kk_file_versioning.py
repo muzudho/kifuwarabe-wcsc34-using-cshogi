@@ -3,6 +3,7 @@ import datetime
 from evaluation_configuration import EvaluationConfiguration
 from evaluation_kk_table import EvaluationKkTable
 from evaluation_file_versioning import FileVersioning
+from evaluation_file_version_up import EvaluationFileVersionUp
 
 
 class EvaluationKkFileVersioning():
@@ -133,12 +134,43 @@ class EvaluationKkFileVersioning():
 
         print(f"[{datetime.datetime.now()}] {file_names_by_version[2]} file exists check ...", flush=True)
 
-        # バイナリ・ファイルに保存されているとき
-        if file_version in ("V3", "V4"):
+        # バイナリ・ファイル V4 に保存されているとき
+        if file_version == "V4":
             mm_table = FileVersioning.read_evaluation_from_binary_v2_v3_file(
-                    file_name=file_names_by_version[3])
+                    file_name=file_names_by_version[4])
 
             return (mm_table, file_version, False)
+
+        # バイナリ・ファイル V3 に保存されているとき
+        if file_version == "V3":
+
+            ## V3ファイル読込
+            #mm_table = FileVersioning.read_evaluation_from_binary_v2_v3_file(
+            #        file_name=file_names_by_version[3])
+
+            # バージョンアップする
+            mm_table = EvaluationFileVersionUp.read_evaluation_v3_file_and_convert_to_v4(
+                is_king_of_a=True,  # KK だから
+                is_king_of_b=True,  # KK だから
+                file_name=file_names_by_version[3])
+
+            # 旧形式のバイナリ・ファイルは削除
+            old_file_name = file_names_by_version[2]
+            if os.path.isfile(old_file_name):
+                FileVersioning.delete_file(old_file_name)
+
+            # 旧形式のバイナリ・ファイルは削除
+            old_file_name = file_names_by_version[1]
+            if os.path.isfile(old_file_name):
+                FileVersioning.delete_file(old_file_name)
+
+            # 旧形式のテキスト・ファイルは削除
+            old_file_name = file_names_by_version[0]
+            if os.path.isfile(old_file_name):
+                FileVersioning.delete_file(old_file_name)
+
+            # バージョンアップ
+            return (mm_table, "V4", True)
 
         # ファイルが存在しないとき
         return None

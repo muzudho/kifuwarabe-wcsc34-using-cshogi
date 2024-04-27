@@ -77,7 +77,7 @@ class EvaluationFileVersionUp():
                                 a_is_king=is_king_of_a,
                                 b_move_obj=b_obj,
                                 b_is_king=is_king_of_b,
-                                turn=cshogi.Black,  # FIXME 全部、先手視点？
+                                turn=cshogi.BLACK,  # FIXME 全部、先手視点？
                                 list_of_move_size=[
                                     EvaluationConfiguration.get_move_number(
                                         is_king=is_king_of_a,
