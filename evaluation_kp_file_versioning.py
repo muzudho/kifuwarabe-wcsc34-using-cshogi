@@ -7,6 +7,80 @@ class EvaluationKpFileVersioning():
 
 
     @staticmethod
+    def load_kp_policy(
+            file_number):
+        """ＫＰポリシー読込"""
+        evaluation_kind = "kp"
+
+        tuple = EvaluationKpFileVersioning.check_file_version_and_name(
+                file_number=file_number,
+                evaluation_kind=evaluation_kind)
+
+        if tuple is None:
+            file_version = None
+            file_name = None
+        if tuple is not None:
+            file_version, file_name = tuple
+
+        if file_version == None:
+            evaluation_kind = "kp_ko" # V3の途中までの旧名その２
+
+            tuple = EvaluationKpFileVersioning.check_file_version_and_name(
+                    file_number=file_number,
+                    evaluation_kind=evaluation_kind)
+
+            if tuple is None:
+                file_version = None
+                file_name = None
+            if tuple is not None:
+                file_version, file_name = tuple
+
+        if file_version == None:
+            evaluation_kind = "fkf_fko" # V3の途中までの旧名
+
+            tuple = EvaluationKpFileVersioning.check_file_version_and_name(
+                    file_number=file_number,
+                    evaluation_kind=evaluation_kind)
+
+            if tuple is None:
+                file_version = None
+                file_name = None
+            if tuple is not None:
+                file_version, file_name = tuple
+
+        # 読込
+        tuple = EvaluationKpFileVersioning.load_from_file_or_random_table(
+                file_number=file_number,
+                evaluation_kind=evaluation_kind,
+                file_version=file_version)
+
+        if tuple is None:
+            mm_table = None
+            is_file_modified = True     # 新規作成だから
+        else:
+            mm_table, file_version = tuple
+            is_file_modified = mm_table is None
+
+        is_symmetrical_connected_of_kp = True
+        if file_version == "V3":
+            # V3 から盤面を左右対称ではなく、全体を使うよう変更
+            is_symmetrical_connected_of_kp = False
+
+        # ファイルが存在しないとき
+        if mm_table is None:
+            mm_table = FileVersioning.reset_to_random_table(
+                hint=f"n{file_number} kind=kp",
+                table_size=EvaluationConfiguration.get_symmetrical_connected_table_size())
+
+        return EvaluationKpTable(
+                file_number=file_number,
+                file_name=file_name,
+                evaluation_mm_table=mm_table,
+                is_file_modified=is_file_modified,
+                is_symmetrical_connected=is_symmetrical_connected_of_kp)
+
+
+    @staticmethod
     def create_file_names_each_version(
             file_number,
             evaluation_kind):

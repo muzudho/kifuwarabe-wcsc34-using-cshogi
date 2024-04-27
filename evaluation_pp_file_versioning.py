@@ -1,9 +1,84 @@
 import os
 import datetime
+from evaluation_configuration import EvaluationConfiguration
+from evaluation_pp_table import EvaluationPpTable
 from file_versioning import FileVersioning
 
 
 class EvaluationPpFileVersioning():
+
+
+    @staticmethod
+    def load_pp_policy(
+            file_number):
+        """ＰＰポリシー読込"""
+        evaluation_kind = "pp"
+
+        tuple = EvaluationPpFileVersioning.check_file_version_and_name(
+                file_number=file_number,
+                evaluation_kind=evaluation_kind)
+
+        if tuple is None:
+            file_version = None
+            file_name = None
+        if tuple is not None:
+            file_version, file_name = tuple
+
+        if file_version is None:
+            evaluation_kind = "pp_po"   # V3の途中までの旧称その２
+
+            tuple = EvaluationPpFileVersioning.check_file_version_and_name(
+                    file_number=file_number,
+                    evaluation_kind=evaluation_kind)
+
+            if tuple is None:
+                file_version = None
+                file_name = None
+            if tuple is not None:
+                file_version, file_name = tuple
+
+        if file_version is None:
+            evaluation_kind = "fmf_fmo"     # V3の途中までの旧称
+            tuple = EvaluationPpFileVersioning.check_file_version_and_name(
+                    file_number=file_number,
+                    evaluation_kind=evaluation_kind)
+
+            if tuple is None:
+                file_version = None
+                file_name = None
+            if tuple is not None:
+                file_version, file_name = tuple
+
+        # 読込
+        tuple = EvaluationPpFileVersioning.load_from_file_or_random_table(
+                file_number=file_number,
+                evaluation_kind=evaluation_kind,
+                file_version=file_version)
+
+        if tuple is None:
+            mm_table = None
+            is_file_modified = True     # 新規作成だから
+        else:
+            mm_table, file_version = tuple
+            is_file_modified = mm_table is None
+
+        is_symmetrical_connected_of_pp = True
+        if file_version == "V3":
+            # TODO 予定
+            is_symmetrical_connected_of_pp = False
+
+        if mm_table is None:
+            # ファイルが存在しないとき
+            mm_table = FileVersioning.reset_to_random_table(
+                hint=f'n{file_number} kind=pp',
+                table_size=EvaluationConfiguration.get_symmetrical_connected_table_size())
+
+        return EvaluationPpTable(
+                file_number=file_number,
+                file_name=file_name,
+                evaluation_mm_table=mm_table,
+                is_file_modified=is_file_modified,
+                is_symmetrical_connected=is_symmetrical_connected_of_pp)
 
 
     @staticmethod

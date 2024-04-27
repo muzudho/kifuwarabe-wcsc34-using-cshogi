@@ -1,10 +1,6 @@
 import datetime
-from evaluation_configuration import EvaluationConfiguration
-from evaluation_kk_table import EvaluationKkTable
 from evaluation_kk_file_versioning import EvaluationKkFileVersioning
-from evaluation_kp_table import EvaluationKpTable
 from evaluation_kp_file_versioning import EvaluationKpFileVersioning
-from evaluation_pp_table import EvaluationPpTable
 from evaluation_pp_file_versioning import EvaluationPpFileVersioning
 from file_versioning import FileVersioning
 from learn import Learn
@@ -19,15 +15,12 @@ class EvaluationFacade():
 
         # 評価値テーブル：　ＫＫポリシー
         self._kk_policy_table = None
-        self._is_symmetrical_connected_of_kk = None
 
         # 評価値テーブル：　ＫＰポリシー
         self._kp_policy_table = None
-        self._is_symmetrical_connected_of_kp = None
 
         # 評価値テーブル：　ＰＰポリシー
         self._pp_policy_table = None
-        self._is_symmetrical_connected_of_pp = None
 
 
     @property
@@ -65,70 +58,8 @@ class EvaluationFacade():
         #
         # ＫＫポリシー
         #
-        self.setup_kk_policy(
-                king_canditates_memory=king_canditates_memory,
-                result_file=result_file)
-
-        #
-        # ＫＰポリシー
-        #
-        self.setup_kp_policy(
-                king_canditates_memory=king_canditates_memory,
-                result_file=result_file)
-
-        #
-        # ＰＰポリシー
-        #
-        self.setup_pp_policy(
-                pieces_canditates_memory=pieces_canditates_memory,
-                result_file=result_file)
-
-
-    def setup_kk_policy(
-            self,
-            king_canditates_memory,
-            result_file):
-        """ＫＫポリシー"""
-        evaluation_kind = "kk"
-
-        # ＫＫ評価値テーブルは V3 の途中から追加
-        self._is_symmetrical_connected_of_kk = False
-
-        tuple = EvaluationKkFileVersioning.check_file_version_and_name(
-                file_number=self._file_number,
-                evaluation_kind=evaluation_kind)
-
-        if tuple is None:
-            file_version = None
-            file_name = None
-        if tuple is not None:
-            file_version, file_name = tuple
-
-        # 読込
-        tuple = EvaluationKkFileVersioning.load_from_file_or_random_table(
-                file_number=self._file_number,
-                evaluation_kind=evaluation_kind,
-                file_version=file_version)
-
-        if tuple is None:
-            mm_table = None
-            is_file_modified = True     # 新規作成だから
-        else:
-            mm_table, file_version = tuple
-            is_file_modified = mm_table is None
-
-        # ファイルが存在しないとき
-        if mm_table is None:
-            mm_table = FileVersioning.reset_to_random_table(
-                hint=f"n{self._file_number} kind=kk",
-                table_size=EvaluationConfiguration.get_symmetrical_connected_table_size())
-
-        self._kk_policy_table = EvaluationKkTable(
-                file_number=self._file_number,
-                file_name=file_name,
-                evaluation_mm_table=mm_table,
-                is_file_modified=is_file_modified,
-                is_symmetrical_connected=self._is_symmetrical_connected_of_kk)
+        self._kk_policy_table = EvaluationKkFileVersioning.load_kk_policy(
+                file_number=self._file_number)
 
         # 学習
         Learn.update_evaluation_table(
@@ -136,80 +67,11 @@ class EvaluationFacade():
                 canditates_memory=king_canditates_memory, # キング
                 result_file=result_file)
 
-
-    def setup_kp_policy(
-            self,
-            king_canditates_memory,
-            result_file):
-        """ＫＰポリシー"""
-        evaluation_kind = "kp"
-
-        tuple = EvaluationKpFileVersioning.check_file_version_and_name(
-                file_number=self._file_number,
-                evaluation_kind=evaluation_kind)
-
-        if tuple is None:
-            file_version = None
-            file_name = None
-        if tuple is not None:
-            file_version, file_name = tuple
-
-        if file_version == None:
-            evaluation_kind = "kp_ko" # V3の途中までの旧名その２
-
-            tuple = EvaluationKpFileVersioning.check_file_version_and_name(
-                    file_number=self._file_number,
-                    evaluation_kind=evaluation_kind)
-
-            if tuple is None:
-                file_version = None
-                file_name = None
-            if tuple is not None:
-                file_version, file_name = tuple
-
-        if file_version == None:
-            evaluation_kind = "fkf_fko" # V3の途中までの旧名
-
-            tuple = EvaluationKpFileVersioning.check_file_version_and_name(
-                    file_number=self._file_number,
-                    evaluation_kind=evaluation_kind)
-
-            if tuple is None:
-                file_version = None
-                file_name = None
-            if tuple is not None:
-                file_version, file_name = tuple
-
-        # 読込
-        tuple = EvaluationKpFileVersioning.load_from_file_or_random_table(
-                file_number=self._file_number,
-                evaluation_kind=evaluation_kind,
-                file_version=file_version)
-
-        if tuple is None:
-            mm_table = None
-            is_file_modified = True     # 新規作成だから
-        else:
-            mm_table, file_version = tuple
-            is_file_modified = mm_table is None
-
-        self._is_symmetrical_connected_of_kp = True
-        if file_version == "V3":
-            # V3 から盤面を左右対称ではなく、全体を使うよう変更
-            self._is_symmetrical_connected_of_kp = False
-
-        # ファイルが存在しないとき
-        if mm_table is None:
-            mm_table = FileVersioning.reset_to_random_table(
-                hint=f"n{self._file_number} kind=kp",
-                table_size=EvaluationConfiguration.get_symmetrical_connected_table_size())
-
-        self._kp_policy_table = EvaluationKpTable(
-                file_number=self._file_number,
-                file_name=file_name,
-                evaluation_mm_table=mm_table,
-                is_file_modified=is_file_modified,
-                is_symmetrical_connected=self._is_symmetrical_connected_of_kp)
+        #
+        # ＫＰポリシー
+        #
+        self._kp_policy_table = EvaluationKpFileVersioning.load_kp_policy(
+                file_number=self._file_number)
 
         # 学習
         Learn.update_evaluation_table(
@@ -217,79 +79,11 @@ class EvaluationFacade():
                 canditates_memory=king_canditates_memory, # キング
                 result_file=result_file)
 
-
-    def setup_pp_policy(
-            self,
-            pieces_canditates_memory,
-            result_file):
-        """ＰＰポリシー"""
-        evaluation_kind = "pp"
-
-        tuple = EvaluationPpFileVersioning.check_file_version_and_name(
-                file_number=self._file_number,
-                evaluation_kind=evaluation_kind)
-
-        if tuple is None:
-            file_version = None
-            file_name = None
-        if tuple is not None:
-            file_version, file_name = tuple
-
-        if file_version is None:
-            evaluation_kind = "pp_po"   # V3の途中までの旧称その２
-
-            tuple = EvaluationPpFileVersioning.check_file_version_and_name(
-                    file_number=self._file_number,
-                    evaluation_kind=evaluation_kind)
-
-            if tuple is None:
-                file_version = None
-                file_name = None
-            if tuple is not None:
-                file_version, file_name = tuple
-
-        if file_version is None:
-            evaluation_kind = "fmf_fmo"     # V3の途中までの旧称
-            tuple = EvaluationPpFileVersioning.check_file_version_and_name(
-                    file_number=self._file_number,
-                    evaluation_kind=evaluation_kind)
-
-            if tuple is None:
-                file_version = None
-                file_name = None
-            if tuple is not None:
-                file_version, file_name = tuple
-
-        # 読込
-        tuple = EvaluationPpFileVersioning.load_from_file_or_random_table(
-                file_number=self._file_number,
-                evaluation_kind=evaluation_kind,
-                file_version=file_version)
-
-        if tuple is None:
-            mm_table = None
-            is_file_modified = True     # 新規作成だから
-        else:
-            mm_table, file_version = tuple
-            is_file_modified = mm_table is None
-
-        self._is_symmetrical_connected_of_pp = True
-        if file_version == "V3":
-            # TODO 予定
-            self._is_symmetrical_connected_of_pp = False
-
-        if mm_table is None:
-            # ファイルが存在しないとき
-            mm_table = FileVersioning.reset_to_random_table(
-                hint=f'n{self._file_number} kind=pp',
-                table_size=EvaluationConfiguration.get_symmetrical_connected_table_size())
-
-        self._pp_policy_table = EvaluationPpTable(
-                file_number=self._file_number,
-                file_name=file_name,
-                evaluation_mm_table=mm_table,
-                is_file_modified=is_file_modified,
-                is_symmetrical_connected=self._is_symmetrical_connected_of_pp)
+        #
+        # ＰＰポリシー
+        #
+        self._pp_policy_table = EvaluationPpFileVersioning.load_pp_policy(
+                file_number=self._file_number)
 
         # 学習
         Learn.update_evaluation_table(
