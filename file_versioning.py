@@ -122,7 +122,8 @@ class FileVersioning():
         # ロードする。１分ほどかかる
         print(f"[{datetime.datetime.now()}] read {v2_file_name} file ...", flush=True)
 
-        evaluation_mm_table = [0] * EvaluationConfiguration.get_fully_connected_table_size()
+        evaluation_mm_table = [0] * EvaluationConfiguration.get_table_size(
+                is_symmetrical_connected=False)
 
         try:
 
@@ -143,7 +144,8 @@ class FileVersioning():
                     for two_power in two_powers:
 
                         # ビットフィールドを全て使わず、途中で切れるケース
-                        if EvaluationConfiguration.get_symmetrical_connected_table_size() <= mm_index:
+                        if EvaluationConfiguration.get_table_size(
+                                is_symmetrical_connected=True) <= mm_index:
                             break
 
                         pair_of_list_of_move_as_usi = EvaluationConfiguration.get_pair_of_list_of_move_as_usi_by_mm_index(
@@ -213,16 +215,9 @@ class FileVersioning():
 
     @staticmethod
     def save_evaluation_to_file(
-            file_number,
-            evaluation_kind,
+            file_name,
             evaluation_mm_table):
         """最新のバージョンで保存する"""
-
-        file_names_by_version = FileVersioning.create_file_names_each_version(
-                file_number=file_number,
-                evaluation_kind=evaluation_kind)
-
-        file_name = file_names_by_version[3]
 
         print(f"[{datetime.datetime.now()}] save {file_name} file ...", flush=True)
 

@@ -21,11 +21,15 @@ class EvaluationPpTable(EvaluationMmTable):
         """
 
         if is_symmetrical_connected:
-            move_size = EvaluationConfiguration.get_symmetrical_connected_move_number()
-            table_size = EvaluationConfiguration.get_symmetrical_connected_table_size()
+            move_size = EvaluationConfiguration.get_move_number(
+                    is_symmetrical_connected=True)
+            table_size = EvaluationConfiguration.get_table_size(
+                    is_symmetrical_connected=True)
         else:
-            move_size = EvaluationConfiguration.get_fully_connected_move_number()
-            table_size = EvaluationConfiguration.get_fully_connected_table_size()
+            move_size = EvaluationConfiguration.get_move_number(
+                    is_symmetrical_connected=False)
+            table_size = EvaluationConfiguration.get_table_size(
+                    is_symmetrical_connected=False)
 
         EvaluationMmTable.__init__(
                 self,

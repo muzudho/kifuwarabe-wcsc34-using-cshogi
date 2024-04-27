@@ -26,23 +26,25 @@ class EvaluationConfiguration():
 
 
     @staticmethod
-    def get_fully_connected_move_number():
-        return 14_256
+    def get_move_number(
+            is_symmetrical_connected):
+        if is_symmetrical_connected:
+            return 4_680
+        else:
+            # fully_connected
+            return 14_256
 
-
-    @staticmethod
-    def get_fully_connected_table_size():
-        return 203_219_280
-
-
-    @staticmethod
-    def get_symmetrical_connected_move_number():
-        return 4_680
 
 
     @staticmethod
-    def get_symmetrical_connected_table_size():
-        return 21_897_720
+    def get_table_size(
+            is_symmetrical_connected):
+        if is_symmetrical_connected:
+            return 21_897_720
+        else:
+            # fully_connected
+            return 203_219_280
+
 
 
     @staticmethod

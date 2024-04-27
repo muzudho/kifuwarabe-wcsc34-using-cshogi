@@ -62,23 +62,23 @@ class EvaluationPpFileVersioning():
             mm_table, file_version = tuple
             is_file_modified = mm_table is None
 
-        is_symmetrical_connected_of_pp = True
+        is_symmetrical_connected = True
         if file_version == "V3":
-            # TODO 予定
-            is_symmetrical_connected_of_pp = False
+            is_symmetrical_connected = False
 
         if mm_table is None:
             # ファイルが存在しないとき
             mm_table = FileVersioning.reset_to_random_table(
                 hint=f'n{file_number} kind=pp',
-                table_size=EvaluationConfiguration.get_symmetrical_connected_table_size())
+                table_size=EvaluationConfiguration.get_table_size(
+                        is_symmetrical_connected=is_symmetrical_connected))
 
         return EvaluationPpTable(
                 file_number=file_number,
                 file_name=file_name,
                 evaluation_mm_table=mm_table,
                 is_file_modified=is_file_modified,
-                is_symmetrical_connected=is_symmetrical_connected_of_pp)
+                is_symmetrical_connected=is_symmetrical_connected)
 
 
     @staticmethod
@@ -99,7 +99,7 @@ class EvaluationPpFileVersioning():
             evaluation_kind):
         """ファイルのバージョンと、ファイル名のタプルを返す。無ければナン"""
 
-        file_names_by_version = FileVersioning.create_file_names_each_version(
+        file_names_by_version = EvaluationPpFileVersioning.create_file_names_each_version(
                 file_number=file_number,
                 evaluation_kind=evaluation_kind)
 

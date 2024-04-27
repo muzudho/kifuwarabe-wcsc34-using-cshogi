@@ -15,7 +15,7 @@ class EvaluationKkFileVersioning():
         evaluation_kind = "kk"
 
         # ＫＫ評価値テーブルは V3 の途中から追加
-        is_symmetrical_connected_of_kk = False
+        is_symmetrical_connected = False
 
         tuple = EvaluationKkFileVersioning.check_file_version_and_name(
                 file_number=file_number,
@@ -44,14 +44,15 @@ class EvaluationKkFileVersioning():
         if mm_table is None:
             mm_table = FileVersioning.reset_to_random_table(
                 hint=f"n{file_number} kind=kk",
-                table_size=EvaluationConfiguration.get_symmetrical_connected_table_size())
+                table_size=EvaluationConfiguration.get_table_size(
+                        is_symmetrical_connected=is_symmetrical_connected))
 
         return EvaluationKkTable(
                 file_number=file_number,
                 file_name=file_name,
                 evaluation_mm_table=mm_table,
                 is_file_modified=is_file_modified,
-                is_symmetrical_connected=is_symmetrical_connected_of_kk)
+                is_symmetrical_connected=is_symmetrical_connected)
 
 
     @staticmethod
@@ -72,7 +73,7 @@ class EvaluationKkFileVersioning():
             evaluation_kind):
         """ファイルのバージョンと、ファイル名のタプルを返す。無ければナン"""
 
-        file_names_by_version = FileVersioning.create_file_names_each_version(
+        file_names_by_version = EvaluationKkFileVersioning.create_file_names_each_version(
                 file_number=file_number,
                 evaluation_kind=evaluation_kind)
 

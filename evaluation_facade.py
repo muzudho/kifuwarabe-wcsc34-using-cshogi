@@ -98,9 +98,14 @@ class EvaluationFacade():
         # 保存するかどうかは先に判定しておくこと
         if self._kk_policy_table.is_file_modified:
             # ＫＫポリシー
-            FileVersioning.save_evaluation_to_file(
+            file_names_by_version = FileVersioning.create_file_names_each_version(
                     file_number=self._file_number,
-                    evaluation_kind="kk",
+                    evaluation_kind="kk")
+
+            file_name = file_names_by_version[3]
+
+            FileVersioning.save_evaluation_to_file(
+                    file_name=file_name,
                     evaluation_mm_table=self._kk_policy_table.evaluation_mm_table)
         else:
             print(f"[{datetime.datetime.now()}] kk file not changed", flush=True)
@@ -112,9 +117,14 @@ class EvaluationFacade():
         # 保存するかどうかは先に判定しておくこと
         if self._kp_policy_table.is_file_modified:
             # ＫＰポリシー
-            FileVersioning.save_evaluation_to_file(
+            file_names_by_version = FileVersioning.create_file_names_each_version(
                     file_number=self._file_number,
-                    evaluation_kind="kp",    # V3 の途中からの新名を使っていく
+                    evaluation_kind="kp")    # V3 の途中からの新名を使っていく
+
+            file_name = file_names_by_version[3]
+
+            FileVersioning.save_evaluation_to_file(
+                    file_name=file_name,
                     evaluation_mm_table=self._kp_policy_table.evaluation_mm_table)
         else:
             print(f"[{datetime.datetime.now()}] kp file not changed", flush=True)
@@ -125,10 +135,15 @@ class EvaluationFacade():
 
         # 保存するかどうかは先に判定しておくこと
         if self._pp_policy_table.is_file_modified:
-            # ＰＰ＋ＰＯポリシー
-            FileVersioning.save_evaluation_to_file(
+            # ＰＰポリシー
+            file_names_by_version = FileVersioning.create_file_names_each_version(
                     file_number=self._file_number,
-                    evaluation_kind="pp",  # V3 の途中からの新名を使っていく
+                    evaluation_kind="pp")   # V3 の途中からの新名を使っていく
+
+            file_name = file_names_by_version[3]
+
+            FileVersioning.save_evaluation_to_file(
+                    file_name=file_name,
                     evaluation_mm_table=self._pp_policy_table.evaluation_mm_table)
         else:
             print(f"[{datetime.datetime.now()}] pp file not changed", flush=True)

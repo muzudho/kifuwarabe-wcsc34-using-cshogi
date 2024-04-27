@@ -1,5 +1,7 @@
 import os
 import datetime
+from evaluation_configuration import EvaluationConfiguration
+from evaluation_kp_table import EvaluationKpTable
 from file_versioning import FileVersioning
 
 
@@ -61,23 +63,24 @@ class EvaluationKpFileVersioning():
             mm_table, file_version = tuple
             is_file_modified = mm_table is None
 
-        is_symmetrical_connected_of_kp = True
+        is_symmetrical_connected = True
         if file_version == "V3":
             # V3 から盤面を左右対称ではなく、全体を使うよう変更
-            is_symmetrical_connected_of_kp = False
+            is_symmetrical_connected = False
 
         # ファイルが存在しないとき
         if mm_table is None:
             mm_table = FileVersioning.reset_to_random_table(
                 hint=f"n{file_number} kind=kp",
-                table_size=EvaluationConfiguration.get_symmetrical_connected_table_size())
+                table_size=EvaluationConfiguration.get_table_size(
+                        is_symmetrical_connected=is_symmetrical_connected))
 
         return EvaluationKpTable(
                 file_number=file_number,
                 file_name=file_name,
                 evaluation_mm_table=mm_table,
                 is_file_modified=is_file_modified,
-                is_symmetrical_connected=is_symmetrical_connected_of_kp)
+                is_symmetrical_connected=is_symmetrical_connected)
 
 
     @staticmethod
@@ -98,7 +101,7 @@ class EvaluationKpFileVersioning():
             evaluation_kind):
         """ファイルのバージョンと、ファイル名のタプルを返す。無ければナン"""
 
-        file_names_by_version = FileVersioning.create_file_names_each_version(
+        file_names_by_version = EvaluationKpFileVersioning.create_file_names_each_version(
                 file_number=file_number,
                 evaluation_kind=evaluation_kind)
 
