@@ -192,51 +192,36 @@ class EvaluationMmTable():
         return self._evaluation_mm_table[index]
 
 
-    def make_move_as_usi_and_policy_dictionary(
+    def make_move_as_usi_and_policy_dictionary_2(
             self,
-            n1st_move_list_as_usi,
-            n2nd_move_list_as_usi,
-            n3rd_move_set_as_usi,
+            a_move_collection_as_usi,
+            b_move_collection_as_usi,
             turn):
         """指し手に評価値を付ける
 
         Parameters
         ----------
-        n1st_move_list_as_usi : list
-            例えば自玉の指し手の集合
-        n2nd_move_list_as_usi : list
-            例えば自軍の玉以外の指し手の集合
-        n3rd_move_set_as_usi : set
-            例えば敵軍の全ての指し手の集合
+        a_move_set_as_usi : set
+            指し手の収集（主体）
+        b_move_set_as_usi : set
+            指し手の収集（客体）
         turn
             手番
         """
 
         # 指し手に評価値を付ける
-        move_as_usi_and_score_dictionary = {}
+        move_as_usi_and_policy_dictionary = {}
 
-        list_of_sorted_friend_legal_move_list_as_usi = [
-            n1st_move_list_as_usi,
-            n2nd_move_list_as_usi,
-        ]
+        # 主体
+        for a_move_as_usi in a_move_collection_as_usi:
+            a_move_obj = Move(a_move_as_usi)
+            sum_value = 0
 
-        for sorted_friend_legal_move_list_as_usi in list_of_sorted_friend_legal_move_list_as_usi:
-            for move_a_as_usi in sorted_friend_legal_move_list_as_usi:
-                move_a_obj = Move(move_a_as_usi)
-                # 総当たりで評価値を計算
-                sum_value = 0
+            # 客体と総当たり
+            for b_move_as_usi in b_move_collection_as_usi:
+                b_move_obj = Move(b_move_as_usi)
+                sum_value += self.get_evaluation_value(a_move_obj, b_move_obj, turn)
 
-                # （ＦＦ）：　自軍の指し手Ａと、自軍の指し手Ｂ
-                for sorted_king_legal_move_list_as_usi_2 in list_of_sorted_friend_legal_move_list_as_usi:
-                    for move_b_as_usi in sorted_king_legal_move_list_as_usi_2:
-                        move_b_obj = Move(move_b_as_usi)
-                        sum_value += self.get_evaluation_value(move_a_obj, move_b_obj, turn)
+            move_as_usi_and_policy_dictionary[a_move_as_usi] = sum_value
 
-                # （ＦＯ）：　自軍の指し手Ａと、第３の指し手リスト
-                for move_b_as_usi in n3rd_move_set_as_usi:
-                    move_b_obj = Move(move_b_as_usi)
-                    sum_value += self.get_evaluation_value(move_a_obj, move_b_obj, turn)
-
-                move_as_usi_and_score_dictionary[move_a_as_usi] = sum_value
-
-        return move_as_usi_and_score_dictionary
+        return move_as_usi_and_policy_dictionary

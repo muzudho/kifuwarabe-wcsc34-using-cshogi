@@ -250,7 +250,7 @@ class EvaluationConfiguration():
                 dst_rank = Move.get_rank_num_to_str(dst_num - 9 + 1)
             else:
                 dst_file = '1'
-                dst_rank = dst_num + 1
+                dst_rank = Move.get_rank_num_to_str(dst_num + 1)
 
         # 移動元（列は左右対称）
         if is_symmetrical_connected:

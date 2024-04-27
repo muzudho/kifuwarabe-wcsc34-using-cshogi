@@ -6,8 +6,8 @@ from file_versioning import FileVersioning
 from learn import Learn
 
 
-class EvaluationTable():
-    """評価値テーブル"""
+class EvaluationFacade():
+    """評価の窓口"""
 
 
     def __init__(self, file_number):
@@ -207,52 +207,112 @@ class EvaluationTable():
 
     def make_move_as_usi_and_policy_dictionary(
             self,
-            n1st_move_list_as_usi,
-            n2nd_move_list_as_usi,
-            n3rd_move_set_as_usi,
+            king_move_collection_as_usi,
+            pieces_move_collection_as_usi,
+            lord_move_collection_as_usi,
+            quaffers_move_collection_as_usi,
             turn):
         """指し手にスコアが紐づく辞書を作成
 
         Parameters
         ----------
-        n1st_move_list_as_usi : list
-            例えば自玉の指し手の集合
-        n2nd_move_list_as_usi : list
-            例えば自軍の玉以外の指し手の集合
-        n3rd_move_set_as_usi : set
-            例えば敵軍の全ての指し手の集合
+        king_move_collection_as_usi : iterable
+            例えば自玉の指し手の収集
+        pieces_move_collection_as_usi : iterable
+            自玉を除く自軍の指し手の収集
+        lord_move_collection_as_usi : iterable
+            敵玉の指し手の収集
+        quaffers_move_collection_as_usi : iterable
+            敵玉を除く敵軍の指し手の収集
+
+        Returns
+        -------
+            - 自玉の指し手のポリシー値付き辞書
+            - 自玉を除く自軍のポリシー値付き辞書
         """
 
         # 指し手に評価値を付ける
-        king_move_as_usi_and_score_dictionary = {}
-        pieces_move_as_usi_and_score_dictionary = {}
+        king_move_as_usi_and_policy_dictionary = {}
+        pieces_move_as_usi_and_policy_dictionary = {}
 
-        # ＫＰ＋ＫＯポリシー
-        kp_ko_policy_dictionary = self._kp_ko_policy_table.make_move_as_usi_and_policy_dictionary(
-                n1st_move_list_as_usi=n1st_move_list_as_usi,
-                n2nd_move_list_as_usi=n2nd_move_list_as_usi,
-                n3rd_move_set_as_usi=n3rd_move_set_as_usi,
+        # ＫＰポリシー　ｉｎ　ＫＰテーブル
+        kp_policy_dictionary = self._kp_ko_policy_table.make_move_as_usi_and_policy_dictionary_2(
+                a_move_collection_as_usi=king_move_collection_as_usi,
+                b_move_collection_as_usi=pieces_move_collection_as_usi,
                 turn=turn)
 
-        ## 評価値をマージ
-        for kp_ko, policy in kp_ko_policy_dictionary.items():
-            if kp_ko in king_move_as_usi_and_score_dictionary:
-                king_move_as_usi_and_score_dictionary[kp_ko] += policy
+        # 評価値をマージ
+        for king_move_as_usi, policy in kp_policy_dictionary.items():
+            if king_move_as_usi in king_move_as_usi_and_policy_dictionary:
+                king_move_as_usi_and_policy_dictionary[king_move_as_usi] += policy
             else:
-                king_move_as_usi_and_score_dictionary[kp_ko] = policy
+                king_move_as_usi_and_policy_dictionary[king_move_as_usi] = policy
 
-        # ＰＰ＋ＰＯポリシー
-        pp_po_policy_dictionary = self._pp_po_policy_table.make_move_as_usi_and_policy_dictionary(
-                n1st_move_list_as_usi=n1st_move_list_as_usi,
-                n2nd_move_list_as_usi=n2nd_move_list_as_usi,
-                n3rd_move_set_as_usi=n3rd_move_set_as_usi,
+        # ＫＬポリシー　ｉｎ　ＫＬテーブル
+        # TODO ＫＬ評価値テーブルが欲しい。仮にＫＰ表を使う
+        kl_policy_dictionary = self._kp_ko_policy_table.make_move_as_usi_and_policy_dictionary_2(
+                a_move_collection_as_usi=king_move_collection_as_usi,
+                b_move_collection_as_usi=lord_move_collection_as_usi,
                 turn=turn)
 
-        ## 評価値をマージ
-        for pp_po, policy in pp_po_policy_dictionary.items():
-            if pp_po in pieces_move_as_usi_and_score_dictionary:
-                pieces_move_as_usi_and_score_dictionary[pp_po] += policy
+        # 評価値をマージ
+        for king_move_as_usi, policy in kl_policy_dictionary.items():
+            if king_move_as_usi in king_move_as_usi_and_policy_dictionary:
+                king_move_as_usi_and_policy_dictionary[king_move_as_usi] += policy
             else:
-                pieces_move_as_usi_and_score_dictionary[pp_po] = policy
+                king_move_as_usi_and_policy_dictionary[king_move_as_usi] = policy
 
-        return (king_move_as_usi_and_score_dictionary, pieces_move_as_usi_and_score_dictionary)
+        # ＫＱポリシー　ｉｎ　ＫＰテーブル
+        kq_policy_dictionary = self._kp_ko_policy_table.make_move_as_usi_and_policy_dictionary_2(
+                a_move_collection_as_usi=king_move_collection_as_usi,
+                b_move_collection_as_usi=quaffers_move_collection_as_usi,
+                turn=turn)
+
+        # 評価値をマージ
+        for king_move_as_usi, policy in kq_policy_dictionary.items():
+            if king_move_as_usi in king_move_as_usi_and_policy_dictionary:
+                king_move_as_usi_and_policy_dictionary[king_move_as_usi] += policy
+            else:
+                king_move_as_usi_and_policy_dictionary[king_move_as_usi] = policy
+
+        # ＰＰポリシー　ｉｎ　ＰＰテーブル
+        pp_policy_dictionary = self._kp_ko_policy_table.make_move_as_usi_and_policy_dictionary_2(
+                a_move_collection_as_usi=pieces_move_collection_as_usi,
+                b_move_collection_as_usi=pieces_move_collection_as_usi,
+                turn=turn)
+
+        # 評価値をマージ
+        for piece_move_as_usi, policy in pp_policy_dictionary.items():
+            if piece_move_as_usi in pieces_move_as_usi_and_policy_dictionary:
+                pieces_move_as_usi_and_policy_dictionary[piece_move_as_usi] += policy
+            else:
+                pieces_move_as_usi_and_policy_dictionary[piece_move_as_usi] = policy
+
+        # ＰＬポリシー　ｉｎ　ＫＰテーブル
+        # TODO 盤の先後をひっくり返さないといけないか？
+        pl_policy_dictionary = self._kp_ko_policy_table.make_move_as_usi_and_policy_dictionary_2(
+                a_move_collection_as_usi=pieces_move_collection_as_usi,
+                b_move_collection_as_usi=lord_move_collection_as_usi,
+                turn=turn)
+
+        # 評価値をマージ
+        for piece_move_as_usi, policy in pl_policy_dictionary.items():
+            if piece_move_as_usi in pieces_move_as_usi_and_policy_dictionary:
+                pieces_move_as_usi_and_policy_dictionary[piece_move_as_usi] += policy
+            else:
+                pieces_move_as_usi_and_policy_dictionary[piece_move_as_usi] = policy
+
+        # ＰＱポリシー　ｉｎ　ＰＰテーブル
+        pq_policy_dictionary = self._kp_ko_policy_table.make_move_as_usi_and_policy_dictionary_2(
+                a_move_collection_as_usi=pieces_move_collection_as_usi,
+                b_move_collection_as_usi=quaffers_move_collection_as_usi,
+                turn=turn)
+
+        # 評価値をマージ
+        for piece_move_as_usi, policy in pq_policy_dictionary.items():
+            if piece_move_as_usi in pieces_move_as_usi_and_policy_dictionary:
+                pieces_move_as_usi_and_policy_dictionary[piece_move_as_usi] += policy
+            else:
+                pieces_move_as_usi_and_policy_dictionary[piece_move_as_usi] = policy
+
+        return (king_move_as_usi_and_policy_dictionary, pieces_move_as_usi_and_policy_dictionary)

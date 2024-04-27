@@ -3,7 +3,7 @@ import random
 import datetime
 from learn_candidates_memory import CandidatesMemory
 from evaluation_configuration import EvaluationConfiguration
-from evaluation_table import EvaluationTable
+from evaluation_facade import EvaluationFacade
 from lottery import Lottery
 from ko_memory import KoMemory
 from result_file import ResultFile
@@ -28,8 +28,8 @@ class Kifuwarabe():
         self._king_canditates_memory = None
         self._pieces_canditates_memory = None
 
-        # 評価値テーブル・オブジェクト
-        self._evaluation_table_obj = None
+        # 評価の窓口
+        self._evaluation_facade_obj = None
 
         # コウの記憶
         self._ko_memory = None
@@ -126,9 +126,9 @@ class Kifuwarabe():
         # 結果ファイル（デフォルト）
         self._result_file = ResultFile(self._player_file_number)
 
-        # 評価関数テーブルをファイルから読み込む。無ければランダム値の入った物を新規作成する
-        self._evaluation_table_obj = EvaluationTable(self._player_file_number)
-        self._evaluation_table_obj.usinewgame(
+        # 評価の窓口を準備
+        self._evaluation_facade_obj = EvaluationFacade(self._player_file_number)
+        self._evaluation_facade_obj.usinewgame(
                 self._king_canditates_memory,
                 self._pieces_canditates_memory,
                 self._result_file)
@@ -194,7 +194,7 @@ class Kifuwarabe():
 
         # くじを引く
         best_move = Lottery.choice_best(
-                evaluation_table=self._evaluation_table_obj,
+                evaluation_facade_obj=self._evaluation_facade_obj,
                 legal_move_list=list(self._board.legal_moves),
                 king_canditates_memory=self._king_canditates_memory,
                 pieces_canditates_memory=self._pieces_canditates_memory,
@@ -239,8 +239,8 @@ class Kifuwarabe():
                 self._pieces_canditates_memory.delete()
 
                 # ［評価値］　勝ったら記憶する
-                self._evaluation_table_obj.save_file_as_kp_ko()
-                self._evaluation_table_obj.save_file_as_pp_po()
+                self._evaluation_facade_obj.save_file_as_kp_ko()
+                self._evaluation_facade_obj.save_file_as_pp_po()
 
             # 持将棋
             elif cmd[1] == 'draw':
@@ -307,20 +307,21 @@ class Kifuwarabe():
 敵玉の位置：　{sq_of_opponent_king}
 """)
 
-
+        #
         # USIプロトコルでの符号表記に変換
+        # ---------------------------
         #
+        # 自玉の指し手と、自玉を除く自軍の指し手を分けて取得
         #
-        # ＦｋＦ＋ＦｋＯポリシー と ＦｍＦ＋ＦｍＯポリシー を分けて取得
-        #
-        sorted_friend_king_legal_move_list_as_usi, sorted_friend_pieces_legal_move_list_as_usi = create_move_lists(
+        king_move_list_as_usi, pieces_move_list_as_usi = create_move_lists(
                 legal_move_list=list(self._board.legal_moves),
                 ko_memory=self._ko_memory,
                 board=self._board)
 
-
-
-        opponent_legal_move_set_as_usi = set()
+        # 敵玉の指し手
+        lord_move_set_as_usi = set()
+        # 敵玉を除く敵軍の指し手
+        quaffers_move_set_as_usi = set()
 
         #
         # 評価値テーブルのインデックスを一覧
@@ -328,43 +329,49 @@ class Kifuwarabe():
 
         number = 1
         print('自玉の合法手一覧：')
-        for move_a_as_usi in sorted_friend_king_legal_move_list_as_usi:
+        for move_a_as_usi in king_move_list_as_usi:
+            # TODO ＫＬ表
+
+            # ＫＰ表
             k_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
-                    is_symmetrical_connected=self._evaluation_table_obj.kp_ko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
 
             k_moves_pair_as_usi = EvaluationConfiguration.get_moves_pair_as_usi_by_table_index(
                     table_index=k_table_index,
-                    is_symmetrical_connected=self._evaluation_table_obj.kp_ko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
 
+            # ＰＰ表
             m_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
-                    is_symmetrical_connected=self._evaluation_table_obj.pp_po_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
 
             m_moves_pair_as_usi = EvaluationConfiguration.get_moves_pair_as_usi_by_table_index(
                     table_index=m_table_index,
-                    is_symmetrical_connected=self._evaluation_table_obj.pp_po_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
 
             print(f'  ({number:3}) {move_a_as_usi:5} = K{k_table_index:5} M{m_table_index:5}  検算 Ka:{",".join(k_moves_pair_as_usi[0]):11}  b:{",".join(k_moves_pair_as_usi[1]):11}  Ma:{",".join(m_moves_pair_as_usi[0]):11}  b:{",".join(m_moves_pair_as_usi[1]):11}')
             number += 1
 
-        print('自軍の玉以外の合法手一覧：')
-        for move_a_as_usi in sorted_friend_pieces_legal_move_list_as_usi:
+        print('自玉以外の自軍の合法手一覧：')
+        for move_a_as_usi in pieces_move_list_as_usi:
+            # ＫＰ表
             k_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
-                    is_symmetrical_connected=self._evaluation_table_obj.kp_ko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
 
             k_moves_pair_as_usi = EvaluationConfiguration.get_moves_pair_as_usi_by_table_index(
                     table_index=k_table_index,
-                    is_symmetrical_connected=self._evaluation_table_obj.kp_ko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
 
+            # ＰＰ表
             m_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
-                    is_symmetrical_connected=self._evaluation_table_obj.pp_po_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
 
             m_moves_pair_as_usi = EvaluationConfiguration.get_moves_pair_as_usi_by_table_index(
                     table_index=m_table_index,
-                    is_symmetrical_connected=self._evaluation_table_obj.pp_po_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
 
             print(f'  ({number:3}) {move_a_as_usi:5} = K{k_table_index:5} M{m_table_index:5}  検算 Ka:{",".join(k_moves_pair_as_usi[0]):11}  b:{",".join(k_moves_pair_as_usi[1]):11}  Ma:{",".join(m_moves_pair_as_usi[0]):11}  b:{",".join(m_moves_pair_as_usi[1]):11}')
             number += 1
@@ -374,39 +381,92 @@ class Kifuwarabe():
         #
         #   ヌルムーブをしたいが、 `self._board.push_pass()` が機能しなかったので、合法手を全部指してみることにする
         #
-        list_of_sorted_friend_legal_move_list_as_usi = [
-            sorted_friend_king_legal_move_list_as_usi,
-            sorted_friend_pieces_legal_move_list_as_usi,
+        list_of_friend_move_list_as_usi = [
+            king_move_list_as_usi,
+            pieces_move_list_as_usi,
         ]
 
-        for sorted_friend_legal_move_list_as_usi in list_of_sorted_friend_legal_move_list_as_usi:
-            for move_a_as_usi in sorted_friend_legal_move_list_as_usi:
-                self._board.push_usi(move_a_as_usi)
-                for opponent_move in self._board.legal_moves:
-                    opponent_legal_move_set_as_usi.add(cshogi.move_to_usi(opponent_move))
+        for friend_move_list_as_usi in list_of_friend_move_list_as_usi:
+            for friend_move_as_usi in friend_move_list_as_usi:
+                self._board.push_usi(friend_move_as_usi)
+
+                # 敵玉（L; Lord）の位置を調べる
+                l_sq = self._board.king_square(self._board.turn)
+
+                for opponent_move_id in self._board.legal_moves:
+                    opponent_move_as_usi = cshogi.move_to_usi(opponent_move_id)
+
+                    opponent_move_obj = Move(opponent_move_as_usi)
+                    src_sq_or_none = opponent_move_obj.get_src_sq_or_none()
+
+                    # 敵玉の指し手
+                    if src_sq_or_none is not None and src_sq_or_none == l_sq:
+                        lord_move_set_as_usi.add(opponent_move_as_usi)
+                    # 敵玉を除く敵軍の指し手
+                    else:
+                        quaffers_move_set_as_usi.add(opponent_move_as_usi)
 
                 self._board.pop()
 
-        print('次のいくつもの局面の相手の合法手の集合：')
+        #
+        # 敵玉の応手の集合
+        # --------------
+        #
+
+        print('敵玉の応手の集合：')
         number = 1
-        for move_a_as_usi in opponent_legal_move_set_as_usi:
+        for lord_move_as_usi in lord_move_set_as_usi:
+            # TODO ＫＬ表
+
+            # ＫＰ表
             k_table_index = EvaluationConfiguration.get_table_index_by_move(
-                    move=Move(move_a_as_usi),
-                    is_symmetrical_connected=self._evaluation_table_obj.kp_ko_policy_table.is_symmetrical_connected)
+                    move=Move(lord_move_as_usi),
+                    is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
 
             k_moves_pair_as_usi = EvaluationConfiguration.get_moves_pair_as_usi_by_table_index(
                     table_index=k_table_index,
-                    is_symmetrical_connected=self._evaluation_table_obj.kp_ko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
 
+            # ＰＰ表
             m_table_index = EvaluationConfiguration.get_table_index_by_move(
-                    move=Move(move_a_as_usi),
-                    is_symmetrical_connected=self._evaluation_table_obj.pp_po_policy_table.is_symmetrical_connected)
+                    move=Move(lord_move_as_usi),
+                    is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
 
             m_moves_pair_as_usi = EvaluationConfiguration.get_moves_pair_as_usi_by_table_index(
                     table_index=m_table_index,
-                    is_symmetrical_connected=self._evaluation_table_obj.pp_po_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
 
-            print(f'  ({number:3}) {move_a_as_usi:5} = K{k_table_index:5} M{m_table_index:5}  検算 Ka:{",".join(k_moves_pair_as_usi[0]):11}  b:{",".join(k_moves_pair_as_usi[1]):11}  Ma:{",".join(m_moves_pair_as_usi[0]):11}  b:{",".join(m_moves_pair_as_usi[1]):11}')
+            print(f'  ({number:3}) L:{lord_move_as_usi:5} = K{k_table_index:5} M{m_table_index:5}  検算 Ka:{",".join(k_moves_pair_as_usi[0]):11}  b:{",".join(k_moves_pair_as_usi[1]):11}  Ma:{",".join(m_moves_pair_as_usi[0]):11}  b:{",".join(m_moves_pair_as_usi[1]):11}')
+            number += 1
+
+        #
+        # 敵玉以外の敵軍の応手の集合
+        # -----------------------
+        #
+
+        print('敵玉以外の敵軍の応手の集合：')
+        for quaffer_move_as_usi in quaffers_move_set_as_usi:
+            # TODO ＫＬ表
+
+            # ＫＰ表
+            k_table_index = EvaluationConfiguration.get_table_index_by_move(
+                    move=Move(quaffer_move_as_usi),
+                    is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
+
+            k_moves_pair_as_usi = EvaluationConfiguration.get_moves_pair_as_usi_by_table_index(
+                    table_index=k_table_index,
+                    is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
+
+            # ＰＰ表
+            m_table_index = EvaluationConfiguration.get_table_index_by_move(
+                    move=Move(quaffer_move_as_usi),
+                    is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
+
+            m_moves_pair_as_usi = EvaluationConfiguration.get_moves_pair_as_usi_by_table_index(
+                    table_index=m_table_index,
+                    is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
+
+            print(f'  ({number:3}) Q:{quaffer_move_as_usi:5} = K{k_table_index:5} M{m_table_index:5}  検算 Ka:{",".join(k_moves_pair_as_usi[0]):11}  b:{",".join(k_moves_pair_as_usi[1]):11}  Ma:{",".join(m_moves_pair_as_usi[0]):11}  b:{",".join(m_moves_pair_as_usi[1]):11}')
             number += 1
 
         #
@@ -414,10 +474,11 @@ class Kifuwarabe():
         # =======================
         #
         # 候補手に評価値を付けた辞書を作成
-        king_move_as_usi_and_score_dictionary, pieces_move_as_usi_and_score_dictionary = self._evaluation_table_obj.make_move_as_usi_and_policy_dictionary(
-                sorted_friend_king_legal_move_list_as_usi,
-                n2nd_move_list_as_usi=sorted_friend_pieces_legal_move_list_as_usi,
-                n3rd_move_set_as_usi=opponent_legal_move_set_as_usi,
+        king_move_as_usi_and_score_dictionary, pieces_move_as_usi_and_score_dictionary = self._evaluation_facade_obj.make_move_as_usi_and_policy_dictionary(
+                king_move_collection_as_usi=king_move_list_as_usi,
+                pieces_move_collection_as_usi=pieces_move_list_as_usi,
+                lord_move_collection_as_usi=lord_move_set_as_usi,
+                quaffers_move_collection_as_usi=quaffers_move_set_as_usi,
                 turn=self._board.turn)
 
         # 表示
@@ -429,42 +490,42 @@ class Kifuwarabe():
         #
 
         print('くじ一覧（自玉の合法手）：')
-        for move_a_as_usi in sorted_friend_king_legal_move_list_as_usi:
+        for move_a_as_usi in king_move_list_as_usi:
 
             # 指し手の評価値
             k_move_value = king_move_as_usi_and_score_dictionary[move_a_as_usi]
 
             k_table_index = EvaluationConfiguration.get_table_index_by_move(
                     move=Move(move_a_as_usi),
-                    is_symmetrical_connected=self._evaluation_table_obj.kp_ko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
 
             k_moves_pair_as_usi = EvaluationConfiguration.get_moves_pair_as_usi_by_table_index(
                     table_index=k_table_index,
-                    is_symmetrical_connected=self._evaluation_table_obj.kp_ko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
 
-            print(f'  ({number:3}) {move_a_as_usi:5} = K{k_table_index:5} value:{k_move_value:3}  検算 Ka:{",".join(k_moves_pair_as_usi[0]):11}  b:{",".join(k_moves_pair_as_usi[1]):11}')
+            print(f'  ({number:3}) K:{move_a_as_usi:5} = K{k_table_index:5} value:{k_move_value:3}  検算 Ka:{",".join(k_moves_pair_as_usi[0]):11}  b:{",".join(k_moves_pair_as_usi[1]):11}')
             number += 1
 
         #
-        # 次にミニオンズ
-        # ------------
+        # 次にピースズ
+        # -----------
         #
 
-        print('くじ一覧（自軍の玉以外の合法手）：')
-        for move_a_as_usi in sorted_friend_pieces_legal_move_list_as_usi:
+        print('くじ一覧（自玉以外の自軍の合法手）：')
+        for piece_move_as_usi in pieces_move_list_as_usi:
 
             # 指し手の評価値
-            m_move_value = pieces_move_as_usi_and_score_dictionary[move_a_as_usi]
+            m_move_value = pieces_move_as_usi_and_score_dictionary[piece_move_as_usi]
 
             m_table_index = EvaluationConfiguration.get_table_index_by_move(
-                    move=Move(move_a_as_usi),
-                    is_symmetrical_connected=self._evaluation_table_obj.pp_po_policy_table.is_symmetrical_connected)
+                    move=Move(piece_move_as_usi),
+                    is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
 
             m_moves_pair_as_usi = EvaluationConfiguration.get_moves_pair_as_usi_by_table_index(
                     table_index=m_table_index,
-                    is_symmetrical_connected=self._evaluation_table_obj.pp_po_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
 
-            print(f'  ({number:3}) {move_a_as_usi:5} = M{m_table_index:5} value:{m_move_value:3}  検算 Ma:{",".join(m_moves_pair_as_usi[0]):11}  b:{",".join(m_moves_pair_as_usi[1]):11}')
+            print(f'  ({number:3}) P:{piece_move_as_usi:5} = M{m_table_index:5} value:{m_move_value:3}  検算 Ma:{",".join(m_moves_pair_as_usi[0]):11}  b:{",".join(m_moves_pair_as_usi[1]):11}')
             number += 1
 
 
