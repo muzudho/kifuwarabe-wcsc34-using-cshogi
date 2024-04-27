@@ -1,5 +1,4 @@
 import cshogi
-from evaluation_configuration import EvaluationConfiguration
 from move import Move
 from move_helper import MoveHelper
 
