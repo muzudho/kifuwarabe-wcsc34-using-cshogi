@@ -39,6 +39,10 @@ class EvaluationConfiguration():
             玉の動きか？
         is_symmetrical_connected : bool
             盤は左右対称か？
+
+        Returns
+        -------
+        - int
         """
 
         # symmetrical connected move 数

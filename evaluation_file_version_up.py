@@ -25,18 +25,29 @@ class EvaluationFileVersionUp():
         - mm_table
         """
 
-        # ロードする。１分ほどかかる
-        print(f"[{datetime.datetime.now()}] (v3 to v4) update {file_name} file ...", flush=True)
-
-        new_mm_table = [0] * EvaluationConfiguration.get_table_size(
-                is_king_of_a=is_king_of_a,      # V4 は未対応
-                is_king_of_b=is_king_of_b,      # V4 は未対応
-                is_symmetrical_connected=False) # V4 は fully connected
-
         table_size = EvaluationConfiguration.get_table_size(
-                is_king_of_a=is_king_of_a,
-                is_king_of_b=is_king_of_b,
-                is_symmetrical_connected=False)
+                is_king_of_a=is_king_of_a,          # V4 は未対応
+                is_king_of_b=is_king_of_b,          # V4 は未対応
+                is_symmetrical_connected=False)     # V4 は fully connected
+
+        list_of_move_size = [
+            EvaluationConfiguration.get_move_number(
+                is_king=is_king_of_a,
+                is_symmetrical_connected=False),
+            EvaluationConfiguration.get_move_number(
+                is_king=is_king_of_b,
+                is_symmetrical_connected=False)]
+
+        # ２の累乗
+        two_powers = [128, 64, 32, 16, 8, 4, 2, 1]
+
+        # ロードする。１分ほどかかる
+        #
+        print(f"[{datetime.datetime.now()}] (v3 to v4) update {file_name} file initialize ... (table_size:{table_size}, a_size:{list_of_move_size[0]}, b_size:{list_of_move_size[1]})", flush=True)
+
+        new_mm_table = [0] * table_size
+
+        print(f"[{datetime.datetime.now()}] (v3 to v4) updating {file_name} file open ...", flush=True)
 
         try:
 
@@ -46,26 +57,40 @@ class EvaluationFileVersionUp():
             with open(file_name, 'rb') as f:
 
                 # プログレス表示
-                if mm_index == table_size//10:
-                    print("[10%]", end=False)
-                elif mm_index == table_size//20:
-                    print("[20%]", end=False)
-                elif mm_index == table_size//30:
-                    print("[30%]", end=False)
-                elif mm_index == table_size//40:
-                    print("[40%]", end=False)
-                elif mm_index == table_size//50:
-                    print("[50%]", end=False)
-                elif mm_index == table_size//60:
-                    print("[60%]", end=False)
-                elif mm_index == table_size//70:
-                    print("[70%]", end=False)
-                elif mm_index == table_size//80:
-                    print("[80%]", end=False)
-                elif mm_index == table_size//90:
-                    print("[90%]", end=False)
+                if mm_index == table_size//100_000_000:
+                    print(f"[{datetime.datetime.now()}]0.000001%", flush=True)
+                elif mm_index == table_size//10_000_000:
+                    print(f"[{datetime.datetime.now()}]0.00001%", flush=True)
+                elif mm_index == table_size//1_000_000:
+                    print(f"[{datetime.datetime.now()}]0.0001%", flush=True)
+                elif mm_index == table_size//100_000:
+                    print(f"[{datetime.datetime.now()}]0.001%", flush=True)
+                elif mm_index == table_size//10_000:
+                    print(f"[{datetime.datetime.now()}]0.01%", flush=True)
+                elif mm_index == table_size//1_000:
+                    print(f"[{datetime.datetime.now()}]0.1%", flush=True)
                 elif mm_index == table_size//100:
-                    print("[100%]", end=False)
+                    print(f"[{datetime.datetime.now()}]1%", flush=True)
+                elif mm_index == table_size//10:
+                    print(f"[{datetime.datetime.now()}]10%", flush=True)
+                elif mm_index == table_size//20:
+                    print(f"[{datetime.datetime.now()}]20%", flush=True)
+                elif mm_index == table_size//30:
+                    print(f"[{datetime.datetime.now()}]30%", flush=True)
+                elif mm_index == table_size//40:
+                    print(f"[{datetime.datetime.now()}]40%", flush=True)
+                elif mm_index == table_size//50:
+                    print(f"[{datetime.datetime.now()}]50%", flush=True)
+                elif mm_index == table_size//60:
+                    print(f"[{datetime.datetime.now()}]60%", flush=True)
+                elif mm_index == table_size//70:
+                    print(f"[{datetime.datetime.now()}]70%", flush=True)
+                elif mm_index == table_size//80:
+                    print(f"[{datetime.datetime.now()}]80%", flush=True)
+                elif mm_index == table_size//90:
+                    print(f"[{datetime.datetime.now()}]90%", flush=True)
+                elif mm_index == table_size//100:
+                    print(f"[{datetime.datetime.now()}]100%", flush=True)
 
                 one_byte_binary = f.read(1)
 
@@ -75,7 +100,6 @@ class EvaluationFileVersionUp():
                     #
                     # V2 ---> V3 で、インデックスがずれる
                     #
-                    two_powers = [128, 64, 32, 16, 8, 4, 2, 1]
                     for two_power in two_powers:
 
                         # ビットフィールドを全て使わず、途中で切れるケース
@@ -103,13 +127,7 @@ class EvaluationFileVersionUp():
                                 b_move_obj=b_obj,
                                 b_is_king=is_king_of_b,
                                 turn=cshogi.BLACK,  # FIXME 全部、先手視点？
-                                list_of_move_size=[
-                                    EvaluationConfiguration.get_move_number(
-                                        is_king=is_king_of_a,
-                                        is_symmetrical_connected=False),
-                                    EvaluationConfiguration.get_move_number(
-                                        is_king=is_king_of_b,
-                                        is_symmetrical_connected=False)],
+                                list_of_move_size=list_of_move_size,
                                 is_symmetrical_connected=False)
 
                         try:
@@ -149,19 +167,17 @@ class EvaluationFileVersionUp():
         - mm_table
         """
 
-        # ロードする。１分ほどかかる
-        print(f"[{datetime.datetime.now()}] (v2 to v3) update {file_name} file ...", flush=True)
-
-        evaluation_mm_table = [0] * EvaluationConfiguration.get_table_size(
-                is_king_of_a=False,     # V2 は未対応
-                is_king_of_b=False,     # V2 は未対応
-                is_symmetrical_connected=True) # V2 は symmetrical connected
-
         table_size = EvaluationConfiguration.get_table_size(
                 is_king_of_a=False,             # V3 は未対応
                 is_king_of_b=False,             # V3 は未対応
                 is_symmetrical_connected=False) # V3 は fully connected
 
+        # ロードする。１分ほどかかる
+        print(f"[{datetime.datetime.now()}] (v2 to v3) update {file_name} file ... (table_size:{table_size})", flush=True)
+
+        evaluation_mm_table = [0] * table_size
+
+        print(f"[{datetime.datetime.now()}] (v2 to v3) updating {file_name} file open ...", flush=True)
 
         try:
 
@@ -172,25 +188,25 @@ class EvaluationFileVersionUp():
 
                 # プログレス表示
                 if mm_index == table_size//10:
-                    print("[10%]", end=False)
+                    print("[10%]", end=False, flush=True)
                 elif mm_index == table_size//20:
-                    print("[20%]", end=False)
+                    print("[20%]", end=False, flush=True)
                 elif mm_index == table_size//30:
-                    print("[30%]", end=False)
+                    print("[30%]", end=False, flush=True)
                 elif mm_index == table_size//40:
-                    print("[40%]", end=False)
+                    print("[40%]", end=False, flush=True)
                 elif mm_index == table_size//50:
-                    print("[50%]", end=False)
+                    print("[50%]", end=False, flush=True)
                 elif mm_index == table_size//60:
-                    print("[60%]", end=False)
+                    print("[60%]", end=False, flush=True)
                 elif mm_index == table_size//70:
-                    print("[70%]", end=False)
+                    print("[70%]", end=False, flush=True)
                 elif mm_index == table_size//80:
-                    print("[80%]", end=False)
+                    print("[80%]", end=False, flush=True)
                 elif mm_index == table_size//90:
-                    print("[90%]", end=False)
+                    print("[90%]", end=False, flush=True)
                 elif mm_index == table_size//100:
-                    print("[100%]", end=False)
+                    print("[100%]", end=False, flush=True)
 
                 one_byte_binary = f.read(1)
 
