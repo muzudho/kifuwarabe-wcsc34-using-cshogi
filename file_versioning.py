@@ -115,9 +115,7 @@ class FileVersioning():
 
     @staticmethod
     def read_evaluation_v2_file_and_convert_to_v3(
-            file_name,
-            is_king_of_a,
-            is_king_of_b):
+            file_name):
         """バイナリ・ファイル V2 を読込み、V3 にバージョンアップして使う
         ファイルの存在チェックを済ませておくこと
 
@@ -125,19 +123,15 @@ class FileVersioning():
         ----------
         file_name : str
             ファイル名
-        is_king_of_a : bool
-            指し手 a は玉か？
-        is_king_of_b : bool
-            指し手 b は玉か？
         """
 
         # ロードする。１分ほどかかる
         print(f"[{datetime.datetime.now()}] read {file_name} file ...", flush=True)
 
         evaluation_mm_table = [0] * EvaluationConfiguration.get_table_size(
-                is_king_of_a=is_king_of_a,
-                is_king_of_b=is_king_of_b,
-                is_symmetrical_connected=False)
+                is_king_of_a=False,     # V2 は未対応
+                is_king_of_b=False,     # V2 は未対応
+                is_symmetrical_connected=False) # V2 は symmetrical connected
 
         try:
 
@@ -159,7 +153,10 @@ class FileVersioning():
 
                         # ビットフィールドを全て使わず、途中で切れるケース
                         if EvaluationConfiguration.get_table_size(
-                                is_symmetrical_connected=True) <= mm_index:
+                                is_king_of_a=False,             # V3 は未対応
+                                is_king_of_b=False,             # V3 は未対応
+                                is_symmetrical_connected=True   # V3 は fully connected
+                                ) <= mm_index:
                             break
 
                         pair_of_list_of_move_as_usi = EvaluationConfiguration.get_pair_of_list_of_move_as_usi_by_mm_index(

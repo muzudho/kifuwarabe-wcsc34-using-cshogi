@@ -180,8 +180,6 @@ class EvaluationPpFileVersioning():
 
             # TODO バージョンアップしたい
             mm_table = FileVersioning.read_evaluation_v2_file_and_convert_to_v3(
-                is_king_of_a=False,     # V2 では未対応
-                is_king_of_b=False,     # V2 では未対応
                 file_name=file_names_by_version[2])
 
             # 旧形式のバイナリ・ファイルは削除
