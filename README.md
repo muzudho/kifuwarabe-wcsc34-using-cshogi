@@ -19,8 +19,7 @@ pip -V
 pip install cshogi
 ```
 
-.py ファイルはパスが通っている必要があるので、必要なら環境変数を設定すること。  
-
+`C:\Users\ユーザー名\AppData\Local\Programs\Python` フォルダの下にゴミ・ファイルがいっぱいできている？  
 
 
 ## 実行
