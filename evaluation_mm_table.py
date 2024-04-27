@@ -134,25 +134,25 @@ class EvaluationMmTable():
 
     def get_table_index_by_2_moves(
             self,
-            move_a_obj,
-            move_b_obj,
+            a_move_obj,
+            b_move_obj,
             turn):
         """指し手２つの組み合わせインデックス"""
 
         # 同じ指し手を比較したら 0 とする（総当たりの二重ループとかでここを通る）
-        if move_a_obj.as_usi == move_b_obj.as_usi:
+        if a_move_obj.as_usi == b_move_obj.as_usi:
             return 0
 
         # 後手なら、指し手の先後をひっくり返す（将棋盤を１８０°回転させるのと同等）
         if turn == cshogi.WHITE:
-            move_a_obj = MoveHelper.flip_turn(move_a_obj)
-            move_b_obj = MoveHelper.flip_turn(move_b_obj)
+            a_move_obj = MoveHelper.flip_turn(a_move_obj)
+            b_move_obj = MoveHelper.flip_turn(b_move_obj)
 
         a_index = EvaluationConfiguration.get_m_index_by_move(
-                move=move_a_obj,
+                move=a_move_obj,
                 is_symmetrical_connected=self._is_symmetrical_connected)
         b_index = EvaluationConfiguration.get_m_index_by_move(
-                move=move_b_obj,
+                move=b_move_obj,
                 is_symmetrical_connected=self._is_symmetrical_connected)
 
         move_indexes = [a_index, b_index]
@@ -170,12 +170,12 @@ class EvaluationMmTable():
         return index
 
 
-    def get_evaluation_value(self, move_a_obj, move_b_obj, turn):
+    def get_evaluation_value(self, a_move_obj, b_move_obj, turn):
         """両方残すなら 0点、インデックスが小さい方を残すなら -1点、インデックスが大きい方を残すなら +1点"""
 
         index = self.get_table_index_by_2_moves(
-                move_a_obj,
-                move_b_obj,
+                a_move_obj,
+                b_move_obj,
                 turn)
         #print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} index:{index}", flush=True)
 
@@ -186,7 +186,7 @@ class EvaluationMmTable():
 
         except IndexError as e:
             # 例： table length: 70955352  index: 102593390  except: list index out of range
-            print(f"table length: {len(self._evaluation_mm_table)}  index: {index}  except: {e}")
+            print(f"table length:{len(self._evaluation_mm_table)}  index:{index}  a_move_obj.as_usi:{a_move_obj.as_usi}  b_move_obj.as_usi:{b_move_obj.as_usi}  turn:{turn}  except: {e}")
             raise
 
         return self._evaluation_mm_table[index]

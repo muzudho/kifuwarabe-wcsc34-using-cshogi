@@ -239,6 +239,7 @@ class Kifuwarabe():
                 self._pieces_canditates_memory.delete()
 
                 # ［評価値］　勝ったら記憶する
+                self._evaluation_facade_obj.save_file_as_kk()
                 self._evaluation_facade_obj.save_file_as_kp()
                 self._evaluation_facade_obj.save_file_as_pp()
 

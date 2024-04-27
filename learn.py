@@ -46,12 +46,12 @@ class Learn():
         for move_a_as_usi in canditates_memory.move_set:
             for move_b_as_usi in canditates_memory.move_set:
 
-                move_a_obj = Move(move_a_as_usi)
-                move_b_obj = Move(move_b_as_usi)
+                a_move_obj = Move(move_a_as_usi)
+                b_move_obj = Move(move_b_as_usi)
 
                 index = evaluation_mm_table_obj.get_table_index_by_2_moves(
-                        move_a_obj,
-                        move_b_obj,
+                        a_move_obj,
+                        b_move_obj,
                         turn)
 
                 # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
@@ -60,12 +60,12 @@ class Learn():
                 #
                 # 左右反転して、同じようにしたい
                 #
-                reversed_move_a_obj = MoveHelper.flip_horizontal(move_a_obj)
-                reversed_move_b_obj = MoveHelper.flip_horizontal(move_b_obj)
+                reversed_a_move_obj = MoveHelper.flip_horizontal(a_move_obj)
+                reversed_b_move_obj = MoveHelper.flip_horizontal(b_move_obj)
 
                 index = evaluation_mm_table_obj.get_table_index_by_2_moves(
-                        reversed_move_a_obj,
-                        reversed_move_b_obj,
+                        reversed_a_move_obj,
+                        reversed_b_move_obj,
                         turn)
 
                 # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
