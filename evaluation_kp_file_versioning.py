@@ -3,6 +3,7 @@ import datetime
 from evaluation_configuration import EvaluationConfiguration
 from evaluation_kp_table import EvaluationKpTable
 from evaluation_file_versioning import FileVersioning
+from evaluation_file_version_up import EvaluationFileVersionUp
 
 
 class EvaluationKpFileVersioning():
@@ -205,10 +206,8 @@ class EvaluationKpFileVersioning():
         if file_version == "V2":
 
             # バージョンアップする
-            mm_table = FileVersioning.read_evaluation_v2_file_and_convert_to_v3(
+            mm_table = EvaluationFileVersionUp.read_evaluation_v2_file_and_convert_to_v3(
                 file_name=file_names_by_version[2])
-
-            # TODO バージョンアップしたら保存する
 
             # 旧形式のバイナリ・ファイルは削除
             old_file_name = file_names_by_version[1]
