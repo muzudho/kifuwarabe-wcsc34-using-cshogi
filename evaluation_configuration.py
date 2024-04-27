@@ -99,7 +99,7 @@ class EvaluationConfiguration():
 
 
     @staticmethod
-    def get_moves_pair_as_usi_by_table_index(
+    def get_pair_of_list_of_move_as_usi_by_table_index(
             table_index,
             is_symmetrical_connected):
         """逆関数

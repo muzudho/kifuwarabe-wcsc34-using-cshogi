@@ -145,7 +145,7 @@ class FileVersioning():
                         if EvaluationConfiguration.get_symmetrical_connected_table_size() <= table_index:
                             break
 
-                        pair_of_list_of_move_as_usi = EvaluationConfiguration.get_moves_pair_as_usi_by_table_index(
+                        pair_of_list_of_move_as_usi = EvaluationConfiguration.get_pair_of_list_of_move_as_usi_by_table_index(
                                 table_index=table_index,
                                 # 左右対称の盤
                                 is_symmetrical_connected=True)
