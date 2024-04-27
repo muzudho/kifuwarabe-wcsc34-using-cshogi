@@ -112,8 +112,9 @@ class EvaluationKpFileVersioning():
         return [
             f'n{file_number}_eval_{evaluation_kind}.txt',       # 旧 V0
             f'n{file_number}_eval_{evaluation_kind}.bin',       # 旧 V1
-            f'n{file_number}_eval_{evaluation_kind}_v2.bin',    # 新 V2
-            f'n{file_number}_eval_{evaluation_kind}_v3.bin',    # 次期 V3
+            f'n{file_number}_eval_{evaluation_kind}_v2.bin',    # 旧 V2
+            f'n{file_number}_eval_{evaluation_kind}_v3.bin',    # 現 V3
+            f'n{file_number}_eval_{evaluation_kind}_v4.bin',    # 次期 V4
         ]
 
 
@@ -180,10 +181,16 @@ class EvaluationKpFileVersioning():
 
         print(f"[{datetime.datetime.now()}] {file_names_by_version[2]} file exists check ...", flush=True)
 
-        # バイナリ・ファイル V3 に保存されているとき
-        if file_version == "V3":
+        # バイナリ・ファイル V4 に保存されているとき
+        if file_version == "V4":
+            # V4ファイル読込
             mm_table = FileVersioning.read_evaluation_from_binary_v2_v3_file(
-                    file_name=file_names_by_version[3])
+                    file_name=file_names_by_version[4])
+
+            # 旧形式のバイナリ・ファイルは削除
+            old_file_name = file_names_by_version[3]
+            if os.path.isfile(old_file_name):
+                FileVersioning.delete_file(old_file_name)
 
             # 旧形式のバイナリ・ファイルは削除
             old_file_name = file_names_by_version[2]
@@ -200,7 +207,36 @@ class EvaluationKpFileVersioning():
             if os.path.isfile(old_file_name):
                 FileVersioning.delete_file(old_file_name)
 
-            return (mm_table, "V3", False)
+            return (mm_table, "V4", False)
+
+        # バイナリ・ファイル V3 に保存されているとき
+        if file_version == "V3":
+
+            ## V3ファイル読込
+            #mm_table = FileVersioning.read_evaluation_from_binary_v2_v3_file(
+            #        file_name=file_names_by_version[3])
+
+            # バージョンアップする
+            mm_table = EvaluationFileVersionUp.read_evaluation_v3_file_and_convert_to_v4(
+                file_name=file_names_by_version[3])
+
+            # 旧形式のバイナリ・ファイルは削除
+            old_file_name = file_names_by_version[2]
+            if os.path.isfile(old_file_name):
+                FileVersioning.delete_file(old_file_name)
+
+            # 旧形式のバイナリ・ファイルは削除
+            old_file_name = file_names_by_version[1]
+            if os.path.isfile(old_file_name):
+                FileVersioning.delete_file(old_file_name)
+
+            # 旧形式のテキスト・ファイルは削除
+            old_file_name = file_names_by_version[0]
+            if os.path.isfile(old_file_name):
+                FileVersioning.delete_file(old_file_name)
+
+            # バージョンアップ
+            return (mm_table, "V4", True)
 
         # バイナリV2ファイルに保存されているとき
         if file_version == "V2":
@@ -219,6 +255,7 @@ class EvaluationKpFileVersioning():
             if os.path.isfile(old_file_name):
                 FileVersioning.delete_file(old_file_name)
 
+            # バージョンアップ
             return (mm_table, "V3", True)
 
         print(f"[{datetime.datetime.now()}] {file_names_by_version[1]} file exists check ...", flush=True)

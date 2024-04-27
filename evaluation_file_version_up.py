@@ -1,3 +1,4 @@
+import cshogi
 import datetime
 from evaluation_configuration import EvaluationConfiguration
 from move import Move
@@ -61,21 +62,37 @@ class EvaluationFileVersionUp():
                                 mm_index=mm_index,
                                 is_symmetrical_connected=False)
 
-                        # 共役の指し手は付いていないはず
                         list_of_a_as_usi, list_of_b_as_usi = pair_of_list_of_move_as_usi
 
+                        # 共役の指し手は付いていないはず
+                        a_as_usi = list_of_a_as_usi[0]
+                        b_as_usi = list_of_b_as_usi[0]
+
+                        a_obj = Move(a_as_usi)
+                        b_obj = Move(b_as_usi)
+
                         # 新しいテーブルでのインデックス
-                        ab_new_index = EvaluationConfiguration.get_m_index_by_move(
-                                move=Move(ab_as_usi),
-                                is_king=is_king,
+                        mm_index = EvaluationConfiguration.get_mm_index_by_2_moves(
+                                a_move_obj=a_obj,
+                                a_is_king=is_king_of_a,
+                                b_move_obj=b_obj,
+                                b_is_king=is_king_of_b,
+                                turn=cshogi.Black,  # FIXME 全部、先手視点？
+                                list_of_move_size=[
+                                    EvaluationConfiguration.get_move_number(
+                                        is_king=is_king_of_a,
+                                        is_symmetrical_connected=False),
+                                    EvaluationConfiguration.get_move_number(
+                                        is_king=is_king_of_b,
+                                        is_symmetrical_connected=False)],
                                 is_symmetrical_connected=False)
 
                         try:
                             bit = one_byte//two_power % 2
-                            new_mm_table[ab_new_index] = bit
+                            new_mm_table[mm_index] = bit
 
                         except IndexError as e:
-                            print(f"table length:{len(new_mm_table)}  mm_index:{mm_index}  ab_new_index:{ab_new_index}  except:{e}")
+                            print(f"table length:{len(new_mm_table)}  mm_index:{mm_index}  except:{e}")
                             raise
 
                         mm_index+=1

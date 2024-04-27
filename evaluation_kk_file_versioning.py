@@ -83,8 +83,9 @@ class EvaluationKkFileVersioning():
         return [
             f'n{file_number}_eval_{evaluation_kind}.txt',       # 旧 V0
             f'n{file_number}_eval_{evaluation_kind}.bin',       # 旧 V1
-            f'n{file_number}_eval_{evaluation_kind}_v2.bin',    # 新 V2
-            f'n{file_number}_eval_{evaluation_kind}_v3.bin',    # 次期 V3
+            f'n{file_number}_eval_{evaluation_kind}_v2.bin',    # 旧 V2
+            f'n{file_number}_eval_{evaluation_kind}_v3.bin',    # 現 V3
+            f'n{file_number}_eval_{evaluation_kind}_v4.bin',    # 次期 V4
         ]
 
 
@@ -132,12 +133,12 @@ class EvaluationKkFileVersioning():
 
         print(f"[{datetime.datetime.now()}] {file_names_by_version[2]} file exists check ...", flush=True)
 
-        # バイナリ・ファイル V3 に保存されているとき
-        if file_version == "V3":
+        # バイナリ・ファイルに保存されているとき
+        if file_version in ("V3", "V4"):
             mm_table = FileVersioning.read_evaluation_from_binary_v2_v3_file(
                     file_name=file_names_by_version[3])
 
-            return (mm_table, "V3", False)
+            return (mm_table, file_version, False)
 
         # ファイルが存在しないとき
         return None
