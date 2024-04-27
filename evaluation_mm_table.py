@@ -204,14 +204,18 @@ class EvaluationMmTable():
         return mm_index
 
 
-    def get_evaluation_value(self, a_move_obj, b_move_obj, turn):
+    def get_evaluation_value(
+            self,
+            a_move_obj,
+            b_move_obj,
+            turn):
         """両方残すなら 0点、インデックスが小さい方を残すなら -1点、インデックスが大きい方を残すなら +1点"""
 
         mm_index = self.get_mm_index_by_2_moves(
                 a_move_obj=a_move_obj,
-                a_is_king=False,    # TODO
+                a_is_king=self._is_king_of_a,
                 b_move_obj=b_move_obj,
-                b_is_king=False,    # TODO
+                b_is_king=self._is_king_of_b,
                 turn=turn)
         #print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} mm_index:{mm_index}", flush=True)
 
@@ -256,7 +260,10 @@ class EvaluationMmTable():
             # 客体と総当たり
             for b_move_as_usi in b_move_collection_as_usi:
                 b_move_obj = Move(b_move_as_usi)
-                sum_value += self.get_evaluation_value(a_move_obj, b_move_obj, turn)
+                sum_value += self.get_evaluation_value(
+                        a_move_obj=a_move_obj,
+                        b_move_obj=b_move_obj,
+                        turn=turn)
 
             move_as_usi_and_policy_dictionary[a_move_as_usi] = sum_value
 

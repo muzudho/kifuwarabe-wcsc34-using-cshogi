@@ -68,19 +68,21 @@ class EvaluationKpFileVersioning():
             # V3 から盤面を左右対称ではなく、全体を使うよう変更
             is_symmetrical_connected = False
 
-        # ファイルが存在しないとき
-        if mm_table is None:
-            mm_table = FileVersioning.reset_to_random_table(
-                hint=f"n{file_number} kind=kp",
-                table_size=EvaluationConfiguration.get_table_size(
-                        is_symmetrical_connected=is_symmetrical_connected))
-
         if file_version == "V4":
             is_king_of_a = True     # 玉の指し手は評価値テーブル・サイズを縮めれる
             is_king_of_b = False    # P なんで
         else:
             is_king_of_a = False    # 過去バージョンではフラグ未対応
             is_king_of_b = False    # 過去バージョンではフラグ未対応
+
+        # ファイルが存在しないとき
+        if mm_table is None:
+            mm_table = FileVersioning.reset_to_random_table(
+                hint=f"n{file_number} kind=kp",
+                table_size=EvaluationConfiguration.get_table_size(
+                        is_king_of_a=is_king_of_a,
+                        is_king_of_b=is_king_of_b,
+                        is_symmetrical_connected=is_symmetrical_connected))
 
         return EvaluationKpTable(
                 file_number=file_number,
@@ -187,7 +189,9 @@ class EvaluationKpFileVersioning():
 
             # TODO バージョンアップしたい
             mm_table = FileVersioning.read_evaluation_v2_file_and_convert_to_v3(
-                v2_file_name=file_names_by_version[2])
+                is_king_of_a=False,     # V2 では未対応
+                is_king_of_b=False,     # V2 では未対応
+                file_name=file_names_by_version[2])
 
             # 旧形式のバイナリ・ファイルは削除
             old_file_name = file_names_by_version[1]

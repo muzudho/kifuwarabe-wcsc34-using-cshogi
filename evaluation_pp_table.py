@@ -35,12 +35,16 @@ class EvaluationPpTable(EvaluationMmTable):
                     is_king=False,  # P なんで
                     is_symmetrical_connected=True)
             table_size = EvaluationConfiguration.get_table_size(
+                    is_king_of_a=False,     # P なんで
+                    is_king_of_b=False,     # P なんで
                     is_symmetrical_connected=True)
         else:
             p_size = EvaluationConfiguration.get_move_number(
                     is_king=False,  # P なんで
                     is_symmetrical_connected=False)
             table_size = EvaluationConfiguration.get_table_size(
+                    is_king_of_a=False,     # P なんで
+                    is_king_of_b=False,     # P なんで
                     is_symmetrical_connected=False)
 
         EvaluationMmTable.__init__(

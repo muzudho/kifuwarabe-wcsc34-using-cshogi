@@ -115,14 +115,28 @@ class FileVersioning():
 
     @staticmethod
     def read_evaluation_v2_file_and_convert_to_v3(
-            v2_file_name):
+            file_name,
+            is_king_of_a,
+            is_king_of_b):
         """バイナリ・ファイル V2 を読込み、V3 にバージョンアップして使う
-        ファイルの存在チェックを済ませておくこと"""
+        ファイルの存在チェックを済ませておくこと
+
+        Parameters
+        ----------
+        file_name : str
+            ファイル名
+        is_king_of_a : bool
+            指し手 a は玉か？
+        is_king_of_b : bool
+            指し手 b は玉か？
+        """
 
         # ロードする。１分ほどかかる
-        print(f"[{datetime.datetime.now()}] read {v2_file_name} file ...", flush=True)
+        print(f"[{datetime.datetime.now()}] read {file_name} file ...", flush=True)
 
         evaluation_mm_table = [0] * EvaluationConfiguration.get_table_size(
+                is_king_of_a=is_king_of_a,
+                is_king_of_b=is_king_of_b,
                 is_symmetrical_connected=False)
 
         try:
@@ -130,7 +144,7 @@ class FileVersioning():
             # 指し手 a, b のペアのインデックス
             mm_index = 0
 
-            with open(v2_file_name, 'rb') as f:
+            with open(file_name, 'rb') as f:
 
                 multiple_bytes = f.read(1)
 
@@ -175,10 +189,10 @@ class FileVersioning():
 
                     multiple_bytes = f.read(1)
 
-            print(f"[{datetime.datetime.now()}] (v2 to v3) '{v2_file_name}' file loaded. evaluation table size: {len(evaluation_mm_table)}", flush=True)
+            print(f"[{datetime.datetime.now()}] (v2 to v3) '{file_name}' file loaded. evaluation table size: {len(evaluation_mm_table)}", flush=True)
 
         except FileNotFoundError as ex:
-            print(f"[evaluation table / load from file] [{v2_file_name}] file error. {ex}")
+            print(f"[evaluation table / load from file] [{file_name}] file error. {ex}")
             raise
 
         return evaluation_mm_table

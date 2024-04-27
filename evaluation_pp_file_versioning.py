@@ -71,6 +71,8 @@ class EvaluationPpFileVersioning():
             mm_table = FileVersioning.reset_to_random_table(
                 hint=f'n{file_number} kind=pp',
                 table_size=EvaluationConfiguration.get_table_size(
+                        is_king_of_a=False,     # P なんで
+                        is_king_of_b=False,     # P なんで
                         is_symmetrical_connected=is_symmetrical_connected))
 
         return EvaluationPpTable(
@@ -178,7 +180,9 @@ class EvaluationPpFileVersioning():
 
             # TODO バージョンアップしたい
             mm_table = FileVersioning.read_evaluation_v2_file_and_convert_to_v3(
-                v2_file_name=file_names_by_version[2])
+                is_king_of_a=False,     # V2 では未対応
+                is_king_of_b=False,     # V2 では未対応
+                file_name=file_names_by_version[2])
 
             # 旧形式のバイナリ・ファイルは削除
             old_file_name = file_names_by_version[1]

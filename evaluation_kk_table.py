@@ -40,12 +40,16 @@ class EvaluationKkTable(EvaluationMmTable):
                     is_king=is_king,
                     is_symmetrical_connected=True)
             table_size = EvaluationConfiguration.get_table_size(
+                    is_king_of_a=is_king,
+                    is_king_of_b=is_king,
                     is_symmetrical_connected=True)
         else:
             k_size = EvaluationConfiguration.get_move_number(
                     is_king=is_king,
                     is_symmetrical_connected=False)
             table_size = EvaluationConfiguration.get_table_size(
+                    is_king_of_a=is_king,
+                    is_king_of_b=is_king,
                     is_symmetrical_connected=False)
 
         EvaluationMmTable.__init__(

@@ -40,19 +40,21 @@ class EvaluationKkFileVersioning():
             mm_table, file_version = tuple
             is_file_modified = mm_table is None
 
-        # ファイルが存在しないとき
-        if mm_table is None:
-            mm_table = FileVersioning.reset_to_random_table(
-                hint=f"n{file_number} kind=kk",
-                table_size=EvaluationConfiguration.get_table_size(
-                        is_symmetrical_connected=is_symmetrical_connected))
-
         if file_version == "V4":
             is_king_of_a = True     # 玉の指し手は評価値テーブル・サイズを縮めれる
             is_king_of_b = True     # 玉の指し手は評価値テーブル・サイズを縮めれる
         else:
             is_king_of_a = False     # 過去バージョンではフラグ未対応
             is_king_of_b = False     # 過去バージョンではフラグ未対応
+
+        # ファイルが存在しないとき
+        if mm_table is None:
+            mm_table = FileVersioning.reset_to_random_table(
+                hint=f"n{file_number} kind=kk",
+                table_size=EvaluationConfiguration.get_table_size(
+                        is_king_of_a=is_king_of_a,
+                        is_king_of_b=is_king_of_b,
+                        is_symmetrical_connected=is_symmetrical_connected))
 
 
         return EvaluationKkTable(

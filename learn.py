@@ -60,7 +60,7 @@ class Learn():
                         a_move_obj=a_move_obj,
                         a_is_king=a_is_king,
                         b_move_obj=b_move_obj,
-                        b_is_kind=b_is_king,
+                        b_is_king=b_is_king,
                         turn=turn)
 
                 # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
@@ -74,9 +74,9 @@ class Learn():
 
                 mm_index = evaluation_mm_table_obj.get_mm_index_by_2_moves(
                         a_move_obj=reversed_a_move_obj,
-                        a_is_king=False,    # TODO
+                        a_is_king=a_is_king,
                         b_move_obj=reversed_b_move_obj,
-                        b_is_kind=False,    # TODO
+                        b_is_kind=b_is_king,
                         turn=turn)
 
                 # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
