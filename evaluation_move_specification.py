@@ -47,7 +47,7 @@ class EvaluationMoveSpecification():
         self._src_patterns = self._drop_patterns + self._file_size * self._rank_size
 
         # 移動のパターン数
-        self._move_patterns = self._src_patterns * self._drop_patterns * self._pro_patterns
+        self._move_patterns = self._src_patterns * self._dst_patterns * self._pro_patterns
 
 
     @property

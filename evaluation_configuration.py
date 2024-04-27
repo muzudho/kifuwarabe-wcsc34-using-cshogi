@@ -274,9 +274,11 @@ class EvaluationConfiguration():
 
         rest = m_index
 
+        pro_value = None
         pro_str = ''
         if not is_king:
-            if rest % m_spec.pro_patterns == 1:
+            pro_value = rest % m_spec.pro_patterns
+            if pro_value == 1:
                 # 成りだ
                 pro_str = '+'
 
@@ -351,11 +353,13 @@ class EvaluationConfiguration():
             if 45 <= src_value:
                 try:
                     src_file_str = EvaluationConfiguration._src_num_to_file_str_on_symmetrical_connected[src_value]
+
                 except KeyError as e:
                     # 例： single_move error.  src_value:52  dst_value:0  m_index:4680  move_patterns:4680  (src_size:52  dst_size:45  pro_size:2)  rest:52  drop_kind:7  file_size:5  rank_size:9  e:52
                     # 例： single_move error.  src_value:52  dst_value:0  m_index:4680  move_patterns:4680  (src_size:52  dst_size:45  pro_size:2)  rest:52  drop_kind:7  file_size:5  rank_size:9  e:52
                     # 例： single_move error.  src_value:52  dst_value:0  m_index:4680  move_patterns:4680  (src_size:52  dst_size:45  pro_size:2)  rest:52  drop_kind:7  file_size:5  rank_size:9  e:52
                     # 例： single_move error.  src_value:52  dst_value:0  m_index:4680  move_patterns:4680  (src_size:52  dst_size:45  pro_size:2)  rest:52  drop_kind:7  file_size:5  rank_size:9  e:52
+                    # 例： single_move error.  src_value:52  dst_value:0  pro_str:''  m_index:4680  rest:52  m_spec:is_king:False  is_symmetrical_connected:True  pro_patterns:2  rank_size:9  file_size:5  dst_patterns:45  drop_patterns:7  src_patterns:52  move_patterns:728  e:52
                     print(f"single_move error.  src_value:{src_value}  dst_value:{dst_value}  pro_str:'{pro_str}'  m_index:{m_index}  rest:{rest}  m_spec:{m_spec.to_debug_str()}  e:{e}")
                     raise
 
