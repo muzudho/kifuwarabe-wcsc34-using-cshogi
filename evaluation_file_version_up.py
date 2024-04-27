@@ -51,51 +51,52 @@ class EvaluationFileVersionUp():
 
         try:
 
-            # 指し手 a, b のペアのインデックス
-            mm_index = 0
+            # 旧テーブルでの、指し手 a, b のペアのインデックス
+            old_mm_index = 0
 
             with open(file_name, 'rb') as f:
 
                 # プログレス表示
-                if mm_index == table_size//100_000_000:
+                if old_mm_index == table_size//100_000_000:
                     print(f"[{datetime.datetime.now()}]0.000001%", flush=True)
-                elif mm_index == table_size//10_000_000:
+                elif old_mm_index == table_size//10_000_000:
                     print(f"[{datetime.datetime.now()}]0.00001%", flush=True)
-                elif mm_index == table_size//1_000_000:
+                elif old_mm_index == table_size//1_000_000:
                     print(f"[{datetime.datetime.now()}]0.0001%", flush=True)
-                elif mm_index == table_size//100_000:
+                elif old_mm_index == table_size//100_000:
                     print(f"[{datetime.datetime.now()}]0.001%", flush=True)
-                elif mm_index == table_size//10_000:
+                elif old_mm_index == table_size//10_000:
                     print(f"[{datetime.datetime.now()}]0.01%", flush=True)
-                elif mm_index == table_size//1_000:
+                elif old_mm_index == table_size//1_000:
                     print(f"[{datetime.datetime.now()}]0.1%", flush=True)
-                elif mm_index == table_size//100:
+                elif old_mm_index == table_size//100:
                     print(f"[{datetime.datetime.now()}]1%", flush=True)
-                elif mm_index == table_size//10:
+                elif old_mm_index == table_size//10:
                     print(f"[{datetime.datetime.now()}]10%", flush=True)
-                elif mm_index == table_size//20:
+                elif old_mm_index == table_size//20:
                     print(f"[{datetime.datetime.now()}]20%", flush=True)
-                elif mm_index == table_size//30:
+                elif old_mm_index == table_size//30:
                     print(f"[{datetime.datetime.now()}]30%", flush=True)
-                elif mm_index == table_size//40:
+                elif old_mm_index == table_size//40:
                     print(f"[{datetime.datetime.now()}]40%", flush=True)
-                elif mm_index == table_size//50:
+                elif old_mm_index == table_size//50:
                     print(f"[{datetime.datetime.now()}]50%", flush=True)
-                elif mm_index == table_size//60:
+                elif old_mm_index == table_size//60:
                     print(f"[{datetime.datetime.now()}]60%", flush=True)
-                elif mm_index == table_size//70:
+                elif old_mm_index == table_size//70:
                     print(f"[{datetime.datetime.now()}]70%", flush=True)
-                elif mm_index == table_size//80:
+                elif old_mm_index == table_size//80:
                     print(f"[{datetime.datetime.now()}]80%", flush=True)
-                elif mm_index == table_size//90:
+                elif old_mm_index == table_size//90:
                     print(f"[{datetime.datetime.now()}]90%", flush=True)
-                elif mm_index == table_size//100:
+                elif old_mm_index == table_size//100:
                     print(f"[{datetime.datetime.now()}]100%", flush=True)
 
                 one_byte_binary = f.read(1)
 
                 while one_byte_binary:
                     one_byte_num = int.from_bytes(one_byte_binary, signed=False)
+                    print(f"old_mm_index:{old_mm_index}  one_byte_num:{one_byte_num}", flush=True)
 
                     #
                     # V2 ---> V3 で、インデックスがずれる
@@ -103,11 +104,12 @@ class EvaluationFileVersionUp():
                     for two_power in two_powers:
 
                         # ビットフィールドを全て使わず、途中で切れるケース
-                        if table_size <= mm_index:
+                        if table_size <= old_mm_index:
+                            print(f"old_mm_index:{old_mm_index}  table_size:{table_size} < old_mm_index:{old_mm_index} break", flush=True)
                             break
 
                         pair_of_list_of_move_as_usi = EvaluationConfiguration.get_pair_of_list_of_move_as_usi_by_mm_index(
-                                mm_index=mm_index,
+                                mm_index=old_mm_index,
                                 is_king_of_b=is_king_of_b,
                                 is_symmetrical_connected=False)
 
@@ -116,12 +118,13 @@ class EvaluationFileVersionUp():
                         # 共役の指し手は付いていないはず
                         a_as_usi = list_of_a_as_usi[0]
                         b_as_usi = list_of_b_as_usi[0]
+                        print(f"old_mm_index:{old_mm_index}  a_as_usi:{a_as_usi}  b_as_usi:{b_as_usi}", flush=True)
 
                         a_obj = Move(a_as_usi)
                         b_obj = Move(b_as_usi)
 
                         # 新しいテーブルでのインデックス
-                        mm_index = EvaluationConfiguration.get_mm_index_by_2_moves(
+                        new_mm_index = EvaluationConfiguration.get_mm_index_by_2_moves(
                                 a_move_obj=a_obj,
                                 a_is_king=is_king_of_a,
                                 b_move_obj=b_obj,
@@ -129,16 +132,20 @@ class EvaluationFileVersionUp():
                                 turn=cshogi.BLACK,  # FIXME 全部、先手視点？
                                 list_of_move_size=list_of_move_size,
                                 is_symmetrical_connected=False)
+                        print(f"old_mm_index:{old_mm_index}  new_mm_index:{new_mm_index}", flush=True)
 
                         try:
                             bit = one_byte_num//two_power % 2
-                            new_mm_table[mm_index] = bit
+                            print(f"old_mm_index:{old_mm_index}  bit:{bit}", flush=True)
+
+                            new_mm_table[new_mm_index] = bit
 
                         except IndexError as e:
-                            print(f"table length:{len(new_mm_table)}  mm_index:{mm_index}  except:{e}")
+                            print(f"old_mm_index:{old_mm_index}  table length:{len(new_mm_table)}  new_mm_index:{new_mm_index}  except:{e}")
                             raise
 
                         mm_index+=1
+                        print(f"old_mm_index:{old_mm_index}  incremented", flush=True)
 
                     one_byte_binary = f.read(1)
 
@@ -182,30 +189,30 @@ class EvaluationFileVersionUp():
         try:
 
             # 指し手 a, b のペアのインデックス
-            mm_index = 0
+            old_mm_index = 0
 
             with open(file_name, 'rb') as f:
 
                 # プログレス表示
-                if mm_index == table_size//10:
+                if old_mm_index == table_size//10:
                     print("[10%]", end=False, flush=True)
-                elif mm_index == table_size//20:
+                elif old_mm_index == table_size//20:
                     print("[20%]", end=False, flush=True)
-                elif mm_index == table_size//30:
+                elif old_mm_index == table_size//30:
                     print("[30%]", end=False, flush=True)
-                elif mm_index == table_size//40:
+                elif old_mm_index == table_size//40:
                     print("[40%]", end=False, flush=True)
-                elif mm_index == table_size//50:
+                elif old_mm_index == table_size//50:
                     print("[50%]", end=False, flush=True)
-                elif mm_index == table_size//60:
+                elif old_mm_index == table_size//60:
                     print("[60%]", end=False, flush=True)
-                elif mm_index == table_size//70:
+                elif old_mm_index == table_size//70:
                     print("[70%]", end=False, flush=True)
-                elif mm_index == table_size//80:
+                elif old_mm_index == table_size//80:
                     print("[80%]", end=False, flush=True)
-                elif mm_index == table_size//90:
+                elif old_mm_index == table_size//90:
                     print("[90%]", end=False, flush=True)
-                elif mm_index == table_size//100:
+                elif old_mm_index == table_size//100:
                     print("[100%]", end=False, flush=True)
 
                 one_byte_binary = f.read(1)
@@ -220,11 +227,11 @@ class EvaluationFileVersionUp():
                     for two_power in two_powers:
 
                         # ビットフィールドを全て使わず、途中で切れるケース
-                        if table_size <= mm_index:
+                        if table_size <= old_mm_index:
                             break
 
                         pair_of_list_of_move_as_usi = EvaluationConfiguration.get_pair_of_list_of_move_as_usi_by_mm_index(
-                                mm_index=mm_index,
+                                mm_index=old_mm_index,
                                 is_king_of_b=False,             # V3 は未対応
                                 # 左右対称の盤
                                 is_symmetrical_connected=True)
@@ -243,11 +250,11 @@ class EvaluationFileVersionUp():
                                     evaluation_mm_table[converted_m_index] = bit
 
                                 except IndexError as e:
-                                    print(f"table length:{len(evaluation_mm_table)}  mm_index:{mm_index}  converted_m_index:{converted_m_index}  except:{e}")
+                                    print(f"table length:{len(evaluation_mm_table)}  old_mm_index:{old_mm_index}  converted_m_index:{converted_m_index}  except:{e}")
                                     raise
 
 
-                        mm_index+=1
+                        old_mm_index+=1
 
                     one_byte_binary = f.read(1)
 
