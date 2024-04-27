@@ -207,11 +207,21 @@ class EvaluationTable():
 
     def make_move_as_usi_and_policy_dictionary(
             self,
-            sorted_friend_king_legal_move_list_as_usi,
-            sorted_friend_pieces_legal_move_list_as_usi,
-            opponent_legal_move_set_as_usi,
+            n1st_move_list_as_usi,
+            n2nd_move_list_as_usi,
+            n3rd_move_set_as_usi,
             turn):
-        """指し手にスコアが紐づく辞書を作成"""
+        """指し手にスコアが紐づく辞書を作成
+
+        Parameters
+        ----------
+        n1st_move_list_as_usi : list
+            例えば自玉の指し手の集合
+        n2nd_move_list_as_usi : list
+            例えば自軍の玉以外の指し手の集合
+        n3rd_move_set_as_usi : set
+            例えば敵軍の全ての指し手の集合
+        """
 
         # 指し手に評価値を付ける
         king_move_as_usi_and_score_dictionary = {}
@@ -219,10 +229,10 @@ class EvaluationTable():
 
         # ＫＰ＋ＫＯポリシー
         kp_ko_policy_dictionary = self._kp_ko_policy_table.make_move_as_usi_and_policy_dictionary(
-                sorted_friend_king_legal_move_list_as_usi,
-                sorted_friend_pieces_legal_move_list_as_usi,
-                opponent_legal_move_set_as_usi,
-                turn)
+                n1st_move_list_as_usi=n1st_move_list_as_usi,
+                n2nd_move_list_as_usi=n2nd_move_list_as_usi,
+                n3rd_move_set_as_usi=n3rd_move_set_as_usi,
+                turn=turn)
 
         ## 評価値をマージ
         for kp_ko, policy in kp_ko_policy_dictionary.items():
@@ -233,10 +243,10 @@ class EvaluationTable():
 
         # ＰＰ＋ＰＯポリシー
         pp_po_policy_dictionary = self._pp_po_policy_table.make_move_as_usi_and_policy_dictionary(
-                sorted_friend_king_legal_move_list_as_usi,
-                sorted_friend_pieces_legal_move_list_as_usi,
-                opponent_legal_move_set_as_usi,
-                turn)
+                n1st_move_list_as_usi=n1st_move_list_as_usi,
+                n2nd_move_list_as_usi=n2nd_move_list_as_usi,
+                n3rd_move_set_as_usi=n3rd_move_set_as_usi,
+                turn=turn)
 
         ## 評価値をマージ
         for pp_po, policy in pp_po_policy_dictionary.items():

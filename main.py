@@ -416,9 +416,9 @@ class Kifuwarabe():
         # 候補手に評価値を付けた辞書を作成
         king_move_as_usi_and_score_dictionary, pieces_move_as_usi_and_score_dictionary = self._evaluation_table_obj.make_move_as_usi_and_policy_dictionary(
                 sorted_friend_king_legal_move_list_as_usi,
-                sorted_friend_pieces_legal_move_list_as_usi,
-                opponent_legal_move_set_as_usi,
-                self._board.turn)
+                n2nd_move_list_as_usi=sorted_friend_pieces_legal_move_list_as_usi,
+                n3rd_move_set_as_usi=opponent_legal_move_set_as_usi,
+                turn=self._board.turn)
 
         # 表示
         number = 1

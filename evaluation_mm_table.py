@@ -194,20 +194,20 @@ class EvaluationMmTable():
 
     def make_move_as_usi_and_policy_dictionary(
             self,
-            sorted_friend_king_legal_move_list_as_usi,
-            sorted_friend_pieces_legal_move_list_as_usi,
-            opponent_legal_move_set_as_usi,
+            n1st_move_list_as_usi,
+            n2nd_move_list_as_usi,
+            n3rd_move_set_as_usi,
             turn):
         """指し手に評価値を付ける
 
         Parameters
         ----------
-        sorted_friend_king_legal_move_list_as_usi : list
-            USIプロトコルでの符号表記の指し手の配列。辞書順で昇順にソート済み
-        sorted_friend_pieces_legal_move_list_as_usi : list
-            USIプロトコルでの符号表記の指し手の配列。辞書順で昇順にソート済み
-        sorted_opponent_legal_move_set_as_usi : set
-            相手の指し手
+        n1st_move_list_as_usi : list
+            例えば自玉の指し手の集合
+        n2nd_move_list_as_usi : list
+            例えば自軍の玉以外の指し手の集合
+        n3rd_move_set_as_usi : set
+            例えば敵軍の全ての指し手の集合
         turn
             手番
         """
@@ -216,8 +216,8 @@ class EvaluationMmTable():
         move_as_usi_and_score_dictionary = {}
 
         list_of_sorted_friend_legal_move_list_as_usi = [
-            sorted_friend_king_legal_move_list_as_usi,
-            sorted_friend_pieces_legal_move_list_as_usi,
+            n1st_move_list_as_usi,
+            n2nd_move_list_as_usi,
         ]
 
         for sorted_friend_legal_move_list_as_usi in list_of_sorted_friend_legal_move_list_as_usi:
@@ -232,8 +232,8 @@ class EvaluationMmTable():
                         move_b_obj = Move(move_b_as_usi)
                         sum_value += self.get_evaluation_value(move_a_obj, move_b_obj, turn)
 
-                # （ＦＯ）：　自軍の指し手Ａと、相手の指し手Ｂ
-                for move_b_as_usi in opponent_legal_move_set_as_usi:
+                # （ＦＯ）：　自軍の指し手Ａと、第３の指し手リスト
+                for move_b_as_usi in n3rd_move_set_as_usi:
                     move_b_obj = Move(move_b_as_usi)
                     sum_value += self.get_evaluation_value(move_a_obj, move_b_obj, turn)
 

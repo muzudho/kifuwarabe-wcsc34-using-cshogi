@@ -42,9 +42,9 @@ class Lottery():
         # 候補手に評価値を付けた辞書を作成
         king_move_as_usi_and_score_dictionary, pieces_move_as_usi_and_score_dictionary = evaluation_table.make_move_as_usi_and_policy_dictionary(
                 sorted_friend_king_legal_move_list_as_usi,
-                sorted_friend_pieces_legal_move_list_as_usi,
-                opponent_legal_move_set_as_usi,
-                board.turn)
+                n2nd_move_list_as_usi=sorted_friend_pieces_legal_move_list_as_usi,
+                n3rd_move_set_as_usi=opponent_legal_move_set_as_usi,
+                turn=board.turn)
 
         # 候補に挙がった指し手は全て記憶しておく
         king_canditates_memory.union_dictionary(king_move_as_usi_and_score_dictionary)
