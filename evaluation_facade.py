@@ -1,7 +1,7 @@
 import datetime
 from evaluation_configuration import EvaluationConfiguration
-from evaluation_pp_po_table import EvaluationPpPoTable
-from evaluation_kp_ko_table import EvaluationKpKoTable
+from evaluation_pp_table import EvaluationPpTable
+from evaluation_kp_table import EvaluationKpTable
 from file_versioning import FileVersioning
 from learn import Learn
 
@@ -13,23 +13,23 @@ class EvaluationFacade():
     def __init__(self, file_number):
         self._file_number = file_number
 
-        # 評価値テーブル：　ＫＰ＋ＫＯポリシー
-        self._kp_ko_policy_table = None
-        self._is_symmetrical_connected_of_kp_ko = None
+        # 評価値テーブル：　ＫＰポリシー
+        self._kp_policy_table = None
+        self._is_symmetrical_connected_of_kp = None
 
-        # 評価値テーブル：　ＰＰ＋ＰＯポリシー
-        self._pp_po_policy_table = None
-        self._is_symmetrical_connected_of_pp_po = None
-
-
-    @property
-    def kp_ko_policy_table(self):
-        return self._kp_ko_policy_table
+        # 評価値テーブル：　ＰＰポリシー
+        self._pp_policy_table = None
+        self._is_symmetrical_connected_of_pp = None
 
 
     @property
-    def pp_po_policy_table(self):
-        return self._pp_po_policy_table
+    def kp_policy_table(self):
+        return self._kp_policy_table
+
+
+    @property
+    def pp_policy_table(self):
+        return self._pp_policy_table
 
 
     def usinewgame(
@@ -50,9 +50,9 @@ class EvaluationFacade():
         """
 
         #
-        # ＦｋＦ＋ＦｋＯポリシー
+        # ＫＰポリシー
         #
-        evaluation_kind = "kp_ko"
+        evaluation_kind = "kp"
 
         tuple = FileVersioning.check_file_version_and_name(
                 file_number=self._file_number,
@@ -63,6 +63,19 @@ class EvaluationFacade():
             file_name = None
         if tuple is not None:
             file_version, file_name = tuple
+
+        if file_version == None:
+            evaluation_kind = "kp_ko" # V3の途中までの旧名その２
+
+            tuple = FileVersioning.check_file_version_and_name(
+                    file_number=self._file_number,
+                    evaluation_kind=evaluation_kind)
+
+            if tuple is None:
+                file_version = None
+                file_name = None
+            if tuple is not None:
+                file_version, file_name = tuple
 
         if file_version == None:
             evaluation_kind = "fkf_fko" # V3の途中までの旧名
@@ -89,34 +102,34 @@ class EvaluationFacade():
             mm_table, file_version = tuple
             is_file_modified = mm_table is None
 
-        self._is_symmetrical_connected_of_kp_ko = True
+        self._is_symmetrical_connected_of_kp = True
         if file_version == "V3":
             # V3 から盤面を左右対称ではなく、全体を使うよう変更
-            self._is_symmetrical_connected_of_kp_ko = False
+            self._is_symmetrical_connected_of_kp = False
 
         if mm_table is None:
             # ファイルが存在しないとき
             mm_table = FileVersioning.reset_to_random_table(
-                hint=f"n{self._file_number} kind=kp_ko",
+                hint=f"n{self._file_number} kind=kp",
                 table_size=EvaluationConfiguration.get_symmetrical_connected_table_size())
 
-        self._kp_ko_policy_table = EvaluationKpKoTable(
+        self._kp_policy_table = EvaluationKpTable(
                 file_number=self._file_number,
                 file_name=file_name,
                 evaluation_mm_table=mm_table,
                 is_file_modified=is_file_modified,
-                is_symmetrical_connected=self._is_symmetrical_connected_of_kp_ko)
+                is_symmetrical_connected=self._is_symmetrical_connected_of_kp)
 
         # 学習
         Learn.update_evaluation_table(
-                evaluation_mm_table_obj=self._kp_ko_policy_table,
+                evaluation_mm_table_obj=self._kp_policy_table,
                 canditates_memory=king_canditates_memory, # キング
                 result_file=result_file)
 
         #
-        # ＦｍＦ＋ＦｍＯポリシー
+        # ＰＰポリシー
         #
-        evaluation_kind = "pp_po"
+        evaluation_kind = "pp"
 
         tuple = FileVersioning.check_file_version_and_name(
                 file_number=self._file_number,
@@ -127,6 +140,19 @@ class EvaluationFacade():
             file_name = None
         if tuple is not None:
             file_version, file_name = tuple
+
+        if file_version is None:
+            evaluation_kind = "pp_po"   # V3の途中までの旧称その２
+
+            tuple = FileVersioning.check_file_version_and_name(
+                    file_number=self._file_number,
+                    evaluation_kind=evaluation_kind)
+
+            if tuple is None:
+                file_version = None
+                file_name = None
+            if tuple is not None:
+                file_version, file_name = tuple
 
         if file_version is None:
             evaluation_kind = "fmf_fmo"     # V3の途中までの旧称
@@ -152,18 +178,18 @@ class EvaluationFacade():
             mm_table, file_version = tuple
             is_file_modified = mm_table is None
 
-        self._is_symmetrical_connected_of_pp_po = True
+        self._is_symmetrical_connected_of_pp = True
         if file_version == "V3":
             # TODO 予定
-            self._is_symmetrical_connected_of_pp_po = False
+            self._is_symmetrical_connected_of_pp = False
 
         if mm_table is None:
             # ファイルが存在しないとき
             mm_table = FileVersioning.reset_to_random_table(
-                hint=f'n{self._file_number} kind=pp_po',
+                hint=f'n{self._file_number} kind=pp',
                 table_size=EvaluationConfiguration.get_symmetrical_connected_table_size())
 
-        self._pp_po_policy_table = EvaluationPpPoTable(
+        self._pp_policy_table = EvaluationPpTable(
                 file_number=self._file_number,
                 file_name=file_name,
                 evaluation_mm_table=mm_table,
@@ -172,37 +198,37 @@ class EvaluationFacade():
 
         # 学習
         Learn.update_evaluation_table(
-                evaluation_mm_table_obj=self._pp_po_policy_table,
+                evaluation_mm_table_obj=self._pp_policy_table,
                 canditates_memory=pieces_canditates_memory,  # 自軍の玉以外の合法手
                 result_file=result_file)
 
 
-    def save_file_as_kp_ko(self):
+    def save_file_as_kp(self):
         """ファイルの保存"""
 
         # 保存するかどうかは先に判定しておくこと
-        if self._kp_ko_policy_table.is_file_modified:
-            # ＫＰ＋ＫＯポリシー
+        if self._kp_policy_table.is_file_modified:
+            # ＫＰポリシー
             FileVersioning.save_evaluation_to_file(
                     file_number=self._file_number,
-                    evaluation_kind="kp_ko",    # V3 の途中からの新名を使っていく
-                    evaluation_mm_table=self._kp_ko_policy_table.evaluation_mm_table)
+                    evaluation_kind="kp",    # V3 の途中からの新名を使っていく
+                    evaluation_mm_table=self._kp_policy_table.evaluation_mm_table)
         else:
-            print(f"[{datetime.datetime.now()}] kp_ko file not changed", flush=True)
+            print(f"[{datetime.datetime.now()}] kp file not changed", flush=True)
 
 
-    def save_file_as_pp_po(self):
+    def save_file_as_pp(self):
         """ファイルの保存"""
 
         # 保存するかどうかは先に判定しておくこと
-        if self._pp_po_policy_table.is_file_modified:
+        if self._pp_policy_table.is_file_modified:
             # ＰＰ＋ＰＯポリシー
             FileVersioning.save_evaluation_to_file(
                     file_number=self._file_number,
                     evaluation_kind="pp_po",  # V3 の途中からの新名を使っていく
-                    evaluation_mm_table=self._pp_po_policy_table.evaluation_mm_table)
+                    evaluation_mm_table=self._pp_policy_table.evaluation_mm_table)
         else:
-            print(f"[{datetime.datetime.now()}] pp_po file not changed", flush=True)
+            print(f"[{datetime.datetime.now()}] pp file not changed", flush=True)
 
 
     def make_move_as_usi_and_policy_dictionary(
@@ -236,7 +262,7 @@ class EvaluationFacade():
         pieces_move_as_usi_and_policy_dictionary = {}
 
         # ＫＰポリシー　ｉｎ　ＫＰテーブル
-        kp_policy_dictionary = self._kp_ko_policy_table.make_move_as_usi_and_policy_dictionary_2(
+        kp_policy_dictionary = self._kp_policy_table.make_move_as_usi_and_policy_dictionary_2(
                 a_move_collection_as_usi=king_move_collection_as_usi,
                 b_move_collection_as_usi=pieces_move_collection_as_usi,
                 turn=turn)
@@ -250,7 +276,7 @@ class EvaluationFacade():
 
         # ＫＬポリシー　ｉｎ　ＫＬテーブル
         # TODO ＫＬ評価値テーブルが欲しい。仮にＫＰ表を使う
-        kl_policy_dictionary = self._kp_ko_policy_table.make_move_as_usi_and_policy_dictionary_2(
+        kl_policy_dictionary = self._kp_policy_table.make_move_as_usi_and_policy_dictionary_2(
                 a_move_collection_as_usi=king_move_collection_as_usi,
                 b_move_collection_as_usi=lord_move_collection_as_usi,
                 turn=turn)
@@ -263,7 +289,7 @@ class EvaluationFacade():
                 king_move_as_usi_and_policy_dictionary[king_move_as_usi] = policy
 
         # ＫＱポリシー　ｉｎ　ＫＰテーブル
-        kq_policy_dictionary = self._kp_ko_policy_table.make_move_as_usi_and_policy_dictionary_2(
+        kq_policy_dictionary = self._kp_policy_table.make_move_as_usi_and_policy_dictionary_2(
                 a_move_collection_as_usi=king_move_collection_as_usi,
                 b_move_collection_as_usi=quaffers_move_collection_as_usi,
                 turn=turn)
@@ -276,13 +302,13 @@ class EvaluationFacade():
                 king_move_as_usi_and_policy_dictionary[king_move_as_usi] = policy
 
         # ＰＰポリシー　ｉｎ　ＰＰテーブル
-        pp_policy_dictionary = self._kp_ko_policy_table.make_move_as_usi_and_policy_dictionary_2(
+        pp_policy_dictionary = self._pp_policy_table.make_move_as_usi_and_policy_dictionary_2(
                 a_move_collection_as_usi=pieces_move_collection_as_usi,
                 b_move_collection_as_usi=pieces_move_collection_as_usi,
                 turn=turn)
 
         # 評価値をマージ
-        for piece_move_as_usi, policy in pp_policy_dictionary.items():
+        for piece_move_as_usi, policy in pplicy_dictionary.items():
             if piece_move_as_usi in pieces_move_as_usi_and_policy_dictionary:
                 pieces_move_as_usi_and_policy_dictionary[piece_move_as_usi] += policy
             else:
@@ -290,7 +316,7 @@ class EvaluationFacade():
 
         # ＰＬポリシー　ｉｎ　ＫＰテーブル
         # TODO 盤の先後をひっくり返さないといけないか？
-        pl_policy_dictionary = self._kp_ko_policy_table.make_move_as_usi_and_policy_dictionary_2(
+        pl_policy_dictionary = self._kp_policy_table.make_move_as_usi_and_policy_dictionary_2(
                 a_move_collection_as_usi=pieces_move_collection_as_usi,
                 b_move_collection_as_usi=lord_move_collection_as_usi,
                 turn=turn)
@@ -303,7 +329,7 @@ class EvaluationFacade():
                 pieces_move_as_usi_and_policy_dictionary[piece_move_as_usi] = policy
 
         # ＰＱポリシー　ｉｎ　ＰＰテーブル
-        pq_policy_dictionary = self._kp_ko_policy_table.make_move_as_usi_and_policy_dictionary_2(
+        pq_policy_dictionary = self._pp_policy_table.make_move_as_usi_and_policy_dictionary_2(
                 a_move_collection_as_usi=pieces_move_collection_as_usi,
                 b_move_collection_as_usi=quaffers_move_collection_as_usi,
                 turn=turn)

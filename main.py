@@ -239,8 +239,8 @@ class Kifuwarabe():
                 self._pieces_canditates_memory.delete()
 
                 # ［評価値］　勝ったら記憶する
-                self._evaluation_facade_obj.save_file_as_kp_ko()
-                self._evaluation_facade_obj.save_file_as_pp_po()
+                self._evaluation_facade_obj.save_file_as_kp()
+                self._evaluation_facade_obj.save_file_as_pp()
 
             # 持将棋
             elif cmd[1] == 'draw':
@@ -335,20 +335,20 @@ class Kifuwarabe():
             # ＫＰ表
             k_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(move_a_as_usi),
-                    is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.kp_policy_table.is_symmetrical_connected)
 
             list_of_k_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
                     m_index=k_index,
-                    is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.kp_policy_table.is_symmetrical_connected)
 
             # ＰＰ表
             m_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(move_a_as_usi),
-                    is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.pp_policy_table.is_symmetrical_connected)
 
             list_of_m_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
                     m_index=m_index,
-                    is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.pp_policy_table.is_symmetrical_connected)
 
             # 表示
             k = ",".join(list_of_k_move_as_usi)
@@ -362,20 +362,20 @@ class Kifuwarabe():
             # ＫＰ表
             k_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(move_a_as_usi),
-                    is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.kp_policy_table.is_symmetrical_connected)
 
             list_of_k_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
                     m_index=k_index,
-                    is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.kp_policy_table.is_symmetrical_connected)
 
             # ＰＰ表
             m_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(move_a_as_usi),
-                    is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.pp_policy_table.is_symmetrical_connected)
 
             list_of_m_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
                     m_index=m_index,
-                    is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.pp_policy_table.is_symmetrical_connected)
 
             # 表示
             k = ",".join(list_of_k_move_as_usi)
@@ -429,20 +429,20 @@ class Kifuwarabe():
             # ＫＰ表
             k_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(lord_move_as_usi),
-                    is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.kp_policy_table.is_symmetrical_connected)
 
             list_of_k_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
                     m_index=k_index,
-                    is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.kp_policy_table.is_symmetrical_connected)
 
             # ＰＰ表
             m_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(lord_move_as_usi),
-                    is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.pp_policy_table.is_symmetrical_connected)
 
             list_of_m_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
                     m_index=m_index,
-                    is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.pp_policy_table.is_symmetrical_connected)
 
             # 表示
             k = ",".join(list_of_k_move_as_usi)
@@ -463,20 +463,20 @@ class Kifuwarabe():
             # ＫＰ表
             k_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(quaffer_move_as_usi),
-                    is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.kp_policy_table.is_symmetrical_connected)
 
             list_of_k_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
                     m_index=k_index,
-                    is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.kp_policy_table.is_symmetrical_connected)
 
             # ＰＰ表
             m_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(quaffer_move_as_usi),
-                    is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.pp_policy_table.is_symmetrical_connected)
 
             list_of_m_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
                     m_index=m_index,
-                    is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.pp_policy_table.is_symmetrical_connected)
 
             # 表示
             k = ",".join(list_of_k_move_as_usi)
@@ -513,11 +513,11 @@ class Kifuwarabe():
 
             k_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(move_a_as_usi),
-                    is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.kp_policy_table.is_symmetrical_connected)
 
             list_of_k_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
                     m_index=k_index,
-                    is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.kp_policy_table.is_symmetrical_connected)
 
             # 表示
             k = ",".join(list_of_k_move_as_usi)
@@ -538,11 +538,11 @@ class Kifuwarabe():
 
             m_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(piece_move_as_usi),
-                    is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.pp_policy_table.is_symmetrical_connected)
 
             list_of_m_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
                     m_index=m_index,
-                    is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
+                    is_symmetrical_connected=self._evaluation_facade_obj.pp_policy_table.is_symmetrical_connected)
 
             # 表示
             m = ",".join(list_of_m_move_as_usi)

@@ -126,7 +126,8 @@ class FileVersioning():
 
         try:
 
-            table_index = 0
+            # 指し手 a, b のペアのインデックス
+            mm_index = 0
 
             with open(v2_file_name, 'rb') as f:
 
@@ -142,14 +143,15 @@ class FileVersioning():
                     for two_power in two_powers:
 
                         # ビットフィールドを全て使わず、途中で切れるケース
-                        if EvaluationConfiguration.get_symmetrical_connected_table_size() <= table_index:
+                        if EvaluationConfiguration.get_symmetrical_connected_table_size() <= mm_index:
                             break
 
                         pair_of_list_of_move_as_usi = EvaluationConfiguration.get_pair_of_list_of_move_as_usi_by_mm_index(
-                                mm_index=table_index,
+                                mm_index=mm_index,
                                 # 左右対称の盤
                                 is_symmetrical_connected=True)
 
+                        # 共役の指し手も付いているケースがある
                         for list_of_move_as_usi in pair_of_list_of_move_as_usi:
                             for move_as_usi in list_of_move_as_usi:
                                 converted_m_index = EvaluationConfiguration.get_m_index_by_move(
@@ -161,14 +163,12 @@ class FileVersioning():
                                     bit = one_byte//two_power % 2
                                     evaluation_mm_table[converted_m_index] = bit
 
-                                    # TODO 共役の方にも反転して値を入れたい？
-
                                 except IndexError as e:
-                                    print(f"table length:{len(evaluation_mm_table)}  table_index:{table_index}  converted_m_index:{converted_m_index}  except:{e}")
+                                    print(f"table length:{len(evaluation_mm_table)}  mm_index:{mm_index}  converted_m_index:{converted_m_index}  except:{e}")
                                     raise
 
 
-                        table_index+=1
+                        mm_index+=1
 
                     multiple_bytes = f.read(1)
 

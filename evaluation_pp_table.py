@@ -2,9 +2,8 @@ from evaluation_configuration import EvaluationConfiguration
 from evaluation_mm_table import EvaluationMmTable
 
 
-class EvaluationPpPoTable(EvaluationMmTable):
-    """評価値テーブル　ＰＰ＋ＰＯ
-    """
+class EvaluationPpTable(EvaluationMmTable):
+    """評価値テーブル　ＰＰ"""
 
     def __init__(
             self,

@@ -2,12 +2,8 @@ from evaluation_configuration import EvaluationConfiguration
 from evaluation_mm_table import EvaluationMmTable
 
 
-class EvaluationKpKoTable(EvaluationMmTable):
-    """評価値テーブル　ＫＰ＋ＫＯ
-
-    TODO ｆｋｆ は kp へリネーム
-    TODO ｆｋｏ は ko へリネーム
-    """
+class EvaluationKpTable(EvaluationMmTable):
+    """評価値テーブル　ＫＰ"""
 
     def __init__(
             self,
