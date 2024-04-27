@@ -3,6 +3,7 @@ import random
 import datetime
 from move import Move
 from move_helper import MoveHelper
+from evaluation_configuration import EvaluationConfiguration
 
 
 class Learn():
@@ -56,12 +57,14 @@ class Learn():
                 a_move_obj = Move(move_a_as_usi)
                 b_move_obj = Move(move_b_as_usi)
 
-                mm_index = evaluation_mm_table_obj.get_mm_index_by_2_moves(
+                mm_index = EvaluationConfiguration.get_mm_index_by_2_moves(
                         a_move_obj=a_move_obj,
                         a_is_king=a_is_king,
                         b_move_obj=b_move_obj,
                         b_is_king=b_is_king,
-                        turn=turn)
+                        turn=turn,
+                        list_of_move_size=evaluation_mm_table_obj.list_of_move_size,
+                        is_symmetrical_connected=evaluation_mm_table_obj.is_symmetrical_connected)
 
                 # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
                 evaluation_mm_table_obj.evaluation_mm_table[mm_index] = random.randint(0,1)
@@ -72,12 +75,14 @@ class Learn():
                 reversed_a_move_obj = MoveHelper.flip_horizontal(a_move_obj)
                 reversed_b_move_obj = MoveHelper.flip_horizontal(b_move_obj)
 
-                mm_index = evaluation_mm_table_obj.get_mm_index_by_2_moves(
+                mm_index = EvaluationConfiguration.get_mm_index_by_2_moves(
                         a_move_obj=reversed_a_move_obj,
                         a_is_king=a_is_king,
                         b_move_obj=reversed_b_move_obj,
                         b_is_king=b_is_king,
-                        turn=turn)
+                        turn=turn,
+                        list_of_move_size=evaluation_mm_table_obj.list_of_move_size,
+                        is_symmetrical_connected=evaluation_mm_table_obj.is_symmetrical_connected)
 
                 # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
                 evaluation_mm_table_obj.evaluation_mm_table[mm_index] = random.randint(0,1)

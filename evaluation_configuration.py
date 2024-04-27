@@ -1,4 +1,7 @@
+import cshogi
+from evaluation_configuration import EvaluationConfiguration
 from move import Move
+from move_helper import MoveHelper
 
 
 class EvaluationConfiguration():
@@ -442,3 +445,48 @@ class EvaluationConfiguration():
             list_of_move_as_usi.append(move_as_usi)
 
         return list_of_move_as_usi
+
+
+    @staticmethod
+    def get_mm_index_by_2_moves(
+            a_move_obj,
+            a_is_king,
+            b_move_obj,
+            b_is_king,
+            turn,
+            list_of_move_size,
+            is_symmetrical_connected):
+        """指し手２つの組み合わせインデックス"""
+
+        # 同じ指し手を比較したら 0 とする（総当たりの二重ループとかでここを通る）
+        if a_move_obj.as_usi == b_move_obj.as_usi:
+            return 0
+
+        # 後手なら、指し手の先後をひっくり返す（将棋盤を１８０°回転させるのと同等）
+        if turn == cshogi.WHITE:
+            a_move_obj = MoveHelper.flip_turn(a_move_obj)
+            b_move_obj = MoveHelper.flip_turn(b_move_obj)
+
+        a_index = EvaluationConfiguration.get_m_index_by_move(
+                move=a_move_obj,
+                is_king=a_is_king,
+                is_symmetrical_connected=is_symmetrical_connected)
+
+        b_index = EvaluationConfiguration.get_m_index_by_move(
+                move=b_move_obj,
+                is_king=b_is_king,
+                is_symmetrical_connected=is_symmetrical_connected)
+
+        move_indexes = [a_index, b_index]
+        move_indexes.sort()
+
+        # 昇順
+        if a_index <= b_index:
+            mm_index = a_index * list_of_move_size[1] + b_index
+            #print(f"[DEBUG] 昇順 a:{a_index:3} b:{b_index:3} mm_index:{mm_index}", flush=True)
+
+        # 降順
+        else:
+            mm_index = b_index * list_of_move_size[1] + a_index
+
+        return mm_index

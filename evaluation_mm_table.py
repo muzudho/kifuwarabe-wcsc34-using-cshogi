@@ -1,8 +1,6 @@
-import cshogi
-import os
-from evaluation_configuration import EvaluationConfiguration
 from move import Move
-from move_helper import MoveHelper
+from evaluation_configuration import EvaluationConfiguration
+
 
 class EvaluationMmTable():
     """評価値ＭＭテーブル
@@ -137,6 +135,11 @@ class EvaluationMmTable():
 
 
     @property
+    def list_of_move_size(self):
+        return self._list_of_move_size
+
+
+    @property
     def is_file_modified(self):
         return self._is_file_modified
 
@@ -166,49 +169,6 @@ class EvaluationMmTable():
         return self._evaluation_mm_table
 
 
-    def get_mm_index_by_2_moves(
-            self,
-            a_move_obj,
-            a_is_king,
-            b_move_obj,
-            b_is_king,
-            turn):
-        """指し手２つの組み合わせインデックス"""
-
-        # 同じ指し手を比較したら 0 とする（総当たりの二重ループとかでここを通る）
-        if a_move_obj.as_usi == b_move_obj.as_usi:
-            return 0
-
-        # 後手なら、指し手の先後をひっくり返す（将棋盤を１８０°回転させるのと同等）
-        if turn == cshogi.WHITE:
-            a_move_obj = MoveHelper.flip_turn(a_move_obj)
-            b_move_obj = MoveHelper.flip_turn(b_move_obj)
-
-        a_index = EvaluationConfiguration.get_m_index_by_move(
-                move=a_move_obj,
-                is_king=a_is_king,
-                is_symmetrical_connected=self._is_symmetrical_connected)
-
-        b_index = EvaluationConfiguration.get_m_index_by_move(
-                move=b_move_obj,
-                is_king=b_is_king,
-                is_symmetrical_connected=self._is_symmetrical_connected)
-
-        move_indexes = [a_index, b_index]
-        move_indexes.sort()
-
-        # 昇順
-        if a_index <= b_index:
-            mm_index = a_index * self._list_of_move_size[1] + b_index
-            #print(f"[DEBUG] 昇順 a:{a_index:3} b:{b_index:3} mm_index:{mm_index}", flush=True)
-
-        # 降順
-        else:
-            mm_index = b_index * self._list_of_move_size[1] + a_index
-
-        return mm_index
-
-
     def get_evaluation_value(
             self,
             a_move_obj,
@@ -216,12 +176,14 @@ class EvaluationMmTable():
             turn):
         """両方残すなら 0点、インデックスが小さい方を残すなら -1点、インデックスが大きい方を残すなら +1点"""
 
-        mm_index = self.get_mm_index_by_2_moves(
+        mm_index = EvaluationConfiguration.get_mm_index_by_2_moves(
                 a_move_obj=a_move_obj,
                 a_is_king=self._is_king_of_a,
                 b_move_obj=b_move_obj,
                 b_is_king=self._is_king_of_b,
-                turn=turn)
+                turn=turn,
+                list_of_move_size=self.list_of_move_size,
+                is_symmetrical_connected=self.is_symmetrical_connected)
         #print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} mm_index:{mm_index}", flush=True)
 
         try:
