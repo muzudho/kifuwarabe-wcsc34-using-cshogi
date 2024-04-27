@@ -2,7 +2,7 @@ import os
 import datetime
 from evaluation_configuration import EvaluationConfiguration
 from evaluation_kk_table import EvaluationKkTable
-from file_versioning import FileVersioning
+from evaluation_file_versioning import FileVersioning
 
 
 class EvaluationKkFileVersioning():
@@ -11,7 +11,14 @@ class EvaluationKkFileVersioning():
     @staticmethod
     def load_kk_policy(
             file_number):
-        """ＫＫポリシー読込"""
+        """ＫＫポリシー読込
+
+        Returns
+        -------
+        - テーブル
+        - バージョンアップしたので保存要求の有無
+        """
+        shall_save_file = False
         evaluation_kind = "kk"
 
         # ＫＫ評価値テーブルは V3 の途中から追加
@@ -37,7 +44,7 @@ class EvaluationKkFileVersioning():
             mm_table = None
             is_file_modified = True     # 新規作成だから
         else:
-            mm_table, file_version = tuple
+            mm_table, file_version, shall_save_file = tuple
             is_file_modified = mm_table is None
 
         if file_version == "V4":
@@ -56,8 +63,7 @@ class EvaluationKkFileVersioning():
                         is_king_of_b=is_king_of_b,
                         is_symmetrical_connected=is_symmetrical_connected))
 
-
-        return EvaluationKkTable(
+        kk_table = EvaluationKkTable(
                 file_number=file_number,
                 file_name=file_name,
                 file_version=file_version,
@@ -66,6 +72,8 @@ class EvaluationKkFileVersioning():
                 is_king_of_b=is_king_of_b,
                 is_symmetrical_connected=is_symmetrical_connected,
                 is_file_modified=is_file_modified)
+
+        return (kk_table, shall_save_file)
 
 
     @staticmethod

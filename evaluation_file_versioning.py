@@ -123,6 +123,10 @@ class FileVersioning():
         ----------
         file_name : str
             ファイル名
+
+        Returns
+        -------
+        - mm_table
         """
 
         # ロードする。１分ほどかかる

@@ -122,6 +122,11 @@ class EvaluationMmTable():
 
 
     @property
+    def file_number(self):
+        return self._file_number
+
+
+    @property
     def file_name(self):
         return self._file_name
 

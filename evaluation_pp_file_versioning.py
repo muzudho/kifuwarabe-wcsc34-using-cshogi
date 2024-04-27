@@ -2,7 +2,7 @@ import os
 import datetime
 from evaluation_configuration import EvaluationConfiguration
 from evaluation_pp_table import EvaluationPpTable
-from file_versioning import FileVersioning
+from evaluation_file_versioning import FileVersioning
 
 
 class EvaluationPpFileVersioning():
@@ -11,7 +11,14 @@ class EvaluationPpFileVersioning():
     @staticmethod
     def load_pp_policy(
             file_number):
-        """ＰＰポリシー読込"""
+        """ＰＰポリシー読込
+
+        Returns
+        -------
+        - テーブル
+        - バージョンアップしたので保存要求の有無
+        """
+        shall_save_file = False
         evaluation_kind = "pp"
 
         tuple = EvaluationPpFileVersioning.check_file_version_and_name(
@@ -59,7 +66,7 @@ class EvaluationPpFileVersioning():
             mm_table = None
             is_file_modified = True     # 新規作成だから
         else:
-            mm_table, file_version = tuple
+            mm_table, file_version, shall_save_file = tuple
             is_file_modified = mm_table is None
 
         is_symmetrical_connected = True
@@ -75,7 +82,7 @@ class EvaluationPpFileVersioning():
                         is_king_of_b=False,     # P なんで
                         is_symmetrical_connected=is_symmetrical_connected))
 
-        return EvaluationPpTable(
+        pp_table = EvaluationPpTable(
                 file_number=file_number,
                 file_name=file_name,
                 file_version=file_version,
@@ -84,6 +91,8 @@ class EvaluationPpFileVersioning():
                 is_king_of_b=False,     # P なんで
                 is_symmetrical_connected=is_symmetrical_connected,
                 is_file_modified=is_file_modified)
+
+        return (pp_table, shall_save_file)
 
 
     @staticmethod
@@ -145,7 +154,15 @@ class EvaluationPpFileVersioning():
             file_version):
         """評価関数テーブルをファイルから読み込む。無ければランダム値の入った物を新規作成する。
 
-        ファイルのバージョンがアップすることがある"""
+        ファイルのバージョンがアップすることがある
+
+        Returns
+        -------
+        - タプル
+            - mm_table
+            - バージョン番号
+            - バージョンアップしたか？
+        """
 
         file_names_by_version = EvaluationPpFileVersioning.create_file_names_each_version(
                 file_number=file_number,
@@ -173,14 +190,16 @@ class EvaluationPpFileVersioning():
             if os.path.isfile(old_file_name):
                 FileVersioning.delete_file(old_file_name)
 
-            return (mm_table, "V3")
+            return (mm_table, "V3", False)
 
         # バイナリV2ファイルに保存されているとき
         if file_version == "V2":
 
-            # TODO バージョンアップしたい
+            # バージョンアップする
             mm_table = FileVersioning.read_evaluation_v2_file_and_convert_to_v3(
                 file_name=file_names_by_version[2])
+
+            # TODO バージョンアップしたら保存する
 
             # 旧形式のバイナリ・ファイルは削除
             old_file_name = file_names_by_version[1]
@@ -192,7 +211,7 @@ class EvaluationPpFileVersioning():
             if os.path.isfile(old_file_name):
                 FileVersioning.delete_file(old_file_name)
 
-            return (mm_table, "V3")
+            return (mm_table, "V3", True)
 
         print(f"[{datetime.datetime.now()}] {file_names_by_version[1]} file exists check ...", flush=True)
 
@@ -206,7 +225,7 @@ class EvaluationPpFileVersioning():
             if os.path.isfile(old_file_name):
                 FileVersioning.delete_file(old_file_name)
 
-            return (mm_table, "V1")
+            return (mm_table, "V1", False)
 
         print(f"[{datetime.datetime.now()}] {file_names_by_version[0]} file exists check ...", flush=True)
 
@@ -215,7 +234,7 @@ class EvaluationPpFileVersioning():
             mm_table = FileVersioning.read_evaluation_from_text_file(
                     file_name=file_names_by_version[0])
 
-            return (mm_table, "V0")
+            return (mm_table, "V0", False)
 
         # ファイルが存在しないとき
         return None

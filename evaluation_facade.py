@@ -2,7 +2,7 @@ import datetime
 from evaluation_kk_file_versioning import EvaluationKkFileVersioning
 from evaluation_kp_file_versioning import EvaluationKpFileVersioning
 from evaluation_pp_file_versioning import EvaluationPpFileVersioning
-from file_versioning import FileVersioning
+from evaluation_file_versioning import FileVersioning
 from learn import Learn
 
 
@@ -58,8 +58,11 @@ class EvaluationFacade():
         #
         # ＫＫポリシー
         #
-        self._kk_policy_table = EvaluationKkFileVersioning.load_kk_policy(
+        self._kk_policy_table, shall_save_file = EvaluationKkFileVersioning.load_kk_policy(
                 file_number=self._file_number)
+
+        if shall_save_file:
+            self.save_file_as_kk()
 
         # 学習
         Learn.update_evaluation_table(
@@ -70,8 +73,11 @@ class EvaluationFacade():
         #
         # ＫＰポリシー
         #
-        self._kp_policy_table = EvaluationKpFileVersioning.load_kp_policy(
+        self._kp_policy_table, shall_save_file = EvaluationKpFileVersioning.load_kp_policy(
                 file_number=self._file_number)
+
+        if shall_save_file:
+            self.save_file_as_kp()
 
         # 学習
         Learn.update_evaluation_table(
@@ -82,8 +88,11 @@ class EvaluationFacade():
         #
         # ＰＰポリシー
         #
-        self._pp_policy_table = EvaluationPpFileVersioning.load_pp_policy(
+        self._pp_policy_table, shall_save_file = EvaluationPpFileVersioning.load_pp_policy(
                 file_number=self._file_number)
+
+        if shall_save_file:
+            self.save_file_as_pp()
 
         # 学習
         Learn.update_evaluation_table(
@@ -99,7 +108,7 @@ class EvaluationFacade():
         if self._kk_policy_table.is_file_modified:
             # ＫＫポリシー
             file_names_by_version = EvaluationKkFileVersioning.create_file_names_each_version(
-                    file_number=self._file_number,
+                    file_number=self._kk_policy_table.file_number,
                     evaluation_kind="kk")
 
             file_name = file_names_by_version[3]
