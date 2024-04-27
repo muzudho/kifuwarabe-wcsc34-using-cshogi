@@ -96,7 +96,7 @@ class EvaluationFileVersionUp():
 
                 while one_byte_binary:
                     one_byte_num = int.from_bytes(one_byte_binary, signed=False)
-                    print(f"old_mm_index:{old_mm_index}  one_byte_num:{one_byte_num}", flush=True)
+                    #print(f"old_mm_index:{old_mm_index}  one_byte_num:{one_byte_num}", flush=True)
 
                     #
                     # V2 ---> V3 で、インデックスがずれる
@@ -105,7 +105,7 @@ class EvaluationFileVersionUp():
 
                         # ビットフィールドを全て使わず、途中で切れるケース
                         if table_size <= old_mm_index:
-                            print(f"old_mm_index:{old_mm_index}  table_size:{table_size} < old_mm_index:{old_mm_index} break", flush=True)
+                            #print(f"old_mm_index:{old_mm_index}  table_size:{table_size} < old_mm_index:{old_mm_index} break", flush=True)
                             break
 
                         pair_of_list_of_move_as_usi = EvaluationConfiguration.get_pair_of_list_of_move_as_usi_by_mm_index(
@@ -118,7 +118,7 @@ class EvaluationFileVersionUp():
                         # 共役の指し手は付いていないはず
                         a_as_usi = list_of_a_as_usi[0]
                         b_as_usi = list_of_b_as_usi[0]
-                        print(f"old_mm_index:{old_mm_index}  a_as_usi:{a_as_usi}  b_as_usi:{b_as_usi}", flush=True)
+                        #print(f"old_mm_index:{old_mm_index}  a_as_usi:{a_as_usi}  b_as_usi:{b_as_usi}", flush=True)
 
                         a_obj = Move(a_as_usi)
                         b_obj = Move(b_as_usi)
@@ -132,11 +132,11 @@ class EvaluationFileVersionUp():
                                 turn=cshogi.BLACK,  # FIXME 全部、先手視点？
                                 list_of_move_size=list_of_move_size,
                                 is_symmetrical_connected=False)
-                        print(f"old_mm_index:{old_mm_index}  new_mm_index:{new_mm_index}", flush=True)
+                        #print(f"old_mm_index:{old_mm_index}  new_mm_index:{new_mm_index}", flush=True)
 
                         try:
                             bit = one_byte_num//two_power % 2
-                            print(f"old_mm_index:{old_mm_index}  bit:{bit}", flush=True)
+                            #print(f"old_mm_index:{old_mm_index}  bit:{bit}", flush=True)
 
                             new_mm_table[new_mm_index] = bit
 
@@ -144,8 +144,8 @@ class EvaluationFileVersionUp():
                             print(f"old_mm_index:{old_mm_index}  table length:{len(new_mm_table)}  new_mm_index:{new_mm_index}  except:{e}")
                             raise
 
-                        mm_index+=1
-                        print(f"old_mm_index:{old_mm_index}  incremented", flush=True)
+                        old_mm_index+=1
+                        #print(f"old_mm_index:{old_mm_index}  incremented", flush=True)
 
                     one_byte_binary = f.read(1)
 
