@@ -145,24 +145,26 @@ class FileVersioning():
                         if EvaluationConfiguration.get_symmetrical_connected_table_size() <= table_index:
                             break
 
-                        pair_of_list_of_move_as_usi = EvaluationConfiguration.get_pair_of_list_of_move_as_usi_by_table_index(
-                                table_index=table_index,
+                        pair_of_list_of_move_as_usi = EvaluationConfiguration.get_pair_of_list_of_move_as_usi_by_mm_index(
+                                mm_index=table_index,
                                 # 左右対称の盤
                                 is_symmetrical_connected=True)
 
                         for list_of_move_as_usi in pair_of_list_of_move_as_usi:
                             for move_as_usi in list_of_move_as_usi:
-                                converted_table_index = EvaluationConfiguration.get_table_index_by_move(
+                                converted_m_index = EvaluationConfiguration.get_m_index_by_move(
                                         move=Move(move_as_usi),
                                         # 左右が異なる盤
                                         is_symmetrical_connected=False)
 
                                 try:
                                     bit = one_byte//two_power % 2
-                                    evaluation_mm_table[converted_table_index] = bit
+                                    evaluation_mm_table[converted_m_index] = bit
+
+                                    # TODO 共役の方にも反転して値を入れたい？
 
                                 except IndexError as e:
-                                    print(f"table length:{len(evaluation_mm_table)}  table_index:{table_index}  converted_table_index:{converted_table_index}  except:{e}")
+                                    print(f"table length:{len(evaluation_mm_table)}  table_index:{table_index}  converted_m_index:{converted_m_index}  except:{e}")
                                     raise
 
 

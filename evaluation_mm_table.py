@@ -148,24 +148,24 @@ class EvaluationMmTable():
             move_a_obj = MoveHelper.flip_turn(move_a_obj)
             move_b_obj = MoveHelper.flip_turn(move_b_obj)
 
-        index_a = EvaluationConfiguration.get_table_index_by_move(
+        a_index = EvaluationConfiguration.get_m_index_by_move(
                 move=move_a_obj,
                 is_symmetrical_connected=self._is_symmetrical_connected)
-        index_b = EvaluationConfiguration.get_table_index_by_move(
+        b_index = EvaluationConfiguration.get_m_index_by_move(
                 move=move_b_obj,
                 is_symmetrical_connected=self._is_symmetrical_connected)
 
-        move_indexes = [index_a, index_b]
+        move_indexes = [a_index, b_index]
         move_indexes.sort()
 
         # 昇順
-        if index_a <= index_b:
-            index = index_a * self._move_size + index_b
-            #print(f"[DEBUG] 昇順 a:{index_a:3} b:{index_b:3} index:{index}", flush=True)
+        if a_index <= b_index:
+            index = a_index * self._move_size + b_index
+            #print(f"[DEBUG] 昇順 a:{a_index:3} b:{b_index:3} index:{index}", flush=True)
 
         # 降順
         else:
-            index = index_b * self._move_size + index_a
+            index = b_index * self._move_size + a_index
 
         return index
 

@@ -46,7 +46,7 @@ class EvaluationConfiguration():
 
 
     @staticmethod
-    def get_table_index_by_move(
+    def get_m_index_by_move(
             move,
             is_symmetrical_connected):
         """将棋盤の筋が左右対称のときの評価値テーブルのセルのインデックス
@@ -57,6 +57,10 @@ class EvaluationConfiguration():
             指し手
         is_symmetrical_connected : bool
             盤は左右対称か？
+
+        Returns
+        -------
+            - 指し手のインデックス
         """
 
         if is_symmetrical_connected:
@@ -99,12 +103,17 @@ class EvaluationConfiguration():
 
 
     @staticmethod
-    def get_pair_of_list_of_move_as_usi_by_table_index(
-            table_index,
+    def get_pair_of_list_of_move_as_usi_by_mm_index(
+            mm_index,
             is_symmetrical_connected):
         """逆関数
 
         指し手２つ分返す
+
+        Parameters
+        ----------
+        mm_index : int
+            指し手 a, b のペアの通しインデックス
         """
 
         pro_size = 2
@@ -123,41 +132,46 @@ class EvaluationConfiguration():
 
         move_size = src_size * dst_size * pro_size
 
-        bits = table_index
+        bits = mm_index
 
-        a_move_bits = bits % move_size
+        a_move_index = bits % move_size
         bits //= move_size
 
-        b_move_bits = bits
+        b_move_index = bits
 
         try:
-            list_of_a_move = EvaluationConfiguration.get_moves_single_as_usi_by_table_index(
-                    a_move_bits,
+            list_of_a_move = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
+                    a_move_index,
                     is_symmetrical_connected)
         except Exception as e:
-            # 例： list_of_a_move error.  a_move_bits:4680  b_move_bits:0  move_size:28350  src_size:315  dst_size:45  pro_size:2  drop_kind:7  rank_size:9  file_size:5  pro_size:2  e:52
-            print(f"list_of_a_move error.  a_move_bits:{a_move_bits}  b_move_bits:{b_move_bits}  table_index:{table_index}  move_size:{move_size}  ( src_size:{src_size}  dst_size:{dst_size}  pro_size:{pro_size} )  drop_kind:{drop_kind}  rank_size:{rank_size}  file_size:{file_size}  e:{e}")
+            # 例： list_of_a_move error.  a_move_index:4680  b_move_index:0  move_size:28350  src_size:315  dst_size:45  pro_size:2  drop_kind:7  rank_size:9  file_size:5  pro_size:2  e:52
+            print(f"list_of_a_move error.  a_move_index:{a_move_index}  b_move_index:{b_move_index}  mm_index:{mm_index}  move_size:{move_size}  ( src_size:{src_size}  dst_size:{dst_size}  pro_size:{pro_size} )  drop_kind:{drop_kind}  rank_size:{rank_size}  file_size:{file_size}  e:{e}")
             raise
 
         try:
-            list_of_b_move = EvaluationConfiguration.get_moves_single_as_usi_by_table_index(
-                    b_move_bits,
+            list_of_b_move = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
+                    b_move_index,
                     is_symmetrical_connected)
         except Exception as e:
-            # 例： list_of_b_move error.  a_move_bits:0  b_move_bits:4680  table_index:21902400  move_size:4680  ( src_size:52  dst_size:45  pro_size:2 )  drop_kind:7  rank_size:9  file_size:5  e:52
-            print(f"list_of_b_move error.  a_move_bits:{a_move_bits}  b_move_bits:{b_move_bits}  table_index:{table_index}  move_size:{move_size}  ( src_size:{src_size}  dst_size:{dst_size}  pro_size:{pro_size} )  drop_kind:{drop_kind}  rank_size:{rank_size}  file_size:{file_size}  e:{e}")
+            # 例： list_of_b_move error.  a_move_index:0  b_move_index:4680  mm_index:21902400  move_size:4680  ( src_size:52  dst_size:45  pro_size:2 )  drop_kind:7  rank_size:9  file_size:5  e:52
+            print(f"list_of_b_move error.  a_move_index:{a_move_index}  b_move_index:{b_move_index}  mm_index:{mm_index}  move_size:{move_size}  ( src_size:{src_size}  dst_size:{dst_size}  pro_size:{pro_size} )  drop_kind:{drop_kind}  rank_size:{rank_size}  file_size:{file_size}  e:{e}")
             raise
 
         return [list_of_a_move, list_of_b_move]
 
 
     @staticmethod
-    def get_moves_single_as_usi_by_table_index(
-            table_index,
+    def get_list_of_move_as_usi_by_m_index(
+            m_index,
             is_symmetrical_connected):
         """逆関数
 
         指し手１つ分。ただし鏡面の場合、共役が付いて２つ返ってくる
+
+        Parameters
+        ----------
+        m_index : int
+            指し手１つ分のインデックス
         """
         pro_size = 2
         rank_size = 9
@@ -174,8 +188,8 @@ class EvaluationConfiguration():
         src_size = (file_size * rank_size) + drop_kind
         move_size = src_size * dst_size * pro_size
 
-        #             4680
-        bits = table_index
+        #         4680
+        bits = m_index
 
         #     0 = 4680 %            2
         pro_num = bits % pro_size
@@ -261,9 +275,9 @@ class EvaluationConfiguration():
                 try:
                     src_file_str = EvaluationConfiguration._src_num_to_file_str_on_symmetrical_connected[src_num]
                 except KeyError as e:
-                    # 例： single_move error.  src_num:52  dst_num:0  pro_num:0  table_index:4680  move_size:4680  (src_size:52  dst_size:45  pro_size:2)  bits:52  drop_kind:7  file_size:5  rank_size:9  e:52
-                    # 例： single_move error.  src_num:52  dst_num:0  pro_num:0  table_index:4680  move_size:4680  (src_size:52  dst_size:45  pro_size:2)  bits:52  drop_kind:7  file_size:5  rank_size:9  e:52
-                    print(f"single_move error.  src_num:{src_num}  dst_num:{dst_num}  pro_num:{pro_num}  table_index:{table_index}  move_size:{move_size}  (src_size:{src_size}  dst_size:{dst_size}  pro_size:{pro_size})  bits:{bits}  drop_kind:{drop_kind}  file_size:{file_size}  rank_size:{rank_size}  e:{e}")
+                    # 例： single_move error.  src_num:52  dst_num:0  pro_num:0  m_index:4680  move_size:4680  (src_size:52  dst_size:45  pro_size:2)  bits:52  drop_kind:7  file_size:5  rank_size:9  e:52
+                    # 例： single_move error.  src_num:52  dst_num:0  pro_num:0  m_index:4680  move_size:4680  (src_size:52  dst_size:45  pro_size:2)  bits:52  drop_kind:7  file_size:5  rank_size:9  e:52
+                    print(f"single_move error.  src_num:{src_num}  dst_num:{dst_num}  pro_num:{pro_num}  m_index:{m_index}  move_size:{move_size}  (src_size:{src_size}  dst_size:{dst_size}  pro_size:{pro_size})  bits:{bits}  drop_kind:{drop_kind}  file_size:{file_size}  rank_size:{rank_size}  e:{e}")
                     raise
 
                 # FIXME 不具合調査
@@ -341,13 +355,6 @@ class EvaluationConfiguration():
 
         if conjugate_src_file_str is not None or conjugate_dst_file_str is not None:
             move_as_usi = f'{conjugate_src_file_str}{src_rank_str}{conjugate_dst_file_str}{dst_rank_str}{pro_str}'
-
-            # FIXME 不具合調査
-            if move_as_usi == '1a1a':
-                error_message = f"move_as_usi conjugate error. as_usi:{move_as_usi}  src_file_str:{src_file_str}  conjugate_src_file_str:{conjugate_src_file_str}  src_rank_str:{src_rank_str}  conjugate_dst_file_str:{conjugate_dst_file_str}  dst_rank_str:{dst_rank_str}  pro_str:{pro_str}"
-                print(error_message)
-                raise Exception(error_message)
-
             list_of_move_as_usi.append(move_as_usi)
 
         return list_of_move_as_usi
