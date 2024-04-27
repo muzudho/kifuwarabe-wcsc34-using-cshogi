@@ -5,10 +5,12 @@ from evaluation_mm_table import EvaluationMmTable
 class EvaluationKkTable(EvaluationMmTable):
     """評価値テーブル　ＫＫ"""
 
+
     def __init__(
             self,
             file_number,
             file_name,
+            file_version,
             evaluation_mm_table,
             is_king_of_a,
             is_king_of_b,
@@ -18,6 +20,8 @@ class EvaluationKkTable(EvaluationMmTable):
 
         Parameters
         ----------
+        file_version : str
+            ファイルのバージョン
         is_king_of_a : bool
             指し手 a は玉か？
         is_king_of_b : bool
@@ -26,13 +30,20 @@ class EvaluationKkTable(EvaluationMmTable):
             保存されていない評価値テーブルを引数で渡したなら真
         """
 
+        if file_version=="V4":
+            is_king = True
+        else:
+            is_king = False
+
         if is_symmetrical_connected:
-            move_size = EvaluationConfiguration.get_move_number(
+            k_size = EvaluationConfiguration.get_move_number(
+                    is_king=is_king,
                     is_symmetrical_connected=True)
             table_size = EvaluationConfiguration.get_table_size(
                     is_symmetrical_connected=True)
         else:
-            move_size = EvaluationConfiguration.get_move_number(
+            k_size = EvaluationConfiguration.get_move_number(
+                    is_king=is_king,
                     is_symmetrical_connected=False)
             table_size = EvaluationConfiguration.get_table_size(
                     is_symmetrical_connected=False)
@@ -41,10 +52,11 @@ class EvaluationKkTable(EvaluationMmTable):
                 self,
                 file_number=file_number,
                 file_name=file_name,
-                move_size=move_size,
+                file_version=file_version,
+                list_of_move_size=[k_size, k_size],
                 table_size=table_size,
-                is_symmetrical_connected=is_symmetrical_connected,
                 evaluation_mm_table=evaluation_mm_table,
                 is_king_of_a=is_king_of_a,
                 is_king_of_b=is_king_of_b,
+                is_symmetrical_connected=is_symmetrical_connected,
                 is_file_modified=is_file_modified)

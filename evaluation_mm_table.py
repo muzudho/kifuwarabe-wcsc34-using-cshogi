@@ -34,23 +34,28 @@ class EvaluationMmTable():
             self,
             file_number,
             file_name,
-            move_size,
+            file_version,
+            list_of_move_size,
             table_size,
-            is_symmetrical_connected,
             evaluation_mm_table,
             is_king_of_a,
             is_king_of_b,
+            is_symmetrical_connected,
             is_file_modified):
         """初期化
 
         Parameters
         ----------
-        is_symmetrical_connected : bool
-            左右対称の盤か？
+        file_version : str
+            ファイルのバージョン
+        list_of_move_size : str[]
+            指し手 a, b それぞれのサイズ
         is_king_of_a : bool
             指し手 a は玉か？
         is_king_of_b : bool
             指し手 b は玉か？
+        is_symmetrical_connected : bool
+            左右対称の盤か？
         is_file_modified : bool
             保存されていない評価値テーブルを引数で渡したなら真
 
@@ -106,16 +111,24 @@ class EvaluationMmTable():
         """
         self._file_number = file_number
         self._file_name = file_name
-        self._move_size = move_size
+        self._file_version = file_version
+        self._list_of_move_size = list_of_move_size
         self._table_size = table_size
-        self._is_symmetrical_connected = is_symmetrical_connected
         self._evaluation_mm_table = evaluation_mm_table
+        self._is_king_of_a = is_king_of_a
+        self._is_king_of_b = is_king_of_b
+        self._is_symmetrical_connected = is_symmetrical_connected
         self._is_file_modified = is_file_modified
 
 
     @property
     def file_name(self):
         return self._file_name
+
+
+    @property
+    def file_version(self):
+        return self._file_version
 
 
     @property
@@ -181,12 +194,12 @@ class EvaluationMmTable():
 
         # 昇順
         if a_index <= b_index:
-            mm_index = a_index * self._move_size + b_index
+            mm_index = a_index * self._list_of_move_size[1] + b_index
             #print(f"[DEBUG] 昇順 a:{a_index:3} b:{b_index:3} mm_index:{mm_index}", flush=True)
 
         # 降順
         else:
-            mm_index = b_index * self._move_size + a_index
+            mm_index = b_index * self._list_of_move_size[1] + a_index
 
         return mm_index
 

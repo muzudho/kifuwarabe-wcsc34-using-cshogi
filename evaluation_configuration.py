@@ -27,22 +27,41 @@ class EvaluationConfiguration():
 
     @staticmethod
     def get_move_number(
+            is_king,
             is_symmetrical_connected):
-        """指し手の数"""
+        """指し手の数
 
-        # TODO 玉は成らないからＫＫ、ＫＰ型の評価値テーブルから pro を削れるのでは？
+        Parameters
+        ----------
+        is_king : bool
+            玉の動きか？
+        is_symmetrical_connected : bool
+            盤は左右対称か？
+        """
 
         # symmetrical connected move 数
         if is_symmetrical_connected:
-            #  file   rank   drop     file   rank    pro
-            # (   5 *    9 +    7) * (   5 *    9) *   2 = 4_680
-            return 4_680
+            # 玉は成らないから pro を削れる
+            if is_king:
+                #  file   rank   drop     file   rank
+                # (   5 *    9 +    7) * (   5 *    9) = 2_340
+                return 2_340
+
+            else:
+                #  file   rank   drop     file   rank    pro
+                # (   5 *    9 +    7) * (   5 *    9) *   2 = 4_680
+                return 4_680
 
         # fully_connected move 数
         else:
-            #  sq   drop    sq   pro
-            # (81 +    7) * 81 *   2 = 14_256
-            return 14_256
+            if is_king:
+                #  sq   drop    sq
+                # (81 +    7) * 81 = 7_128
+                return 7_128
+            else:
+                #  sq   drop    sq   pro
+                # (81 +    7) * 81 *   2 = 14_256
+                return 14_256
 
 
 
@@ -116,7 +135,7 @@ class EvaluationConfiguration():
         if is_king:
             pro_size = 0
             pro_num = 0     # 玉は成らない
-            
+
         else:
             pro_size = 2
 

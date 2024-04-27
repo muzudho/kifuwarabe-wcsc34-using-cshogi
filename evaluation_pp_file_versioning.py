@@ -76,11 +76,12 @@ class EvaluationPpFileVersioning():
         return EvaluationPpTable(
                 file_number=file_number,
                 file_name=file_name,
+                file_version=file_version,
                 evaluation_mm_table=mm_table,
                 is_king_of_a=False,     # P なんで
                 is_king_of_b=False,     # P なんで
-                is_file_modified=is_file_modified,
-                is_symmetrical_connected=is_symmetrical_connected)
+                is_symmetrical_connected=is_symmetrical_connected,
+                is_file_modified=is_file_modified)
 
 
     @staticmethod

@@ -85,11 +85,12 @@ class EvaluationKpFileVersioning():
         return EvaluationKpTable(
                 file_number=file_number,
                 file_name=file_name,
+                file_version=file_version,
                 evaluation_mm_table=mm_table,
                 is_king_of_a=is_king_of_a,
                 is_king_of_b=is_king_of_b,
-                is_file_modified=is_file_modified,
-                is_symmetrical_connected=is_symmetrical_connected)
+                is_symmetrical_connected=is_symmetrical_connected,
+                is_file_modified=is_file_modified)
 
 
     @staticmethod
