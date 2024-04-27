@@ -131,24 +131,24 @@ class EvaluationConfiguration():
         b_move_bits = bits
 
         try:
-            a_moves = EvaluationConfiguration.get_moves_single_as_usi_by_table_index(
+            list_of_a_move = EvaluationConfiguration.get_moves_single_as_usi_by_table_index(
                     a_move_bits,
                     is_symmetrical_connected)
         except Exception as e:
-            # 例： a_moves error.  a_move_bits:4680  b_move_bits:0  move_size:28350  src_size:315  dst_size:45  pro_size:2  drop_kind:7  rank_size:9  file_size:5  pro_size:2  e:52
-            print(f"a_moves error.  a_move_bits:{a_move_bits}  b_move_bits:{b_move_bits}  table_index:{table_index}  move_size:{move_size}  ( src_size:{src_size}  dst_size:{dst_size}  pro_size:{pro_size} )  drop_kind:{drop_kind}  rank_size:{rank_size}  file_size:{file_size}  e:{e}")
+            # 例： list_of_a_move error.  a_move_bits:4680  b_move_bits:0  move_size:28350  src_size:315  dst_size:45  pro_size:2  drop_kind:7  rank_size:9  file_size:5  pro_size:2  e:52
+            print(f"list_of_a_move error.  a_move_bits:{a_move_bits}  b_move_bits:{b_move_bits}  table_index:{table_index}  move_size:{move_size}  ( src_size:{src_size}  dst_size:{dst_size}  pro_size:{pro_size} )  drop_kind:{drop_kind}  rank_size:{rank_size}  file_size:{file_size}  e:{e}")
             raise
 
         try:
-            b_moves = EvaluationConfiguration.get_moves_single_as_usi_by_table_index(
+            list_of_b_move = EvaluationConfiguration.get_moves_single_as_usi_by_table_index(
                     b_move_bits,
                     is_symmetrical_connected)
         except Exception as e:
-            # 例： b_moves error.  a_move_bits:0  b_move_bits:4680  table_index:21902400  move_size:4680  ( src_size:52  dst_size:45  pro_size:2 )  drop_kind:7  rank_size:9  file_size:5  e:52
-            print(f"b_moves error.  a_move_bits:{a_move_bits}  b_move_bits:{b_move_bits}  table_index:{table_index}  move_size:{move_size}  ( src_size:{src_size}  dst_size:{dst_size}  pro_size:{pro_size} )  drop_kind:{drop_kind}  rank_size:{rank_size}  file_size:{file_size}  e:{e}")
+            # 例： list_of_b_move error.  a_move_bits:0  b_move_bits:4680  table_index:21902400  move_size:4680  ( src_size:52  dst_size:45  pro_size:2 )  drop_kind:7  rank_size:9  file_size:5  e:52
+            print(f"list_of_b_move error.  a_move_bits:{a_move_bits}  b_move_bits:{b_move_bits}  table_index:{table_index}  move_size:{move_size}  ( src_size:{src_size}  dst_size:{dst_size}  pro_size:{pro_size} )  drop_kind:{drop_kind}  rank_size:{rank_size}  file_size:{file_size}  e:{e}")
             raise
 
-        return [a_moves, b_moves]
+        return [list_of_a_move, list_of_b_move]
 
 
     @staticmethod
@@ -191,8 +191,8 @@ class EvaluationConfiguration():
         src_num = bits
 
         # 共役の移動元の筋。左右対称の盤で、反対側の方の筋
-        conjugate_src_file = None
-        conjugate_dst_file = None
+        conjugate_src_file_str = None
+        conjugate_dst_file_str = None
 
         # 成りか？
         if pro_num == 1:
@@ -204,53 +204,53 @@ class EvaluationConfiguration():
         if is_symmetrical_connected:
             if 36 <= dst_num:
                 dst_file = '5'
-                conjugate_dst_file = '5'
-                dst_rank = Move.get_rank_num_to_str(dst_num - 36 + 1)
+                conjugate_dst_file_str = '5'
+                dst_rank_str = Move.get_rank_num_to_str(dst_num - 36 + 1)
             elif 27 <= dst_num:
                 dst_file = '4'
-                conjugate_dst_file = '6'
-                dst_rank = Move.get_rank_num_to_str(dst_num - 27 + 1)
+                conjugate_dst_file_str = '6'
+                dst_rank_str = Move.get_rank_num_to_str(dst_num - 27 + 1)
             elif 18 <= dst_num:
                 dst_file = '3'
-                conjugate_dst_file = '7'
-                dst_rank = Move.get_rank_num_to_str(dst_num - 18 + 1)
+                conjugate_dst_file_str = '7'
+                dst_rank_str = Move.get_rank_num_to_str(dst_num - 18 + 1)
             elif 9 <= dst_num:
                 dst_file = '2'
-                conjugate_dst_file = '8'
-                dst_rank = Move.get_rank_num_to_str(dst_num - 9 + 1)
+                conjugate_dst_file_str = '8'
+                dst_rank_str = Move.get_rank_num_to_str(dst_num - 9 + 1)
             else:
                 dst_file = '1'
-                conjugate_dst_file = '9'
-                dst_rank = Move.get_rank_num_to_str(dst_num + 1)
+                conjugate_dst_file_str = '9'
+                dst_rank_str = Move.get_rank_num_to_str(dst_num + 1)
 
         else:
             if 72 <= dst_num:
                 dst_file = '9'
-                dst_rank = Move.get_rank_num_to_str(dst_num - 72 + 1)
+                dst_rank_str = Move.get_rank_num_to_str(dst_num - 72 + 1)
             elif 63 <= dst_num:
                 dst_file = '8'
-                dst_rank = Move.get_rank_num_to_str(dst_num - 63 + 1)
+                dst_rank_str = Move.get_rank_num_to_str(dst_num - 63 + 1)
             elif 54 <= dst_num:
                 dst_file = '7'
-                dst_rank = Move.get_rank_num_to_str(dst_num - 54 + 1)
+                dst_rank_str = Move.get_rank_num_to_str(dst_num - 54 + 1)
             elif 45 <= dst_num:
                 dst_file = '6'
-                dst_rank = Move.get_rank_num_to_str(dst_num - 45 + 1)
+                dst_rank_str = Move.get_rank_num_to_str(dst_num - 45 + 1)
             elif 36 <= dst_num:
                 dst_file = '5'
-                dst_rank = Move.get_rank_num_to_str(dst_num - 36 + 1)
+                dst_rank_str = Move.get_rank_num_to_str(dst_num - 36 + 1)
             elif 27 <= dst_num:
                 dst_file = '4'
-                dst_rank = Move.get_rank_num_to_str(dst_num - 27 + 1)
+                dst_rank_str = Move.get_rank_num_to_str(dst_num - 27 + 1)
             elif 18 <= dst_num:
                 dst_file = '3'
-                dst_rank = Move.get_rank_num_to_str(dst_num - 18 + 1)
+                dst_rank_str = Move.get_rank_num_to_str(dst_num - 18 + 1)
             elif 9 <= dst_num:
                 dst_file = '2'
-                dst_rank = Move.get_rank_num_to_str(dst_num - 9 + 1)
+                dst_rank_str = Move.get_rank_num_to_str(dst_num - 9 + 1)
             else:
                 dst_file = '1'
-                dst_rank = Move.get_rank_num_to_str(dst_num + 1)
+                dst_rank_str = Move.get_rank_num_to_str(dst_num + 1)
 
         # 移動元（列は左右対称）
         if is_symmetrical_connected:
@@ -259,80 +259,95 @@ class EvaluationConfiguration():
             # 45 ～ 51 は打
             if 45 <= src_num:
                 try:
-                    src_file = EvaluationConfiguration._src_num_to_file_str_on_symmetrical_connected[src_num]
+                    src_file_str = EvaluationConfiguration._src_num_to_file_str_on_symmetrical_connected[src_num]
                 except KeyError as e:
                     # 例： single_move error.  src_num:52  dst_num:0  pro_num:0  table_index:4680  move_size:4680  (src_size:52  dst_size:45  pro_size:2)  bits:52  drop_kind:7  file_size:5  rank_size:9  e:52
                     # 例： single_move error.  src_num:52  dst_num:0  pro_num:0  table_index:4680  move_size:4680  (src_size:52  dst_size:45  pro_size:2)  bits:52  drop_kind:7  file_size:5  rank_size:9  e:52
                     print(f"single_move error.  src_num:{src_num}  dst_num:{dst_num}  pro_num:{pro_num}  table_index:{table_index}  move_size:{move_size}  (src_size:{src_size}  dst_size:{dst_size}  pro_size:{pro_size})  bits:{bits}  drop_kind:{drop_kind}  file_size:{file_size}  rank_size:{rank_size}  e:{e}")
                     raise
 
-                conjugate_src_file = src_file
-                src_rank = '*'
+                # FIXME 不具合調査
+                if not src_file_str in Move._src_drops:
+                    error_message = f"drop file error.  src_num:{src_num}  src_file_str:{src_file_str}"
+                    print(error_message)
+                    raise Exception(error_message)
+
+                # 打の駒種類に左右の違いはない
+                conjugate_src_file_str = src_file_str
+                src_rank_str = '*'
 
             # 盤上
             else:
                 if 36 <= src_num:
-                    src_file = '5'
-                    conjugate_src_file = '5'
-                    src_rank = Move.get_rank_num_to_str(src_num - 36 + 1)
+                    src_file_str = '5'
+                    conjugate_src_file_str = '5'
+                    src_rank_str = Move.get_rank_num_to_str(src_num - 36 + 1)
                 elif 27 <= src_num:
-                    src_file = '4'
-                    conjugate_src_file = '6'
-                    src_rank = Move.get_rank_num_to_str(src_num - 27 + 1)
+                    src_file_str = '4'
+                    conjugate_src_file_str = '6'
+                    src_rank_str = Move.get_rank_num_to_str(src_num - 27 + 1)
                 elif 18 <= src_num:
-                    src_file = '3'
-                    conjugate_src_file = '7'
-                    src_rank = Move.get_rank_num_to_str(src_num - 18 + 1)
+                    src_file_str = '3'
+                    conjugate_src_file_str = '7'
+                    src_rank_str = Move.get_rank_num_to_str(src_num - 18 + 1)
                 elif 9 <= src_num:
-                    src_file = '2'
-                    conjugate_src_file = '8'
-                    src_rank = Move.get_rank_num_to_str(src_num - 9 + 1)
+                    src_file_str = '2'
+                    conjugate_src_file_str = '8'
+                    src_rank_str = Move.get_rank_num_to_str(src_num - 9 + 1)
                 else:
-                    src_file = '1'
-                    conjugate_src_file = '9'
-                    src_rank = Move.get_rank_num_to_str(src_num + 1)
+                    src_file_str = '1'
+                    conjugate_src_file_str = '9'
+                    src_rank_str = Move.get_rank_num_to_str(src_num + 1)
 
         else:
             # 81 以上は打
             if 81 <= src_num:
-                src_file = EvaluationConfiguration._src_num_to_file_str_on_fully_connected[src_num]
-                src_rank = '*'
+                src_file_str = EvaluationConfiguration._src_num_to_file_str_on_fully_connected[src_num]
+                src_rank_str = '*'
 
             # 盤上
             else:
                 if 72 <= src_num:
-                    src_file = '9'
-                    src_rank = Move.get_rank_num_to_str(src_num - 72 + 1)
+                    src_file_str = '9'
+                    src_rank_str = Move.get_rank_num_to_str(src_num - 72 + 1)
                 elif 63 <= src_num:
-                    src_file = '8'
-                    src_rank = Move.get_rank_num_to_str(src_num - 63 + 1)
+                    src_file_str = '8'
+                    src_rank_str = Move.get_rank_num_to_str(src_num - 63 + 1)
                 elif 54 <= src_num:
-                    src_file = '7'
-                    src_rank = Move.get_rank_num_to_str(src_num - 54 + 1)
+                    src_file_str = '7'
+                    src_rank_str = Move.get_rank_num_to_str(src_num - 54 + 1)
                 elif 45 <= src_num:
-                    src_file = '6'
-                    src_rank = Move.get_rank_num_to_str(src_num - 45 + 1)
+                    src_file_str = '6'
+                    src_rank_str = Move.get_rank_num_to_str(src_num - 45 + 1)
                 elif 36 <= src_num:
-                    src_file = '5'
-                    src_rank = Move.get_rank_num_to_str(src_num - 36 + 1)
+                    src_file_str = '5'
+                    src_rank_str = Move.get_rank_num_to_str(src_num - 36 + 1)
                 elif 27 <= src_num:
-                    src_file = '4'
-                    src_rank = Move.get_rank_num_to_str(src_num - 27 + 1)
+                    src_file_str = '4'
+                    src_rank_str = Move.get_rank_num_to_str(src_num - 27 + 1)
                 elif 18 <= src_num:
-                    src_file = '3'
-                    src_rank = Move.get_rank_num_to_str(src_num - 18 + 1)
+                    src_file_str = '3'
+                    src_rank_str = Move.get_rank_num_to_str(src_num - 18 + 1)
                 elif 9 <= src_num:
-                    src_file = '2'
-                    src_rank = Move.get_rank_num_to_str(src_num - 9 + 1)
+                    src_file_str = '2'
+                    src_rank_str = Move.get_rank_num_to_str(src_num - 9 + 1)
                 else:
-                    src_file = '1'
-                    src_rank = Move.get_rank_num_to_str(src_num + 1)
+                    src_file_str = '1'
+                    src_rank_str = Move.get_rank_num_to_str(src_num + 1)
 
-        moves_single = [
-            f'{src_file}{src_rank}{dst_file}{dst_rank}{pro_str}'
+        list_of_move_as_usi = [
+            f'{src_file_str}{src_rank_str}{dst_file}{dst_rank_str}{pro_str}'
         ]
 
-        if conjugate_src_file is not None or conjugate_dst_file is not None:
-            moves_single.append(f'{conjugate_src_file}{src_rank}{conjugate_dst_file}{dst_rank}{pro_str}')
+        if conjugate_src_file_str is not None or conjugate_dst_file_str is not None:
+            move_as_usi = f'{conjugate_src_file_str}{src_rank_str}{conjugate_dst_file_str}{dst_rank_str}{pro_str}'
 
-        return moves_single
+            # FIXME 不具合調査
+            if move_as_usi == '1a1a':
+                error_message = f"move_as_usi conjugate error. as_usi:{move_as_usi}  src_file_str:{src_file_str}  conjugate_src_file_str:{conjugate_src_file_str}  src_rank_str:{src_rank_str}  conjugate_dst_file_str:{conjugate_dst_file_str}  dst_rank_str:{dst_rank_str}  pro_str:{pro_str}"
+                print(error_message)
+                raise Exception(error_message)
+
+            list_of_move_as_usi.append(move_as_usi)
+
+        return list_of_move_as_usi

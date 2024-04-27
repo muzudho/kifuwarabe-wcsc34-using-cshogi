@@ -145,13 +145,13 @@ class FileVersioning():
                         if EvaluationConfiguration.get_symmetrical_connected_table_size() <= table_index:
                             break
 
-                        moves_as_usi_pair = EvaluationConfiguration.get_moves_pair_as_usi_by_table_index(
+                        pair_of_list_of_move_as_usi = EvaluationConfiguration.get_moves_pair_as_usi_by_table_index(
                                 table_index=table_index,
                                 # 左右対称の盤
                                 is_symmetrical_connected=True)
 
-                        for moves_as_usi in moves_as_usi_pair:
-                            for move_as_usi in moves_as_usi:
+                        for list_of_move_as_usi in pair_of_list_of_move_as_usi:
+                            for move_as_usi in list_of_move_as_usi:
                                 converted_table_index = EvaluationConfiguration.get_table_index_by_move(
                                         move=Move(move_as_usi),
                                         # 左右が異なる盤
