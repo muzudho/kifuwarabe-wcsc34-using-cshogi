@@ -45,6 +45,28 @@ class EvaluationFileVersionUp():
 
             with open(file_name, 'rb') as f:
 
+                # プログレス表示
+                if mm_index == table_size//10:
+                    print("[10%]", end=False)
+                elif mm_index == table_size//20:
+                    print("[20%]", end=False)
+                elif mm_index == table_size//30:
+                    print("[30%]", end=False)
+                elif mm_index == table_size//40:
+                    print("[40%]", end=False)
+                elif mm_index == table_size//50:
+                    print("[50%]", end=False)
+                elif mm_index == table_size//60:
+                    print("[60%]", end=False)
+                elif mm_index == table_size//70:
+                    print("[70%]", end=False)
+                elif mm_index == table_size//80:
+                    print("[80%]", end=False)
+                elif mm_index == table_size//90:
+                    print("[90%]", end=False)
+                elif mm_index == table_size//100:
+                    print("[100%]", end=False)
+
                 one_byte_binary = f.read(1)
 
                 while one_byte_binary:
@@ -147,6 +169,28 @@ class EvaluationFileVersionUp():
             mm_index = 0
 
             with open(file_name, 'rb') as f:
+
+                # プログレス表示
+                if mm_index == table_size//10:
+                    print("[10%]", end=False)
+                elif mm_index == table_size//20:
+                    print("[20%]", end=False)
+                elif mm_index == table_size//30:
+                    print("[30%]", end=False)
+                elif mm_index == table_size//40:
+                    print("[40%]", end=False)
+                elif mm_index == table_size//50:
+                    print("[50%]", end=False)
+                elif mm_index == table_size//60:
+                    print("[60%]", end=False)
+                elif mm_index == table_size//70:
+                    print("[70%]", end=False)
+                elif mm_index == table_size//80:
+                    print("[80%]", end=False)
+                elif mm_index == table_size//90:
+                    print("[90%]", end=False)
+                elif mm_index == table_size//100:
+                    print("[100%]", end=False)
 
                 one_byte_binary = f.read(1)
 
