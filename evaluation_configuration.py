@@ -186,7 +186,6 @@ class EvaluationConfiguration():
     @staticmethod
     def get_pair_of_list_of_move_as_usi_by_mm_index(
             mm_index,
-            is_king_of_a,
             is_king_of_b,
             is_symmetrical_connected):
         """逆関数
@@ -197,8 +196,6 @@ class EvaluationConfiguration():
         ----------
         mm_index : int
             指し手 a, b のペアの通しインデックス
-        is_king_of_a : bool
-            指し手 a は、玉の動きか？
         is_king_of_b : bool
             指し手 b は、玉の動きか？
         is_symmetrical_connected : bool

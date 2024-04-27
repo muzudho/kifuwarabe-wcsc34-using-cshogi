@@ -62,6 +62,7 @@ class EvaluationFileVersionUp():
 
                         pair_of_list_of_move_as_usi = EvaluationConfiguration.get_pair_of_list_of_move_as_usi_by_mm_index(
                                 mm_index=mm_index,
+                                is_king_of_b=is_king_of_b,
                                 is_symmetrical_connected=False)
 
                         list_of_a_as_usi, list_of_b_as_usi = pair_of_list_of_move_as_usi
@@ -164,6 +165,7 @@ class EvaluationFileVersionUp():
 
                         pair_of_list_of_move_as_usi = EvaluationConfiguration.get_pair_of_list_of_move_as_usi_by_mm_index(
                                 mm_index=mm_index,
+                                is_king_of_b=False,             # V3 は未対応
                                 # 左右対称の盤
                                 is_symmetrical_connected=True)
 

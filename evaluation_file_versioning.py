@@ -128,6 +128,7 @@ class FileVersioning():
             hint,
             table_size):
         """ランダム値の入った評価値テーブルを新規作成する"""
+        
         # ダミーデータを入れる。１分ほどかかる
         print(f"[{datetime.datetime.now()}] make random evaluation table in memory. hint: '{hint}' ...", flush=True)
 
