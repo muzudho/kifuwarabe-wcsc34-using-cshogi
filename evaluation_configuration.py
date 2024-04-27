@@ -239,9 +239,10 @@ class EvaluationConfiguration():
                     is_king=is_king_of_b,
                     is_symmetrical_connected=is_symmetrical_connected)
         except Exception as e:
+            # mm_index がでかすぎる？
             # 例： list_of_a_move error.  a_index:4680  b_index:0  e:52
             # 例： list_of_a_move error.  a_index:4680  b_index:0  mm_index:21902400  e:52
-            print(f"list_of_a_move error.  a_index:{a_index}  b_index:{b_index}  mm_index:{mm_index}  e:{e}")
+            print(f"list_of_a_move error.  a_index:{a_index}  b_index:{b_index}  mm_index:{mm_index}  is_king_of_b:{is_king_of_b}  is_symmetrical_connected:{is_symmetrical_connected}  e:{e}")
             raise
 
         return [list_of_a_move, list_of_b_move]
@@ -267,130 +268,100 @@ class EvaluationConfiguration():
         """
 
         m_spec = EvaluationMoveSpecification(
+            # 玉は成らないから pro を削れる
             is_king=is_king,
             is_symmetrical_connected=is_symmetrical_connected)
 
-        # 玉は成らないから pro を削れる
-        if is_king:
-            pro_size = 1
-        else:
-            pro_size = 2
+        rest = m_index
 
-        rank_size = 9
+        pro_str = ''
+        if not is_king:
+            if rest % m_spec.pro_patterns == 1:
+                # 成りだ
+                pro_str = '+'
 
-        if is_symmetrical_connected:
-            file_size = 5
-        else:
-            file_size = 9
+            rest //= m_spec.pro_patterns
 
-        #     45 =         5 *         9
-        dst_size = file_size * rank_size
+        dst_value = rest % m_spec.dst_patterns
+        rest //= m_spec.dst_patterns
 
-        drop_kind = 7
-        src_size = (file_size * rank_size) + drop_kind
-        move_size = src_size * dst_size * pro_size
-
-        #         4680
-        bits = m_index
-
-        if is_king:
-            pro_num = 0
-        else:
-            #     0 = 4680 %            2
-            pro_num = bits % m_spec.pro_patterns
-
-        # 2340
-        bits //= m_spec.pro_patterns
-
-        #     0 = 2340 %       45
-        dst_num = bits % dst_size
-        # 52 = 2340 / 45
-        bits //= dst_size
-
-        # 52
-        src_num = bits
+        src_value = rest
 
         # 共役の移動元の筋。左右対称の盤で、反対側の方の筋
         conjugate_src_file_str = None
         conjugate_dst_file_str = None
 
-        # 成りか？
-        if pro_num == 1:
-            pro_str = '+'
-        else:
-            pro_str = ''
-
         # 移動先（列は左右対称）
         if is_symmetrical_connected:
-            if 36 <= dst_num:
+            if 36 <= dst_value:
                 dst_file = '5'
                 conjugate_dst_file_str = '5'
-                dst_rank_str = Move.get_rank_num_to_str(dst_num - 36 + 1)
-            elif 27 <= dst_num:
+                dst_rank_str = Move.get_rank_num_to_str(dst_value - 36 + 1)
+            elif 27 <= dst_value:
                 dst_file = '4'
                 conjugate_dst_file_str = '6'
-                dst_rank_str = Move.get_rank_num_to_str(dst_num - 27 + 1)
-            elif 18 <= dst_num:
+                dst_rank_str = Move.get_rank_num_to_str(dst_value - 27 + 1)
+            elif 18 <= dst_value:
                 dst_file = '3'
                 conjugate_dst_file_str = '7'
-                dst_rank_str = Move.get_rank_num_to_str(dst_num - 18 + 1)
-            elif 9 <= dst_num:
+                dst_rank_str = Move.get_rank_num_to_str(dst_value - 18 + 1)
+            elif 9 <= dst_value:
                 dst_file = '2'
                 conjugate_dst_file_str = '8'
-                dst_rank_str = Move.get_rank_num_to_str(dst_num - 9 + 1)
+                dst_rank_str = Move.get_rank_num_to_str(dst_value - 9 + 1)
             else:
                 dst_file = '1'
                 conjugate_dst_file_str = '9'
-                dst_rank_str = Move.get_rank_num_to_str(dst_num + 1)
+                dst_rank_str = Move.get_rank_num_to_str(dst_value + 1)
 
         else:
-            if 72 <= dst_num:
+            if 72 <= dst_value:
                 dst_file = '9'
-                dst_rank_str = Move.get_rank_num_to_str(dst_num - 72 + 1)
-            elif 63 <= dst_num:
+                dst_rank_str = Move.get_rank_num_to_str(dst_value - 72 + 1)
+            elif 63 <= dst_value:
                 dst_file = '8'
-                dst_rank_str = Move.get_rank_num_to_str(dst_num - 63 + 1)
-            elif 54 <= dst_num:
+                dst_rank_str = Move.get_rank_num_to_str(dst_value - 63 + 1)
+            elif 54 <= dst_value:
                 dst_file = '7'
-                dst_rank_str = Move.get_rank_num_to_str(dst_num - 54 + 1)
-            elif 45 <= dst_num:
+                dst_rank_str = Move.get_rank_num_to_str(dst_value - 54 + 1)
+            elif 45 <= dst_value:
                 dst_file = '6'
-                dst_rank_str = Move.get_rank_num_to_str(dst_num - 45 + 1)
-            elif 36 <= dst_num:
+                dst_rank_str = Move.get_rank_num_to_str(dst_value - 45 + 1)
+            elif 36 <= dst_value:
                 dst_file = '5'
-                dst_rank_str = Move.get_rank_num_to_str(dst_num - 36 + 1)
-            elif 27 <= dst_num:
+                dst_rank_str = Move.get_rank_num_to_str(dst_value - 36 + 1)
+            elif 27 <= dst_value:
                 dst_file = '4'
-                dst_rank_str = Move.get_rank_num_to_str(dst_num - 27 + 1)
-            elif 18 <= dst_num:
+                dst_rank_str = Move.get_rank_num_to_str(dst_value - 27 + 1)
+            elif 18 <= dst_value:
                 dst_file = '3'
-                dst_rank_str = Move.get_rank_num_to_str(dst_num - 18 + 1)
-            elif 9 <= dst_num:
+                dst_rank_str = Move.get_rank_num_to_str(dst_value - 18 + 1)
+            elif 9 <= dst_value:
                 dst_file = '2'
-                dst_rank_str = Move.get_rank_num_to_str(dst_num - 9 + 1)
+                dst_rank_str = Move.get_rank_num_to_str(dst_value - 9 + 1)
             else:
                 dst_file = '1'
-                dst_rank_str = Move.get_rank_num_to_str(dst_num + 1)
+                dst_rank_str = Move.get_rank_num_to_str(dst_value + 1)
 
         # 移動元（列は左右対称）
         if is_symmetrical_connected:
             # FIXME 52 以上は何？
 
             # 45 ～ 51 は打
-            if 45 <= src_num:
+            if 45 <= src_value:
                 try:
-                    src_file_str = EvaluationConfiguration._src_num_to_file_str_on_symmetrical_connected[src_num]
+                    src_file_str = EvaluationConfiguration._src_num_to_file_str_on_symmetrical_connected[src_value]
                 except KeyError as e:
-                    # 例： single_move error.  src_num:52  dst_num:0  pro_num:0  m_index:4680  move_size:4680  (src_size:52  dst_size:45  pro_size:2)  bits:52  drop_kind:7  file_size:5  rank_size:9  e:52
-                    # 例： single_move error.  src_num:52  dst_num:0  pro_num:0  m_index:4680  move_size:4680  (src_size:52  dst_size:45  pro_size:2)  bits:52  drop_kind:7  file_size:5  rank_size:9  e:52
-                    # 例： single_move error.  src_num:52  dst_num:0  pro_num:0  m_index:4680  move_size:4680  (src_size:52  dst_size:45  pro_size:2)  bits:52  drop_kind:7  file_size:5  rank_size:9  e:52
-                    # 例： single_move error.  src_num:52  dst_num:0  pro_num:0  m_index:4680  move_size:4680  (src_size:52  dst_size:45  pro_size:2)  bits:52  drop_kind:7  file_size:5  rank_size:9  e:52
-                    print(f"single_move error.  src_num:{src_num}  dst_num:{dst_num}  pro_num:{pro_num}  m_index:{m_index}  move_size:{move_size}  (src_size:{src_size}  dst_size:{dst_size}  pro_size:{pro_size})  bits:{bits}  drop_kind:{drop_kind}  file_size:{file_size}  rank_size:{rank_size}  e:{e}")
+                    # 例： single_move error.  src_value:52  dst_value:0  m_index:4680  move_patterns:4680  (src_size:52  dst_size:45  pro_size:2)  rest:52  drop_kind:7  file_size:5  rank_size:9  e:52
+                    # 例： single_move error.  src_value:52  dst_value:0  m_index:4680  move_patterns:4680  (src_size:52  dst_size:45  pro_size:2)  rest:52  drop_kind:7  file_size:5  rank_size:9  e:52
+                    # 例： single_move error.  src_value:52  dst_value:0  m_index:4680  move_patterns:4680  (src_size:52  dst_size:45  pro_size:2)  rest:52  drop_kind:7  file_size:5  rank_size:9  e:52
+                    # 例： single_move error.  src_value:52  dst_value:0  m_index:4680  move_patterns:4680  (src_size:52  dst_size:45  pro_size:2)  rest:52  drop_kind:7  file_size:5  rank_size:9  e:52
+                    print(f"single_move error.  src_value:{src_value}  dst_value:{dst_value}  pro_str:'{pro_str}'  m_index:{m_index}  rest:{rest}  m_spec:{m_spec.to_debug_str()}  e:{e}")
                     raise
 
                 # FIXME 不具合調査
                 if not src_file_str in Move._src_drop_files:
-                    error_message = f"drop file error.  src_num:{src_num}  src_file_str:{src_file_str}"
+                    error_message = f"drop file error.  src_value:{src_value}  src_file_str:{src_file_str}"
                     print(error_message)
                     raise Exception(error_message)
 
@@ -400,62 +371,62 @@ class EvaluationConfiguration():
 
             # 盤上
             else:
-                if 36 <= src_num:
+                if 36 <= src_value:
                     src_file_str = '5'
                     conjugate_src_file_str = '5'
-                    src_rank_str = Move.get_rank_num_to_str(src_num - 36 + 1)
-                elif 27 <= src_num:
+                    src_rank_str = Move.get_rank_num_to_str(src_value - 36 + 1)
+                elif 27 <= src_value:
                     src_file_str = '4'
                     conjugate_src_file_str = '6'
-                    src_rank_str = Move.get_rank_num_to_str(src_num - 27 + 1)
-                elif 18 <= src_num:
+                    src_rank_str = Move.get_rank_num_to_str(src_value - 27 + 1)
+                elif 18 <= src_value:
                     src_file_str = '3'
                     conjugate_src_file_str = '7'
-                    src_rank_str = Move.get_rank_num_to_str(src_num - 18 + 1)
-                elif 9 <= src_num:
+                    src_rank_str = Move.get_rank_num_to_str(src_value - 18 + 1)
+                elif 9 <= src_value:
                     src_file_str = '2'
                     conjugate_src_file_str = '8'
-                    src_rank_str = Move.get_rank_num_to_str(src_num - 9 + 1)
+                    src_rank_str = Move.get_rank_num_to_str(src_value - 9 + 1)
                 else:
                     src_file_str = '1'
                     conjugate_src_file_str = '9'
-                    src_rank_str = Move.get_rank_num_to_str(src_num + 1)
+                    src_rank_str = Move.get_rank_num_to_str(src_value + 1)
 
         else:
             # 81 以上は打
-            if 81 <= src_num:
-                src_file_str = EvaluationConfiguration._src_num_to_file_str_on_fully_connected[src_num]
+            if 81 <= src_value:
+                src_file_str = EvaluationConfiguration._src_num_to_file_str_on_fully_connected[src_value]
                 src_rank_str = '*'
 
             # 盤上
             else:
-                if 72 <= src_num:
+                if 72 <= src_value:
                     src_file_str = '9'
-                    src_rank_str = Move.get_rank_num_to_str(src_num - 72 + 1)
-                elif 63 <= src_num:
+                    src_rank_str = Move.get_rank_num_to_str(src_value - 72 + 1)
+                elif 63 <= src_value:
                     src_file_str = '8'
-                    src_rank_str = Move.get_rank_num_to_str(src_num - 63 + 1)
-                elif 54 <= src_num:
+                    src_rank_str = Move.get_rank_num_to_str(src_value - 63 + 1)
+                elif 54 <= src_value:
                     src_file_str = '7'
-                    src_rank_str = Move.get_rank_num_to_str(src_num - 54 + 1)
-                elif 45 <= src_num:
+                    src_rank_str = Move.get_rank_num_to_str(src_value - 54 + 1)
+                elif 45 <= src_value:
                     src_file_str = '6'
-                    src_rank_str = Move.get_rank_num_to_str(src_num - 45 + 1)
-                elif 36 <= src_num:
+                    src_rank_str = Move.get_rank_num_to_str(src_value - 45 + 1)
+                elif 36 <= src_value:
                     src_file_str = '5'
-                    src_rank_str = Move.get_rank_num_to_str(src_num - 36 + 1)
-                elif 27 <= src_num:
+                    src_rank_str = Move.get_rank_num_to_str(src_value - 36 + 1)
+                elif 27 <= src_value:
                     src_file_str = '4'
-                    src_rank_str = Move.get_rank_num_to_str(src_num - 27 + 1)
-                elif 18 <= src_num:
+                    src_rank_str = Move.get_rank_num_to_str(src_value - 27 + 1)
+                elif 18 <= src_value:
                     src_file_str = '3'
-                    src_rank_str = Move.get_rank_num_to_str(src_num - 18 + 1)
-                elif 9 <= src_num:
+                    src_rank_str = Move.get_rank_num_to_str(src_value - 18 + 1)
+                elif 9 <= src_value:
                     src_file_str = '2'
-                    src_rank_str = Move.get_rank_num_to_str(src_num - 9 + 1)
+                    src_rank_str = Move.get_rank_num_to_str(src_value - 9 + 1)
                 else:
                     src_file_str = '1'
-                    src_rank_str = Move.get_rank_num_to_str(src_num + 1)
+                    src_rank_str = Move.get_rank_num_to_str(src_value + 1)
 
         list_of_move_as_usi = [
             f'{src_file_str}{src_rank_str}{dst_file}{dst_rank_str}{pro_str}'

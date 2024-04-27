@@ -102,3 +102,8 @@ class EvaluationMoveSpecification():
     def move_patterns(self):
         """移動のパターン数"""
         return self._move_patterns
+
+
+    def to_debug_str(self):
+        """デバッグ用文字列"""
+        return f"is_king:{self._is_king}  is_symmetrical_connected:{self._is_symmetrical_connected}  pro_patterns:{self._pro_patterns}  rank_size:{self._rank_size}  file_size:{self._file_size}  dst_patterns:{self._dst_patterns}  drop_patterns:{self._drop_patterns}  src_patterns:{self._src_patterns}  move_patterns:{self._move_patterns}"
