@@ -54,13 +54,13 @@ class FileVersioning():
         # バイナリ・ファイル
         try:
             with open(file_name, 'rb') as f:
-                multiple_bytes = f.read(1)
+                one_byte_binary = f.read(1)
 
-                while multiple_bytes:
-                    one_byte = int.from_bytes(multiple_bytes, signed=False)
-                    evaluation_mm_table.append(one_byte)
+                while one_byte_binary:
+                    one_byte_num = int.from_bytes(one_byte_binary, signed=False)
+                    evaluation_mm_table.append(one_byte_num)
 
-                    multiple_bytes = f.read(1)
+                    one_byte_binary = f.read(1)
 
             print(f"[{datetime.datetime.now()}] (v1) '{file_name}' file loaded. evaluation table size: {len(evaluation_mm_table)}", flush=True)
 
@@ -86,21 +86,21 @@ class FileVersioning():
 
             with open(file_name, 'rb') as f:
 
-                multiple_bytes = f.read(1)
+                one_byte_binary = f.read(1)
 
-                while multiple_bytes:
-                    one_byte = int.from_bytes(multiple_bytes, signed=False)
+                while one_byte_binary:
+                    one_byte_num = int.from_bytes(one_byte_binary, signed=False)
 
-                    evaluation_mm_table.append(one_byte//128 % 2)
-                    evaluation_mm_table.append(one_byte// 64 % 2)
-                    evaluation_mm_table.append(one_byte// 32 % 2)
-                    evaluation_mm_table.append(one_byte// 16 % 2)
-                    evaluation_mm_table.append(one_byte//  8 % 2)
-                    evaluation_mm_table.append(one_byte//  4 % 2)
-                    evaluation_mm_table.append(one_byte//  2 % 2)
-                    evaluation_mm_table.append(one_byte//      2)
+                    evaluation_mm_table.append(one_byte_num//128 % 2)
+                    evaluation_mm_table.append(one_byte_num// 64 % 2)
+                    evaluation_mm_table.append(one_byte_num// 32 % 2)
+                    evaluation_mm_table.append(one_byte_num// 16 % 2)
+                    evaluation_mm_table.append(one_byte_num//  8 % 2)
+                    evaluation_mm_table.append(one_byte_num//  4 % 2)
+                    evaluation_mm_table.append(one_byte_num//  2 % 2)
+                    evaluation_mm_table.append(one_byte_num//      2)
 
-                    multiple_bytes = f.read(1)
+                    one_byte_binary = f.read(1)
 
             print(f"[{datetime.datetime.now()}] (v2,v3) '{file_name}' file loaded. evaluation table size: {len(evaluation_mm_table)}", flush=True)
 

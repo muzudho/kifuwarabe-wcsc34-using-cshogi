@@ -159,9 +159,9 @@ class EvaluationConfiguration():
             except Exception as e:
                 raise Exception(f"fully_connected dst_sq error in '{move.as_usi}'.  ('{move.dst_str[0]}', '{move.dst_str[1]}')  e: {e}")
 
-        # TODO 玉は成りの判定を削れないか？
+        # 玉は成りの判定を削る
         if is_king:
-            pro_size = 0
+            pro_size = 1
             pro_num = 0     # 玉は成らない
 
         else:
@@ -186,6 +186,8 @@ class EvaluationConfiguration():
     @staticmethod
     def get_pair_of_list_of_move_as_usi_by_mm_index(
             mm_index,
+            is_king_of_a,
+            is_king_of_b,
             is_symmetrical_connected):
         """逆関数
 
@@ -195,49 +197,46 @@ class EvaluationConfiguration():
         ----------
         mm_index : int
             指し手 a, b のペアの通しインデックス
+        is_king_of_a : bool
+            指し手 a は、玉の動きか？
+        is_king_of_b : bool
+            指し手 b は、玉の動きか？
+        is_symmetrical_connected : bool
+            盤は左右対称か？
         """
 
-        # TODO 玉は成りの判定を削れないか？
+        #
+        # 下位の b から
+        # ------------
+        #
 
-        pro_size = 2
-
-        if is_symmetrical_connected:
-            file_size = 5
-        else:
-            file_size = 9
-
-        rank_size = 9
-
-        dst_size = file_size * rank_size
-
-        drop_kind = 7
-        src_size = (file_size * rank_size) + drop_kind
-
-        move_size = src_size * dst_size * pro_size
+        b_size = EvaluationConfiguration.get_move_number(
+            is_king=is_king_of_b,
+            is_symmetrical_connected=is_symmetrical_connected)
 
         bits = mm_index
 
-        a_move_index = bits % move_size
-        bits //= move_size
+        b_index = bits % b_size
+        bits //= b_size
 
-        b_move_index = bits
-
-        try:
-            list_of_a_move = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
-                    a_move_index,
-                    is_symmetrical_connected)
-        except Exception as e:
-            # 例： list_of_a_move error.  a_move_index:4680  b_move_index:0  move_size:28350  src_size:315  dst_size:45  pro_size:2  drop_kind:7  rank_size:9  file_size:5  pro_size:2  e:52
-            print(f"list_of_a_move error.  a_move_index:{a_move_index}  b_move_index:{b_move_index}  mm_index:{mm_index}  move_size:{move_size}  ( src_size:{src_size}  dst_size:{dst_size}  pro_size:{pro_size} )  drop_kind:{drop_kind}  rank_size:{rank_size}  file_size:{file_size}  e:{e}")
-            raise
+        a_index = bits
 
         try:
             list_of_b_move = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
-                    b_move_index,
+                    b_index,
                     is_symmetrical_connected)
         except Exception as e:
-            # 例： list_of_b_move error.  a_move_index:0  b_move_index:4680  mm_index:21902400  move_size:4680  ( src_size:52  dst_size:45  pro_size:2 )  drop_kind:7  rank_size:9  file_size:5  e:52
-            print(f"list_of_b_move error.  a_move_index:{a_move_index}  b_move_index:{b_move_index}  mm_index:{mm_index}  move_size:{move_size}  ( src_size:{src_size}  dst_size:{dst_size}  pro_size:{pro_size} )  drop_kind:{drop_kind}  rank_size:{rank_size}  file_size:{file_size}  e:{e}")
+            # 例： list_of_b_move error.  a_index:0  b_index:4680  mm_index:21902400  e:52
+            print(f"list_of_b_move error.  a_index:{a_index}  b_index:{b_index}  mm_index:{mm_index}  e:{e}")
+            raise
+
+        try:
+            list_of_a_move = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
+                    a_index,
+                    is_symmetrical_connected)
+        except Exception as e:
+            # 例： list_of_a_move error.  a_index:4680  b_index:0  src_size:315  dst_size:45  pro_size:2  pro_size:2  e:52
+            print(f"list_of_a_move error.  a_index:{a_index}  b_index:{b_index}  mm_index:{mm_index}  e:{e}")
             raise
 
         return [list_of_a_move, list_of_b_move]
