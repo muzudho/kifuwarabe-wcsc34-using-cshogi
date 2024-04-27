@@ -220,8 +220,9 @@ class EvaluationConfiguration():
 
         try:
             list_of_b_move = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
-                    b_index,
-                    is_symmetrical_connected)
+                    m_index=b_index,
+                    is_king=is_king_of_b,
+                    is_symmetrical_connected=is_symmetrical_connected)
         except Exception as e:
             # 例： list_of_b_move error.  a_index:0  b_index:4680  mm_index:21902400  e:52
             print(f"list_of_b_move error.  a_index:{a_index}  b_index:{b_index}  mm_index:{mm_index}  e:{e}")
@@ -229,10 +230,12 @@ class EvaluationConfiguration():
 
         try:
             list_of_a_move = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
-                    a_index,
-                    is_symmetrical_connected)
+                    m_index=a_index,
+                    is_king=is_king_of_b,
+                    is_symmetrical_connected=is_symmetrical_connected)
         except Exception as e:
-            # 例： list_of_a_move error.  a_index:4680  b_index:0  src_size:315  dst_size:45  pro_size:2  pro_size:2  e:52
+            # 例： list_of_a_move error.  a_index:4680  b_index:0  e:52
+            # 例： list_of_a_move error.  a_index:4680  b_index:0  mm_index:21902400  e:52
             print(f"list_of_a_move error.  a_index:{a_index}  b_index:{b_index}  mm_index:{mm_index}  e:{e}")
             raise
 
@@ -242,6 +245,7 @@ class EvaluationConfiguration():
     @staticmethod
     def get_list_of_move_as_usi_by_m_index(
             m_index,
+            is_king,
             is_symmetrical_connected):
         """逆関数
 
@@ -251,10 +255,17 @@ class EvaluationConfiguration():
         ----------
         m_index : int
             指し手１つ分のインデックス
+        is_king : bool
+            玉の動きか？
+        is_symmetrical_connected : bool
+            盤は左右対称か？
         """
 
-        # TODO 玉は成らないから pro を削れないか？
-        pro_size = 2
+        # 玉は成らないから pro を削れる
+        if is_king:
+            pro_size = 1
+        else:
+            pro_size = 2
 
         rank_size = 9
 
@@ -357,6 +368,7 @@ class EvaluationConfiguration():
                 try:
                     src_file_str = EvaluationConfiguration._src_num_to_file_str_on_symmetrical_connected[src_num]
                 except KeyError as e:
+                    # 例： single_move error.  src_num:52  dst_num:0  pro_num:0  m_index:4680  move_size:4680  (src_size:52  dst_size:45  pro_size:2)  bits:52  drop_kind:7  file_size:5  rank_size:9  e:52
                     # 例： single_move error.  src_num:52  dst_num:0  pro_num:0  m_index:4680  move_size:4680  (src_size:52  dst_size:45  pro_size:2)  bits:52  drop_kind:7  file_size:5  rank_size:9  e:52
                     # 例： single_move error.  src_num:52  dst_num:0  pro_num:0  m_index:4680  move_size:4680  (src_size:52  dst_size:45  pro_size:2)  bits:52  drop_kind:7  file_size:5  rank_size:9  e:52
                     print(f"single_move error.  src_num:{src_num}  dst_num:{dst_num}  pro_num:{pro_num}  m_index:{m_index}  move_size:{move_size}  (src_size:{src_size}  dst_size:{dst_size}  pro_size:{pro_size})  bits:{bits}  drop_kind:{drop_kind}  file_size:{file_size}  rank_size:{rank_size}  e:{e}")
