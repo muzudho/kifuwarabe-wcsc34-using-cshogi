@@ -38,6 +38,8 @@ class EvaluationMmTable():
             table_size,
             is_symmetrical_connected,
             evaluation_mm_table,
+            is_king_of_a,
+            is_king_of_b,
             is_file_modified):
         """初期化
 
@@ -45,6 +47,10 @@ class EvaluationMmTable():
         ----------
         is_symmetrical_connected : bool
             左右対称の盤か？
+        is_king_of_a : bool
+            指し手 a は玉か？
+        is_king_of_b : bool
+            指し手 b は玉か？
         is_file_modified : bool
             保存されていない評価値テーブルを引数で渡したなら真
 
@@ -123,6 +129,16 @@ class EvaluationMmTable():
 
 
     @property
+    def is_king_of_a(self):
+        return self._is_king_of_a
+
+
+    @property
+    def is_king_of_b(self):
+        return self._is_king_of_b
+
+
+    @property
     def is_symmetrical_connected(self):
         return self._is_symmetrical_connected
 
@@ -135,7 +151,9 @@ class EvaluationMmTable():
     def get_mm_index_by_2_moves(
             self,
             a_move_obj,
+            a_is_king,
             b_move_obj,
+            b_is_king,
             turn):
         """指し手２つの組み合わせインデックス"""
 
@@ -150,10 +168,12 @@ class EvaluationMmTable():
 
         a_index = EvaluationConfiguration.get_m_index_by_move(
                 move=a_move_obj,
+                is_king=a_is_king,
                 is_symmetrical_connected=self._is_symmetrical_connected)
 
         b_index = EvaluationConfiguration.get_m_index_by_move(
                 move=b_move_obj,
+                is_king=b_is_king,
                 is_symmetrical_connected=self._is_symmetrical_connected)
 
         move_indexes = [a_index, b_index]
@@ -175,9 +195,11 @@ class EvaluationMmTable():
         """両方残すなら 0点、インデックスが小さい方を残すなら -1点、インデックスが大きい方を残すなら +1点"""
 
         mm_index = self.get_mm_index_by_2_moves(
-                a_move_obj,
-                b_move_obj,
-                turn)
+                a_move_obj=a_move_obj,
+                a_is_king=False,    # TODO
+                b_move_obj=b_move_obj,
+                b_is_king=False,    # TODO
+                turn=turn)
         #print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} mm_index:{mm_index}", flush=True)
 
         try:

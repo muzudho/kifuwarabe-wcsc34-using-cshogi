@@ -117,8 +117,12 @@ class Kifuwarabe():
         self._player_file_number = random.randint(1,6)
 
         # 前回の対局の指し手の候補手の記憶
-        self._king_canditates_memory = CandidatesMemory.load_from_file(self._player_file_number, is_king=True)
-        self._pieces_canditates_memory = CandidatesMemory.load_from_file(self._player_file_number, is_king=False)
+        self._king_canditates_memory = CandidatesMemory.load_from_file(
+                self._player_file_number,
+                is_king=True)
+        self._pieces_canditates_memory = CandidatesMemory.load_from_file(
+                self._player_file_number,
+                is_king=False)
 
         # コウの記録
         self._ko_memory = KoMemory()
@@ -331,11 +335,12 @@ class Kifuwarabe():
         number = 1
         print('自玉の合法手一覧：')
         for move_a_as_usi in king_move_list_as_usi:
-            # TODO ＫＬ表
+            # TODO ＫＫ表
 
             # ＫＰ表
             k_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(move_a_as_usi),
+                    is_king=False,  # TODO 仕様化
                     is_symmetrical_connected=self._evaluation_facade_obj.kp_policy_table.is_symmetrical_connected)
 
             list_of_k_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
@@ -345,6 +350,7 @@ class Kifuwarabe():
             # ＰＰ表
             m_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(move_a_as_usi),
+                    is_king=False,  # TODO 仕様化
                     is_symmetrical_connected=self._evaluation_facade_obj.pp_policy_table.is_symmetrical_connected)
 
             list_of_m_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
@@ -363,6 +369,7 @@ class Kifuwarabe():
             # ＫＰ表
             k_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(move_a_as_usi),
+                    is_king=False,  # TODO
                     is_symmetrical_connected=self._evaluation_facade_obj.kp_policy_table.is_symmetrical_connected)
 
             list_of_k_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
@@ -372,6 +379,7 @@ class Kifuwarabe():
             # ＰＰ表
             m_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(move_a_as_usi),
+                    is_king=False,  # TODO
                     is_symmetrical_connected=self._evaluation_facade_obj.pp_policy_table.is_symmetrical_connected)
 
             list_of_m_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
@@ -430,6 +438,7 @@ class Kifuwarabe():
             # ＫＰ表
             k_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(lord_move_as_usi),
+                    is_king=False,  # TODO
                     is_symmetrical_connected=self._evaluation_facade_obj.kp_policy_table.is_symmetrical_connected)
 
             list_of_k_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
@@ -439,6 +448,7 @@ class Kifuwarabe():
             # ＰＰ表
             m_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(lord_move_as_usi),
+                    is_king=False,  # TODO
                     is_symmetrical_connected=self._evaluation_facade_obj.pp_policy_table.is_symmetrical_connected)
 
             list_of_m_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
@@ -464,6 +474,7 @@ class Kifuwarabe():
             # ＫＰ表
             k_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(quaffer_move_as_usi),
+                    is_king=False,  # TODO
                     is_symmetrical_connected=self._evaluation_facade_obj.kp_policy_table.is_symmetrical_connected)
 
             list_of_k_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
@@ -473,6 +484,7 @@ class Kifuwarabe():
             # ＰＰ表
             m_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(quaffer_move_as_usi),
+                    is_king=False,  # TODO
                     is_symmetrical_connected=self._evaluation_facade_obj.pp_policy_table.is_symmetrical_connected)
 
             list_of_m_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
@@ -514,6 +526,7 @@ class Kifuwarabe():
 
             k_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(move_a_as_usi),
+                    is_king=False,  # TODO
                     is_symmetrical_connected=self._evaluation_facade_obj.kp_policy_table.is_symmetrical_connected)
 
             list_of_k_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
@@ -539,6 +552,7 @@ class Kifuwarabe():
 
             m_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(piece_move_as_usi),
+                    is_king=False,  # TODO
                     is_symmetrical_connected=self._evaluation_facade_obj.pp_policy_table.is_symmetrical_connected)
 
             list_of_m_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(

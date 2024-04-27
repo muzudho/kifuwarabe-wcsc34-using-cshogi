@@ -32,15 +32,22 @@ class Learn():
 
             # 前回の対局で、負けるか、引き分けなら、内容を変えます
             if result_text in ('lose', 'draw'):
-                Learn.modify_table(
+                Learn.modify_mm_table(
                         evaluation_mm_table_obj=evaluation_mm_table_obj,
+                        a_is_king=False,    # TODO
+                        b_is_king=False,    # TODO
                         canditates_memory=canditates_memory,
                         turn=turn)
                 print(f"[{datetime.datetime.now()}] {evaluation_mm_table_obj._file_name} file updated", flush=True)
 
 
     @staticmethod
-    def modify_table(evaluation_mm_table_obj, canditates_memory, turn):
+    def modify_mm_table(
+            evaluation_mm_table_obj,
+            a_is_king,
+            b_is_king,
+            canditates_memory,
+            turn):
         """指した手の評価値を適当に変更します"""
 
         for move_a_as_usi in canditates_memory.move_set:
@@ -50,9 +57,11 @@ class Learn():
                 b_move_obj = Move(move_b_as_usi)
 
                 mm_index = evaluation_mm_table_obj.get_mm_index_by_2_moves(
-                        a_move_obj,
-                        b_move_obj,
-                        turn)
+                        a_move_obj=a_move_obj,
+                        a_is_king=a_is_king,
+                        b_move_obj=b_move_obj,
+                        b_is_kind=b_is_king,
+                        turn=turn)
 
                 # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
                 evaluation_mm_table_obj.evaluation_mm_table[mm_index] = random.randint(0,1)
@@ -64,9 +73,11 @@ class Learn():
                 reversed_b_move_obj = MoveHelper.flip_horizontal(b_move_obj)
 
                 mm_index = evaluation_mm_table_obj.get_mm_index_by_2_moves(
-                        reversed_a_move_obj,
-                        reversed_b_move_obj,
-                        turn)
+                        a_move_obj=reversed_a_move_obj,
+                        a_is_king=False,    # TODO
+                        b_move_obj=reversed_b_move_obj,
+                        b_is_kind=False,    # TODO
+                        turn=turn)
 
                 # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
                 evaluation_mm_table_obj.evaluation_mm_table[mm_index] = random.randint(0,1)

@@ -10,12 +10,18 @@ class EvaluationPpTable(EvaluationMmTable):
             file_number,
             file_name,
             evaluation_mm_table,
+            is_king_of_a,
+            is_king_of_b,
             is_file_modified,
             is_symmetrical_connected):
         """初期化
 
         Parameters
         ----------
+        is_king_of_a : bool
+            指し手 a は玉か？
+        is_king_of_b : bool
+            指し手 b は玉か？
         is_file_modified : bool
             保存されていない評価値テーブルを引数で渡したなら真
         """
@@ -39,4 +45,6 @@ class EvaluationPpTable(EvaluationMmTable):
                 table_size=table_size,
                 is_symmetrical_connected=is_symmetrical_connected,
                 evaluation_mm_table=evaluation_mm_table,
+                is_king_of_a=is_king_of_a,
+                is_king_of_b=is_king_of_b,
                 is_file_modified=is_file_modified)

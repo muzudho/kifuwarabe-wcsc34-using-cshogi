@@ -158,6 +158,7 @@ class FileVersioning():
                             for move_as_usi in list_of_move_as_usi:
                                 converted_m_index = EvaluationConfiguration.get_m_index_by_move(
                                         move=Move(move_as_usi),
+                                        is_king=False,  # 旧仕様では玉の区別なし
                                         # 左右が異なる盤
                                         is_symmetrical_connected=False)
 

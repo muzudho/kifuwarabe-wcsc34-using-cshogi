@@ -67,6 +67,7 @@ class EvaluationConfiguration():
     @staticmethod
     def get_m_index_by_move(
             move,
+            is_king,
             is_symmetrical_connected):
         """将棋盤の筋が左右対称のときの評価値テーブルのセルのインデックス
 
@@ -74,6 +75,8 @@ class EvaluationConfiguration():
         ----------
         move : Move
             指し手
+        is_king : bool
+            玉の動きか？
         is_symmetrical_connected : bool
             盤は左右対称か？
 
@@ -82,45 +85,55 @@ class EvaluationConfiguration():
             - 指し手のインデックス
         """
 
+        # 左右対称の盤か？
         if is_symmetrical_connected:
+            # 移動元マス番号、または打の種類
             try:
-                src_num = Move._src_dst_str_1st_figure_to_index_on_symmetrical_board[move.src_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.src_str[1]]
+                src_sq = Move._src_dst_str_1st_figure_to_sq_on_symmetrical_board[move.src_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.src_str[1]]
             except Exception as e:
-                raise Exception(f"symmetrical_connected src_num error in '{move.as_usi}'.  ('{move.src_str[0]}', '{move.src_str[1]}')  e: {e}")
+                raise Exception(f"symmetrical_connected src_sq error in '{move.as_usi}'.  ('{move.src_str[0]}', '{move.src_str[1]}')  e: {e}")
 
+            # 移動先マス番号
             try:
-                dst_num = Move._src_dst_str_1st_figure_to_index_on_symmetrical_board[move.dst_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.dst_str[1]]
+                dst_sq = Move._src_dst_str_1st_figure_to_sq_on_symmetrical_board[move.dst_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.dst_str[1]]
             except Exception as e:
-                raise Exception(f"symmetrical_connected dst_num error in '{move.as_usi}'.  ('{move.dst_str[0]}', '{move.dst_str[1]}')  e: {e}")
+                raise Exception(f"symmetrical_connected dst_sq error in '{move.as_usi}'.  ('{move.dst_str[0]}', '{move.dst_str[1]}')  e: {e}")
 
         else:
+            # 移動元マス番号
             try:
-                src_num = Move._src_dst_str_1st_figure_to_index_on_fully_connected[move.src_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.src_str[1]]
+                src_sq = Move._src_dst_str_1st_figure_to_sq_on_fully_connected[move.src_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.src_str[1]]
             except Exception as e:
-                raise Exception(f"fully_connected src_num error in '{move.as_usi}'.  ('{move.src_str[0]}', '{move.src_str[1]}')  e: {e}")
+                raise Exception(f"fully_connected src_sq error in '{move.as_usi}'.  ('{move.src_str[0]}', '{move.src_str[1]}')  e: {e}")
 
+            # 移動先マス番号
             try:
-                dst_num = Move._src_dst_str_1st_figure_to_index_on_fully_connected[move.dst_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.dst_str[1]]
+                dst_sq = Move._src_dst_str_1st_figure_to_sq_on_fully_connected[move.dst_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.dst_str[1]]
             except Exception as e:
-                raise Exception(f"fully_connected dst_num error in '{move.as_usi}'.  ('{move.dst_str[0]}', '{move.dst_str[1]}')  e: {e}")
+                raise Exception(f"fully_connected dst_sq error in '{move.as_usi}'.  ('{move.dst_str[0]}', '{move.dst_str[1]}')  e: {e}")
 
         # TODO 玉は成りの判定を削れないか？
-
-        # 成りか？
-        if move.is_promotion():
-            pro_num = 1
+        if is_king:
+            pro_size = 0
+            pro_num = 0     # 玉は成らない
+            
         else:
-            pro_num = 0
+            pro_size = 2
+
+            # 成りか？
+            if move.is_promotion():
+                pro_num = 1
+            else:
+                pro_num = 0
 
         rank_size = 9
-        pro_size = 2
 
         if is_symmetrical_connected:
             file_size = 5
         else:
             file_size = 9
 
-        return (src_num * file_size * rank_size * pro_size) + (dst_num * pro_size) + pro_num
+        return (src_sq * file_size * rank_size * pro_size) + (dst_sq * pro_size) + pro_num
 
 
     @staticmethod
@@ -199,7 +212,7 @@ class EvaluationConfiguration():
 
         # TODO 玉は成らないから pro を削れないか？
         pro_size = 2
-        
+
         rank_size = 9
 
         if is_symmetrical_connected:

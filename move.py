@@ -58,7 +58,7 @@ class Move():
     """段数を英字に変換"""
 
 
-    _src_dst_str_1st_figure_to_index_on_fully_connected = {
+    _src_dst_str_1st_figure_to_sq_on_fully_connected = {
         'R' : 81,   # 'R*' 移動元の打 72+9=81
         'B' : 82,   # 'B*'
         'G' : 83,   # 'G*'
@@ -76,10 +76,10 @@ class Move():
         '8' : 63,
         '9' : 72,
     }
-    """移動元の１文字目をインデックスへ変換"""
+    """移動元の１文字目をマス番号へ変換"""
 
 
-    _src_dst_str_1st_figure_to_index_on_symmetrical_board = {
+    _src_dst_str_1st_figure_to_sq_on_symmetrical_board = {
         'R' : 45,   # 'R*' 移動元の打 36+9=45
         'B' : 46,   # 'B*'
         'G' : 47,   # 'G*'
@@ -97,7 +97,7 @@ class Move():
         '8' : 9,
         '9' : 0,
     }
-    """移動元の１文字目をインデックスへ変換。盤は左右対称とします"""
+    """移動元の１文字目をマス番号、または打番号へ変換。盤は左右対称とします"""
 
     _src_dst_str_2nd_figure_to_index = {
         '*': 0,     # 移動元の打

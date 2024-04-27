@@ -47,10 +47,20 @@ class EvaluationKkFileVersioning():
                 table_size=EvaluationConfiguration.get_table_size(
                         is_symmetrical_connected=is_symmetrical_connected))
 
+        if file_version == "V4":
+            is_king_of_a = True     # 玉の指し手は評価値テーブル・サイズを縮めれる
+            is_king_of_b = True     # 玉の指し手は評価値テーブル・サイズを縮めれる
+        else:
+            is_king_of_a = False     # 過去バージョンではフラグ未対応
+            is_king_of_b = False     # 過去バージョンではフラグ未対応
+
+
         return EvaluationKkTable(
                 file_number=file_number,
                 file_name=file_name,
                 evaluation_mm_table=mm_table,
+                is_king_of_a=is_king_of_a,
+                is_king_of_b=is_king_of_b,
                 is_file_modified=is_file_modified,
                 is_symmetrical_connected=is_symmetrical_connected)
 
