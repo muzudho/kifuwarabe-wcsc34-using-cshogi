@@ -4,16 +4,22 @@
 
 ## 事前準備
 
+Python を公式からインストールすると環境設定が難しすぎる（不完全な初期状態で設定される）ので、  
+Anaconda をインストールして、  
+VS Code から、  
+Anaconda の中に入っている Python インタープリターを選択した方が、断然早い  
+
+[https://www.anaconda.com/](https://www.anaconda.com/)  
+
 ```shell
 # pip のバージョン確認。 19.0 以上が必要
 pip -V
 
-# PYPI から cshogi をインストール
+# cshogi をインストール
 pip install cshogi
-#
-# または
-# pip install git+https://github.com/TadaoYamaoka/cshogi
 ```
+
+
 
 ## 実行
 
