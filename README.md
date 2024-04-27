@@ -6,7 +6,7 @@
 
 Python を公式からインストールすると環境設定が難しすぎる（不完全な初期状態で設定される）ので、  
 Anaconda をインストールして、  
-VS Code から、  
+VS Code から適当に `*.py` ファイルを選択し、VSCodeのウィンドウの右下あたりから Python インタープリターを選択できるので、  
 Anaconda の中に入っている Python インタープリターを選択した方が、断然早い  
 
 [https://www.anaconda.com/](https://www.anaconda.com/)  
@@ -18,6 +18,8 @@ pip -V
 # cshogi をインストール
 pip install cshogi
 ```
+
+.py ファイルはパスが通っている必要があるので、必要なら環境変数を設定すること。  
 
 
 
