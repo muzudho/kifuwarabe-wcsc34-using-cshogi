@@ -58,45 +58,49 @@ class EvaluationFileVersionUp():
 
             with open(file_name, 'rb') as f:
 
-                # プログレス表示
-                if old_mm_index == new_table_size//100_000_000:
-                    print(f"[{datetime.datetime.now()}]0.000001%", flush=True)
-                elif old_mm_index == new_table_size//10_000_000:
-                    print(f"[{datetime.datetime.now()}]0.00001%", flush=True)
-                elif old_mm_index == new_table_size//1_000_000:
-                    print(f"[{datetime.datetime.now()}]0.0001%", flush=True)
-                elif old_mm_index == new_table_size//100_000:
-                    print(f"[{datetime.datetime.now()}]0.001%", flush=True)
-                elif old_mm_index == new_table_size//10_000:
-                    print(f"[{datetime.datetime.now()}]0.01%", flush=True)
-                elif old_mm_index == new_table_size//1_000:
-                    print(f"[{datetime.datetime.now()}]0.1%", flush=True)
-                elif old_mm_index == new_table_size//100:
-                    print(f"[{datetime.datetime.now()}]1%", flush=True)
-                elif old_mm_index == new_table_size//10:
-                    print(f"[{datetime.datetime.now()}]10%", flush=True)
-                elif old_mm_index == new_table_size//20:
-                    print(f"[{datetime.datetime.now()}]20%", flush=True)
-                elif old_mm_index == new_table_size//30:
-                    print(f"[{datetime.datetime.now()}]30%", flush=True)
-                elif old_mm_index == new_table_size//40:
-                    print(f"[{datetime.datetime.now()}]40%", flush=True)
-                elif old_mm_index == new_table_size//50:
-                    print(f"[{datetime.datetime.now()}]50%", flush=True)
-                elif old_mm_index == new_table_size//60:
-                    print(f"[{datetime.datetime.now()}]60%", flush=True)
-                elif old_mm_index == new_table_size//70:
-                    print(f"[{datetime.datetime.now()}]70%", flush=True)
-                elif old_mm_index == new_table_size//80:
-                    print(f"[{datetime.datetime.now()}]80%", flush=True)
-                elif old_mm_index == new_table_size//90:
-                    print(f"[{datetime.datetime.now()}]90%", flush=True)
-                elif old_mm_index == new_table_size//100:
-                    print(f"[{datetime.datetime.now()}]100%", flush=True)
 
                 one_byte_binary = f.read(1)
 
                 while one_byte_binary:
+
+                    # プログレス表示
+                    if old_mm_index == new_table_size//1_000_000_000:
+                        print(f"[{datetime.datetime.now()}]0.0000001%", flush=True)
+                    elif old_mm_index == new_table_size//100_000_000:
+                        print(f"[{datetime.datetime.now()}]0.000001%", flush=True)
+                    elif old_mm_index == new_table_size//10_000_000:
+                        print(f"[{datetime.datetime.now()}]0.00001%", flush=True)
+                    elif old_mm_index == new_table_size//1_000_000:
+                        print(f"[{datetime.datetime.now()}]0.0001%", flush=True)
+                    elif old_mm_index == new_table_size//100_000:
+                        print(f"[{datetime.datetime.now()}]0.001%", flush=True)
+                    elif old_mm_index == new_table_size//10_000:
+                        print(f"[{datetime.datetime.now()}]0.01%", flush=True)
+                    elif old_mm_index == new_table_size//1_000:
+                        print(f"[{datetime.datetime.now()}]0.1%", flush=True)
+                    elif old_mm_index == new_table_size//100:
+                        print(f"[{datetime.datetime.now()}]1%", flush=True)
+                    elif old_mm_index == new_table_size//10:
+                        print(f"[{datetime.datetime.now()}]10%", flush=True)
+                    elif old_mm_index == new_table_size//20:
+                        print(f"[{datetime.datetime.now()}]20%", flush=True)
+                    elif old_mm_index == new_table_size//30:
+                        print(f"[{datetime.datetime.now()}]30%", flush=True)
+                    elif old_mm_index == new_table_size//40:
+                        print(f"[{datetime.datetime.now()}]40%", flush=True)
+                    elif old_mm_index == new_table_size//50:
+                        print(f"[{datetime.datetime.now()}]50%", flush=True)
+                    elif old_mm_index == new_table_size//60:
+                        print(f"[{datetime.datetime.now()}]60%", flush=True)
+                    elif old_mm_index == new_table_size//70:
+                        print(f"[{datetime.datetime.now()}]70%", flush=True)
+                    elif old_mm_index == new_table_size//80:
+                        print(f"[{datetime.datetime.now()}]80%", flush=True)
+                    elif old_mm_index == new_table_size//90:
+                        print(f"[{datetime.datetime.now()}]90%", flush=True)
+                    elif old_mm_index == new_table_size//100:
+                        print(f"[{datetime.datetime.now()}]100%", flush=True)
+
                     one_byte_num = int.from_bytes(one_byte_binary, signed=False)
                     #print(f"old_mm_index:{old_mm_index}  one_byte_num:{one_byte_num}", flush=True)
 
@@ -204,45 +208,49 @@ class EvaluationFileVersionUp():
 
             with open(file_name, 'rb') as f:
 
-                # プログレス表示
-                if old_mm_index == new_table_size//100_000_000:
-                    print(f"[{datetime.datetime.now()}]0.000001%", flush=True)
-                elif old_mm_index == new_table_size//10_000_000:
-                    print(f"[{datetime.datetime.now()}]0.00001%", flush=True)
-                elif old_mm_index == new_table_size//1_000_000:
-                    print(f"[{datetime.datetime.now()}]0.0001%", flush=True)
-                elif old_mm_index == new_table_size//100_000:
-                    print(f"[{datetime.datetime.now()}]0.001%", flush=True)
-                elif old_mm_index == new_table_size//10_000:
-                    print(f"[{datetime.datetime.now()}]0.01%", flush=True)
-                elif old_mm_index == new_table_size//1_000:
-                    print(f"[{datetime.datetime.now()}]0.1%", flush=True)
-                elif old_mm_index == new_table_size//100:
-                    print(f"[{datetime.datetime.now()}]1%", flush=True)
-                elif old_mm_index == new_table_size//10:
-                    print(f"[{datetime.datetime.now()}]10%", flush=True)
-                elif old_mm_index == new_table_size//20:
-                    print(f"[{datetime.datetime.now()}]20%", flush=True)
-                elif old_mm_index == new_table_size//30:
-                    print(f"[{datetime.datetime.now()}]30%", flush=True)
-                elif old_mm_index == new_table_size//40:
-                    print(f"[{datetime.datetime.now()}]40%", flush=True)
-                elif old_mm_index == new_table_size//50:
-                    print(f"[{datetime.datetime.now()}]50%", flush=True)
-                elif old_mm_index == new_table_size//60:
-                    print(f"[{datetime.datetime.now()}]60%", flush=True)
-                elif old_mm_index == new_table_size//70:
-                    print(f"[{datetime.datetime.now()}]70%", flush=True)
-                elif old_mm_index == new_table_size//80:
-                    print(f"[{datetime.datetime.now()}]80%", flush=True)
-                elif old_mm_index == new_table_size//90:
-                    print(f"[{datetime.datetime.now()}]90%", flush=True)
-                elif old_mm_index == new_table_size//100:
-                    print(f"[{datetime.datetime.now()}]100%", flush=True)
 
                 one_byte_binary = f.read(1)
 
                 while one_byte_binary:
+
+                    # プログレス表示
+                    if old_mm_index == new_table_size//1_000_000_000:
+                        print(f"[{datetime.datetime.now()}]0.0000001%", flush=True)
+                    elif old_mm_index == new_table_size//100_000_000:
+                        print(f"[{datetime.datetime.now()}]0.000001%", flush=True)
+                    elif old_mm_index == new_table_size//10_000_000:
+                        print(f"[{datetime.datetime.now()}]0.00001%", flush=True)
+                    elif old_mm_index == new_table_size//1_000_000:
+                        print(f"[{datetime.datetime.now()}]0.0001%", flush=True)
+                    elif old_mm_index == new_table_size//100_000:
+                        print(f"[{datetime.datetime.now()}]0.001%", flush=True)
+                    elif old_mm_index == new_table_size//10_000:
+                        print(f"[{datetime.datetime.now()}]0.01%", flush=True)
+                    elif old_mm_index == new_table_size//1_000:
+                        print(f"[{datetime.datetime.now()}]0.1%", flush=True)
+                    elif old_mm_index == new_table_size//100:
+                        print(f"[{datetime.datetime.now()}]1%", flush=True)
+                    elif old_mm_index == new_table_size//10:
+                        print(f"[{datetime.datetime.now()}]10%", flush=True)
+                    elif old_mm_index == new_table_size//20:
+                        print(f"[{datetime.datetime.now()}]20%", flush=True)
+                    elif old_mm_index == new_table_size//30:
+                        print(f"[{datetime.datetime.now()}]30%", flush=True)
+                    elif old_mm_index == new_table_size//40:
+                        print(f"[{datetime.datetime.now()}]40%", flush=True)
+                    elif old_mm_index == new_table_size//50:
+                        print(f"[{datetime.datetime.now()}]50%", flush=True)
+                    elif old_mm_index == new_table_size//60:
+                        print(f"[{datetime.datetime.now()}]60%", flush=True)
+                    elif old_mm_index == new_table_size//70:
+                        print(f"[{datetime.datetime.now()}]70%", flush=True)
+                    elif old_mm_index == new_table_size//80:
+                        print(f"[{datetime.datetime.now()}]80%", flush=True)
+                    elif old_mm_index == new_table_size//90:
+                        print(f"[{datetime.datetime.now()}]90%", flush=True)
+                    elif old_mm_index == new_table_size//100:
+                        print(f"[{datetime.datetime.now()}]100%", flush=True)
+
                     one_byte_num = int.from_bytes(one_byte_binary, signed=False)
 
                     #
