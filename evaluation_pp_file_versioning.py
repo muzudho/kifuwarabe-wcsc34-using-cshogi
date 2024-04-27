@@ -66,6 +66,7 @@ class EvaluationPpFileVersioning():
         if tuple is None:
             mm_table = None
             is_file_modified = True     # 新規作成だから
+            shall_save_file = True      # 保存しておかないと、毎回作成して時間がかかる
         else:
             mm_table, file_version, shall_save_file = tuple
             is_file_modified = mm_table is None
@@ -76,12 +77,12 @@ class EvaluationPpFileVersioning():
 
         if mm_table is None:
             # ファイルが存在しないとき
-            mm_table = FileVersioning.reset_to_random_table(
-                hint=f'n{file_number} kind=pp',
-                table_size=EvaluationConfiguration.get_table_size(
-                        is_king_of_a=False,     # P なんで
-                        is_king_of_b=False,     # P なんで
-                        is_symmetrical_connected=is_symmetrical_connected))
+            mm_table = FileVersioning.create_random_table(
+                    hint=f'n{file_number} kind=pp',
+                    table_size=EvaluationConfiguration.get_table_size(
+                            is_king_of_a=False,     # P なんで
+                            is_king_of_b=False,     # P なんで
+                            is_symmetrical_connected=is_symmetrical_connected))
 
         pp_table = EvaluationPpTable(
                 file_number=file_number,

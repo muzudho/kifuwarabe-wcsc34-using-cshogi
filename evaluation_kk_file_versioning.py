@@ -44,6 +44,7 @@ class EvaluationKkFileVersioning():
         if tuple is None:
             mm_table = None
             is_file_modified = True     # 新規作成だから
+            shall_save_file = True      # 保存しておかないと、毎回作成して時間がかかる
         else:
             mm_table, file_version, shall_save_file = tuple
             is_file_modified = mm_table is None
@@ -57,12 +58,12 @@ class EvaluationKkFileVersioning():
 
         # ファイルが存在しないとき
         if mm_table is None:
-            mm_table = FileVersioning.reset_to_random_table(
-                hint=f"n{file_number} kind=kk",
-                table_size=EvaluationConfiguration.get_table_size(
-                        is_king_of_a=is_king_of_a,
-                        is_king_of_b=is_king_of_b,
-                        is_symmetrical_connected=is_symmetrical_connected))
+            mm_table = FileVersioning.create_random_table(
+                    hint=f"n{file_number} kind=kk",
+                    table_size=EvaluationConfiguration.get_table_size(
+                            is_king_of_a=is_king_of_a,
+                            is_king_of_b=is_king_of_b,
+                            is_symmetrical_connected=is_symmetrical_connected))
 
         kk_table = EvaluationKkTable(
                 file_number=file_number,
