@@ -333,77 +333,55 @@ class Kifuwarabe():
             # TODO ＫＬ表
 
             # ＫＰ表
-            k_table_index = EvaluationConfiguration.get_m_index_by_move(
+            k_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(move_a_as_usi),
                     is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
 
-            pair_of_list_of_k_move_as_usi = EvaluationConfiguration.get_pair_of_list_of_move_as_usi_by_mm_index(
-                    mm_index=k_table_index,
+            list_of_k_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
+                    m_index=k_index,
                     is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
 
             # ＰＰ表
-            m_table_index = EvaluationConfiguration.get_m_index_by_move(
+            m_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(move_a_as_usi),
                     is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
 
-            pair_of_list_of_m_move_as_usi = EvaluationConfiguration.get_pair_of_list_of_move_as_usi_by_mm_index(
-                    mm_index=m_table_index,
+            list_of_m_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
+                    m_index=m_index,
                     is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
 
             # 表示
-            ka = ",".join(pair_of_list_of_k_move_as_usi[0])
+            k = ",".join(list_of_k_move_as_usi)
+            m = ",".join(list_of_m_move_as_usi)
 
-            if 1 < len(pair_of_list_of_k_move_as_usi):
-                kb = ",".join(pair_of_list_of_k_move_as_usi[1])
-            else:
-                kb = ""
-
-            ma = ",".join(pair_of_list_of_m_move_as_usi[0])
-
-            if 1 < len(pair_of_list_of_m_move_as_usi):
-                mb = ",".join(pair_of_list_of_m_move_as_usi[1])
-            else:
-                mb = ""
-
-            print(f'  ({number:3}) {move_a_as_usi:5} = K{k_table_index:5} M{m_table_index:5}  検算 Ka:{ka:11}  b:{kb:11}  Ma:{ma:11}  b:{mb:11}')
+            print(f'  ({number:3}) {move_a_as_usi:5} = K{k_index:5} M{m_index:5}  検算 K:{k:11}  M:{m:11}')
             number += 1
 
         print('自玉以外の自軍の合法手一覧：')
         for move_a_as_usi in pieces_move_list_as_usi:
             # ＫＰ表
-            k_table_index = EvaluationConfiguration.get_m_index_by_move(
+            k_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(move_a_as_usi),
                     is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
 
-            pair_of_list_of_k_move_as_usi = EvaluationConfiguration.get_pair_of_list_of_move_as_usi_by_mm_index(
-                    mm_index=k_table_index,
+            list_of_k_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
+                    m_index=k_index,
                     is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
 
             # ＰＰ表
-            m_table_index = EvaluationConfiguration.get_m_index_by_move(
+            m_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(move_a_as_usi),
                     is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
 
-            pair_of_list_of_m_move_as_usi = EvaluationConfiguration.get_pair_of_list_of_move_as_usi_by_mm_index(
-                    mm_index=m_table_index,
+            list_of_m_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
+                    m_index=m_index,
                     is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
 
             # 表示
-            ka = ",".join(pair_of_list_of_k_move_as_usi[0])
+            k = ",".join(list_of_k_move_as_usi)
+            m = ",".join(list_of_m_move_as_usi)
 
-            if 1 < len(pair_of_list_of_k_move_as_usi):
-                kb = ",".join(pair_of_list_of_k_move_as_usi[1])
-            else:
-                kb = ""
-
-            ma = ",".join(pair_of_list_of_m_move_as_usi[0])
-
-            if 1 < len(pair_of_list_of_m_move_as_usi):
-                mb = ",".join(pair_of_list_of_m_move_as_usi[1])
-            else:
-                mb = ""
-
-            print(f'  ({number:3}) {move_a_as_usi:5} = K{k_table_index:5} M{m_table_index:5}  検算 Ka:{ka:11}  b:{kb:11}  Ma:{ma:11}  b:{mb:11}')
+            print(f'  ({number:3}) {move_a_as_usi:5} = K{k_index:5} M{m_index:5}  検算 K:{k:11}  M:{m:11}')
             number += 1
 
         #
@@ -449,39 +427,28 @@ class Kifuwarabe():
             # TODO ＫＬ表
 
             # ＫＰ表
-            k_table_index = EvaluationConfiguration.get_m_index_by_move(
+            k_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(lord_move_as_usi),
                     is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
 
-            pair_of_list_of_k_move_as_usi = EvaluationConfiguration.get_pair_of_list_of_move_as_usi_by_mm_index(
-                    mm_index=k_table_index,
+            list_of_k_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
+                    m_index=k_index,
                     is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
 
             # ＰＰ表
-            m_table_index = EvaluationConfiguration.get_m_index_by_move(
+            m_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(lord_move_as_usi),
                     is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
 
-            pair_of_list_of_m_move_as_usi = EvaluationConfiguration.get_pair_of_list_of_move_as_usi_by_mm_index(
-                    mm_index=m_table_index,
+            list_of_m_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
+                    m_index=m_index,
                     is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
 
             # 表示
-            ka = ",".join(pair_of_list_of_k_move_as_usi[0])
+            k = ",".join(list_of_k_move_as_usi)
+            m = ",".join(list_of_m_move_as_usi)
 
-            if 1 < len(pair_of_list_of_k_move_as_usi):
-                kb = ",".join(pair_of_list_of_k_move_as_usi[1])
-            else:
-                kb = ""
-
-            ma = ",".join(pair_of_list_of_m_move_as_usi[0])
-
-            if 1 < len(pair_of_list_of_m_move_as_usi):
-                mb = ",".join(pair_of_list_of_m_move_as_usi[1])
-            else:
-                mb = ""
-
-            print(f'  ({number:3}) L:{lord_move_as_usi:5} = K{k_table_index:5} M{m_table_index:5}  検算 Ka:{ka:11}  b:{kb:11}  Ma:{ma:11}  b:{mb:11}')
+            print(f'  ({number:3}) L:{lord_move_as_usi:5} = K{k_index:5} M{m_index:5}  検算 K:{k:11}  M:{m:11}')
             number += 1
 
         #
@@ -494,39 +461,28 @@ class Kifuwarabe():
             # TODO ＫＬ表
 
             # ＫＰ表
-            k_table_index = EvaluationConfiguration.get_m_index_by_move(
+            k_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(quaffer_move_as_usi),
                     is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
 
-            pair_of_list_of_k_move_as_usi = EvaluationConfiguration.get_pair_of_list_of_move_as_usi_by_mm_index(
-                    mm_index=k_table_index,
+            list_of_k_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
+                    m_index=k_index,
                     is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
 
             # ＰＰ表
-            m_table_index = EvaluationConfiguration.get_m_index_by_move(
+            m_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(quaffer_move_as_usi),
                     is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
 
-            pair_of_list_of_m_move_as_usi = EvaluationConfiguration.get_pair_of_list_of_move_as_usi_by_mm_index(
-                    mm_index=m_table_index,
+            list_of_m_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
+                    m_index=m_index,
                     is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
 
             # 表示
-            ka = ",".join(pair_of_list_of_k_move_as_usi[0])
+            k = ",".join(list_of_k_move_as_usi)
+            m = ",".join(list_of_m_move_as_usi)
 
-            if 1 < len(pair_of_list_of_k_move_as_usi):
-                kb = ",".join(pair_of_list_of_k_move_as_usi[1])
-            else:
-                kb = ""
-
-            ma = ",".join(pair_of_list_of_m_move_as_usi[0])
-
-            if 1 < len(pair_of_list_of_m_move_as_usi):
-                mb = ",".join(pair_of_list_of_m_move_as_usi[1])
-            else:
-                mb = ""
-
-            print(f'  ({number:3}) Q:{quaffer_move_as_usi:5} = K{k_table_index:5} M{m_table_index:5}  検算 Ka:{ka:11}  b:{kb:11}  Ma:{ma:11}  b:{mb:11}')
+            print(f'  ({number:3}) Q:{quaffer_move_as_usi:5} = K{k_index:5} M{m_index:5}  検算 K:{k:11}  M:{m:11}')
             number += 1
 
         #
@@ -555,23 +511,18 @@ class Kifuwarabe():
             # 指し手ペアの評価値
             k_move_value = king_move_as_usi_and_score_dictionary[move_a_as_usi]
 
-            k_table_index = EvaluationConfiguration.get_m_index_by_move(
+            k_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(move_a_as_usi),
                     is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
 
-            pair_of_list_of_k_move_as_usi = EvaluationConfiguration.get_pair_of_list_of_move_as_usi_by_mm_index(
-                    mm_index=k_table_index,
+            list_of_k_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
+                    m_index=k_index,
                     is_symmetrical_connected=self._evaluation_facade_obj.kp_ko_policy_table.is_symmetrical_connected)
 
             # 表示
-            ka = ",".join(pair_of_list_of_k_move_as_usi[0])
+            k = ",".join(list_of_k_move_as_usi)
 
-            if 1 < len(pair_of_list_of_k_move_as_usi):
-                kb = ",".join(pair_of_list_of_k_move_as_usi[1])
-            else:
-                kb = ""
-
-            print(f'  ({number:3}) K:{move_a_as_usi:5} = K{k_table_index:5} value:{k_move_value:3}  検算 Ka:{ka:11}  b:{kb:11}')
+            print(f'  ({number:3}) K:{move_a_as_usi:5} = K{k_index:5} value:{k_move_value:3}  検算 K:{k:11}')
             number += 1
 
         #
@@ -585,23 +536,18 @@ class Kifuwarabe():
             # 指し手ペアの評価値
             m_move_value = pieces_move_as_usi_and_score_dictionary[piece_move_as_usi]
 
-            m_table_index = EvaluationConfiguration.get_m_index_by_move(
+            m_index = EvaluationConfiguration.get_m_index_by_move(
                     move=Move(piece_move_as_usi),
                     is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
 
-            pair_of_list_of_m_move_as_usi = EvaluationConfiguration.get_pair_of_list_of_move_as_usi_by_mm_index(
-                    mm_index=m_table_index,
+            list_of_m_move_as_usi = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
+                    m_index=m_index,
                     is_symmetrical_connected=self._evaluation_facade_obj.pp_po_policy_table.is_symmetrical_connected)
 
             # 表示
-            ma = ",".join(pair_of_list_of_m_move_as_usi[0])
+            m = ",".join(list_of_m_move_as_usi)
 
-            if 1 < len(pair_of_list_of_m_move_as_usi):
-                mb = ",".join(pair_of_list_of_m_move_as_usi[1])
-            else:
-                mb = ""
-
-            print(f'  ({number:3}) P:{piece_move_as_usi:5} = M{m_table_index:5} value:{m_move_value:3}  検算 Ma:{ma:11}  b:{mb:11}')
+            print(f'  ({number:3}) P:{piece_move_as_usi:5} = M{m_index:5} value:{m_move_value:3}  検算 M:{m:11}')
             number += 1
 
 

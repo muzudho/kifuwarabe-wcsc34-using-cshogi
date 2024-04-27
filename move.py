@@ -115,6 +115,7 @@ class Move():
 
 
     _src_drops = ('R*', 'B*', 'G*', 'S*', 'N*', 'L*', 'P*')
+    _src_drop_files = ('R', 'B', 'G', 'S', 'N', 'L', 'P')
 
 
     @staticmethod

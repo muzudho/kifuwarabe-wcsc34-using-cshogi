@@ -281,7 +281,7 @@ class EvaluationConfiguration():
                     raise
 
                 # FIXME 不具合調査
-                if not src_file_str in Move._src_drops:
+                if not src_file_str in Move._src_drop_files:
                     error_message = f"drop file error.  src_num:{src_num}  src_file_str:{src_file_str}"
                     print(error_message)
                     raise Exception(error_message)
