@@ -267,13 +267,19 @@ class FileVersioning():
                     file_name=file_names_by_version[3])
 
             # 旧形式のバイナリ・ファイルは削除
-            FileVersioning.delete_file(file_names_by_version[2])
+            old_file_name = file_names_by_version[2]
+            if os.path.isfile(old_file_name):
+                FileVersioning.delete_file(old_file_name)
 
             # 旧形式のバイナリ・ファイルは削除
-            FileVersioning.delete_file(file_names_by_version[1])
+            old_file_name = file_names_by_version[1]
+            if os.path.isfile(old_file_name):
+                FileVersioning.delete_file(old_file_name)
 
             # 旧形式のテキスト・ファイルは削除
-            FileVersioning.delete_file(file_names_by_version[0])
+            old_file_name = file_names_by_version[0]
+            if os.path.isfile(old_file_name):
+                FileVersioning.delete_file(old_file_name)
 
             return (mm_table, "V3")
 
@@ -285,10 +291,14 @@ class FileVersioning():
                 v2_file_name=file_names_by_version[2])
 
             # 旧形式のバイナリ・ファイルは削除
-            FileVersioning.delete_file(file_names_by_version[1])
+            old_file_name = file_names_by_version[1]
+            if os.path.isfile(old_file_name):
+                FileVersioning.delete_file(old_file_name)
 
             # 旧形式のテキスト・ファイルは削除
-            FileVersioning.delete_file(file_names_by_version[0])
+            old_file_name = file_names_by_version[0]
+            if os.path.isfile(old_file_name):
+                FileVersioning.delete_file(old_file_name)
 
             return (mm_table, "V3")
 
@@ -300,7 +310,9 @@ class FileVersioning():
                     file_name=file_names_by_version[1])
 
             # 旧形式のテキスト・ファイルは削除
-            FileVersioning.delete_file(file_names_by_version[0])
+            old_file_name = file_names_by_version[0]
+            if os.path.isfile(old_file_name):
+                FileVersioning.delete_file(old_file_name)
 
             return (mm_table, "V1")
 

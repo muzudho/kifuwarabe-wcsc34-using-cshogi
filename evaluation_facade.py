@@ -194,7 +194,7 @@ class EvaluationFacade():
                 file_name=file_name,
                 evaluation_mm_table=mm_table,
                 is_file_modified=is_file_modified,
-                is_symmetrical_connected=self._is_symmetrical_connected_of_pp_po)
+                is_symmetrical_connected=self._is_symmetrical_connected_of_pp)
 
         # 学習
         Learn.update_evaluation_table(
@@ -225,7 +225,7 @@ class EvaluationFacade():
             # ＰＰ＋ＰＯポリシー
             FileVersioning.save_evaluation_to_file(
                     file_number=self._file_number,
-                    evaluation_kind="pp_po",  # V3 の途中からの新名を使っていく
+                    evaluation_kind="pp",  # V3 の途中からの新名を使っていく
                     evaluation_mm_table=self._pp_policy_table.evaluation_mm_table)
         else:
             print(f"[{datetime.datetime.now()}] pp file not changed", flush=True)
@@ -308,7 +308,7 @@ class EvaluationFacade():
                 turn=turn)
 
         # 評価値をマージ
-        for piece_move_as_usi, policy in pplicy_dictionary.items():
+        for piece_move_as_usi, policy in pp_policy_dictionary.items():
             if piece_move_as_usi in pieces_move_as_usi_and_policy_dictionary:
                 pieces_move_as_usi_and_policy_dictionary[piece_move_as_usi] += policy
             else:
