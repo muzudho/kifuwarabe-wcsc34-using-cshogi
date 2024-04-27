@@ -1,6 +1,7 @@
 import cshogi
 from move import Move
 from move_helper import MoveHelper
+from evaluation_move_specification import EvaluationMoveSpecification
 
 
 class EvaluationConfiguration():
@@ -265,6 +266,10 @@ class EvaluationConfiguration():
             盤は左右対称か？
         """
 
+        m_spec = EvaluationMoveSpecification(
+            is_king=is_king,
+            is_symmetrical_connected=is_symmetrical_connected)
+
         # 玉は成らないから pro を削れる
         if is_king:
             pro_size = 1
@@ -288,10 +293,14 @@ class EvaluationConfiguration():
         #         4680
         bits = m_index
 
-        #     0 = 4680 %            2
-        pro_num = bits % pro_size
+        if is_king:
+            pro_num = 0
+        else:
+            #     0 = 4680 %            2
+            pro_num = bits % m_spec.pro_patterns
+
         # 2340
-        bits //= pro_size
+        bits //= m_spec.pro_patterns
 
         #     0 = 2340 %       45
         dst_num = bits % dst_size
@@ -372,6 +381,7 @@ class EvaluationConfiguration():
                 try:
                     src_file_str = EvaluationConfiguration._src_num_to_file_str_on_symmetrical_connected[src_num]
                 except KeyError as e:
+                    # 例： single_move error.  src_num:52  dst_num:0  pro_num:0  m_index:4680  move_size:4680  (src_size:52  dst_size:45  pro_size:2)  bits:52  drop_kind:7  file_size:5  rank_size:9  e:52
                     # 例： single_move error.  src_num:52  dst_num:0  pro_num:0  m_index:4680  move_size:4680  (src_size:52  dst_size:45  pro_size:2)  bits:52  drop_kind:7  file_size:5  rank_size:9  e:52
                     # 例： single_move error.  src_num:52  dst_num:0  pro_num:0  m_index:4680  move_size:4680  (src_size:52  dst_size:45  pro_size:2)  bits:52  drop_kind:7  file_size:5  rank_size:9  e:52
                     # 例： single_move error.  src_num:52  dst_num:0  pro_num:0  m_index:4680  move_size:4680  (src_size:52  dst_size:45  pro_size:2)  bits:52  drop_kind:7  file_size:5  rank_size:9  e:52

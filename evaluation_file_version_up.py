@@ -38,7 +38,7 @@ class EvaluationFileVersionUp():
                 is_king=is_king_of_b,
                 is_symmetrical_connected=False)]
 
-        # ２の累乗
+        # ２の累乗、１バイト分
         two_powers = [128, 64, 32, 16, 8, 4, 2, 1]
 
         # ロードする。１分ほどかかる
@@ -179,6 +179,9 @@ class EvaluationFileVersionUp():
                 is_king_of_b=False,             # V3 は未対応
                 is_symmetrical_connected=False) # V3 は fully connected
 
+        # ２の累乗、１バイト分
+        two_powers = [128, 64, 32, 16, 8, 4, 2, 1]
+
         # ロードする。１分ほどかかる
         print(f"[{datetime.datetime.now()}] (v2 to v3) update {file_name} file ... (table_size:{table_size})", flush=True)
 
@@ -194,26 +197,40 @@ class EvaluationFileVersionUp():
             with open(file_name, 'rb') as f:
 
                 # プログレス表示
-                if old_mm_index == table_size//10:
-                    print("[10%]", end=False, flush=True)
-                elif old_mm_index == table_size//20:
-                    print("[20%]", end=False, flush=True)
-                elif old_mm_index == table_size//30:
-                    print("[30%]", end=False, flush=True)
-                elif old_mm_index == table_size//40:
-                    print("[40%]", end=False, flush=True)
-                elif old_mm_index == table_size//50:
-                    print("[50%]", end=False, flush=True)
-                elif old_mm_index == table_size//60:
-                    print("[60%]", end=False, flush=True)
-                elif old_mm_index == table_size//70:
-                    print("[70%]", end=False, flush=True)
-                elif old_mm_index == table_size//80:
-                    print("[80%]", end=False, flush=True)
-                elif old_mm_index == table_size//90:
-                    print("[90%]", end=False, flush=True)
+                if old_mm_index == table_size//100_000_000:
+                    print(f"[{datetime.datetime.now()}]0.000001%", flush=True)
+                elif old_mm_index == table_size//10_000_000:
+                    print(f"[{datetime.datetime.now()}]0.00001%", flush=True)
+                elif old_mm_index == table_size//1_000_000:
+                    print(f"[{datetime.datetime.now()}]0.0001%", flush=True)
+                elif old_mm_index == table_size//100_000:
+                    print(f"[{datetime.datetime.now()}]0.001%", flush=True)
+                elif old_mm_index == table_size//10_000:
+                    print(f"[{datetime.datetime.now()}]0.01%", flush=True)
+                elif old_mm_index == table_size//1_000:
+                    print(f"[{datetime.datetime.now()}]0.1%", flush=True)
                 elif old_mm_index == table_size//100:
-                    print("[100%]", end=False, flush=True)
+                    print(f"[{datetime.datetime.now()}]1%", flush=True)
+                elif old_mm_index == table_size//10:
+                    print(f"[{datetime.datetime.now()}]10%", flush=True)
+                elif old_mm_index == table_size//20:
+                    print(f"[{datetime.datetime.now()}]20%", flush=True)
+                elif old_mm_index == table_size//30:
+                    print(f"[{datetime.datetime.now()}]30%", flush=True)
+                elif old_mm_index == table_size//40:
+                    print(f"[{datetime.datetime.now()}]40%", flush=True)
+                elif old_mm_index == table_size//50:
+                    print(f"[{datetime.datetime.now()}]50%", flush=True)
+                elif old_mm_index == table_size//60:
+                    print(f"[{datetime.datetime.now()}]60%", flush=True)
+                elif old_mm_index == table_size//70:
+                    print(f"[{datetime.datetime.now()}]70%", flush=True)
+                elif old_mm_index == table_size//80:
+                    print(f"[{datetime.datetime.now()}]80%", flush=True)
+                elif old_mm_index == table_size//90:
+                    print(f"[{datetime.datetime.now()}]90%", flush=True)
+                elif old_mm_index == table_size//100:
+                    print(f"[{datetime.datetime.now()}]100%", flush=True)
 
                 one_byte_binary = f.read(1)
 
@@ -223,7 +240,6 @@ class EvaluationFileVersionUp():
                     #
                     # V2 ---> V3 で、インデックスがずれる
                     #
-                    two_powers = [128, 64, 32, 16, 8, 4, 2, 1]
                     for two_power in two_powers:
 
                         # ビットフィールドを全て使わず、途中で切れるケース
