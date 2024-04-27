@@ -28,10 +28,20 @@ class EvaluationConfiguration():
     @staticmethod
     def get_move_number(
             is_symmetrical_connected):
+        """指し手の数"""
+
+        # TODO 玉は成らないからＫＫ、ＫＰ型の評価値テーブルから pro を削れるのでは？
+
+        # symmetrical connected move 数
         if is_symmetrical_connected:
+            #  file   rank   drop     file   rank    pro
+            # (   5 *    9 +    7) * (   5 *    9) *   2 = 4_680
             return 4_680
+
+        # fully_connected move 数
         else:
-            # fully_connected
+            #  sq   drop    sq   pro
+            # (81 +    7) * 81 *   2 = 14_256
             return 14_256
 
 
@@ -39,10 +49,17 @@ class EvaluationConfiguration():
     @staticmethod
     def get_table_size(
             is_symmetrical_connected):
+
+        # symmetrical connected table size
         if is_symmetrical_connected:
+            #  SCM          SCM
+            # (4_680 - 1) * 4_680 = 21_897_720
             return 21_897_720
+
+        # fully connected table size
         else:
-            # fully_connected
+            #  FCM          FCM
+            # (14256 - 1) * 14256 = 203_219_280
             return 203_219_280
 
 
@@ -87,6 +104,8 @@ class EvaluationConfiguration():
             except Exception as e:
                 raise Exception(f"fully_connected dst_num error in '{move.as_usi}'.  ('{move.dst_str[0]}', '{move.dst_str[1]}')  e: {e}")
 
+        # TODO 玉は成りの判定を削れないか？
+
         # 成りか？
         if move.is_promotion():
             pro_num = 1
@@ -117,6 +136,8 @@ class EvaluationConfiguration():
         mm_index : int
             指し手 a, b のペアの通しインデックス
         """
+
+        # TODO 玉は成りの判定を削れないか？
 
         pro_size = 2
 
@@ -175,7 +196,10 @@ class EvaluationConfiguration():
         m_index : int
             指し手１つ分のインデックス
         """
+
+        # TODO 玉は成らないから pro を削れないか？
         pro_size = 2
+        
         rank_size = 9
 
         if is_symmetrical_connected:

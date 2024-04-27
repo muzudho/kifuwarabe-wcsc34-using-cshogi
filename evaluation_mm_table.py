@@ -132,7 +132,7 @@ class EvaluationMmTable():
         return self._evaluation_mm_table
 
 
-    def get_table_index_by_2_moves(
+    def get_mm_index_by_2_moves(
             self,
             a_move_obj,
             b_move_obj,
@@ -151,6 +151,7 @@ class EvaluationMmTable():
         a_index = EvaluationConfiguration.get_m_index_by_move(
                 move=a_move_obj,
                 is_symmetrical_connected=self._is_symmetrical_connected)
+
         b_index = EvaluationConfiguration.get_m_index_by_move(
                 move=b_move_obj,
                 is_symmetrical_connected=self._is_symmetrical_connected)
@@ -160,36 +161,36 @@ class EvaluationMmTable():
 
         # 昇順
         if a_index <= b_index:
-            index = a_index * self._move_size + b_index
-            #print(f"[DEBUG] 昇順 a:{a_index:3} b:{b_index:3} index:{index}", flush=True)
+            mm_index = a_index * self._move_size + b_index
+            #print(f"[DEBUG] 昇順 a:{a_index:3} b:{b_index:3} mm_index:{mm_index}", flush=True)
 
         # 降順
         else:
-            index = b_index * self._move_size + a_index
+            mm_index = b_index * self._move_size + a_index
 
-        return index
+        return mm_index
 
 
     def get_evaluation_value(self, a_move_obj, b_move_obj, turn):
         """両方残すなら 0点、インデックスが小さい方を残すなら -1点、インデックスが大きい方を残すなら +1点"""
 
-        index = self.get_table_index_by_2_moves(
+        mm_index = self.get_mm_index_by_2_moves(
                 a_move_obj,
                 b_move_obj,
                 turn)
-        #print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} index:{index}", flush=True)
+        #print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} mm_index:{mm_index}", flush=True)
 
         try:
             # 古いデータには 2 が入っているので、 2 は　1 に変換する
-            if self._evaluation_mm_table[index] == 2:
-                self._evaluation_mm_table[index] = 1
+            if self._evaluation_mm_table[mm_index] == 2:
+                self._evaluation_mm_table[mm_index] = 1
 
         except IndexError as e:
-            # 例： table length: 70955352  index: 102593390  except: list index out of range
-            print(f"table length:{len(self._evaluation_mm_table)}  index:{index}  a_move_obj.as_usi:{a_move_obj.as_usi}  b_move_obj.as_usi:{b_move_obj.as_usi}  turn:{turn}  except: {e}")
+            # 例： table length: 70955352  mm_index: 102593390  except: list index out of range
+            print(f"table length:{len(self._evaluation_mm_table)}  mm_index:{mm_index}  a_move_obj.as_usi:{a_move_obj.as_usi}  b_move_obj.as_usi:{b_move_obj.as_usi}  turn:{turn}  except: {e}")
             raise
 
-        return self._evaluation_mm_table[index]
+        return self._evaluation_mm_table[mm_index]
 
 
     def make_move_as_usi_and_policy_dictionary_2(

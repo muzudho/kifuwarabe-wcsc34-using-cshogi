@@ -49,13 +49,13 @@ class Learn():
                 a_move_obj = Move(move_a_as_usi)
                 b_move_obj = Move(move_b_as_usi)
 
-                index = evaluation_mm_table_obj.get_table_index_by_2_moves(
+                mm_index = evaluation_mm_table_obj.get_mm_index_by_2_moves(
                         a_move_obj,
                         b_move_obj,
                         turn)
 
                 # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
-                evaluation_mm_table_obj.evaluation_mm_table[index] = random.randint(0,1)
+                evaluation_mm_table_obj.evaluation_mm_table[mm_index] = random.randint(0,1)
 
                 #
                 # 左右反転して、同じようにしたい
@@ -63,13 +63,13 @@ class Learn():
                 reversed_a_move_obj = MoveHelper.flip_horizontal(a_move_obj)
                 reversed_b_move_obj = MoveHelper.flip_horizontal(b_move_obj)
 
-                index = evaluation_mm_table_obj.get_table_index_by_2_moves(
+                mm_index = evaluation_mm_table_obj.get_mm_index_by_2_moves(
                         reversed_a_move_obj,
                         reversed_b_move_obj,
                         turn)
 
                 # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
-                evaluation_mm_table_obj.evaluation_mm_table[index] = random.randint(0,1)
+                evaluation_mm_table_obj.evaluation_mm_table[mm_index] = random.randint(0,1)
 
 
         evaluation_mm_table_obj.is_file_modified = True
