@@ -10,6 +10,9 @@ pip -V
 
 # PYPI から cshogi をインストール
 pip install cshogi
+#
+# または
+# pip install git+https://github.com/TadaoYamaoka/cshogi
 ```
 
 ## 実行
