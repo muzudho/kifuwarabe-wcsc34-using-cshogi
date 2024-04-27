@@ -111,7 +111,7 @@ class EvaluationFacade():
                     file_number=self._kk_policy_table.file_number,
                     evaluation_kind="kk")
 
-            file_name = file_names_by_version[3]
+            file_name = file_names_by_version[4]    # V4
 
             FileVersioning.save_evaluation_to_file(
                     file_name=file_name,
@@ -130,7 +130,7 @@ class EvaluationFacade():
                     file_number=self._file_number,
                     evaluation_kind="kp")    # V3 の途中からの新名を使っていく
 
-            file_name = file_names_by_version[3]
+            file_name = file_names_by_version[4]    # V4
 
             FileVersioning.save_evaluation_to_file(
                     file_name=file_name,
@@ -149,7 +149,7 @@ class EvaluationFacade():
                     file_number=self._file_number,
                     evaluation_kind="pp")   # V3 の途中からの新名を使っていく
 
-            file_name = file_names_by_version[3]
+            file_name = file_names_by_version[4]    # V4
 
             FileVersioning.save_evaluation_to_file(
                     file_name=file_name,
