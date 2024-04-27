@@ -98,7 +98,7 @@ class EvaluationFacade():
         # 保存するかどうかは先に判定しておくこと
         if self._kk_policy_table.is_file_modified:
             # ＫＫポリシー
-            file_names_by_version = FileVersioning.create_file_names_each_version(
+            file_names_by_version = EvaluationKkFileVersioning.create_file_names_each_version(
                     file_number=self._file_number,
                     evaluation_kind="kk")
 
@@ -117,7 +117,7 @@ class EvaluationFacade():
         # 保存するかどうかは先に判定しておくこと
         if self._kp_policy_table.is_file_modified:
             # ＫＰポリシー
-            file_names_by_version = FileVersioning.create_file_names_each_version(
+            file_names_by_version = EvaluationKpFileVersioning.create_file_names_each_version(
                     file_number=self._file_number,
                     evaluation_kind="kp")    # V3 の途中からの新名を使っていく
 
@@ -136,7 +136,7 @@ class EvaluationFacade():
         # 保存するかどうかは先に判定しておくこと
         if self._pp_policy_table.is_file_modified:
             # ＰＰポリシー
-            file_names_by_version = FileVersioning.create_file_names_each_version(
+            file_names_by_version = EvaluationPpFileVersioning.create_file_names_each_version(
                     file_number=self._file_number,
                     evaluation_kind="pp")   # V3 の途中からの新名を使っていく
 
