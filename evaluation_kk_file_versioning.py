@@ -116,7 +116,15 @@ class EvaluationKkFileVersioning():
             file_version):
         """評価関数テーブルをファイルから読み込む。無ければランダム値の入った物を新規作成する。
 
-        ファイルのバージョンがアップすることがある"""
+        ファイルのバージョンがアップすることがある
+
+        Returns
+        -------
+        - タプル
+            - mm_table
+            - バージョン番号
+            - バージョンアップしたか？
+        """
 
         file_names_by_version = EvaluationKkFileVersioning.create_file_names_each_version(
                 file_number=file_number,
@@ -129,7 +137,7 @@ class EvaluationKkFileVersioning():
             mm_table = FileVersioning.read_evaluation_from_binary_v2_v3_file(
                     file_name=file_names_by_version[3])
 
-            return (mm_table, "V3")
+            return (mm_table, "V3", False)
 
         # ファイルが存在しないとき
         return None
