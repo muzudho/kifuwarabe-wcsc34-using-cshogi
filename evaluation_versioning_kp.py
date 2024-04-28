@@ -1,6 +1,6 @@
 import os
 import datetime
-from evaluation_kp_table import EvaluationKpTable
+from evaluation_table_kp import EvaluationTableKp
 from evaluation_versioning import EvaluationVersioning
 from evaluation_version_up_mm import EvaluationVersionUpMm
 from evaluation_table_size import EvaluationTableSize
@@ -241,7 +241,7 @@ class EvaluationVersioningKp():
                     hint=f"n{file_number}  kind=kp)",
                     table_size_obj=new_table_size_obj)
 
-        kp_table = EvaluationKpTable(
+        kp_table = EvaluationTableKp(
                 file_number=file_number,
                 file_name=file_name,
                 file_version=file_version,

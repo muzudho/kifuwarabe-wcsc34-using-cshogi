@@ -1,6 +1,6 @@
 import os
 import datetime
-from evaluation_pp_table import EvaluationPpTable
+from evaluation_table_pp import EvaluationTablePp
 from evaluation_versioning import EvaluationVersioning
 from evaluation_version_up_mm import EvaluationVersionUpMm
 from evaluation_table_size import EvaluationTableSize
@@ -230,7 +230,7 @@ class EvaluationVersioningPp():
                     hint=f'n{file_number}  kind=pp)',
                     table_size_obj=new_table_size_obj)
 
-        pp_table = EvaluationPpTable(
+        pp_table = EvaluationTablePp(
                 file_number=file_number,
                 file_name=file_name,
                 file_version=file_version,

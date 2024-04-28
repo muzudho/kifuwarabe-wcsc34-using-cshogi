@@ -1,9 +1,9 @@
-from evaluation_mm_table import EvaluationMmTable
+from evaluation_table_mm import EvaluationTableMm
 from evaluation_table_size import EvaluationTableSize
 from evaluation_rule_mm import EvaluationRuleMm
 
 
-class EvaluationKkTable(EvaluationMmTable):
+class EvaluationTableKk(EvaluationTableMm):
     """評価値テーブル　ＫＫ"""
 
 
@@ -56,7 +56,7 @@ class EvaluationKkTable(EvaluationMmTable):
                     is_king_of_b=is_king,
                     is_symmetrical_half_board=False)
 
-        EvaluationMmTable.__init__(
+        EvaluationTableMm.__init__(
                 self,
                 file_number=file_number,
                 file_name=file_name,

@@ -2,7 +2,7 @@ from move import Move
 from evaluation_rule_mm import EvaluationRuleMm
 
 
-class EvaluationMmTable():
+class EvaluationTableMm():
     """評価値ＭＭテーブル
 
     USIプロトコルの指し手の符号を M (Move) と呼ぶとする
