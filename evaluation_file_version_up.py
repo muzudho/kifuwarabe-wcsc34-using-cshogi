@@ -4,6 +4,7 @@ from evaluation_configuration import EvaluationConfiguration
 from move import Move
 from display_helper import DisplayHelper
 from evaluation_table_size import EvaluationTableSize
+from evaluation_rule_mm import EvaluationRuleMm
 
 
 class EvaluationFileVersionUp():
@@ -244,7 +245,7 @@ class EvaluationFileVersionUp():
                         # 共役の指し手も付いているケースがある
                         for list_of_move_as_usi in pair_of_list_of_move_as_usi:
                             for move_as_usi in list_of_move_as_usi:
-                                converted_m_index = EvaluationConfiguration.get_m_index_by_move(
+                                converted_m_index = EvaluationRuleMm.get_m_index_by_move(
                                         move=Move(move_as_usi),
                                         is_king=False,                  # 旧仕様では玉の区別なし
                                         is_symmetrical_half_board=True)  # V2 では、左右が異なる盤

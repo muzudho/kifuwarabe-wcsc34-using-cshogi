@@ -133,6 +133,82 @@ class Move():
         """
         self._move_as_usi = move_as_usi
 
+        # 移動元
+        self._src_str = self._move_as_usi[0: 2]
+
+        # 移動先
+        self._dst_str = self._move_as_usi[2: 4]
+
+        #
+        # 移動元の列番号を序数で。打にはマス番号は無い
+        #
+        if self.src_str in Move._src_drops:
+            self._src_file_or_none = None
+
+        else:
+            file_str = self.src_str[0]
+
+            try:
+                self._src_file_or_none = Move._file_str_to_num[file_str]
+            except:
+                raise Exception(f"src file error: '{file_str}' in '{self._move_as_usi}'")
+
+        #
+        # 移動元の段番号を序数で。打は無い
+        #
+        if self.src_str in Move._src_drops:
+            self._src_rank_or_none = None
+
+        else:
+            rank_str = self.src_str[1]
+
+            try:
+                self._src_rank_or_none = Move._rank_str_to_num[rank_str]
+            except:
+                raise Exception(f"src rank error: '{rank_str}' in '{self._move_as_usi}'")
+
+        #
+        # 移動元のマス番号を基数で。打にはマス番号は無い
+        #
+        file_or_none = self.get_src_file_or_none()
+        rank_or_none = self.get_src_rank_or_none()
+
+        if file_or_none is not None and rank_or_none is not None:
+            self._src_sq_or_none = (file_or_none - 1) * 9 + (rank_or_none - 1)
+        else:
+            self._src_sq_or_none = None
+
+        #
+        # 移動先の列番号を序数で
+        #
+        file_str = self.dst_str[0]
+
+        try:
+            self._dst_file = Move._file_str_to_num[file_str]
+        except:
+            raise Exception(f"dst file error: '{file_str}' in '{self._move_as_usi}'")
+
+
+        #
+        # 移動先の段番号を序数で
+        #
+        rank_str = self.dst_str[1]
+
+        try:
+            self._dst_rank = Move._rank_str_to_num[rank_str]
+        except:
+            raise Exception(f"dst rank error: '{rank_str}' in '{self._move_as_usi}'")
+
+        #
+        # 移動先のマス番号（Destination Square）
+        #
+        self._dst_sq = (self.get_dst_rank() - 1) * 9 + (self.get_dst_file() - 1)
+
+        #
+        # 成りかそれ以外（５文字なら成りだろう）
+        #
+        self._is_promotion = 4 < len(self._move_as_usi)
+
 
     @property
     def as_usi(self):
@@ -141,110 +217,46 @@ class Move():
 
     @property
     def src_str(self):
-        # 移動元
-        return self._move_as_usi[0: 2]
+        """移動元"""
+        return self._src_str
 
 
     @property
     def dst_str(self):
-        # 移動先
-        return self._move_as_usi[2: 4]
+        """移動先"""
+        return self._dst_str
 
 
     def get_src_file_or_none(self):
-        """移動元の列番号　＞　序数。打ではマス番号は取得できない"""
-
-        # 移動元
-        src_str = self._move_as_usi[0: 2]
-
-        #print(f"[get_src_file_or_none] move_as_usi: {self._move_as_usi}, src_str: {src_str}")
-
-        # ［打］は列番号を取得できない
-        if src_str in Move._src_drops:
-            return None
-
-        file_str = src_str[0]
-
-        #print(f"[get_src_file_or_none] move_as_usi: {self._move_as_usi}, file_str: {file_str}")
-
-        try:
-            return Move._file_str_to_num[file_str]
-        except:
-            raise Exception(f"src file error: '{file_str}' in '{self._move_as_usi}'")
+        """移動元の列番号を序数で。打にはマス番号は無い"""
+        return self._src_file_or_none
 
 
     def get_src_rank_or_none(self):
-        """移動元の段番号　＞　序数。打ではマス番号は取得できない"""
-
-        # 移動元
-        src_str = self._move_as_usi[0: 2]
-
-        #print(f"[get_src_rank_or_none] move_as_usi: {self._move_as_usi}, src_str: {src_str}")
-
-        # ［打］は列番号を取得できない
-        if src_str in Move._src_drops:
-            return None
-
-        rank_str = src_str[1]
-
-        #print(f"[get_src_rank_or_none] move_as_usi: {self._move_as_usi}, rank_str: {rank_str}")
-
-        try:
-            return Move._rank_str_to_num[rank_str]
-        except:
-            raise Exception(f"src rank error: '{rank_str}' in '{self._move_as_usi}'")
+        """移動元の段番号を序数で。打にはマス番号は無い"""
+        return self._src_rank_or_none
 
 
     def get_src_sq_or_none(self):
-        """移動元のマス番号（Destination Square）。打ではマス番号は取得できない"""
-
-        file_or_none = self.get_src_file_or_none()
-        rank_or_none = self.get_src_rank_or_none()
-
-        #print(f"[get_src_sq_or_none] move_as_usi: {self._move_as_usi}, file_or_none: {file_or_none}, rank_or_none: {rank_or_none}")
-
-        if file_or_none is not None and rank_or_none is not None:
-            return (file_or_none - 1) * 9 + (rank_or_none - 1)
-
-        return None
+        """移動元のマス番号を基数で。打にはマス番号は無い"""
+        return self._src_sq_or_none
 
 
     def get_dst_file(self):
-        """移動先の列番号　＞　序数"""
-
-        # 移動先
-        dst_str = self._move_as_usi[2: 4]
-
-        file_str = dst_str[0]
-
-        try:
-            Move._file_str_to_num[file_str]
-        except:
-            raise Exception(f"dst file error: '{file_str}' in '{self._move_as_usi}'")
+        """移動先の列番号を序数で"""
+        return self._dst_file
 
 
     def get_dst_rank(self):
-        """移動先の段番号　＞　序数"""
-
-        # 移動先
-        dst_str = self._move_as_usi[2: 4]
-
-        rank_str = dst_str[1]
-
-        try:
-            Move._rank_str_to_num[rank_str]
-        except:
-            raise Exception(f"dst rank error: '{rank_str}' in '{self._move_as_usi}'")
+        """移動先の段番号を序数で"""
+        return self._dst_rank
 
 
     def get_dst_sq(self):
         """移動先のマス番号（Destination Square）"""
-        return (self.get_dst_rank() - 1) * 9 + (self.get_dst_file() - 1)
+        return self._dst_sq
 
 
     def is_promotion(self):
         """成りかそれ以外（５文字なら成りだろう）"""
-        if 4 < len(self._move_as_usi):
-            return True
-
-        return False
+        return self._is_promotion
