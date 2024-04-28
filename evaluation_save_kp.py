@@ -13,7 +13,7 @@ class EvaluationSaveKp():
 
         Parameters
         ----------
-        kp_table_obj : EvaluationTableKp
+        kp_table_obj : EvaluationTableMm
             ポリシーのKP関係の評価値テーブル
         """
 

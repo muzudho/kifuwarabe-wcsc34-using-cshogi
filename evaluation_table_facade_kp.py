@@ -3,42 +3,38 @@ from evaluation_rule_facade import EvaluationRuleFacade
 from evaluation_table_size_facade_kp import EvaluationTableSizeFacadeKp
 
 
-class EvaluationTableKp(EvaluationTableMm):
+class EvaluationTableFacadeKp():
     """評価値テーブル　ＫＰ"""
 
 
-    def __init__(
-            self,
+    @staticmethod
+    def create_it(
             file_number,
             file_name,
-            evaluation_table_property,
             evaluation_mm_table,
             is_file_modified):
         """初期化
 
         Parameters
         ----------
-        evaluation_table_property : EvaluationTableProperty
-            バージョン別の仕様の情報
         is_file_modified : bool
             保存されていない評価値テーブルを引数で渡したなら真
         """
 
         # テーブル・サイズ。計算過程付き
-        table_size_obj = EvaluationTableSizeFacadeKp.create_it(
-                evaluation_table_property=evaluation_table_property)
+        table_size_obj = EvaluationTableSizeFacadeKp.create_it()
 
         k_size = EvaluationRuleFacade.get_move_number(
-                is_king=evaluation_table_property.is_king_size_of_a)
+                is_king=True)
         p_size = EvaluationRuleFacade.get_move_number(
-                is_king=evaluation_table_property.is_king_size_of_b)
+                is_king=False)
 
-        EvaluationTableMm.__init__(
-                self,
+        return EvaluationTableMm(
                 file_number=file_number,
                 file_name=file_name,
-                evaluation_table_property=evaluation_table_property,
                 table_size_obj=table_size_obj,
                 list_of_move_size=[k_size, p_size],
                 evaluation_mm_table=evaluation_mm_table,
+                is_king_size_of_a=True,
+                is_king_size_of_b=False,
                 is_file_modified=is_file_modified)

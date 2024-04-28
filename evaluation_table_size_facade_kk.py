@@ -6,8 +6,7 @@ class EvaluationTableSizeFacadeKk():
 
 
     @staticmethod
-    def create_it(
-            evaluation_table_property):
+    def create_it():
         """ＫＫ関係のテーブル・サイズ
 
         玉は１マスしか動かないから、指し手は最大８手。
@@ -45,7 +44,7 @@ class EvaluationTableSizeFacadeKk():
 
         # FIXME バージョン対応したい
         return EvaluationTableSize(
-                is_king_of_a=evaluation_table_property.is_king_size_of_a,
-                is_king_of_b=evaluation_table_property.is_king_size_of_b,
+                is_king_of_a=True,
+                is_king_of_b=True,
                 a_number=EvaluationRuleKk.get_move_number(),
                 b_number=EvaluationRuleKk.get_move_number())

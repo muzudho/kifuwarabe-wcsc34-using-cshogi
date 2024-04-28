@@ -1,8 +1,7 @@
 import os
 import datetime
-from evaluation_table_pp import EvaluationTablePp
+from evaluation_table_facade_pp import EvaluationTableFacadePp
 from evaluation_file import EvaluationFile
-from evaluation_table_property import EvaluationTableProperty
 from evaluation_table_size_facade_pp import EvaluationTableSizeFacadePp
 from evaluation_load import EvaluationLoad
 
@@ -52,14 +51,9 @@ class EvaluationFilePp():
             is_file_modified = False
             shall_save_file = False
 
-        evaluation_table_property = EvaluationTableProperty(
-                is_king_size_of_a=False,            # P なんで
-                is_king_size_of_b=False)            # P なんで
-
         if mm_table is None:
             # ファイルが存在しないとき
-            new_table_size_obj = EvaluationTableSizeFacadePp.create_it(
-                    evaluation_table_property=evaluation_table_property)
+            new_table_size_obj = EvaluationTableSizeFacadePp.create_it()
 
             mm_table = EvaluationFile.create_random_table(
                     hint=f'n{file_number}  kind=pp)',
@@ -68,10 +62,9 @@ class EvaluationFilePp():
             shall_save_file = True
             is_file_modified = True
 
-        pp_table = EvaluationTablePp(
+        pp_table = EvaluationTableFacadePp(
                 file_number=file_number,
                 file_name=file_name,
-                evaluation_table_property=evaluation_table_property,
                 evaluation_mm_table=mm_table,
                 is_file_modified=is_file_modified)
 

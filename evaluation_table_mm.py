@@ -30,17 +30,16 @@ class EvaluationTableMm():
             self,
             file_number,
             file_name,
-            evaluation_table_property,
             table_size_obj,
             list_of_move_size,
             evaluation_mm_table,
+            is_king_size_of_a,
+            is_king_size_of_b,
             is_file_modified):
         """初期化
 
         Parameters
         ----------
-        evaluation_table_property : EvaluationTableProperty
-            バージョン別の仕様の情報
         table_size_obj: EvaluationTableSize
             テーブル・サイズ。計算過程付き
         list_of_move_size : str[]
@@ -90,12 +89,11 @@ class EvaluationTableMm():
         """
         self._file_number = file_number
         self._file_name = file_name
-        self._evaluation_table_property = evaluation_table_property
         self._table_size_obj = table_size_obj
         self._list_of_move_size = list_of_move_size
         self._evaluation_mm_table = evaluation_mm_table
-        self._is_king_of_a = evaluation_table_property.is_king_size_of_a
-        self._is_king_of_b = evaluation_table_property.is_king_size_of_b
+        self._is_king_of_a = is_king_size_of_a
+        self._is_king_of_b = is_king_size_of_b
         self._is_file_modified = is_file_modified
 
 
@@ -107,11 +105,6 @@ class EvaluationTableMm():
     @property
     def file_name(self):
         return self._file_name
-
-
-    @property
-    def evaluation_table_property(self):
-        return self._evaluation_table_property
 
 
     @property

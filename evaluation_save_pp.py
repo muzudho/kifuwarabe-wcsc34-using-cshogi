@@ -13,7 +13,7 @@ class EvaluationSavePp():
 
         Parameters
         ----------
-        pp_table_obj : EvaluationTablePp
+        pp_table_obj : EvaluationTableFacadePp
             ポリシーのPP関係の評価値テーブル
         """
 
