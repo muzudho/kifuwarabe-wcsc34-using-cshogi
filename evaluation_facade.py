@@ -2,7 +2,7 @@ import datetime
 from evaluation_versioning_kk import EvaluationVersioningKk
 from evaluation_versioning_kp import EvaluationVersioningKp
 from evaluation_versioning_pp import EvaluationVersioningPp
-from evaluation_file_versioning import FileVersioning
+from evaluation_versioning import EvaluationVersioning
 from learn import Learn
 
 
@@ -113,7 +113,7 @@ class EvaluationFacade():
 
             file_name = file_names_by_version[4]    # V4
 
-            FileVersioning.save_evaluation_to_file(
+            EvaluationVersioning.save_evaluation_to_file(
                     file_name=file_name,
                     evaluation_mm_table=self._kk_policy_table.evaluation_mm_table)
         else:
@@ -132,7 +132,7 @@ class EvaluationFacade():
 
             file_name = file_names_by_version[4]    # V4
 
-            FileVersioning.save_evaluation_to_file(
+            EvaluationVersioning.save_evaluation_to_file(
                     file_name=file_name,
                     evaluation_mm_table=self._kp_policy_table.evaluation_mm_table)
         else:
@@ -151,7 +151,7 @@ class EvaluationFacade():
 
             file_name = file_names_by_version[4]    # V4
 
-            FileVersioning.save_evaluation_to_file(
+            EvaluationVersioning.save_evaluation_to_file(
                     file_name=file_name,
                     evaluation_mm_table=self._pp_policy_table.evaluation_mm_table)
         else:

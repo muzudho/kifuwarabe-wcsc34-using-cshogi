@@ -1,7 +1,7 @@
 import os
 import datetime
 from evaluation_kp_table import EvaluationKpTable
-from evaluation_file_versioning import FileVersioning
+from evaluation_versioning import EvaluationVersioning
 from evaluation_version_up_mm import EvaluationVersionUpMm
 from evaluation_table_size import EvaluationTableSize
 
@@ -35,25 +35,25 @@ class EvaluationVersioningKp():
             # 旧形式のバイナリ・ファイルは削除
             old_file_name = file_names_by_version[3]
             if os.path.isfile(old_file_name):
-                FileVersioning.delete_file(old_file_name)
+                EvaluationVersioning.delete_file(old_file_name)
 
         if 2 < current_number:
             # 旧形式のバイナリ・ファイルは削除
             old_file_name = file_names_by_version[2]
             if os.path.isfile(old_file_name):
-                FileVersioning.delete_file(old_file_name)
+                EvaluationVersioning.delete_file(old_file_name)
 
         if 1 < current_number:
             # 旧形式のバイナリ・ファイルは削除
             old_file_name = file_names_by_version[1]
             if os.path.isfile(old_file_name):
-                FileVersioning.delete_file(old_file_name)
+                EvaluationVersioning.delete_file(old_file_name)
 
         if 0 < current_number:
             # 旧形式のテキスト・ファイルは削除
             old_file_name = file_names_by_version[0]
             if os.path.isfile(old_file_name):
-                FileVersioning.delete_file(old_file_name)
+                EvaluationVersioning.delete_file(old_file_name)
 
 
     @staticmethod
@@ -82,7 +82,7 @@ class EvaluationVersioningKp():
         # バイナリ・ファイル V4 に保存されているとき
         if file_version == "V4":
             # V4ファイル読込
-            mm_table = FileVersioning.read_evaluation_from_binary_v2_v3_file(
+            mm_table = EvaluationVersioning.read_evaluation_from_binary_v2_v3_file(
                     file_name=file_names_by_version[4])
 
             # 旧形式ファイル削除
@@ -96,7 +96,7 @@ class EvaluationVersioningKp():
         if file_version == "V3":
 
             ## V3ファイル読込
-            #mm_table = FileVersioning.read_evaluation_from_binary_v2_v3_file(
+            #mm_table = EvaluationVersioning.read_evaluation_from_binary_v2_v3_file(
             #        file_name=file_names_by_version[3])
 
             # バージョンアップする
@@ -132,7 +132,7 @@ class EvaluationVersioningKp():
 
         # バイナリ・ファイルに保存されているとき
         if file_version == "V1":
-            mm_table = FileVersioning.read_evaluation_from_binary_file(
+            mm_table = EvaluationVersioning.read_evaluation_from_binary_file(
                     file_name=file_names_by_version[1])
 
             # 旧形式ファイル削除
@@ -146,7 +146,7 @@ class EvaluationVersioningKp():
 
         # テキスト・ファイルに保存されているとき
         if file_version == "V0":
-            mm_table = FileVersioning.read_evaluation_from_text_file(
+            mm_table = EvaluationVersioning.read_evaluation_from_text_file(
                     file_name=file_names_by_version[0])
 
             return (mm_table, "V0", False)
@@ -237,7 +237,7 @@ class EvaluationVersioningKp():
                     is_king_of_b=is_king_of_b,
                     is_symmetrical_half_board=is_symmetrical_half_board)
 
-            mm_table = FileVersioning.create_random_table(
+            mm_table = EvaluationVersioning.create_random_table(
                     hint=f"n{file_number}  kind=kp)",
                     table_size_obj=new_table_size_obj)
 

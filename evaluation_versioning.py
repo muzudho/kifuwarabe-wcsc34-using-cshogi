@@ -3,7 +3,7 @@ import datetime
 import random
 
 
-class FileVersioning():
+class EvaluationVersioning():
     """評価値ファイル等の読込や、バージョン更新などを担当"""
 
 
