@@ -68,7 +68,7 @@ class EvaluationFacade():
 
         # 学習
         Learn.update_evaluation_table(
-                evaluation_mm_table_obj=self._kk_table_obj,
+                mm_table_obj=self._kk_table_obj,
                 canditates_memory=king_canditates_memory, # キング
                 result_file=result_file)
 
@@ -84,7 +84,7 @@ class EvaluationFacade():
 
         # 学習
         Learn.update_evaluation_table(
-                evaluation_mm_table_obj=self._kp_table_obj,
+                mm_table_obj=self._kp_table_obj,
                 canditates_memory=king_canditates_memory, # キング
                 result_file=result_file)
 
@@ -100,7 +100,7 @@ class EvaluationFacade():
 
         # 学習
         Learn.update_evaluation_table(
-                evaluation_mm_table_obj=self._pp_table_obj,
+                mm_table_obj=self._pp_table_obj,
                 canditates_memory=pieces_canditates_memory,  # 自軍の玉以外の合法手
                 result_file=result_file)
 
