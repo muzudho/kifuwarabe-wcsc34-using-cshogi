@@ -1,9 +1,9 @@
 import os
 import datetime
-from evaluation_configuration import EvaluationConfiguration
 from evaluation_kk_table import EvaluationKkTable
 from evaluation_file_versioning import FileVersioning
 from evaluation_file_version_up import EvaluationFileVersionUp
+from evaluation_table_size import EvaluationTableSize
 
 
 class EvaluationKkFileVersioning():
@@ -58,12 +58,13 @@ class EvaluationKkFileVersioning():
 
         # ファイルが存在しないとき
         if mm_table is None:
+            new_table_size_obj = EvaluationTableSize(
+                    is_king_of_a=is_king_of_a,
+                    is_king_of_b=is_king_of_b,
+                    is_symmetrical_connected=is_symmetrical_connected)
             mm_table = FileVersioning.create_random_table(
-                    hint=f"n{file_number} kind=kk",
-                    table_size=EvaluationConfiguration.get_table_size(
-                            is_king_of_a=is_king_of_a,
-                            is_king_of_b=is_king_of_b,
-                            is_symmetrical_connected=is_symmetrical_connected))
+                    hint=f"n{file_number}  kind=kk  new_table_size_obj:({new_table_size_obj.to_debug_str()})",
+                    table_size=new_table_size_obj.combination)
 
         kk_table = EvaluationKkTable(
                 file_number=file_number,

@@ -1,9 +1,9 @@
 import os
 import datetime
-from evaluation_configuration import EvaluationConfiguration
 from evaluation_pp_table import EvaluationPpTable
 from evaluation_file_versioning import FileVersioning
 from evaluation_file_version_up import EvaluationFileVersionUp
+from evaluation_table_size import EvaluationTableSize
 
 
 class EvaluationPpFileVersioning():
@@ -77,12 +77,14 @@ class EvaluationPpFileVersioning():
 
         if mm_table is None:
             # ファイルが存在しないとき
+            new_table_size_obj = EvaluationTableSize(
+                    is_king_of_a=False,     # P なんで
+                    is_king_of_b=False,     # P なんで
+                    is_symmetrical_connected=is_symmetrical_connected)
+
             mm_table = FileVersioning.create_random_table(
-                    hint=f'n{file_number} kind=pp',
-                    table_size=EvaluationConfiguration.get_table_size(
-                            is_king_of_a=False,     # P なんで
-                            is_king_of_b=False,     # P なんで
-                            is_symmetrical_connected=is_symmetrical_connected))
+                    hint=f'n{file_number}  kind=pp  new_table_size_obj:({new_table_size_obj.to_debug_str()})',
+                    table_size=new_table_size_obj.combination)
 
         pp_table = EvaluationPpTable(
                 file_number=file_number,

@@ -3,6 +3,7 @@ import datetime
 from evaluation_configuration import EvaluationConfiguration
 from move import Move
 from display_helper import DisplayHelper
+from evaluation_table_size import EvaluationTableSize
 
 
 class EvaluationFileVersionUp():
@@ -28,10 +29,11 @@ class EvaluationFileVersionUp():
 
         is_finish = False
 
-        new_table_size = EvaluationConfiguration.get_table_size(
+        new_table_size_obj = EvaluationTableSize(
                 is_king_of_a=is_king_of_a,          # V4 は未対応
                 is_king_of_b=is_king_of_b,          # V4 は未対応
                 is_symmetrical_connected=False)     # V4 は fully connected
+        new_table_size = new_table_size_obj.combination
 
         list_of_move_size = [
             EvaluationConfiguration.get_move_number(
@@ -49,7 +51,7 @@ class EvaluationFileVersionUp():
         new_table_size_with_underscore = DisplayHelper.with_underscore(new_table_size)
         a_size_with_underscore = list_of_move_size[0]
         b_size_with_underscore = list_of_move_size[1]
-        print(f"[{datetime.datetime.now()}] (v3 to v4) update {file_name} file initialize ... (new_table_size:{new_table_size_with_underscore}, a_size:{a_size_with_underscore}, b_size:{b_size_with_underscore})", flush=True)
+        print(f"[{datetime.datetime.now()}] (v3 to v4) update {file_name} file initialize ... new_table_size_obj:({new_table_size_obj.to_debug_str()})  (a_size:{a_size_with_underscore}, b_size:{b_size_with_underscore})", flush=True)
 
         new_mm_table = [0] * new_table_size
 
@@ -171,10 +173,11 @@ class EvaluationFileVersionUp():
 
         is_finish = False
 
-        new_table_size = EvaluationConfiguration.get_table_size(
+        new_table_size_obj = EvaluationTableSize(
                 is_king_of_a=False,             # V3 は未対応
                 is_king_of_b=False,             # V3 は未対応
                 is_symmetrical_connected=False) # V3 は fully connected
+        new_table_size = new_table_size_obj.combination
 
         # ２の累乗、１バイト分
         two_powers = [128, 64, 32, 16, 8, 4, 2, 1]
@@ -182,7 +185,7 @@ class EvaluationFileVersionUp():
         # サイズに応じて時間のかかる処理
         #
         new_table_size_with_underscore = DisplayHelper.with_underscore(new_table_size)
-        print(f"[{datetime.datetime.now()}] (v2 to v3) update {file_name} file ... (new_table_size:{new_table_size_with_underscore})", flush=True)
+        print(f"[{datetime.datetime.now()}] (v2 to v3) update {file_name} file ... new_table_size_obj:({new_table_size_obj.to_debug_str()})", flush=True)
 
         evaluation_mm_table = [0] * new_table_size
 

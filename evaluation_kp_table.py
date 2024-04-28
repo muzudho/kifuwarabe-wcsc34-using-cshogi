@@ -1,5 +1,6 @@
 from evaluation_configuration import EvaluationConfiguration
 from evaluation_mm_table import EvaluationMmTable
+from evaluation_table_size import EvaluationTableSize
 
 
 class EvaluationKpTable(EvaluationMmTable):
@@ -42,10 +43,12 @@ class EvaluationKpTable(EvaluationMmTable):
             p_size = EvaluationConfiguration.get_move_number(
                     is_king=False,  # P なんで
                     is_symmetrical_connected=True)
-            table_size = EvaluationConfiguration.get_table_size(
+
+            new_table_size_obj = EvaluationTableSize(
                     is_king_of_a=False,     # P なんで
                     is_king_of_b=False,     # P なんで
                     is_symmetrical_connected=True)
+            table_size = new_table_size_obj.combination
 
         else:
             k_size = EvaluationConfiguration.get_move_number(
@@ -54,10 +57,12 @@ class EvaluationKpTable(EvaluationMmTable):
             p_size = EvaluationConfiguration.get_move_number(
                     is_king=False,  # P なんで
                     is_symmetrical_connected=False)
-            table_size = EvaluationConfiguration.get_table_size(
+
+            new_table_size_obj = EvaluationTableSize(
                     is_king_of_a=False,     # P なんで
                     is_king_of_b=False,     # P なんで
                     is_symmetrical_connected=False)
+            table_size = new_table_size_obj.combination
 
         EvaluationMmTable.__init__(
                 self,
