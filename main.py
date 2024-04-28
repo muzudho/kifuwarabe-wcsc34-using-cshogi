@@ -253,8 +253,8 @@ class Kifuwarabe():
                 self._result_file.save_win(self._my_turn)
 
                 # ［指した手］　勝ったら全部忘れる
-                self._king_canditates_memory.delete()
-                self._pieces_canditates_memory.delete()
+                self._king_canditates_memory.delete_file()
+                self._pieces_canditates_memory.delete_file()
 
                 # ［評価値］　勝ったら記憶する
                 EvaluationSaveKk.save_file_as_kk(
