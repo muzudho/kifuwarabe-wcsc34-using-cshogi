@@ -20,8 +20,7 @@ class EvaluationSaveKk():
         # 保存するかどうかは先に判定しておくこと
         if kk_table_obj.is_file_modified:
             file_name = EvaluationFileKk.create_file_name(
-                    file_number=kk_table_obj.file_number,
-                    evaluation_kind="kk")
+                    file_number=kk_table_obj.file_number)
 
             EvaluationSave.save_evaluation_file(
                     file_name=file_name,

@@ -11,9 +11,8 @@ class EvaluationFilePp():
 
     @staticmethod
     def create_file_name(
-            file_number,
-            evaluation_kind):
-        return f'n{file_number}_eval_{evaluation_kind}.bin'
+            file_number):
+        return f'n{file_number}_eval_pp.bin'
 
 
     @staticmethod
@@ -27,11 +26,9 @@ class EvaluationFilePp():
         - バージョンアップしたので保存要求の有無
         """
         shall_save_file = False
-        evaluation_kind = "pp"
 
         file_name = EvaluationFilePp.create_file_name(
-                file_number=file_number,
-                evaluation_kind=evaluation_kind)
+                file_number=file_number)
 
         print(f"[{datetime.datetime.now()}] {file_name} file exists check ...", flush=True)
         is_file_exists = os.path.isfile(file_name)

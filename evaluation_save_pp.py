@@ -21,8 +21,7 @@ class EvaluationSavePp():
         if pp_table_obj.is_file_modified:
             # ＰＰポリシー
             file_name = EvaluationFilePp.create_file_name(
-                    file_number=pp_table_obj.file_number,
-                    evaluation_kind="pp")   # V3 の途中からの新名を使っていく
+                    file_number=pp_table_obj.file_number)
 
             EvaluationSave.save_evaluation_file(
                     file_name=file_name,
