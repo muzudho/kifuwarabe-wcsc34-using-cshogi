@@ -101,7 +101,18 @@ class Kifuwarabe():
 
     def usi(self):
         """USIエンジン握手"""
-        print('id name KifuwarabeWCSC34')
+
+        # エンジン名は別ファイルから読込。pythonファイルはよく差し替えるのでデータは外に出したい
+        try:
+            file_name = "engine_name.txt"
+            with open(file_name, 'r', encoding="utf-8") as f:
+                engine_name = f.read().strip()
+
+        except FileNotFoundError as ex:
+            print(f"[usi protocol > usi] '{file_name}' file not found. {ex}")
+            raise
+
+        print(f'id name {engine_name}')
         print('usiok', flush=True)
 
 
