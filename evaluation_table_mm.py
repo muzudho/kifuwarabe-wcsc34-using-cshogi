@@ -30,6 +30,7 @@ class EvaluationTableMm():
             file_number,
             file_name,
             file_version,
+            evaluation_version_record,
             list_of_move_size,
             table_size_obj,
             evaluation_mm_table,
@@ -43,6 +44,8 @@ class EvaluationTableMm():
         ----------
         file_version : str
             ファイルのバージョン
+        evaluation_version_record : EvaluationVersionRecord
+            バージョン別の仕様の情報
         list_of_move_size : str[]
             指し手 a, b それぞれのサイズ
         table_size_obj: EvaluationTableSize
@@ -109,6 +112,7 @@ class EvaluationTableMm():
         self._file_number = file_number
         self._file_name = file_name
         self._file_version = file_version
+        self._evaluation_version_record = evaluation_version_record
         self._list_of_move_size = list_of_move_size
         self._table_size_obj = table_size_obj
         self._evaluation_mm_table = evaluation_mm_table
@@ -131,6 +135,11 @@ class EvaluationTableMm():
     @property
     def file_version(self):
         return self._file_version
+
+
+    @property
+    def evaluation_version_record(self):
+        return self._evaluation_version_record
 
 
     @property

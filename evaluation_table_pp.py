@@ -12,6 +12,7 @@ class EvaluationTablePp(EvaluationTableMm):
             file_number,
             file_name,
             file_version,
+            evaluation_version_record,
             evaluation_mm_table,
             is_king_of_a,
             is_king_of_b,
@@ -23,6 +24,8 @@ class EvaluationTablePp(EvaluationTableMm):
         ----------
         file_version : str
             ファイルのバージョン
+        evaluation_version_record : EvaluationVersionRecord
+            バージョン別の仕様の情報
         is_king_of_a : bool
             指し手 a は玉か？
         is_king_of_b : bool

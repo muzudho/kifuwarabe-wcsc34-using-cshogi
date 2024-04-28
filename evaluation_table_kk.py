@@ -1,6 +1,6 @@
 from evaluation_table_mm import EvaluationTableMm
 from evaluation_table_size import EvaluationTableSize
-from evaluation_rule_mm import EvaluationRuleMm
+from evaluation_rule_kk import EvaluationRuleKk
 
 
 class EvaluationTableKk(EvaluationTableMm):
@@ -12,6 +12,7 @@ class EvaluationTableKk(EvaluationTableMm):
             file_number,
             file_name,
             file_version,
+            evaluation_version_record,
             evaluation_mm_table,
             is_king_of_a,
             is_king_of_b,
@@ -23,6 +24,8 @@ class EvaluationTableKk(EvaluationTableMm):
         ----------
         file_version : str
             ファイルのバージョン
+        evaluation_version_record : EvaluationVersionRecord
+            バージョン別の仕様の情報
         is_king_of_a : bool
             指し手 a は玉か？
         is_king_of_b : bool
@@ -31,13 +34,15 @@ class EvaluationTableKk(EvaluationTableMm):
             保存されていない評価値テーブルを引数で渡したなら真
         """
 
-        if file_version=="V4":
+        is_king = evaluation_version_record.is_king_size_of_kk
+
+        if file_version in ("V4", "V5"):
             is_king = True
         else:
             is_king = False
 
         if is_symmetrical_half_board:
-            k_size = EvaluationRuleMm.get_move_number(
+            k_size = EvaluationRuleKk.get_move_number(
                     is_king=is_king,
                     is_symmetrical_half_board=True)
 
@@ -47,7 +52,7 @@ class EvaluationTableKk(EvaluationTableMm):
                     is_symmetrical_half_board=True)
 
         else:
-            k_size = EvaluationRuleMm.get_move_number(
+            k_size = EvaluationRuleKk.get_move_number(
                     is_king=is_king,
                     is_symmetrical_half_board=False)
 
