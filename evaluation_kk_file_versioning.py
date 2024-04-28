@@ -23,7 +23,7 @@ class EvaluationKkFileVersioning():
         evaluation_kind = "kk"
 
         # ＫＫ評価値テーブルは V3 の途中から追加
-        is_symmetrical_connected = False
+        is_symmetrical_half_board = False
 
         tuple = EvaluationKkFileVersioning.check_file_version_and_name(
                 file_number=file_number,
@@ -61,7 +61,7 @@ class EvaluationKkFileVersioning():
             new_table_size_obj = EvaluationTableSize(
                     is_king_of_a=is_king_of_a,
                     is_king_of_b=is_king_of_b,
-                    is_symmetrical_connected=is_symmetrical_connected)
+                    is_symmetrical_half_board=is_symmetrical_half_board)
             mm_table = FileVersioning.create_random_table(
                     hint=f"n{file_number}  kind=kk)",
                     table_size_obj=new_table_size_obj)
@@ -73,7 +73,7 @@ class EvaluationKkFileVersioning():
                 evaluation_mm_table=mm_table,
                 is_king_of_a=is_king_of_a,
                 is_king_of_b=is_king_of_b,
-                is_symmetrical_connected=is_symmetrical_connected,
+                is_symmetrical_half_board=is_symmetrical_half_board,
                 is_file_modified=is_file_modified)
 
         return (kk_table, shall_save_file)

@@ -5,7 +5,7 @@ class EvaluationMoveSpecification():
     def __init__(
             self,
             is_king,
-            is_symmetrical_connected):
+            is_symmetrical_half_board):
         """初期化
 
         Parameters
@@ -14,11 +14,11 @@ class EvaluationMoveSpecification():
             指し手１つ分のインデックス
         is_king : bool
             玉の動きか？
-        is_symmetrical_connected : bool
+        is_symmetrical_half_board : bool
             盤は左右対称か？
         """
         self._is_king = is_king
-        self._is_symmetrical_connected = is_symmetrical_connected
+        self._is_symmetrical_half_board = is_symmetrical_half_board
 
         if is_king:
             # 玉は成らずの１パターン
@@ -31,7 +31,7 @@ class EvaluationMoveSpecification():
         self._rank_size = 9
 
         # 筋数
-        if is_symmetrical_connected:
+        if is_symmetrical_half_board:
             # 盤が左右対称
             self._file_size = 5
         else:
@@ -57,9 +57,9 @@ class EvaluationMoveSpecification():
 
 
     @property
-    def is_symmetrical_connected(self):
+    def is_symmetrical_half_board(self):
         """盤は左右対称か？"""
-        return self._is_symmetrical_connected
+        return self._is_symmetrical_half_board
 
 
     @property
@@ -106,4 +106,4 @@ class EvaluationMoveSpecification():
 
     def to_debug_str(self):
         """デバッグ用文字列"""
-        return f"is_king:{self._is_king}  is_symmetrical_connected:{self._is_symmetrical_connected}  pro_patterns:{self._pro_patterns}  rank_size:{self._rank_size}  file_size:{self._file_size}  dst_patterns:{self._dst_patterns}  drop_patterns:{self._drop_patterns}  src_patterns:{self._src_patterns}  move_patterns:{self._move_patterns}"
+        return f"is_king:{self._is_king}  is_symmetrical_half_board:{self._is_symmetrical_half_board}  pro_patterns:{self._pro_patterns}  rank_size:{self._rank_size}  file_size:{self._file_size}  dst_patterns:{self._dst_patterns}  drop_patterns:{self._drop_patterns}  src_patterns:{self._src_patterns}  move_patterns:{self._move_patterns}"

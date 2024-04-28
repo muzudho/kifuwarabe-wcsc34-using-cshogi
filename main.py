@@ -341,19 +341,19 @@ class Kifuwarabe():
             # ＫＫ表と、ＫＰ表
             # --------------
             #
-            is_symmetrical_connected_in_kk = self._evaluation_facade_obj.kk_policy_table.is_symmetrical_connected
-            is_symmetrical_connected_in_kp = self._evaluation_facade_obj.kp_policy_table.is_symmetrical_connected
+            is_symmetrical_half_board_in_kk = self._evaluation_facade_obj.kk_policy_table.is_symmetrical_half_board
+            is_symmetrical_half_board_in_kp = self._evaluation_facade_obj.kp_policy_table.is_symmetrical_half_board
             k_obj = Move(k_as_usi)
 
             k_index_in_kk = EvaluationConfiguration.get_m_index_by_move(
                     move=k_obj,
                     is_king=self._evaluation_facade_obj.kk_policy_table.is_king_of_a,
-                    is_symmetrical_connected=is_symmetrical_connected_in_kk)
+                    is_symmetrical_half_board=is_symmetrical_half_board_in_kk)
 
             k_index_in_kp = EvaluationConfiguration.get_m_index_by_move(
                     move=k_obj,
                     is_king=self._evaluation_facade_obj.kk_policy_table.is_king_of_a,
-                    is_symmetrical_connected=is_symmetrical_connected_in_kp)
+                    is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
 
             #
             # 検算
@@ -362,12 +362,12 @@ class Kifuwarabe():
             list_of_k_as_usi_in_kk = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
                     m_index=k_index_in_kk,
                     is_king=self._evaluation_facade_obj.kk_policy_table.is_king_of_a,
-                    is_symmetrical_connected=is_symmetrical_connected_in_kk)
+                    is_symmetrical_half_board=is_symmetrical_half_board_in_kk)
 
             list_of_k_as_usi_in_kp = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
                     m_index=k_index_in_kp,
                     is_king=self._evaluation_facade_obj.kk_policy_table.is_king_of_a,
-                    is_symmetrical_connected=is_symmetrical_connected_in_kp)
+                    is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
 
             verify_usi_in_kk = ",".join(list_of_k_as_usi_in_kk)
             verify_usi_in_kp = ",".join(list_of_k_as_usi_in_kp)
@@ -387,20 +387,20 @@ class Kifuwarabe():
             # ＫＰ表と、ＰＰ表
             # --------------
             #
-            is_symmetrical_connected_in_kp = self._evaluation_facade_obj.kp_policy_table.is_symmetrical_connected
-            is_symmetrical_connected_in_pp = self._evaluation_facade_obj.pp_policy_table.is_symmetrical_connected
+            is_symmetrical_half_board_in_kp = self._evaluation_facade_obj.kp_policy_table.is_symmetrical_half_board
+            is_symmetrical_half_board_in_pp = self._evaluation_facade_obj.pp_policy_table.is_symmetrical_half_board
             p_obj = Move(p_as_usi)
 
             # TODO ＫＰを、ＰＫにひっくり返してみる必要がある？
             p_index_in_kp = EvaluationConfiguration.get_m_index_by_move(
                     move=p_obj,
                     is_king=self._evaluation_facade_obj.kp_policy_table.is_king_of_b,
-                    is_symmetrical_connected=is_symmetrical_connected_in_kp)
+                    is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
 
             p_index_in_pp = EvaluationConfiguration.get_m_index_by_move(
                     move=p_obj,
                     is_king=self._evaluation_facade_obj.pp_policy_table.is_king_of_a,
-                    is_symmetrical_connected=is_symmetrical_connected_in_pp)
+                    is_symmetrical_half_board=is_symmetrical_half_board_in_pp)
 
             #
             # 検算
@@ -409,12 +409,12 @@ class Kifuwarabe():
             list_of_p_as_usi_in_kp = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
                     m_index=p_index_in_kp,
                     is_king=self._evaluation_facade_obj.kp_policy_table.is_king_of_b,
-                    is_symmetrical_connected=is_symmetrical_connected_in_kp)
+                    is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
 
             list_of_p_as_usi_in_pp = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
                     m_index=p_index_in_pp,
                     is_king=self._evaluation_facade_obj.pp_policy_table.is_king_of_a,
-                    is_symmetrical_connected=is_symmetrical_connected_in_pp)
+                    is_symmetrical_half_board=is_symmetrical_half_board_in_pp)
 
             verify_usi_in_kp = ",".join(list_of_p_as_usi_in_kp)
             verify_usi_in_pp = ",".join(list_of_p_as_usi_in_pp)
@@ -474,19 +474,19 @@ class Kifuwarabe():
             # ＫＫ表と、ＫＰ表
             # --------------
             #
-            is_symmetrical_connected_in_kk = self._evaluation_facade_obj.kk_policy_table.is_symmetrical_connected
-            is_symmetrical_connected_in_kp = self._evaluation_facade_obj.kp_policy_table.is_symmetrical_connected
+            is_symmetrical_half_board_in_kk = self._evaluation_facade_obj.kk_policy_table.is_symmetrical_half_board
+            is_symmetrical_half_board_in_kp = self._evaluation_facade_obj.kp_policy_table.is_symmetrical_half_board
             l_obj = Move(l_as_usi)
 
             k_index_in_kk = EvaluationConfiguration.get_m_index_by_move(
                     move=l_obj,
                     is_king=self._evaluation_facade_obj.kk_policy_table.is_king_of_a,
-                    is_symmetrical_connected=is_symmetrical_connected_in_kk)
+                    is_symmetrical_half_board=is_symmetrical_half_board_in_kk)
 
             k_index_in_kp = EvaluationConfiguration.get_m_index_by_move(
                     move=l_obj,
                     is_king=self._evaluation_facade_obj.kp_policy_table.is_king_of_a,
-                    is_symmetrical_connected=is_symmetrical_connected_in_kp)
+                    is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
 
             #
             # 検算
@@ -495,12 +495,12 @@ class Kifuwarabe():
             list_of_k_as_usi_in_kk = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
                     m_index=k_index_in_kk,
                     is_king=self._evaluation_facade_obj.kk_policy_table.is_king_of_a,
-                    is_symmetrical_connected=is_symmetrical_connected_in_kk)
+                    is_symmetrical_half_board=is_symmetrical_half_board_in_kk)
 
             list_of_k_as_usi_in_kp = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
                     m_index=k_index_in_kp,
                     is_king=self._evaluation_facade_obj.kp_policy_table.is_king_of_a,
-                    is_symmetrical_connected=is_symmetrical_connected_in_kp)
+                    is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
 
             verofy_usi_in_kk = ",".join(list_of_k_as_usi_in_kk)
             verify_usi_in_kp = ",".join(list_of_k_as_usi_in_kp)
@@ -525,20 +525,20 @@ class Kifuwarabe():
             # ＫＰ表と、ＰＰ表
             # --------------
             #
-            is_symmetrical_connected_in_kp = self._evaluation_facade_obj.kp_policy_table.is_symmetrical_connected
-            is_symmetrical_connected_in_pp = self._evaluation_facade_obj.pp_policy_table.is_symmetrical_connected
+            is_symmetrical_half_board_in_kp = self._evaluation_facade_obj.kp_policy_table.is_symmetrical_half_board
+            is_symmetrical_half_board_in_pp = self._evaluation_facade_obj.pp_policy_table.is_symmetrical_half_board
             q_obj = Move(q_as_usi)
 
             # TODO ＫＰを、ＰＫにひっくり返してみる必要がある？
             p_index_in_kp = EvaluationConfiguration.get_m_index_by_move(
                     move=q_obj,
                     is_king=self._evaluation_facade_obj.kp_policy_table.is_king_of_b,
-                    is_symmetrical_connected=is_symmetrical_connected_in_kp)
+                    is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
 
             p_index_in_pp = EvaluationConfiguration.get_m_index_by_move(
                     move=q_obj,
                     is_king=self._evaluation_facade_obj.pp_policy_table.is_king_of_a,
-                    is_symmetrical_connected=is_symmetrical_connected_in_pp)
+                    is_symmetrical_half_board=is_symmetrical_half_board_in_pp)
 
             #
             # 検算
@@ -548,12 +548,12 @@ class Kifuwarabe():
             list_of_p_as_usi_in_kp = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
                     m_index=p_index_in_kp,
                     is_king=self._evaluation_facade_obj.kp_policy_table.is_king_of_b,
-                    is_symmetrical_connected=is_symmetrical_connected_in_kp)
+                    is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
 
             list_of_p_as_usi_in_pp = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
                     m_index=p_index_in_pp,
                     is_king=self._evaluation_facade_obj.pp_policy_table.is_king_of_a,
-                    is_symmetrical_connected=is_symmetrical_connected_in_pp)
+                    is_symmetrical_half_board=is_symmetrical_half_board_in_pp)
 
             verify_usi_in_kp = ",".join(list_of_p_as_usi_in_kp)
             verify_usi_in_pp = ",".join(list_of_p_as_usi_in_pp)
@@ -598,19 +598,19 @@ class Kifuwarabe():
             # ＫＫ表と、ＫＰ表
             # --------------
             #
-            is_symmetrical_connected_is_kk = self._evaluation_facade_obj.kk_policy_table.is_symmetrical_connected
-            is_symmetrical_connected_is_kp = self._evaluation_facade_obj.kp_policy_table.is_symmetrical_connected
+            is_symmetrical_half_board_is_kk = self._evaluation_facade_obj.kk_policy_table.is_symmetrical_half_board
+            is_symmetrical_half_board_is_kp = self._evaluation_facade_obj.kp_policy_table.is_symmetrical_half_board
             k_obj = Move(k_as_usi)
 
             k_index_in_kk = EvaluationConfiguration.get_m_index_by_move(
                     move=k_obj,
                     is_king=self._evaluation_facade_obj.kk_policy_table.is_king_of_a,
-                    is_symmetrical_connected=is_symmetrical_connected_is_kk)
+                    is_symmetrical_half_board=is_symmetrical_half_board_is_kk)
 
             k_index_in_kp = EvaluationConfiguration.get_m_index_by_move(
                     move=k_obj,
                     is_king=self._evaluation_facade_obj.kp_policy_table.is_king_of_a,
-                    is_symmetrical_connected=is_symmetrical_connected_is_kp)
+                    is_symmetrical_half_board=is_symmetrical_half_board_is_kp)
 
             #
             # 検算
@@ -619,12 +619,12 @@ class Kifuwarabe():
             list_of_k_as_usi_in_kk = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
                     m_index=k_index_in_kk,
                     is_king=self._evaluation_facade_obj.kk_policy_table.is_king_of_a,
-                    is_symmetrical_connected=is_symmetrical_connected_is_kk)
+                    is_symmetrical_half_board=is_symmetrical_half_board_is_kk)
 
             list_of_k_as_usi_in_kp = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
                     m_index=k_index_in_kp,
                     is_king=self._evaluation_facade_obj.kp_policy_table.is_king_of_a,
-                    is_symmetrical_connected=is_symmetrical_connected_is_kp)
+                    is_symmetrical_half_board=is_symmetrical_half_board_is_kp)
 
             verify_usi_in_kk = ",".join(list_of_k_as_usi_in_kk)
             verify_usi_in_kp = ",".join(list_of_k_as_usi_in_kp)
@@ -654,20 +654,20 @@ class Kifuwarabe():
             # ＫＰ表と、ＰＰ表
             # --------------
             #
-            is_symmetrical_connected_in_kp = self._evaluation_facade_obj.kp_policy_table.is_symmetrical_connected
-            is_symmetrical_connected_in_pp = self._evaluation_facade_obj.pp_policy_table.is_symmetrical_connected
+            is_symmetrical_half_board_in_kp = self._evaluation_facade_obj.kp_policy_table.is_symmetrical_half_board
+            is_symmetrical_half_board_in_pp = self._evaluation_facade_obj.pp_policy_table.is_symmetrical_half_board
             p_obj = Move(p_as_usi)
 
             # TODO ＫＰを、ＰＫにひっくり返してみる必要がある？
             p_index_in_kp = EvaluationConfiguration.get_m_index_by_move(
                     move=p_obj,
                     is_king=self._evaluation_facade_obj.kp_policy_table.is_king_of_b,
-                    is_symmetrical_connected=is_symmetrical_connected_in_kp)
+                    is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
 
             p_index_in_pp = EvaluationConfiguration.get_m_index_by_move(
                     move=p_obj,
                     is_king=self._evaluation_facade_obj.pp_policy_table.is_king_of_a,
-                    is_symmetrical_connected=is_symmetrical_connected_in_pp)
+                    is_symmetrical_half_board=is_symmetrical_half_board_in_pp)
 
             #
             # 検算
@@ -677,12 +677,12 @@ class Kifuwarabe():
             list_of_p_as_usi_in_kp = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
                     m_index=p_index_in_kp,
                     is_king=self._evaluation_facade_obj.kp_policy_table.is_king_of_b,
-                    is_symmetrical_connected=is_symmetrical_connected_in_kp)
+                    is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
 
             list_of_p_as_usi_in_pp = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
                     m_index=p_index_in_pp,
                     is_king=self._evaluation_facade_obj.pp_policy_table.is_king_of_a,
-                    is_symmetrical_connected=is_symmetrical_connected_in_pp)
+                    is_symmetrical_half_board=is_symmetrical_half_board_in_pp)
 
             verify_usi_in_kp = ",".join(list_of_p_as_usi_in_kp)
             verify_usi_in_pp = ",".join(list_of_p_as_usi_in_pp)

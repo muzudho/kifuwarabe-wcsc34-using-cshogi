@@ -38,7 +38,7 @@ class EvaluationMmTable():
             evaluation_mm_table,
             is_king_of_a,
             is_king_of_b,
-            is_symmetrical_connected,
+            is_symmetrical_half_board,
             is_file_modified):
         """初期化
 
@@ -54,7 +54,7 @@ class EvaluationMmTable():
             指し手 a は玉か？
         is_king_of_b : bool
             指し手 b は玉か？
-        is_symmetrical_connected : bool
+        is_symmetrical_half_board : bool
             左右対称の盤か？
         is_file_modified : bool
             保存されていない評価値テーブルを引数で渡したなら真
@@ -94,10 +94,10 @@ class EvaluationMmTable():
         しかし、家のＰＣでこのサイズの配列を２つ読み込んで２つのエンジンで対局させることはできなかったので、
         左右対称と仮定して、９筋ではなく、５筋にする。
 
-            (5 * 9 + 7) * (5 * 9) * 2 = 4_680     ... symmetrical_connected_move 数
+            (5 * 9 + 7) * (5 * 9) * 2 = 4_680     ... symmetrical_half_board_move 数
 
 
-            (4_680 - 1) * 4_680 = 21_897_720    ... symmetrical_connected_table_size 数
+            (4_680 - 1) * 4_680 = 21_897_720    ... symmetrical_half_board_table_size 数
 
         ----------
 
@@ -117,7 +117,7 @@ class EvaluationMmTable():
         self._evaluation_mm_table = evaluation_mm_table
         self._is_king_of_a = is_king_of_a
         self._is_king_of_b = is_king_of_b
-        self._is_symmetrical_connected = is_symmetrical_connected
+        self._is_symmetrical_half_boardddd = is_symmetrical_half_board
         self._is_file_modified = is_file_modified
 
 
@@ -168,8 +168,8 @@ class EvaluationMmTable():
 
 
     @property
-    def is_symmetrical_connected(self):
-        return self._is_symmetrical_connected
+    def is_symmetrical_half_board(self):
+        return self._is_symmetrical_half_board
 
 
     @property
@@ -191,7 +191,7 @@ class EvaluationMmTable():
                 b_is_king=self._is_king_of_b,
                 turn=turn,
                 list_of_move_size=self.list_of_move_size,
-                is_symmetrical_connected=self.is_symmetrical_connected)
+                is_symmetrical_half_board=self.is_symmetrical_half_board)
         #print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} mm_index:{mm_index}", flush=True)
 
         try:

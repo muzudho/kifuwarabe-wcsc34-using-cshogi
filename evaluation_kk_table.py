@@ -16,7 +16,7 @@ class EvaluationKkTable(EvaluationMmTable):
             is_king_of_a,
             is_king_of_b,
             is_file_modified,
-            is_symmetrical_connected):
+            is_symmetrical_half_board):
         """初期化
 
         Parameters
@@ -36,25 +36,25 @@ class EvaluationKkTable(EvaluationMmTable):
         else:
             is_king = False
 
-        if is_symmetrical_connected:
+        if is_symmetrical_half_board:
             k_size = EvaluationConfiguration.get_move_number(
                     is_king=is_king,
-                    is_symmetrical_connected=True)
+                    is_symmetrical_half_board=True)
 
             new_table_size_obj = EvaluationTableSize(
                     is_king_of_a=is_king,
                     is_king_of_b=is_king,
-                    is_symmetrical_connected=True)
+                    is_symmetrical_half_board=True)
 
         else:
             k_size = EvaluationConfiguration.get_move_number(
                     is_king=is_king,
-                    is_symmetrical_connected=False)
+                    is_symmetrical_half_board=False)
 
             new_table_size_obj = EvaluationTableSize(
                     is_king_of_a=is_king,
                     is_king_of_b=is_king,
-                    is_symmetrical_connected=False)
+                    is_symmetrical_half_board=False)
 
         EvaluationMmTable.__init__(
                 self,
@@ -66,5 +66,5 @@ class EvaluationKkTable(EvaluationMmTable):
                 evaluation_mm_table=evaluation_mm_table,
                 is_king_of_a=is_king_of_a,
                 is_king_of_b=is_king_of_b,
-                is_symmetrical_connected=is_symmetrical_connected,
+                is_symmetrical_half_board=is_symmetrical_half_board,
                 is_file_modified=is_file_modified)

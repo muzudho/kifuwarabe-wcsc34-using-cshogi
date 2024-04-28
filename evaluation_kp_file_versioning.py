@@ -72,10 +72,10 @@ class EvaluationKpFileVersioning():
             mm_table, file_version, shall_save_file = tuple
             is_file_modified = mm_table is None
 
-        is_symmetrical_connected = True
+        is_symmetrical_half_board = True
         if file_version == "V3":
             # V3 から盤面を左右対称ではなく、全体を使うよう変更
-            is_symmetrical_connected = False
+            is_symmetrical_half_board = False
 
         if file_version == "V4":
             is_king_of_a = True     # 玉の指し手は評価値テーブル・サイズを縮めれる
@@ -89,7 +89,7 @@ class EvaluationKpFileVersioning():
             new_table_size_obj = EvaluationTableSize(
                     is_king_of_a=is_king_of_a,
                     is_king_of_b=is_king_of_b,
-                    is_symmetrical_connected=is_symmetrical_connected)
+                    is_symmetrical_half_board=is_symmetrical_half_board)
 
             mm_table = FileVersioning.create_random_table(
                     hint=f"n{file_number}  kind=kp)",
@@ -102,7 +102,7 @@ class EvaluationKpFileVersioning():
                 evaluation_mm_table=mm_table,
                 is_king_of_a=is_king_of_a,
                 is_king_of_b=is_king_of_b,
-                is_symmetrical_connected=is_symmetrical_connected,
+                is_symmetrical_half_board=is_symmetrical_half_board,
                 is_file_modified=is_file_modified)
 
         return (kp_table, shall_save_file)

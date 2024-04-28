@@ -32,16 +32,16 @@ class EvaluationFileVersionUp():
         new_table_size_obj = EvaluationTableSize(
                 is_king_of_a=is_king_of_a,          # V4 は未対応
                 is_king_of_b=is_king_of_b,          # V4 は未対応
-                is_symmetrical_connected=False)     # V4 は fully connected
+                is_symmetrical_half_board=False)     # V4 は fully connected
         new_table_size = new_table_size_obj.combination
 
         list_of_move_size = [
             EvaluationConfiguration.get_move_number(
                 is_king=is_king_of_a,
-                is_symmetrical_connected=False),
+                is_symmetrical_half_board=False),
             EvaluationConfiguration.get_move_number(
                 is_king=is_king_of_b,
-                is_symmetrical_connected=False)]
+                is_symmetrical_half_board=False)]
 
         # ２の累乗、１バイト分
         two_powers = [128, 64, 32, 16, 8, 4, 2, 1]
@@ -105,7 +105,7 @@ class EvaluationFileVersionUp():
                         pair_of_list_of_move_as_usi = EvaluationConfiguration.get_pair_of_list_of_move_as_usi_by_mm_index(
                                 mm_index=old_mm_index,
                                 is_king_of_b=is_king_of_b,
-                                is_symmetrical_connected=False)
+                                is_symmetrical_half_board=False)
 
                         list_of_a_as_usi, list_of_b_as_usi = pair_of_list_of_move_as_usi
 
@@ -125,7 +125,7 @@ class EvaluationFileVersionUp():
                                 b_is_king=is_king_of_b,
                                 turn=cshogi.BLACK,  # FIXME 全部、先手視点？
                                 list_of_move_size=list_of_move_size,
-                                is_symmetrical_connected=False)
+                                is_symmetrical_half_board=False)
                         #print(f"old_mm_index:{old_mm_index_with_underscore}  new_mm_index:{new_mm_index}", flush=True)
 
                         try:
@@ -176,7 +176,7 @@ class EvaluationFileVersionUp():
         new_table_size_obj = EvaluationTableSize(
                 is_king_of_a=False,             # V3 は未対応
                 is_king_of_b=False,             # V3 は未対応
-                is_symmetrical_connected=False) # V3 は fully connected
+                is_symmetrical_half_board=False) # V3 は fully connected
         new_table_size = new_table_size_obj.combination
 
         # ２の累乗、１バイト分
@@ -239,7 +239,7 @@ class EvaluationFileVersionUp():
                                 mm_index=old_mm_index,
                                 is_king_of_b=False,             # V3 は未対応
                                 # 左右対称の盤
-                                is_symmetrical_connected=True)
+                                is_symmetrical_half_board=True)
 
                         # 共役の指し手も付いているケースがある
                         for list_of_move_as_usi in pair_of_list_of_move_as_usi:
@@ -247,7 +247,7 @@ class EvaluationFileVersionUp():
                                 converted_m_index = EvaluationConfiguration.get_m_index_by_move(
                                         move=Move(move_as_usi),
                                         is_king=False,                  # 旧仕様では玉の区別なし
-                                        is_symmetrical_connected=True)  # V2 では、左右が異なる盤
+                                        is_symmetrical_half_board=True)  # V2 では、左右が異なる盤
 
                                 try:
                                     bit = one_byte_num//two_power % 2

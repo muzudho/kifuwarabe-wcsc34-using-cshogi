@@ -71,16 +71,16 @@ class EvaluationPpFileVersioning():
             mm_table, file_version, shall_save_file = tuple
             is_file_modified = mm_table is None
 
-        is_symmetrical_connected = True
+        is_symmetrical_half_board = True
         if file_version == "V3":
-            is_symmetrical_connected = False
+            is_symmetrical_half_board = False
 
         if mm_table is None:
             # ファイルが存在しないとき
             new_table_size_obj = EvaluationTableSize(
                     is_king_of_a=False,     # P なんで
                     is_king_of_b=False,     # P なんで
-                    is_symmetrical_connected=is_symmetrical_connected)
+                    is_symmetrical_half_board=is_symmetrical_half_board)
 
             mm_table = FileVersioning.create_random_table(
                     hint=f'n{file_number}  kind=pp)',
@@ -93,7 +93,7 @@ class EvaluationPpFileVersioning():
                 evaluation_mm_table=mm_table,
                 is_king_of_a=False,     # P なんで
                 is_king_of_b=False,     # P なんで
-                is_symmetrical_connected=is_symmetrical_connected,
+                is_symmetrical_half_board=is_symmetrical_half_board,
                 is_file_modified=is_file_modified)
 
         return (pp_table, shall_save_file)

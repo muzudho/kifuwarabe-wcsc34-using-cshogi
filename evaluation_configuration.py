@@ -7,7 +7,7 @@ from evaluation_move_specification import EvaluationMoveSpecification
 class EvaluationConfiguration():
 
 
-    _src_num_to_file_str_on_symmetrical_connected = {
+    _src_num_to_file_str_on_symmetrical_half_board = {
         45:'R',   # 'R*' 移動元の打 36+9=45
         46:'B',   # 'B*'
         47:'G',   # 'G*'
@@ -31,14 +31,14 @@ class EvaluationConfiguration():
     @staticmethod
     def get_move_number(
             is_king,
-            is_symmetrical_connected):
+            is_symmetrical_half_board):
         """指し手の数
 
         Parameters
         ----------
         is_king : bool
             玉の動きか？
-        is_symmetrical_connected : bool
+        is_symmetrical_half_board : bool
             盤は左右対称か？
 
         Returns
@@ -47,7 +47,7 @@ class EvaluationConfiguration():
         """
 
         # symmetrical connected move 数
-        if is_symmetrical_connected:
+        if is_symmetrical_half_board:
             # 玉は成らないから pro を削れる
             if is_king:
                 #  file   rank   drop     file   rank
@@ -75,7 +75,7 @@ class EvaluationConfiguration():
     def get_m_index_by_move(
             move,
             is_king,
-            is_symmetrical_connected):
+            is_symmetrical_half_board):
         """将棋盤の筋が左右対称のときの評価値テーブルのセルのインデックス
 
         Parameters
@@ -84,7 +84,7 @@ class EvaluationConfiguration():
             指し手
         is_king : bool
             玉の動きか？
-        is_symmetrical_connected : bool
+        is_symmetrical_half_board : bool
             盤は左右対称か？
 
         Returns
@@ -93,18 +93,18 @@ class EvaluationConfiguration():
         """
 
         # 左右対称の盤か？
-        if is_symmetrical_connected:
+        if is_symmetrical_half_boardd:
             # 移動元マス番号、または打の種類
             try:
                 src_sq = Move._src_dst_str_1st_figure_to_sq_on_symmetrical_board[move.src_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.src_str[1]]
             except Exception as e:
-                raise Exception(f"symmetrical_connected src_sq error in '{move.as_usi}'.  ('{move.src_str[0]}', '{move.src_str[1]}')  e: {e}")
+                raise Exception(f"symmetrical_half_board src_sq error in '{move.as_usi}'.  ('{move.src_str[0]}', '{move.src_str[1]}')  e: {e}")
 
             # 移動先マス番号
             try:
                 dst_sq = Move._src_dst_str_1st_figure_to_sq_on_symmetrical_board[move.dst_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.dst_str[1]]
             except Exception as e:
-                raise Exception(f"symmetrical_connected dst_sq error in '{move.as_usi}'.  ('{move.dst_str[0]}', '{move.dst_str[1]}')  e: {e}")
+                raise Exception(f"symmetrical_half_board dst_sq error in '{move.as_usi}'.  ('{move.dst_str[0]}', '{move.dst_str[1]}')  e: {e}")
 
         else:
             # 移動元マス番号
@@ -135,7 +135,7 @@ class EvaluationConfiguration():
 
         rank_size = 9
 
-        if is_symmetrical_connected:
+        if is_symmetrical_half_board:
             file_size = 5
         else:
             file_size = 9
@@ -147,7 +147,7 @@ class EvaluationConfiguration():
     def get_pair_of_list_of_move_as_usi_by_mm_index(
             mm_index,
             is_king_of_b,
-            is_symmetrical_connected):
+            is_symmetrical_half_board):
         """逆関数
 
         指し手２つ分返す
@@ -158,7 +158,7 @@ class EvaluationConfiguration():
             指し手 a, b のペアの通しインデックス
         is_king_of_b : bool
             指し手 b は、玉の動きか？
-        is_symmetrical_connected : bool
+        is_symmetrical_half_board : bool
             盤は左右対称か？
         """
 
@@ -169,7 +169,7 @@ class EvaluationConfiguration():
 
         b_size = EvaluationConfiguration.get_move_number(
             is_king=is_king_of_b,
-            is_symmetrical_connected=is_symmetrical_connected)
+            is_symmetrical_half_board=is_symmetrical_half_board)
 
         bits = mm_index
 
@@ -182,7 +182,7 @@ class EvaluationConfiguration():
             list_of_b_move = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
                     m_index=b_index,
                     is_king=is_king_of_b,
-                    is_symmetrical_connected=is_symmetrical_connected)
+                    is_symmetrical_half_board=is_symmetrical_half_board)
         except Exception as e:
             # 例： list_of_b_move error.  a_index:0  b_index:4680  mm_index:21902400  e:52
             print(f"list_of_b_move error.  a_index:{a_index}  b_index:{b_index}  mm_index:{mm_index}  e:{e}")
@@ -192,12 +192,12 @@ class EvaluationConfiguration():
             list_of_a_move = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
                     m_index=a_index,
                     is_king=is_king_of_b,
-                    is_symmetrical_connected=is_symmetrical_connected)
+                    is_symmetrical_half_board=is_symmetrical_half_board)
         except Exception as e:
             # mm_index がでかすぎる？
             # 例： list_of_a_move error.  a_index:4680  b_index:0  e:52
             # 例： list_of_a_move error.  a_index:4680  b_index:0  mm_index:21902400  e:52
-            print(f"list_of_a_move error.  a_index:{a_index}  b_index:{b_index}  mm_index:{mm_index}  is_king_of_b:{is_king_of_b}  is_symmetrical_connected:{is_symmetrical_connected}  e:{e}")
+            print(f"list_of_a_move error.  a_index:{a_index}  b_index:{b_index}  mm_index:{mm_index}  is_king_of_b:{is_king_of_b}  is_symmetrical_half_board:{is_symmetrical_half_board}  e:{e}")
             raise
 
         return [list_of_a_move, list_of_b_move]
@@ -207,7 +207,7 @@ class EvaluationConfiguration():
     def get_list_of_move_as_usi_by_m_index(
             m_index,
             is_king,
-            is_symmetrical_connected):
+            is_symmetrical_half_board):
         """逆関数
 
         指し手１つ分。ただし鏡面の場合、共役が付いて２つ返ってくる
@@ -218,14 +218,14 @@ class EvaluationConfiguration():
             指し手１つ分のインデックス
         is_king : bool
             玉の動きか？
-        is_symmetrical_connected : bool
+        is_symmetrical_half_board : bool
             盤は左右対称か？
         """
 
         m_spec = EvaluationMoveSpecification(
             # 玉は成らないから pro を削れる
             is_king=is_king,
-            is_symmetrical_connected=is_symmetrical_connected)
+            is_symmetrical_half_board=is_symmetrical_half_board)
 
         rest = m_index
 
@@ -249,7 +249,7 @@ class EvaluationConfiguration():
         conjugate_dst_file_str = None
 
         # 移動先（列は左右対称）
-        if is_symmetrical_connected:
+        if is_symmetrical_half_board:
             if 36 <= dst_value:
                 dst_file = '5'
                 conjugate_dst_file_str = '5'
@@ -301,20 +301,20 @@ class EvaluationConfiguration():
                 dst_rank_str = Move.get_rank_num_to_str(dst_value + 1)
 
         # 移動元（列は左右対称）
-        if is_symmetrical_connected:
+        if is_symmetrical_half_board:
             # FIXME 52 以上は何？
 
             # 45 ～ 51 は打
             if 45 <= src_value:
                 try:
-                    src_file_str = EvaluationConfiguration._src_num_to_file_str_on_symmetrical_connected[src_value]
+                    src_file_str = EvaluationConfiguration._src_num_to_file_str_on_symmetrical_half_board[src_value]
 
                 except KeyError as e:
                     # 例： single_move error.  src_value:52  dst_value:0  m_index:4680  move_patterns:4680  (src_size:52  dst_size:45  pro_size:2)  rest:52  drop_kind:7  file_size:5  rank_size:9  e:52
                     # 例： single_move error.  src_value:52  dst_value:0  m_index:4680  move_patterns:4680  (src_size:52  dst_size:45  pro_size:2)  rest:52  drop_kind:7  file_size:5  rank_size:9  e:52
                     # 例： single_move error.  src_value:52  dst_value:0  m_index:4680  move_patterns:4680  (src_size:52  dst_size:45  pro_size:2)  rest:52  drop_kind:7  file_size:5  rank_size:9  e:52
                     # 例： single_move error.  src_value:52  dst_value:0  m_index:4680  move_patterns:4680  (src_size:52  dst_size:45  pro_size:2)  rest:52  drop_kind:7  file_size:5  rank_size:9  e:52
-                    # 例： single_move error.  src_value:52  dst_value:0  pro_str:''  m_index:4680  rest:52  m_spec:is_king:False  is_symmetrical_connected:True  pro_patterns:2  rank_size:9  file_size:5  dst_patterns:45  drop_patterns:7  src_patterns:52  move_patterns:728  e:52
+                    # 例： single_move error.  src_value:52  dst_value:0  pro_str:''  m_index:4680  rest:52  m_spec:is_king:False  is_symmetrical_half_board:True  pro_patterns:2  rank_size:9  file_size:5  dst_patterns:45  drop_patterns:7  src_patterns:52  move_patterns:728  e:52
                     print(f"single_move error.  src_value:{src_value}  dst_value:{dst_value}  pro_str:'{pro_str}'  m_index:{m_index}  rest:{rest}  m_spec:{m_spec.to_debug_str()}  e:{e}")
                     raise
 
@@ -406,7 +406,7 @@ class EvaluationConfiguration():
             b_is_king,
             turn,
             list_of_move_size,
-            is_symmetrical_connected):
+            is_symmetrical_half_board):
         """指し手２つの組み合わせインデックス"""
 
         # 同じ指し手を比較したら 0 とする（総当たりの二重ループとかでここを通る）
@@ -421,12 +421,12 @@ class EvaluationConfiguration():
         a_index = EvaluationConfiguration.get_m_index_by_move(
                 move=a_move_obj,
                 is_king=a_is_king,
-                is_symmetrical_connected=is_symmetrical_connected)
+                is_symmetrical_half_board=is_symmetrical_half_board)
 
         b_index = EvaluationConfiguration.get_m_index_by_move(
                 move=b_move_obj,
                 is_king=b_is_king,
-                is_symmetrical_connected=is_symmetrical_connected)
+                is_symmetrical_half_board=is_symmetrical_half_board)
 
         move_indexes = [a_index, b_index]
         move_indexes.sort()

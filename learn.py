@@ -64,7 +64,7 @@ class Learn():
                         b_is_king=b_is_king,
                         turn=turn,
                         list_of_move_size=evaluation_mm_table_obj.list_of_move_size,
-                        is_symmetrical_connected=evaluation_mm_table_obj.is_symmetrical_connected)
+                        is_symmetrical_half_board=evaluation_mm_table_obj.is_symmetrical_half_board)
 
                 if len(evaluation_mm_table_obj.evaluation_mm_table) <= mm_index:
                     # 範囲外エラー
@@ -88,7 +88,7 @@ class Learn():
                         b_is_king=b_is_king,
                         turn=turn,
                         list_of_move_size=evaluation_mm_table_obj.list_of_move_size,
-                        is_symmetrical_connected=evaluation_mm_table_obj.is_symmetrical_connected)
+                        is_symmetrical_half_board=evaluation_mm_table_obj.is_symmetrical_half_board)
 
                 if len(evaluation_mm_table_obj.evaluation_mm_table) <= mm_index:
                     # 範囲外エラー

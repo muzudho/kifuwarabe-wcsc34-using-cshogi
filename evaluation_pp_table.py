@@ -16,7 +16,7 @@ class EvaluationPpTable(EvaluationMmTable):
             is_king_of_a,
             is_king_of_b,
             is_file_modified,
-            is_symmetrical_connected):
+            is_symmetrical_half_board):
         """初期化
 
         Parameters
@@ -31,23 +31,23 @@ class EvaluationPpTable(EvaluationMmTable):
             保存されていない評価値テーブルを引数で渡したなら真
         """
 
-        if is_symmetrical_connected:
+        if is_symmetrical_half_board:
             p_size = EvaluationConfiguration.get_move_number(
                     is_king=False,          # P なんで
-                    is_symmetrical_connected=True)
+                    is_symmetrical_half_board=True)
             new_table_size_obj = EvaluationTableSize(
                     is_king_of_a=False,     # P なんで
                     is_king_of_b=False,     # P なんで
-                    is_symmetrical_connected=True)
+                    is_symmetrical_half_board=True)
 
         else:
             p_size = EvaluationConfiguration.get_move_number(
                     is_king=False,          # P なんで
-                    is_symmetrical_connected=False)
+                    is_symmetrical_half_board=False)
             new_table_size_obj = EvaluationTableSize(
                     is_king_of_a=False,     # P なんで
                     is_king_of_b=False,     # P なんで
-                    is_symmetrical_connected=False)
+                    is_symmetrical_half_board=False)
 
         EvaluationMmTable.__init__(
                 self,
@@ -59,5 +59,5 @@ class EvaluationPpTable(EvaluationMmTable):
                 evaluation_mm_table=evaluation_mm_table,
                 is_king_of_a=is_king_of_a,
                 is_king_of_b=is_king_of_b,
-                is_symmetrical_connected=is_symmetrical_connected,
+                is_symmetrical_half_board=is_symmetrical_half_board,
                 is_file_modified=is_file_modified)

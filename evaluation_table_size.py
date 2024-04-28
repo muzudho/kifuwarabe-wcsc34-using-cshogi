@@ -10,9 +10,9 @@ class EvaluationTableSize():
             self,
             is_king_of_a,
             is_king_of_b,
-            is_symmetrical_connected):
+            is_symmetrical_half_board):
         """初期化
-        symmetrical
+        symmetrical_half_board
         +--------------+------------------------+
         |   b          |       king       piece |
         | a            |    2_340-1     4_680-1 |
@@ -36,20 +36,20 @@ class EvaluationTableSize():
             指し手 a は、玉の動きか？
         is_king_of_b : bool
             指し手 b は、玉の動きか？
-        is_symmetrical_connected : bool
+        is_symmetrical_half_board : bool
             盤は左右対称にして半分だけ使っているか？
         """
         self._is_king_of_a = is_king_of_a
         self._is_king_of_b = is_king_of_b
-        self._is_symmetrical_connected = is_symmetrical_connected
+        self._is_symmetrical_half_board = is_symmetrical_half_board
 
         self._a_number = EvaluationConfiguration.get_move_number(
                 is_king=is_king_of_a,
-                is_symmetrical_connected=is_symmetrical_connected)
+                is_symmetrical_half_board=is_symmetrical_half_board)
 
         self._b_number = EvaluationConfiguration.get_move_number(
                 is_king=is_king_of_b,
-                is_symmetrical_connected=is_symmetrical_connected)
+                is_symmetrical_half_board=is_symmetrical_half_board)
 
         # a と b のどちらを -1 するかで計算結果に違いが出てくるが、難しいところだ
         self._combination = self._a_number * (self._b_number - 1)
@@ -69,9 +69,9 @@ class EvaluationTableSize():
 
 
     @property
-    def is_symmetrical_connected(self):
+    def is_symmetrical_half_board(self):
         """盤は左右対称にして半分だけ使っているか？"""
-        return self._is_symmetrical_connected
+        return self._is_symmetrical_half_board
 
 
     @property
@@ -96,9 +96,9 @@ class EvaluationTableSize():
         """デバッグ用"""
         a = self._is_king_of_a   # bool
         b = self._is_king_of_b
-        c = self._is_symmetrical_connected
+        c = self._is_symmetrical_half_board
         d = DisplayHelper.with_underscore(self._a_number)
         e = DisplayHelper.with_underscore(self._b_number)
         f = DisplayHelper.with_underscore(self._combination)
 
-        return f"is_king_of_a:{a}  is_king_of_b:{b}  is_symmetrical_connected:{c}  a_number:{d}  b_number:{e}  combination:{f}"
+        return f"is_king_of_a:{a}  is_king_of_b:{b}  is_symmetrical_half_board:{c}  a_number:{d}  b_number:{e}  combination:{f}"
