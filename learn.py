@@ -51,41 +51,52 @@ class Learn():
             turn):
         """指した手の評価値を適当に変更します"""
 
-        for move_a_as_usi in canditates_memory.move_set:
-            for move_b_as_usi in canditates_memory.move_set:
+        for a_as_usi in canditates_memory.move_set:
+            for b_as_usi in canditates_memory.move_set:
 
-                a_move_obj = Move(move_a_as_usi)
-                b_move_obj = Move(move_b_as_usi)
+                a_obj = Move(a_as_usi)
+                b_obj = Move(b_as_usi)
 
                 mm_index = EvaluationConfiguration.get_mm_index_by_2_moves(
-                        a_move_obj=a_move_obj,
+                        a_move_obj=a_obj,
                         a_is_king=a_is_king,
-                        b_move_obj=b_move_obj,
+                        b_move_obj=b_obj,
                         b_is_king=b_is_king,
                         turn=turn,
                         list_of_move_size=evaluation_mm_table_obj.list_of_move_size,
                         is_symmetrical_connected=evaluation_mm_table_obj.is_symmetrical_connected)
 
-                # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
-                evaluation_mm_table_obj.evaluation_mm_table[mm_index] = random.randint(0,1)
+                if len(evaluation_mm_table_obj.evaluation_mm_table) <= mm_index:
+                    # 範囲外エラー
+                    # 無視
+                    pass
+                else:
+                    # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
+                    evaluation_mm_table_obj.evaluation_mm_table[mm_index] = random.randint(0,1)
 
                 #
                 # 左右反転して、同じようにしたい
                 #
-                reversed_a_move_obj = MoveHelper.flip_horizontal(a_move_obj)
-                reversed_b_move_obj = MoveHelper.flip_horizontal(b_move_obj)
+                # reverse
+                rev_a_obj = MoveHelper.flip_horizontal(a_obj)
+                rev_b_obj = MoveHelper.flip_horizontal(b_obj)
 
                 mm_index = EvaluationConfiguration.get_mm_index_by_2_moves(
-                        a_move_obj=reversed_a_move_obj,
+                        a_move_obj=rev_a_obj,
                         a_is_king=a_is_king,
-                        b_move_obj=reversed_b_move_obj,
+                        b_move_obj=rev_b_obj,
                         b_is_king=b_is_king,
                         turn=turn,
                         list_of_move_size=evaluation_mm_table_obj.list_of_move_size,
                         is_symmetrical_connected=evaluation_mm_table_obj.is_symmetrical_connected)
 
-                # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
-                evaluation_mm_table_obj.evaluation_mm_table[mm_index] = random.randint(0,1)
+                if len(evaluation_mm_table_obj.evaluation_mm_table) <= mm_index:
+                    # 範囲外エラー
+                    # 無視
+                    pass
+                else:
+                    # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
+                    evaluation_mm_table_obj.evaluation_mm_table[mm_index] = random.randint(0,1)
 
 
         evaluation_mm_table_obj.is_file_modified = True
