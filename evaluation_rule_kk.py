@@ -31,6 +31,19 @@ class EvaluationRuleKK():
 
 
     @staticmethod
+    def get_move_number():
+        """指し手の数
+
+        左右対称の盤には非対応
+
+        Returns
+        -------
+        - int
+        """
+        return 8
+
+
+    @staticmethod
     def get_k_index_by_move(
             move_obj):
         """指し手を指定すると、指し手のインデックスを返す。
@@ -108,7 +121,7 @@ class EvaluationRuleKK():
 
         relative_sq = EvaluationRuleKK._k_index_to_relative_sq[k_index]
         dst_sq = src_sq + relative_sq
-        
+
         return Move.from_src_dst_pro(
             src_sq=src_sq,
             dst_sq=dst_sq,
