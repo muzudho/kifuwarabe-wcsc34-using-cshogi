@@ -232,9 +232,7 @@ class EvaluationVersioningPp():
         if mm_table is None:
             # ファイルが存在しないとき
             new_table_size_obj = EvaluationTableSize(
-                    is_king_of_a=evaluation_table_property.is_king_size_of_a,
-                    is_king_of_b=evaluation_table_property.is_king_size_of_b,
-                    is_symmetrical_half_board=evaluation_table_property.is_symmetrical_half_board)
+                    evaluation_table_property=evaluation_table_property)
 
             mm_table = EvaluationVersioning.create_random_table(
                     hint=f'n{file_number}  kind=pp)',
@@ -246,7 +244,6 @@ class EvaluationVersioningPp():
                 file_version=file_version,
                 evaluation_table_property=evaluation_table_property,
                 evaluation_mm_table=mm_table,
-                is_symmetrical_half_board=evaluation_table_property.is_symmetrical_half_board,
                 is_file_modified=is_file_modified)
 
         return (pp_table, shall_save_file)

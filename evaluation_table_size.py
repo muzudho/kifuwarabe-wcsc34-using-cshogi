@@ -8,9 +8,7 @@ class EvaluationTableSize():
 
     def __init__(
             self,
-            is_king_of_a,
-            is_king_of_b,
-            is_symmetrical_half_board):
+            evaluation_table_property):
         """初期化
 
         組み合わせは n * (n - 1) だが、実装が難しいので関係 n * n にしている
@@ -35,6 +33,8 @@ class EvaluationTableSize():
 
         Parameters
         ----------
+        evaluation_table_property : EvaluationTableProperty
+            バージョン毎に異なる評価値テーブルの設定
         is_king_of_a : bool
             指し手 a は、玉の動きか？
         is_king_of_b : bool
@@ -42,17 +42,17 @@ class EvaluationTableSize():
         is_symmetrical_half_board : bool
             盤は左右対称にして半分だけ使っているか？
         """
-        self._is_king_of_a = is_king_of_a
-        self._is_king_of_b = is_king_of_b
-        self._is_symmetrical_half_board = is_symmetrical_half_board
+        self._is_king_of_a = evaluation_table_property.is_king_size_of_a
+        self._is_king_of_b = evaluation_table_property.is_king_size_of_b
+        self._is_symmetrical_half_board = evaluation_table_property.is_symmetrical_half_board
 
         self._a_number = EvaluationRuleMm.get_move_number(
-                is_king=is_king_of_a,
-                is_symmetrical_half_board=is_symmetrical_half_board)
+                is_king=evaluation_table_property.is_king_size_of_a,
+                is_symmetrical_half_board=evaluation_table_property.is_symmetrical_half_board)
 
         self._b_number = EvaluationRuleMm.get_move_number(
-                is_king=is_king_of_b,
-                is_symmetrical_half_board=is_symmetrical_half_board)
+                is_king=evaluation_table_property.is_king_size_of_b,
+                is_symmetrical_half_board=evaluation_table_property.is_symmetrical_half_board)
 
         self._relation = self._a_number * self._b_number
 

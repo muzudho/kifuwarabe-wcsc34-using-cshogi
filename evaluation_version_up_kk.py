@@ -1,9 +1,9 @@
 import cshogi
 import datetime
-from move import Move
 from display_helper import DisplayHelper
 from evaluation_table_size import EvaluationTableSize
 from evaluation_rule_kk import EvaluationRuleKk
+from evaluation_table_property import EvaluationTableProperty
 
 
 class EvaluationVersionUpKk():
@@ -27,19 +27,22 @@ class EvaluationVersionUpKk():
 
         is_finish = False
 
+        evaluation_table_property = EvaluationTableProperty(
+                is_king_size_of_a=True,                 # KK なんで
+                is_king_size_of_b=True,                 # KK なんで
+                is_symmetrical_half_board=False)        # 非対応
+
         new_table_size_obj = EvaluationTableSize(
-                is_king_of_a=True,                  # KK なんで
-                is_king_of_b=True,                  # KK なんで
-                is_symmetrical_half_board=False)    # fully connected
+                evaluation_table_property=evaluation_table_property)    # fully connected
         new_table_size = new_table_size_obj.relation
 
         list_of_move_size = [
             EvaluationRuleKk.get_move_number(
                 is_king=True,
-                is_symmetrical_half_board=False),
+                is_symmetrical_half_board=evaluation_table_property.is_symmetrical_half_board),
             EvaluationRuleKk.get_move_number(
                 is_king=True,
-                is_symmetrical_half_board=False)]
+                is_symmetrical_half_board=evaluation_table_property.is_symmetrical_half_board)]
 
         # ２の累乗、１バイト分
         two_powers = [128, 64, 32, 16, 8, 4, 2, 1]

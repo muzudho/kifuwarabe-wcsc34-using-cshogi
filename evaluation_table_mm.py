@@ -34,7 +34,6 @@ class EvaluationTableMm():
             list_of_move_size,
             table_size_obj,
             evaluation_mm_table,
-            is_symmetrical_half_board,
             is_file_modified):
         """初期化
 
@@ -48,8 +47,6 @@ class EvaluationTableMm():
             指し手 a, b それぞれのサイズ
         table_size_obj: EvaluationTableSize
             テーブル・サイズ。計算過程付き
-        is_symmetrical_half_board : bool
-            左右対称の盤か？
         is_file_modified : bool
             保存されていない評価値テーブルを引数で渡したなら真
 
@@ -112,7 +109,7 @@ class EvaluationTableMm():
         self._evaluation_mm_table = evaluation_mm_table
         self._is_king_of_a = evaluation_table_property.is_king_size_of_a
         self._is_king_of_b = evaluation_table_property.is_king_size_of_b
-        self._is_symmetrical_half_board = is_symmetrical_half_board
+        self._is_symmetrical_half_board = evaluation_table_property.is_symmetrical_half_board
         self._is_file_modified = is_file_modified
 
 

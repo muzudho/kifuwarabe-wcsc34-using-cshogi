@@ -4,6 +4,7 @@ from move import Move
 from display_helper import DisplayHelper
 from evaluation_table_size import EvaluationTableSize
 from evaluation_rule_mm import EvaluationRuleMm
+from evaluation_table_property import EvaluationTableProperty
 
 
 class EvaluationVersionUpMm():
@@ -29,10 +30,13 @@ class EvaluationVersionUpMm():
 
         is_finish = False
 
+        evaluation_table_property = EvaluationTableProperty(
+                is_king_size_of_a=is_king_of_a,          # V4 は未対応
+                is_king_size_of_b=is_king_of_b,          # V4 は未対応
+                is_symmetrical_half_board=False)         # V4 は fully connected
+
         new_table_size_obj = EvaluationTableSize(
-                is_king_of_a=is_king_of_a,          # V4 は未対応
-                is_king_of_b=is_king_of_b,          # V4 は未対応
-                is_symmetrical_half_board=False)     # V4 は fully connected
+                evaluation_table_property=evaluation_table_property)
         new_table_size = new_table_size_obj.relation
 
         list_of_move_size = [
@@ -173,10 +177,13 @@ class EvaluationVersionUpMm():
 
         is_finish = False
 
+        evaluation_table_property = EvaluationTableProperty(
+                is_king_size_of_a=False,             # V3 は未対応
+                is_king_size_of_b=False,             # V3 は未対応
+                is_symmetrical_half_board=False)     # V3 は fully connected
+
         new_table_size_obj = EvaluationTableSize(
-                is_king_of_a=False,             # V3 は未対応
-                is_king_of_b=False,             # V3 は未対応
-                is_symmetrical_half_board=False) # V3 は fully connected
+                evaluation_table_property=evaluation_table_property)
         new_table_size = new_table_size_obj.relation
 
         # ２の累乗、１バイト分
