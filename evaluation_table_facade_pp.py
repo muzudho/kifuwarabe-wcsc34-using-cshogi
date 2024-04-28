@@ -1,5 +1,5 @@
 from evaluation_table_mm import EvaluationTableMm
-from evaluation_rule_facade import EvaluationRuleFacade
+from evaluation_rule_p import EvaluationRuleP
 from evaluation_table_size_facade_pp import EvaluationTableSizeFacadePp
 
 
@@ -24,10 +24,8 @@ class EvaluationTableFacadePp():
         # テーブル・サイズ。計算過程付き
         table_size_obj = EvaluationTableSizeFacadePp.create_it()
 
-        a_size = EvaluationRuleFacade.get_move_number(
-                is_king=False)
-        b_size = EvaluationRuleFacade.get_move_number(
-                is_king=False)
+        a_size = EvaluationRuleP.get_piece_move_number()
+        b_size = EvaluationRuleP.get_piece_move_number()
 
         return EvaluationTableMm(
                 file_number=file_number,

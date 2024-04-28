@@ -1,4 +1,6 @@
 import cshogi
+from evaluation_rule_k import EvaluationRuleK
+from evaluation_rule_p import EvaluationRuleP
 from evaluation_move_specification import EvaluationMoveSpecification
 from move import Move
 from move_helper import MoveHelper
@@ -89,13 +91,11 @@ class EvaluationRuleFacade():
         """
 
         if is_king:
-            #  sq   drop    sq
-            # (81 +    7) * 81 = 7_128
-            return 7_128
+            return EvaluationRuleK.get_king_move_number()
         else:
             #  sq   drop    sq   pro
             # (81 +    7) * 81 *   2 = 14_256
-            return 14_256
+            return EvaluationRuleP.get_piece_move_number()
 
 
     @staticmethod

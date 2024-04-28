@@ -29,20 +29,17 @@ class EvaluationTableSizeFacadeKk():
         指し手は例えば　5g5f　なら相対SQは -1 が該当する。
         以下の通りで充分だ
 
-        81 *    8  *      8 =      5_184
         (file * rank) * around = k_patterns
+        (   9 *    9) *      8 =        648
 
         組み合わせだと n * (n-1) のようにしたいところだが実装が難しいので単に n * n にするとし、これを関係と呼ぶとき
 
         KL関係なら、以下で足りる
 
-            5_184 *       5_184 =  26_873_856
-        k_patterns * (k_patterns = kk_relation
-
-        ※ PP関係が 203_219_280 あるので、１桁は少ない
+        k_patterns * k_patterns = kk_relation
+               648 *        648 =      419904
         """
 
-        # FIXME バージョン対応したい
         return EvaluationTableSize(
                 is_king_of_a=True,
                 is_king_of_b=True,

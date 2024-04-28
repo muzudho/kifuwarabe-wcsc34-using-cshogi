@@ -1,4 +1,4 @@
-from evaluation_rule_facade import EvaluationRuleFacade
+from evaluation_rule_p import EvaluationRuleP
 from evaluation_table_size import EvaluationTableSize
 
 
@@ -11,7 +11,5 @@ class EvaluationTableSizeFacadePp():
         return EvaluationTableSize(
                 is_king_of_a=False,
                 is_king_of_b=False,
-                a_number=EvaluationRuleFacade.get_move_number(
-                        is_king=False),
-                b_number=EvaluationRuleFacade.get_move_number(
-                        is_king=False))
+                a_number=EvaluationRuleP.get_piece_move_number(),
+                b_number=EvaluationRuleP.get_piece_move_number())
