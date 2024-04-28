@@ -30,7 +30,6 @@ class EvaluationTableMm():
             self,
             file_number,
             file_name,
-            file_version,
             evaluation_table_property,
             table_size_obj,
             list_of_move_size,
@@ -40,8 +39,6 @@ class EvaluationTableMm():
 
         Parameters
         ----------
-        file_version : str
-            ファイルのバージョン
         evaluation_table_property : EvaluationTableProperty
             バージョン別の仕様の情報
         table_size_obj: EvaluationTableSize
@@ -93,7 +90,6 @@ class EvaluationTableMm():
         """
         self._file_number = file_number
         self._file_name = file_name
-        self._file_version = file_version
         self._evaluation_table_property = evaluation_table_property
         self._table_size_obj = table_size_obj
         self._list_of_move_size = list_of_move_size
@@ -111,11 +107,6 @@ class EvaluationTableMm():
     @property
     def file_name(self):
         return self._file_name
-
-
-    @property
-    def file_version(self):
-        return self._file_version
 
 
     @property

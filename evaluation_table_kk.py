@@ -11,7 +11,6 @@ class EvaluationTableKk(EvaluationTableMm):
             self,
             file_number,
             file_name,
-            file_version,
             evaluation_table_property,
             evaluation_mm_table,
             is_file_modified):
@@ -19,8 +18,6 @@ class EvaluationTableKk(EvaluationTableMm):
 
         Parameters
         ----------
-        file_version : str
-            ファイルのバージョン
         evaluation_table_property : EvaluationTableProperty
             バージョン別の仕様の情報
         is_file_modified : bool
@@ -39,7 +36,6 @@ class EvaluationTableKk(EvaluationTableMm):
                 self,
                 file_number=file_number,
                 file_name=file_name,
-                file_version=file_version,
                 evaluation_table_property=evaluation_table_property,
                 table_size_obj=table_size_obj,
                 list_of_move_size=[k_size, l_size],

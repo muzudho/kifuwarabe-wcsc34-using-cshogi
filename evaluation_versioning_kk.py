@@ -17,51 +17,14 @@ class EvaluationVersioningKk():
 
 
     @staticmethod
-    def delete_old_files_cascade(
-            current_number,
-            file_names_by_version):
-        """旧形式のファイルを削除します"""
-
-        if 3 < current_number:
-            # 旧形式のバイナリ・ファイル V3 は削除
-            old_file_name = file_names_by_version[3]
-            if os.path.isfile(old_file_name):
-                EvaluationVersioning.delete_file(old_file_name)
-
-        if 2 < current_number:
-            # 旧形式のバイナリ・ファイル V2 は削除
-            old_file_name = file_names_by_version[2]
-            if os.path.isfile(old_file_name):
-                EvaluationVersioning.delete_file(old_file_name)
-
-        if 1 < current_number:
-            # 旧形式のバイナリ・ファイル V1 は削除
-            old_file_name = file_names_by_version[1]
-            if os.path.isfile(old_file_name):
-                EvaluationVersioning.delete_file(old_file_name)
-
-        if 0 < current_number:
-            # 旧形式のテキスト・ファイル V0 は削除
-            old_file_name = file_names_by_version[0]
-            if os.path.isfile(old_file_name):
-                EvaluationVersioning.delete_file(old_file_name)
-
-
-    @staticmethod
     def load_from_file(
             file_number,
-            evaluation_kind,
-            file_version):
+            evaluation_kind):
         """評価関数テーブルをファイルから読み込む
-
-        ファイルのバージョンがアップすることがある
 
         Returns
         -------
-        - タプル
-            - mm_table
-            - バージョン番号
-            - バージョンアップしたか？
+        - mm_table
         """
 
         file_name = EvaluationVersioningKk.create_file_name(
@@ -70,35 +33,10 @@ class EvaluationVersioningKk():
 
         print(f"[{datetime.datetime.now()}] {file_name} file exists check ...", flush=True)
 
-        # バイナリ・ファイル V4 に保存されているとき
-        if file_version == "V4":
-            mm_table = EvaluationVersioning.read_evaluation_from_binary_v2_v3_file(
-                    file_name=file_name)
+        mm_table = EvaluationVersioning.read_evaluation_from_binary_v2_v3_file(
+                file_name=file_name)
 
-            # 旧形式ファイル削除
-            EvaluationVersioningKk.delete_old_files_cascade(
-                    current_number=4,
-                    file_names_by_version=file_names_by_version)
-
-            return (mm_table, file_version, False)
-
-        # バイナリ・ファイル V3 に保存されているとき
-        if file_version == "V3":
-
-            # V3ファイル読込
-            mm_table = EvaluationVersioning.read_evaluation_from_binary_v2_v3_file(
-                    file_name=file_name)
-
-            # 旧形式ファイル削除
-            EvaluationVersioningKk.delete_old_files_cascade(
-                    current_number=3,
-                    file_names_by_version=file_names_by_version)
-
-            # バージョンアップ
-            return (mm_table, "V4", True)
-
-        # ファイルが存在しないとき
-        return None
+        return mm_table
 
 
     @staticmethod
@@ -114,44 +52,27 @@ class EvaluationVersioningKk():
         shall_save_file = False
         evaluation_kind = "kk"
 
-        tuple = EvaluationVersioningKk.check_file_version_and_name(
+        file_name, is_file_exists = EvaluationVersioningKk.check_file_exists(
                 file_number=file_number,
                 evaluation_kind=evaluation_kind)
-
-        if tuple is None:
-            file_version = None
-            file_name = None
-        if tuple is not None:
-            file_version, file_name = tuple
 
         # 読込
         tuple = EvaluationVersioningKk.load_from_file(
                 file_number=file_number,
-                evaluation_kind=evaluation_kind,
-                file_version=file_version)
+                evaluation_kind=evaluation_kind)
 
         if tuple is None:
             mm_table = None
             is_file_modified = True     # 新規作成だから
             shall_save_file = True      # 保存しておかないと、毎回作成して時間がかかる
         else:
-            mm_table, file_version, shall_save_file = tuple
+            mm_table, shall_save_file = tuple
             is_file_modified = mm_table is None
 
 
-        if file_version in ("V4", "V5"):
-            evaluation_table_property = EvaluationTableProperty(
-                    is_king_size_of_a=True,             # 玉の指し手は評価値テーブル・サイズを縮めれる
-                    is_king_size_of_b=True)             # 玉の指し手は評価値テーブル・サイズを縮めれる
-
-        elif file_version == None or file_version in ("V0", "V1", "V2", "V3", "V4"):
-            # KK評価値テーブルは V3 の途中から使用
-            evaluation_table_property = EvaluationTableProperty(
-                    is_king_size_of_a=False,            # 過去バージョンではフラグ未対応
-                    is_king_size_of_b=False)            # 過去バージョンではフラグ未対応
-
-        else:
-            raise Exception(f"unexpected file version:'{file_version}'")
+        evaluation_table_property = EvaluationTableProperty(
+                is_king_size_of_a=True,             # 玉の指し手は評価値テーブル・サイズを縮めれる
+                is_king_size_of_b=True)             # 玉の指し手は評価値テーブル・サイズを縮めれる
 
         # ファイルが存在しないとき
         if mm_table is None:
@@ -167,7 +88,6 @@ class EvaluationVersioningKk():
         kk_table = EvaluationTableKk(
                 file_number=file_number,
                 file_name=file_name,
-                file_version=file_version,
                 evaluation_table_property=evaluation_table_property,
                 evaluation_mm_table=mm_table,
                 is_file_modified=is_file_modified)
@@ -176,10 +96,10 @@ class EvaluationVersioningKk():
 
 
     @staticmethod
-    def check_file_version_and_name(
+    def check_file_exists(
             file_number,
             evaluation_kind):
-        """ファイルのバージョンと、ファイル名のタプルを返す。無ければナン"""
+        """ファイルの存在確認"""
 
         file_name = EvaluationVersioningKk.create_file_name(
                 file_number=file_number,
@@ -187,9 +107,4 @@ class EvaluationVersioningKk():
 
         print(f"[{datetime.datetime.now()}] {file_name} file exists check ...", flush=True)
 
-        # バイナリV3ファイルに保存されているとき
-        if os.path.isfile(file_name):
-            return ("V3", file_name)
-
-        # ファイルが存在しないとき
-        return None
+        return (file_name, os.path.isfile(file_name))

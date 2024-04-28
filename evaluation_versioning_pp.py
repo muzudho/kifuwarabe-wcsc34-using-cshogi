@@ -17,51 +17,16 @@ class EvaluationVersioningPp():
 
 
     @staticmethod
-    def delete_old_files_cascade(
-            current_number,
-            file_names_by_version):
-        """旧形式のファイルを削除します"""
-
-        if 3 < current_number:
-            # 旧形式のバイナリ・ファイル V3 は削除
-            old_file_name = file_names_by_version[3]
-            if os.path.isfile(old_file_name):
-                EvaluationVersioning.delete_file(old_file_name)
-
-        if 2 < current_number:
-            # 旧形式のバイナリ・ファイル V2 は削除
-            old_file_name = file_names_by_version[2]
-            if os.path.isfile(old_file_name):
-                EvaluationVersioning.delete_file(old_file_name)
-
-        if 1 < current_number:
-            # 旧形式のバイナリ・ファイル V1 は削除
-            old_file_name = file_names_by_version[1]
-            if os.path.isfile(old_file_name):
-                EvaluationVersioning.delete_file(old_file_name)
-
-        if 0 < current_number:
-            # 旧形式のテキスト・ファイル V0 は削除
-            old_file_name = file_names_by_version[0]
-            if os.path.isfile(old_file_name):
-                EvaluationVersioning.delete_file(old_file_name)
-
-
-    @staticmethod
     def load_from_file(
             file_number,
-            evaluation_kind,
-            file_version):
+            evaluation_kind):
         """評価関数テーブルをファイルから読み込む
 
         ファイルのバージョンがアップすることがある
 
         Returns
         -------
-        - タプル
-            - mm_table
-            - バージョン番号
-            - バージョンアップしたか？
+        - mm_table
         """
 
         file_name = EvaluationVersioningPp.create_file_name(
@@ -70,70 +35,11 @@ class EvaluationVersioningPp():
 
         print(f"[{datetime.datetime.now()}] {file_name} file exists check ...", flush=True)
 
-        # バイナリ・ファイル V4 に保存されているとき
-        if file_version == "V4":
-            # V4ファイル読込
-            mm_table = EvaluationVersioning.read_evaluation_from_binary_v2_v3_file(
-                    file_name=file_name)
+        # V4ファイル読込
+        mm_table = EvaluationVersioning.read_evaluation_from_binary_v2_v3_file(
+                file_name=file_name)
 
-            # 旧形式ファイル削除
-            EvaluationVersioningPp.delete_old_files_cascade(
-                    current_number=4,
-                    file_names_by_version=file_names_by_version)
-
-            return (mm_table, "V4", False)
-
-        # バイナリ・ファイル V3 に保存されているとき
-        if file_version == "V3":
-            mm_table = EvaluationVersioning.read_evaluation_from_binary_v2_v3_file(
-                    file_name=file_name)
-
-            # 旧形式ファイル削除
-            EvaluationVersioningPp.delete_old_files_cascade(
-                    current_number=3,
-                    file_names_by_version=file_names_by_version)
-
-            # バージョンアップ
-            return (mm_table, "V4", True)
-
-        # バイナリV2ファイルに保存されているとき
-        if file_version == "V2":
-            mm_table = EvaluationVersioning.read_evaluation_from_binary_v2_v3_file(
-                    file_name=file_name)
-
-            # 旧形式ファイル削除
-            EvaluationVersioningPp.delete_old_files_cascade(
-                    current_number=2,
-                    file_names_by_version=file_names_by_version)
-
-            # バージョンアップ
-            return (mm_table, "V3", True)
-
-        print(f"[{datetime.datetime.now()}] {file_name} file exists check ...", flush=True)
-
-        # バイナリ・ファイルに保存されているとき
-        if file_version == "V1":
-            mm_table = EvaluationVersioning.read_evaluation_from_binary_file(
-                    file_name=file_names_by_version[1])
-
-            # 旧形式ファイル削除
-            EvaluationVersioningPp.delete_old_files_cascade(
-                    current_number=1,
-                    file_names_by_version=file_names_by_version)
-
-            return (mm_table, "V1", False)
-
-        print(f"[{datetime.datetime.now()}] {file_name} file exists check ...", flush=True)
-
-        # テキスト・ファイルに保存されているとき
-        if file_version == "V0":
-            mm_table = EvaluationVersioning.read_evaluation_from_text_file(
-                    file_name=file_name)
-
-            return (mm_table, "V0", False)
-
-        # ファイルが存在しないとき
-        return None
+        return mm_table
 
 
     @staticmethod
@@ -149,68 +55,25 @@ class EvaluationVersioningPp():
         shall_save_file = False
         evaluation_kind = "pp"
 
-        tuple = EvaluationVersioningPp.check_file_version_and_name(
+        file_name, is_file_exists = EvaluationVersioningPp.check_file_exists(
                 file_number=file_number,
                 evaluation_kind=evaluation_kind)
 
-        if tuple is None:
-            file_version = None
-            file_name = None
-        if tuple is not None:
-            file_version, file_name = tuple
-
-        if file_version is None:
-            evaluation_kind = "pp_po"   # V3の途中までの旧称その２
-
-            tuple = EvaluationVersioningPp.check_file_version_and_name(
-                    file_number=file_number,
-                    evaluation_kind=evaluation_kind)
-
-            if tuple is None:
-                file_version = None
-                file_name = None
-            if tuple is not None:
-                file_version, file_name = tuple
-
-        if file_version is None:
-            evaluation_kind = "fmf_fmo"     # V3の途中までの旧称
-            tuple = EvaluationVersioningPp.check_file_version_and_name(
-                    file_number=file_number,
-                    evaluation_kind=evaluation_kind)
-
-            if tuple is None:
-                file_version = None
-                file_name = None
-            if tuple is not None:
-                file_version, file_name = tuple
-
         # 読込
-        tuple = EvaluationVersioningPp.load_from_file(
+        mm_table = EvaluationVersioningPp.load_from_file(
                 file_number=file_number,
-                evaluation_kind=evaluation_kind,
-                file_version=file_version)
+                evaluation_kind=evaluation_kind)
 
-        if tuple is None:
-            mm_table = None
+        if mm_table is None:
             is_file_modified = True     # 新規作成だから
             shall_save_file = True      # 保存しておかないと、毎回作成して時間がかかる
         else:
-            mm_table, file_version, shall_save_file = tuple
-            is_file_modified = mm_table is None
+            is_file_modified = False
+            shall_save_file = False
 
-        if file_version in ("V3", "V4", "V5"):
-            evaluation_table_property = EvaluationTableProperty(
-                    is_king_size_of_a=False,            # P なんで
-                    is_king_size_of_b=False)            # P なんで
-
-        elif file_version in ("V0", "V1", "V2"):
-            evaluation_table_property = EvaluationTableProperty(
-                    is_king_size_of_a=False,            # P なんで
-                    is_king_size_of_b=False)            # P なんで
-
-        else:
-            raise Exception(f"unexpected file version:'{file_version}'")
-
+        evaluation_table_property = EvaluationTableProperty(
+                is_king_size_of_a=False,            # P なんで
+                is_king_size_of_b=False)            # P なんで
 
         if mm_table is None:
             # ファイルが存在しないとき
@@ -227,7 +90,6 @@ class EvaluationVersioningPp():
         pp_table = EvaluationTablePp(
                 file_number=file_number,
                 file_name=file_name,
-                file_version=file_version,
                 evaluation_table_property=evaluation_table_property,
                 evaluation_mm_table=mm_table,
                 is_file_modified=is_file_modified)
@@ -236,10 +98,10 @@ class EvaluationVersioningPp():
 
 
     @staticmethod
-    def check_file_version_and_name(
+    def check_file_exists(
             file_number,
             evaluation_kind):
-        """ファイルのバージョンと、ファイル名のタプルを返す。無ければナン"""
+        """ファイルの存在確認"""
 
         file_name = EvaluationVersioningPp.create_file_name(
                 file_number=file_number,
@@ -248,24 +110,5 @@ class EvaluationVersioningPp():
         print(f"[{datetime.datetime.now()}] {file_name} file exists check ...", flush=True)
 
         # バイナリV3ファイルに保存されているとき
-        if os.path.isfile(file_name):
-            return ("V3", file_name)
+        return (file_name, os.path.isfile(file_name))
 
-        # バイナリV2ファイルに保存されているとき
-        if os.path.isfile(file_name):
-            return ("V2", file_name)
-
-        print(f"[{datetime.datetime.now()}] {file_name} file exists check ...", flush=True)
-
-        # バイナリ・ファイルに保存されているとき
-        if os.path.isfile(file_name):
-            return ("V1", file_name)
-
-        print(f"[{datetime.datetime.now()}] {file_name} file exists check ...", flush=True)
-
-        # テキスト・ファイルに保存されているとき
-        if os.path.isfile(file_name):
-            return ("V0", file_name)
-
-        # ファイルが存在しないとき
-        return None
