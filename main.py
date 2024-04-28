@@ -9,6 +9,9 @@ from result_file import ResultFile
 from move import Move
 from move_list import create_move_lists
 from evaluation_rule_mm import EvaluationRuleMm
+from evaluation_save_kk import EvaluationSaveKk
+from evaluation_save_kp import EvaluationSaveKp
+from evaluation_save_pp import EvaluationSavePp
 
 
 class Kifuwarabe():
@@ -254,9 +257,12 @@ class Kifuwarabe():
                 self._pieces_canditates_memory.delete()
 
                 # ［評価値］　勝ったら記憶する
-                self._evaluation_facade_obj.save_file_as_kk()
-                self._evaluation_facade_obj.save_file_as_kp()
-                self._evaluation_facade_obj.save_file_as_pp()
+                EvaluationSaveKk.save_file_as_kk(
+                        kk_table_obj=self._evaluation_facade_obj.kk_policy_table)
+                EvaluationSaveKp.save_file_as_kp(
+                        kp_table_obj=self._evaluation_facade_obj.kp_policy_table)
+                EvaluationSavePp.save_file_as_pp(
+                        pp_table_obj=self._evaluation_facade_obj.pp_policy_table)
 
             # 持将棋
             elif cmd[1] == 'draw':

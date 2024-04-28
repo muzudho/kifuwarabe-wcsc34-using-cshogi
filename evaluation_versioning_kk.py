@@ -179,6 +179,9 @@ class EvaluationVersioningKk():
                     hint=f"n{file_number}  kind=kk)",
                     table_size_obj=new_table_size_obj)
 
+            shall_save_file = True
+            is_file_modified = True
+
         kk_table = EvaluationTableKk(
                 file_number=file_number,
                 file_name=file_name,

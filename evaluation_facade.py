@@ -4,6 +4,9 @@ from evaluation_versioning_kp import EvaluationVersioningKp
 from evaluation_versioning_pp import EvaluationVersioningPp
 from evaluation_versioning import EvaluationVersioning
 from learn import Learn
+from evaluation_save_kk import EvaluationSaveKk
+from evaluation_save_kp import EvaluationSaveKp
+from evaluation_save_pp import EvaluationSavePp
 
 
 class EvaluationFacade():
@@ -62,7 +65,8 @@ class EvaluationFacade():
                 file_number=self._file_number)
 
         if shall_save_file:
-            self.save_file_as_kk()
+            EvaluationSaveKk.save_file_as_kk(
+                    kk_table_obj=self._kk_policy_table)
 
         # 学習
         Learn.update_evaluation_table(
@@ -77,7 +81,8 @@ class EvaluationFacade():
                 file_number=self._file_number)
 
         if shall_save_file:
-            self.save_file_as_kp()
+            EvaluationSaveKp.save_file_as_kp(
+                    kp_table_obj=self._kp_policy_table)
 
         # 学習
         Learn.update_evaluation_table(
@@ -92,70 +97,14 @@ class EvaluationFacade():
                 file_number=self._file_number)
 
         if shall_save_file:
-            self.save_file_as_pp()
+            EvaluationSavePp.save_file_as_pp(
+                    pp_table_obj=self._pp_policy_table)
 
         # 学習
         Learn.update_evaluation_table(
                 evaluation_mm_table_obj=self._pp_policy_table,
                 canditates_memory=pieces_canditates_memory,  # 自軍の玉以外の合法手
                 result_file=result_file)
-
-
-    def save_file_as_kk(self):
-        """ＫＫ評価値ファイルの保存"""
-
-        # 保存するかどうかは先に判定しておくこと
-        if self._kk_policy_table.is_file_modified:
-            # ＫＫポリシー
-            file_names_by_version = EvaluationVersioningKk.create_file_names_each_version(
-                    file_number=self._kk_policy_table.file_number,
-                    evaluation_kind="kk")
-
-            file_name = file_names_by_version[5]    # V5
-
-            EvaluationVersioning.save_evaluation_to_file(
-                    file_name=file_name,
-                    evaluation_mm_table=self._kk_policy_table.evaluation_mm_table)
-        else:
-            print(f"[{datetime.datetime.now()}] kk file not changed", flush=True)
-
-
-    def save_file_as_kp(self):
-        """ＫＰ評価値ファイルの保存"""
-
-        # 保存するかどうかは先に判定しておくこと
-        if self._kp_policy_table.is_file_modified:
-            # ＫＰポリシー
-            file_names_by_version = EvaluationVersioningKp.create_file_names_each_version(
-                    file_number=self._file_number,
-                    evaluation_kind="kp")    # V3 の途中からの新名を使っていく
-
-            file_name = file_names_by_version[4]    # V4
-
-            EvaluationVersioning.save_evaluation_to_file(
-                    file_name=file_name,
-                    evaluation_mm_table=self._kp_policy_table.evaluation_mm_table)
-        else:
-            print(f"[{datetime.datetime.now()}] kp file not changed", flush=True)
-
-
-    def save_file_as_pp(self):
-        """ＰＰ評価値ファイルの保存"""
-
-        # 保存するかどうかは先に判定しておくこと
-        if self._pp_policy_table.is_file_modified:
-            # ＰＰポリシー
-            file_names_by_version = EvaluationVersioningPp.create_file_names_each_version(
-                    file_number=self._file_number,
-                    evaluation_kind="pp")   # V3 の途中からの新名を使っていく
-
-            file_name = file_names_by_version[4]    # V4
-
-            EvaluationVersioning.save_evaluation_to_file(
-                    file_name=file_name,
-                    evaluation_mm_table=self._pp_policy_table.evaluation_mm_table)
-        else:
-            print(f"[{datetime.datetime.now()}] pp file not changed", flush=True)
 
 
     def make_move_as_usi_and_policy_dictionary(

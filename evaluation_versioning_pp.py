@@ -241,6 +241,9 @@ class EvaluationVersioningPp():
                     hint=f'n{file_number}  kind=pp)',
                     table_size_obj=new_table_size_obj)
 
+            shall_save_file = True
+            is_file_modified = True
+
         pp_table = EvaluationTablePp(
                 file_number=file_number,
                 file_name=file_name,
