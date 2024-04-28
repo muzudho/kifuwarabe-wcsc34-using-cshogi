@@ -1,4 +1,7 @@
+import cshogi
+from evaluation_move_specification import EvaluationMoveSpecification
 from move import Move
+from move_helper import MoveHelper
 
 
 class EvaluationRuleKk():
@@ -149,7 +152,7 @@ class EvaluationRuleKk():
 
 
     @staticmethod
-    def get_pair_of_move_as_usi_by_kl_index(
+    def get_move_by_index(
             kl_index):
         """逆関数
 
@@ -159,6 +162,12 @@ class EvaluationRuleKk():
         ----------
         kl_index : int
             指し手 k, l のペアの通しインデックス
+
+        Returns
+        -------
+        - タプル
+            - 指し手 k
+            - 指し手 l
         """
 
         #
@@ -206,3 +215,48 @@ class EvaluationRuleKk():
             raise
 
         return [k_move, l_move]
+
+
+    @staticmethod
+    def get_kl_index_by_2_moves(
+            k_obj,
+            l_obj,
+            turn):
+        """指し手２つの組み合わせインデックス
+
+        Parameters
+        ----------
+        k_obj : Move
+            指し手 k
+        l_obj : Move
+            指し手 l
+        turn : int
+            手番
+        """
+
+        # 同じ指し手を比較したら 0 とする（総当たりの二重ループとかでここを通る）
+        if k_obj.as_usi == l_obj.as_usi:
+            return 0
+
+        # 後手なら、指し手の先後をひっくり返す（将棋盤を１８０°回転させるのと同等）
+        if turn == cshogi.WHITE:
+            a_move_obj = MoveHelper.flip_turn(a_move_obj)
+            b_move_obj = MoveHelper.flip_turn(b_move_obj)
+
+        l_index = EvaluationRuleKk.get_k_index_by_move(
+                move_obj=l_obj)
+        k_index = EvaluationRuleKk.get_k_index_by_move(
+                move_obj=k_obj)
+
+        move_indexes = [l_index, k_index]
+        move_indexes.sort()
+
+        # 昇順
+        if l_index <= k_index:
+            kl_index = l_index * EvaluationRuleKk.get_move_number() + k_index
+
+        # 降順
+        else:
+            kl_index = k_index * EvaluationRuleKk.get_move_number() + l_index
+
+        return kl_index
