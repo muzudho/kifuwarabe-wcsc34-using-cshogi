@@ -62,7 +62,7 @@ class EvaluationFilePp():
             shall_save_file = True
             is_file_modified = True
 
-        pp_table = EvaluationTableFacadePp(
+        pp_table = EvaluationTableFacadePp.create_it(
                 file_number=file_number,
                 file_name=file_name,
                 evaluation_mm_table=mm_table,

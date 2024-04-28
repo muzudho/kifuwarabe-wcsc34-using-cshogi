@@ -1,6 +1,7 @@
 import cshogi
 from move import Move
 from move_helper import MoveHelper
+from evaluation_rule_k import EvaluationRuleK
 
 
 class EvaluationRuleKk():
@@ -30,17 +31,6 @@ class EvaluationRuleKk():
         7: 10,
     }
     """玉の指し手のインデックスを、相対SQへ復元"""
-
-
-    @staticmethod
-    def get_king_direction_max_number():
-        """玉の移動方向の最大数
-
-        Returns
-        -------
-        - int
-        """
-        return 8
 
 
     @staticmethod
@@ -115,7 +105,7 @@ class EvaluationRuleKk():
 
 
         #      0～80  *                                  8 +           0～7
-        return src_sq * EvaluationRuleKk.get_king_direction_max_number() + relative_index
+        return src_sq * EvaluationRuleK.get_king_direction_max_number() + relative_index
 
 
     @staticmethod
