@@ -61,7 +61,7 @@ class EvaluationFacade():
         #
         # ＫＫポリシー
         #
-        self.kk_table_obj, shall_save_file = EvaluationVersioningKk.load_on_usinewgame(
+        self._kk_table_obj, shall_save_file = EvaluationVersioningKk.load_on_usinewgame(
                 file_number=self._file_number)
 
         if shall_save_file:
