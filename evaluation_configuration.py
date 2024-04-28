@@ -93,7 +93,7 @@ class EvaluationConfiguration():
         """
 
         # 左右対称の盤か？
-        if is_symmetrical_half_boardd:
+        if is_symmetrical_half_board:
             # 移動元マス番号、または打の種類
             try:
                 src_sq = Move._src_dst_str_1st_figure_to_sq_on_symmetrical_board[move.src_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.src_str[1]]

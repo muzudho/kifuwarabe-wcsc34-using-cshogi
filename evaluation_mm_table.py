@@ -117,7 +117,7 @@ class EvaluationMmTable():
         self._evaluation_mm_table = evaluation_mm_table
         self._is_king_of_a = is_king_of_a
         self._is_king_of_b = is_king_of_b
-        self._is_symmetrical_half_boardddd = is_symmetrical_half_board
+        self._is_symmetrical_half_board = is_symmetrical_half_board
         self._is_file_modified = is_file_modified
 
 
