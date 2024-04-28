@@ -1,5 +1,6 @@
 from move import Move
 from evaluation_rule_mm import EvaluationRuleMm
+from evaluation_table_size import EvaluationTableSize
 
 
 class EvaluationTableMm():
@@ -32,7 +33,6 @@ class EvaluationTableMm():
             file_version,
             evaluation_table_property,
             list_of_move_size,
-            table_size_obj,
             evaluation_mm_table,
             is_file_modified):
         """初期化
@@ -105,12 +105,15 @@ class EvaluationTableMm():
         self._file_version = file_version
         self._evaluation_table_property = evaluation_table_property
         self._list_of_move_size = list_of_move_size
-        self._table_size_obj = table_size_obj
         self._evaluation_mm_table = evaluation_mm_table
         self._is_king_of_a = evaluation_table_property.is_king_size_of_a
         self._is_king_of_b = evaluation_table_property.is_king_size_of_b
         self._is_symmetrical_half_board = evaluation_table_property.is_symmetrical_half_board
         self._is_file_modified = is_file_modified
+
+        # テーブル・サイズ。計算過程付き
+        self._table_size_obj = EvaluationTableSize(
+                evaluation_table_property=evaluation_table_property)
 
 
     @property

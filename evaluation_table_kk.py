@@ -31,9 +31,6 @@ class EvaluationTableKk(EvaluationTableMm):
         k_size = EvaluationRuleKk.get_move_number()
         l_size = EvaluationRuleKk.get_move_number()
 
-        new_table_size_obj = EvaluationTableSize(
-                evaluation_table_property=evaluation_table_property)
-
         EvaluationTableMm.__init__(
                 self,
                 file_number=file_number,
@@ -41,6 +38,5 @@ class EvaluationTableKk(EvaluationTableMm):
                 file_version=file_version,
                 evaluation_table_property=evaluation_table_property,
                 list_of_move_size=[k_size, l_size],
-                table_size_obj=new_table_size_obj,
                 evaluation_mm_table=evaluation_mm_table,
                 is_file_modified=is_file_modified)

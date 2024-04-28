@@ -17,28 +17,28 @@ class EvaluationFacade():
         self._file_number = file_number
 
         # 評価値テーブル：　ＫＫポリシー
-        self._kk_policy_table = None
+        self._kk_table_obj = None
 
         # 評価値テーブル：　ＫＰポリシー
-        self._kp_policy_table = None
+        self._kp_table_obj = None
 
         # 評価値テーブル：　ＰＰポリシー
-        self._pp_policy_table = None
+        self._pp_table_obj = None
 
 
     @property
-    def kk_policy_table(self):
-        return self._kk_policy_table
+    def kk_table_obj(self):
+        return self._kk_table_obj
 
 
     @property
-    def kp_policy_table(self):
-        return self._kp_policy_table
+    def kp_table_obj(self):
+        return self._kp_table_obj
 
 
     @property
-    def pp_policy_table(self):
-        return self._pp_policy_table
+    def pp_table_obj(self):
+        return self._pp_table_obj
 
 
     def usinewgame(
@@ -61,48 +61,48 @@ class EvaluationFacade():
         #
         # ＫＫポリシー
         #
-        self._kk_policy_table, shall_save_file = EvaluationVersioningKk.load_on_usinewgame(
+        self.kk_table_obj, shall_save_file = EvaluationVersioningKk.load_on_usinewgame(
                 file_number=self._file_number)
 
         if shall_save_file:
             EvaluationSaveKk.save_file_as_kk(
-                    kk_table_obj=self._kk_policy_table)
+                    kk_table_obj=self._kk_table_obj)
 
         # 学習
         Learn.update_evaluation_table(
-                evaluation_mm_table_obj=self._kk_policy_table,
+                evaluation_mm_table_obj=self._kk_table_obj,
                 canditates_memory=king_canditates_memory, # キング
                 result_file=result_file)
 
         #
         # ＫＰポリシー
         #
-        self._kp_policy_table, shall_save_file = EvaluationVersioningKp.load_on_usinewgame(
+        self._kp_table_obj, shall_save_file = EvaluationVersioningKp.load_on_usinewgame(
                 file_number=self._file_number)
 
         if shall_save_file:
             EvaluationSaveKp.save_file_as_kp(
-                    kp_table_obj=self._kp_policy_table)
+                    kp_table_obj=self._kp_table_obj)
 
         # 学習
         Learn.update_evaluation_table(
-                evaluation_mm_table_obj=self._kp_policy_table,
+                evaluation_mm_table_obj=self._kp_table_obj,
                 canditates_memory=king_canditates_memory, # キング
                 result_file=result_file)
 
         #
         # ＰＰポリシー
         #
-        self._pp_policy_table, shall_save_file = EvaluationVersioningPp.load_on_usinewgame(
+        self._pp_table_obj, shall_save_file = EvaluationVersioningPp.load_on_usinewgame(
                 file_number=self._file_number)
 
         if shall_save_file:
             EvaluationSavePp.save_file_as_pp(
-                    pp_table_obj=self._pp_policy_table)
+                    pp_table_obj=self._pp_table_obj)
 
         # 学習
         Learn.update_evaluation_table(
-                evaluation_mm_table_obj=self._pp_policy_table,
+                evaluation_mm_table_obj=self._pp_table_obj,
                 canditates_memory=pieces_canditates_memory,  # 自軍の玉以外の合法手
                 result_file=result_file)
 
@@ -138,7 +138,7 @@ class EvaluationFacade():
         pieces_move_as_usi_and_policy_dictionary = {}
 
         # ＫＰポリシー　ｉｎ　ＫＰテーブル
-        kp_policy_dictionary = self._kp_policy_table.make_move_as_usi_and_policy_dictionary_2(
+        kp_policy_dictionary = self._kp_table_obj.make_move_as_usi_and_policy_dictionary_2(
                 a_move_collection_as_usi=king_move_collection_as_usi,
                 b_move_collection_as_usi=pieces_move_collection_as_usi,
                 turn=turn)
@@ -151,7 +151,7 @@ class EvaluationFacade():
                 king_move_as_usi_and_policy_dictionary[king_move_as_usi] = policy
 
         # ＫＬポリシー　ｉｎ　ＫＫテーブル
-        kl_policy_dictionary = self._kk_policy_table.make_move_as_usi_and_policy_dictionary_2(
+        kl_policy_dictionary = self.kk_table_obj.make_move_as_usi_and_policy_dictionary_2(
                 a_move_collection_as_usi=king_move_collection_as_usi,
                 b_move_collection_as_usi=lord_move_collection_as_usi,
                 turn=turn)
@@ -164,7 +164,7 @@ class EvaluationFacade():
                 king_move_as_usi_and_policy_dictionary[king_move_as_usi] = policy
 
         # ＫＱポリシー　ｉｎ　ＫＰテーブル
-        kq_policy_dictionary = self._kp_policy_table.make_move_as_usi_and_policy_dictionary_2(
+        kq_policy_dictionary = self._kp_table_obj.make_move_as_usi_and_policy_dictionary_2(
                 a_move_collection_as_usi=king_move_collection_as_usi,
                 b_move_collection_as_usi=quaffers_move_collection_as_usi,
                 turn=turn)
@@ -177,7 +177,7 @@ class EvaluationFacade():
                 king_move_as_usi_and_policy_dictionary[king_move_as_usi] = policy
 
         # ＰＰポリシー　ｉｎ　ＰＰテーブル
-        pp_policy_dictionary = self._pp_policy_table.make_move_as_usi_and_policy_dictionary_2(
+        pp_policy_dictionary = self._pp_table_obj.make_move_as_usi_and_policy_dictionary_2(
                 a_move_collection_as_usi=pieces_move_collection_as_usi,
                 b_move_collection_as_usi=pieces_move_collection_as_usi,
                 turn=turn)
@@ -191,7 +191,7 @@ class EvaluationFacade():
 
         # ＰＬポリシー　ｉｎ　ＫＰテーブル
         # TODO 盤の先後をひっくり返さないといけないか？
-        pl_policy_dictionary = self._kp_policy_table.make_move_as_usi_and_policy_dictionary_2(
+        pl_policy_dictionary = self._kp_table_obj.make_move_as_usi_and_policy_dictionary_2(
                 a_move_collection_as_usi=pieces_move_collection_as_usi,
                 b_move_collection_as_usi=lord_move_collection_as_usi,
                 turn=turn)
@@ -204,7 +204,7 @@ class EvaluationFacade():
                 pieces_move_as_usi_and_policy_dictionary[piece_move_as_usi] = policy
 
         # ＰＱポリシー　ｉｎ　ＰＰテーブル
-        pq_policy_dictionary = self._pp_policy_table.make_move_as_usi_and_policy_dictionary_2(
+        pq_policy_dictionary = self._pp_table_obj.make_move_as_usi_and_policy_dictionary_2(
                 a_move_collection_as_usi=pieces_move_collection_as_usi,
                 b_move_collection_as_usi=quaffers_move_collection_as_usi,
                 turn=turn)
