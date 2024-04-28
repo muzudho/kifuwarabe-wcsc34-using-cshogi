@@ -30,19 +30,19 @@ class EvaluationFileKk():
         shall_save_file = False
         evaluation_kind = "kk"
 
-        file_name, is_file_exists = EvaluationFileKk.check_file_exists(
-                file_number=file_number,
-                evaluation_kind=evaluation_kind)
-
-        # 読込
         file_name = EvaluationFileKk.create_file_name(
                 file_number=file_number,
                 evaluation_kind=evaluation_kind)
 
         print(f"[{datetime.datetime.now()}] {file_name} file exists check ...", flush=True)
+        is_file_exists = os.path.isfile(file_name)
 
-        mm_table = EvaluationLoad.read_evaluation_file(
-                file_name=file_name)
+        if is_file_exists:
+            # 読込
+            mm_table = EvaluationLoad.read_evaluation_file(
+                    file_name=file_name)
+        else:
+            mm_table = None
 
         if mm_table is None:
             is_file_modified = True     # 新規作成だから
@@ -75,18 +75,3 @@ class EvaluationFileKk():
                 is_file_modified=is_file_modified)
 
         return (kk_table, shall_save_file)
-
-
-    @staticmethod
-    def check_file_exists(
-            file_number,
-            evaluation_kind):
-        """ファイルの存在確認"""
-
-        file_name = EvaluationFileKk.create_file_name(
-                file_number=file_number,
-                evaluation_kind=evaluation_kind)
-
-        print(f"[{datetime.datetime.now()}] {file_name} file exists check ...", flush=True)
-
-        return (file_name, os.path.isfile(file_name))

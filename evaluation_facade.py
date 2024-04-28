@@ -1,8 +1,6 @@
-import datetime
 from evaluation_file_kk import EvaluationFileKk
 from evaluation_file_kp import EvaluationFileKp
 from evaluation_file_pp import EvaluationFilePp
-from evaluation_file import EvaluationFile
 from learn import Learn
 from evaluation_save_kk import EvaluationSaveKk
 from evaluation_save_kp import EvaluationSaveKp
