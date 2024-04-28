@@ -62,7 +62,7 @@ class EvaluationRuleMm():
             pro_size = 2
 
             # 成りか？
-            if move.is_promotion():
+            if move.promoted:
                 pro_num = 1
             else:
                 pro_num = 0

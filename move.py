@@ -170,11 +170,8 @@ class Move():
         #
         # 移動元のマス番号を基数で。打にはマス番号は無い
         #
-        file_or_none = self.get_src_file_or_none()
-        rank_or_none = self.get_src_rank_or_none()
-
-        if file_or_none is not None and rank_or_none is not None:
-            self._src_sq_or_none = (file_or_none - 1) * 9 + (rank_or_none - 1)
+        if self.src_file_or_none is not None and self.src_rank_or_none is not None:
+            self._src_sq_or_none = (self.src_file_or_none - 1) * 9 + (self.src_rank_or_none - 1)
         else:
             self._src_sq_or_none = None
 
@@ -200,14 +197,16 @@ class Move():
             raise Exception(f"dst rank error: '{rank_str}' in '{self._move_as_usi}'")
 
         #
-        # 移動先のマス番号（Destination Square）
+        # 移動先のマス番号を序数で
         #
-        self._dst_sq = (self.get_dst_rank() - 1) * 9 + (self.get_dst_file() - 1)
+        self._dst_sq = (self.dst_rank - 1) * 9 + (self.dst_file - 1)
 
         #
-        # 成りかそれ以外（５文字なら成りだろう）
+        # 成ったか？
         #
-        self._is_promotion = 4 < len(self._move_as_usi)
+        #   - ５文字なら成りだろう
+        #
+        self._promoted = 4 < len(self._move_as_usi)
 
 
     @property
@@ -227,36 +226,43 @@ class Move():
         return self._dst_str
 
 
-    def get_src_file_or_none(self):
+    @property
+    def src_file_or_none(self):
         """移動元の列番号を序数で。打にはマス番号は無い"""
         return self._src_file_or_none
 
 
-    def get_src_rank_or_none(self):
+    @property
+    def src_rank_or_none(self):
         """移動元の段番号を序数で。打にはマス番号は無い"""
         return self._src_rank_or_none
 
 
-    def get_src_sq_or_none(self):
+    @property
+    def src_sq_or_none(self):
         """移動元のマス番号を基数で。打にはマス番号は無い"""
         return self._src_sq_or_none
 
 
-    def get_dst_file(self):
+    @property
+    def dst_file(self):
         """移動先の列番号を序数で"""
         return self._dst_file
 
 
-    def get_dst_rank(self):
+    @property
+    def dst_rank(self):
         """移動先の段番号を序数で"""
         return self._dst_rank
 
 
-    def get_dst_sq(self):
-        """移動先のマス番号（Destination Square）"""
+    @property
+    def dst_sq(self):
+        """移動先のマス番号を序数で"""
         return self._dst_sq
 
 
-    def is_promotion(self):
-        """成りかそれ以外（５文字なら成りだろう）"""
-        return self._is_promotion
+    @property
+    def promoted(self):
+        """成ったか？"""
+        return self._promoted

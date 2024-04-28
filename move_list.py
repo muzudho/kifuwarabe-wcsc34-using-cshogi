@@ -26,7 +26,7 @@ def create_move_lists(
 
         # 指し手の移動元を取得
         move_obj = Move(move_as_usi)
-        src_sq_or_none = move_obj.get_src_sq_or_none()
+        src_sq_or_none = move_obj.src_sq_or_none
 
         # コウならスキップする
         if move_as_usi == ko_move_as_usi:

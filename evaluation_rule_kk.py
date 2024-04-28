@@ -76,15 +76,12 @@ class EvaluationRuleKK():
         #
         #   - 打はありません。したがって None にはなりません
         #
-        src_sq = move_obj.get_src_sq_or_none()
-
-        # 移動先マス番号
-        dst_sq = move_obj.get_dst_sq()
+        src_sq = move_obj.src_sq_or_none
 
         # 玉は成らない
 
-        # 相対SQ
-        relative_sq = dst_sq - src_sq
+        # 相対SQ    =  移動先マス番号    - 移動元マス番号
+        relative_sq = move_obj.dst_sq - src_sq
 
         return EvaluationRuleKK._relative_sq_to_move_index[relative_sq]
 

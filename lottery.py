@@ -51,7 +51,7 @@ class Lottery():
                     opponent_move_as_usi = cshogi.move_to_usi(opponent_move_id)
 
                     opponent_move_obj = Move(opponent_move_as_usi)
-                    src_sq_or_none = opponent_move_obj.get_src_sq_or_none()
+                    src_sq_or_none = opponent_move_obj.src_sq_or_none
 
                     # 敵玉の指し手
                     if src_sq_or_none is not None and src_sq_or_none == l_sq:
