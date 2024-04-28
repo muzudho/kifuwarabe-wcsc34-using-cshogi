@@ -2,7 +2,6 @@ import os
 import datetime
 from evaluation_table_kk import EvaluationTableKk
 from evaluation_versioning import EvaluationVersioning
-from evaluation_version_up_mm import EvaluationVersionUpMm
 from evaluation_table_property import EvaluationTableProperty
 from evaluation_table_size_facade_kk import EvaluationTableSizeFacadeKk
 
@@ -11,19 +10,10 @@ class EvaluationVersioningKk():
 
 
     @staticmethod
-    def create_file_names_each_version(
+    def create_file_name(
             file_number,
             evaluation_kind):
-        return [
-            # ↑ 旧い
-            f'n{file_number}_eval_{evaluation_kind}.txt',       # 0
-            f'n{file_number}_eval_{evaluation_kind}.bin',       # 1
-            f'n{file_number}_eval_{evaluation_kind}_v2.bin',    # 2
-            f'n{file_number}_eval_{evaluation_kind}_v3.bin',    # 3
-            f'n{file_number}_eval_{evaluation_kind}_v4.bin',    # 4
-            f'n{file_number}_eval_{evaluation_kind}_v5.bin',    # 5
-            # ↓ 新しい
-        ]
+        return f'n{file_number}_eval_{evaluation_kind}.bin'
 
 
     @staticmethod
@@ -74,16 +64,16 @@ class EvaluationVersioningKk():
             - バージョンアップしたか？
         """
 
-        file_names_by_version = EvaluationVersioningKk.create_file_names_each_version(
+        file_name = EvaluationVersioningKk.create_file_name(
                 file_number=file_number,
                 evaluation_kind=evaluation_kind)
 
-        print(f"[{datetime.datetime.now()}] {file_names_by_version[2]} file exists check ...", flush=True)
+        print(f"[{datetime.datetime.now()}] {file_name} file exists check ...", flush=True)
 
         # バイナリ・ファイル V4 に保存されているとき
         if file_version == "V4":
             mm_table = EvaluationVersioning.read_evaluation_from_binary_v2_v3_file(
-                    file_name=file_names_by_version[4])
+                    file_name=file_name)
 
             # 旧形式ファイル削除
             EvaluationVersioningKk.delete_old_files_cascade(
@@ -97,7 +87,7 @@ class EvaluationVersioningKk():
 
             # V3ファイル読込
             mm_table = EvaluationVersioning.read_evaluation_from_binary_v2_v3_file(
-                    file_name=file_names_by_version[3])
+                    file_name=file_name)
 
             # 旧形式ファイル削除
             EvaluationVersioningKk.delete_old_files_cascade(
@@ -191,14 +181,13 @@ class EvaluationVersioningKk():
             evaluation_kind):
         """ファイルのバージョンと、ファイル名のタプルを返す。無ければナン"""
 
-        file_names_by_version = EvaluationVersioningKk.create_file_names_each_version(
+        file_name = EvaluationVersioningKk.create_file_name(
                 file_number=file_number,
                 evaluation_kind=evaluation_kind)
 
-        print(f"[{datetime.datetime.now()}] {file_names_by_version[2]} file exists check ...", flush=True)
+        print(f"[{datetime.datetime.now()}] {file_name} file exists check ...", flush=True)
 
         # バイナリV3ファイルに保存されているとき
-        file_name = file_names_by_version[3]
         if os.path.isfile(file_name):
             return ("V3", file_name)
 

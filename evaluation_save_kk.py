@@ -19,11 +19,9 @@ class EvaluationSaveKk():
 
         # 保存するかどうかは先に判定しておくこと
         if kk_table_obj.is_file_modified:
-            file_names_by_version = EvaluationVersioningKk.create_file_names_each_version(
+            file_name = EvaluationVersioningKk.create_file_name(
                     file_number=kk_table_obj.file_number,
                     evaluation_kind="kk")
-
-            file_name = file_names_by_version[5]    # V5
 
             EvaluationVersioning.save_evaluation_to_file(
                     file_name=file_name,

@@ -20,11 +20,9 @@ class EvaluationSaveKp():
         # 保存するかどうかは先に判定しておくこと
         if kp_table_obj.is_file_modified:
             # ＫＰポリシー
-            file_names_by_version = EvaluationVersioningKp.create_file_names_each_version(
+            file_name = EvaluationVersioningKp.create_file_name(
                     file_number=kp_table_obj.file_number,
                     evaluation_kind="kp")    # V3 の途中からの新名を使っていく
-
-            file_name = file_names_by_version[4]    # V4
 
             EvaluationVersioning.save_evaluation_to_file(
                     file_name=file_name,
