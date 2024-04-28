@@ -2,11 +2,11 @@ import os
 import datetime
 from evaluation_pp_table import EvaluationPpTable
 from evaluation_file_versioning import FileVersioning
-from evaluation_file_version_up import EvaluationFileVersionUp
+from evaluation_version_up_mm import EvaluationVersionUpMm
 from evaluation_table_size import EvaluationTableSize
 
 
-class EvaluationPpFileVersioning():
+class EvaluationVersioningPp():
 
 
     @staticmethod
@@ -73,7 +73,7 @@ class EvaluationPpFileVersioning():
             - バージョンアップしたか？
         """
 
-        file_names_by_version = EvaluationPpFileVersioning.create_file_names_each_version(
+        file_names_by_version = EvaluationVersioningPp.create_file_names_each_version(
                 file_number=file_number,
                 evaluation_kind=evaluation_kind)
 
@@ -86,7 +86,7 @@ class EvaluationPpFileVersioning():
                     file_name=file_names_by_version[4])
 
             # 旧形式ファイル削除
-            EvaluationPpFileVersioning.delete_old_files_cascade(
+            EvaluationVersioningPp.delete_old_files_cascade(
                     current_number=4,
                     file_names_by_version=file_names_by_version)
 
@@ -98,13 +98,13 @@ class EvaluationPpFileVersioning():
             #        file_name=file_names_by_version[3])
 
             # バージョンアップする
-            mm_table = EvaluationFileVersionUp.update_v3_to_v4(
+            mm_table = EvaluationVersionUpMm.update_v3_to_v4(
                 is_king_of_a=False, # PP だから
                 is_king_of_b=False, # PP だから
                 file_name=file_names_by_version[3])
 
             # 旧形式ファイル削除
-            EvaluationPpFileVersioning.delete_old_files_cascade(
+            EvaluationVersioningPp.delete_old_files_cascade(
                     current_number=3,
                     file_names_by_version=file_names_by_version)
 
@@ -115,11 +115,11 @@ class EvaluationPpFileVersioning():
         if file_version == "V2":
 
             # バージョンアップする
-            mm_table = EvaluationFileVersionUp.update_v2_to_v3(
+            mm_table = EvaluationVersionUpMm.update_v2_to_v3(
                 file_name=file_names_by_version[2])
 
             # 旧形式ファイル削除
-            EvaluationPpFileVersioning.delete_old_files_cascade(
+            EvaluationVersioningPp.delete_old_files_cascade(
                     current_number=2,
                     file_names_by_version=file_names_by_version)
 
@@ -134,7 +134,7 @@ class EvaluationPpFileVersioning():
                     file_name=file_names_by_version[1])
 
             # 旧形式ファイル削除
-            EvaluationPpFileVersioning.delete_old_files_cascade(
+            EvaluationVersioningPp.delete_old_files_cascade(
                     current_number=1,
                     file_names_by_version=file_names_by_version)
 
@@ -166,7 +166,7 @@ class EvaluationPpFileVersioning():
         shall_save_file = False
         evaluation_kind = "pp"
 
-        tuple = EvaluationPpFileVersioning.check_file_version_and_name(
+        tuple = EvaluationVersioningPp.check_file_version_and_name(
                 file_number=file_number,
                 evaluation_kind=evaluation_kind)
 
@@ -179,7 +179,7 @@ class EvaluationPpFileVersioning():
         if file_version is None:
             evaluation_kind = "pp_po"   # V3の途中までの旧称その２
 
-            tuple = EvaluationPpFileVersioning.check_file_version_and_name(
+            tuple = EvaluationVersioningPp.check_file_version_and_name(
                     file_number=file_number,
                     evaluation_kind=evaluation_kind)
 
@@ -191,7 +191,7 @@ class EvaluationPpFileVersioning():
 
         if file_version is None:
             evaluation_kind = "fmf_fmo"     # V3の途中までの旧称
-            tuple = EvaluationPpFileVersioning.check_file_version_and_name(
+            tuple = EvaluationVersioningPp.check_file_version_and_name(
                     file_number=file_number,
                     evaluation_kind=evaluation_kind)
 
@@ -202,7 +202,7 @@ class EvaluationPpFileVersioning():
                 file_version, file_name = tuple
 
         # 読込
-        tuple = EvaluationPpFileVersioning.load_from_file(
+        tuple = EvaluationVersioningPp.load_from_file(
                 file_number=file_number,
                 evaluation_kind=evaluation_kind,
                 file_version=file_version)
@@ -249,7 +249,7 @@ class EvaluationPpFileVersioning():
             evaluation_kind):
         """ファイルのバージョンと、ファイル名のタプルを返す。無ければナン"""
 
-        file_names_by_version = EvaluationPpFileVersioning.create_file_names_each_version(
+        file_names_by_version = EvaluationVersioningPp.create_file_names_each_version(
                 file_number=file_number,
                 evaluation_kind=evaluation_kind)
 

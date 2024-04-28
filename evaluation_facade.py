@@ -1,7 +1,7 @@
 import datetime
-from evaluation_kk_file_versioning import EvaluationKkFileVersioning
-from evaluation_kp_file_versioning import EvaluationKpFileVersioning
-from evaluation_pp_file_versioning import EvaluationPpFileVersioning
+from evaluation_versioning_kk import EvaluationVersioningKk
+from evaluation_versioning_kp import EvaluationVersioningKp
+from evaluation_versioning_pp import EvaluationVersioningPp
 from evaluation_file_versioning import FileVersioning
 from learn import Learn
 
@@ -58,7 +58,7 @@ class EvaluationFacade():
         #
         # ＫＫポリシー
         #
-        self._kk_policy_table, shall_save_file = EvaluationKkFileVersioning.load_on_usinewgame(
+        self._kk_policy_table, shall_save_file = EvaluationVersioningKk.load_on_usinewgame(
                 file_number=self._file_number)
 
         if shall_save_file:
@@ -73,7 +73,7 @@ class EvaluationFacade():
         #
         # ＫＰポリシー
         #
-        self._kp_policy_table, shall_save_file = EvaluationKpFileVersioning.load_on_usinewgame(
+        self._kp_policy_table, shall_save_file = EvaluationVersioningKp.load_on_usinewgame(
                 file_number=self._file_number)
 
         if shall_save_file:
@@ -88,7 +88,7 @@ class EvaluationFacade():
         #
         # ＰＰポリシー
         #
-        self._pp_policy_table, shall_save_file = EvaluationPpFileVersioning.load_on_usinewgame(
+        self._pp_policy_table, shall_save_file = EvaluationVersioningPp.load_on_usinewgame(
                 file_number=self._file_number)
 
         if shall_save_file:
@@ -107,7 +107,7 @@ class EvaluationFacade():
         # 保存するかどうかは先に判定しておくこと
         if self._kk_policy_table.is_file_modified:
             # ＫＫポリシー
-            file_names_by_version = EvaluationKkFileVersioning.create_file_names_each_version(
+            file_names_by_version = EvaluationVersioningKk.create_file_names_each_version(
                     file_number=self._kk_policy_table.file_number,
                     evaluation_kind="kk")
 
@@ -126,7 +126,7 @@ class EvaluationFacade():
         # 保存するかどうかは先に判定しておくこと
         if self._kp_policy_table.is_file_modified:
             # ＫＰポリシー
-            file_names_by_version = EvaluationKpFileVersioning.create_file_names_each_version(
+            file_names_by_version = EvaluationVersioningKp.create_file_names_each_version(
                     file_number=self._file_number,
                     evaluation_kind="kp")    # V3 の途中からの新名を使っていく
 
@@ -145,7 +145,7 @@ class EvaluationFacade():
         # 保存するかどうかは先に判定しておくこと
         if self._pp_policy_table.is_file_modified:
             # ＰＰポリシー
-            file_names_by_version = EvaluationPpFileVersioning.create_file_names_each_version(
+            file_names_by_version = EvaluationVersioningPp.create_file_names_each_version(
                     file_number=self._file_number,
                     evaluation_kind="pp")   # V3 の途中からの新名を使っていく
 

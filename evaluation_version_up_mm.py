@@ -7,7 +7,7 @@ from evaluation_table_size import EvaluationTableSize
 from evaluation_rule_mm import EvaluationRuleMm
 
 
-class EvaluationFileVersionUp():
+class EvaluationVersionUpMm():
 
 
     @staticmethod
