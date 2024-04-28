@@ -1,5 +1,5 @@
 from move import Move
-from evaluation_rule_mm import EvaluationRuleMm
+from evaluation_rule_facade import EvaluationRuleFacade
 from evaluation_table_size import EvaluationTableSize
 
 
@@ -184,7 +184,7 @@ class EvaluationTableMm():
             turn):
         """両方残すなら 0点、インデックスが小さい方を残すなら -1点、インデックスが大きい方を残すなら +1点"""
 
-        mm_index = EvaluationRuleMm.get_mm_index_by_2_moves(
+        mm_index = EvaluationRuleFacade.get_mm_index_by_2_moves(
                 a_move_obj=a_move_obj,
                 a_is_king=self._is_king_of_a,
                 b_move_obj=b_move_obj,

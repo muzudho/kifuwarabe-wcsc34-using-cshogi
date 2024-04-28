@@ -1,6 +1,6 @@
 from evaluation_table_mm import EvaluationTableMm
 from evaluation_table_size import EvaluationTableSize
-from evaluation_rule_mm import EvaluationRuleMm
+from evaluation_rule_facade import EvaluationRuleFacade
 
 
 class EvaluationTableKp(EvaluationTableMm):
@@ -27,10 +27,10 @@ class EvaluationTableKp(EvaluationTableMm):
             保存されていない評価値テーブルを引数で渡したなら真
         """
 
-        k_size = EvaluationRuleMm.get_move_number(
+        k_size = EvaluationRuleFacade.get_move_number(
                 is_king=evaluation_table_property.is_king_size_of_a,
                 is_symmetrical_half_board=evaluation_table_property.is_symmetrical_half_board)
-        p_size = EvaluationRuleMm.get_move_number(
+        p_size = EvaluationRuleFacade.get_move_number(
                 is_king=evaluation_table_property.is_king_size_of_b,
                 is_symmetrical_half_board=evaluation_table_property.is_symmetrical_half_board)
 

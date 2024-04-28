@@ -4,7 +4,7 @@ from move import Move
 from move_helper import MoveHelper
 
 
-class EvaluationRuleMm():
+class EvaluationRuleFacade():
 
 
     _src_num_to_file_str_on_symmetrical_half_board = {
@@ -170,7 +170,7 @@ class EvaluationRuleMm():
         # ------------
         #
 
-        b_size = EvaluationRuleMm.get_move_number(
+        b_size = EvaluationRuleFacade.get_move_number(
             is_king=is_king_of_b,
             is_symmetrical_half_board=is_symmetrical_half_board)
 
@@ -182,7 +182,7 @@ class EvaluationRuleMm():
         a_index = rest
 
         try:
-            list_of_b_move = EvaluationRuleMm.get_list_of_move_as_usi_by_m_index(
+            list_of_b_move = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
                     m_index=b_index,
                     is_king=is_king_of_b,
                     is_symmetrical_half_board=is_symmetrical_half_board)
@@ -192,7 +192,7 @@ class EvaluationRuleMm():
             raise
 
         try:
-            list_of_a_move = EvaluationRuleMm.get_list_of_move_as_usi_by_m_index(
+            list_of_a_move = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
                     m_index=a_index,
                     is_king=is_king_of_b,
                     is_symmetrical_half_board=is_symmetrical_half_board)
@@ -310,7 +310,7 @@ class EvaluationRuleMm():
             # 45 ～ 51 は打
             if 45 <= src_value:
                 try:
-                    src_file_str = EvaluationRuleMm._src_num_to_file_str_on_symmetrical_half_board[src_value]
+                    src_file_str = EvaluationRuleFacade._src_num_to_file_str_on_symmetrical_half_board[src_value]
 
                 except KeyError as e:
                     # 例： single_move error.  src_value:52  dst_value:0  m_index:4680  move_patterns:4680  (src_size:52  dst_size:45  pro_size:2)  rest:52  drop_kind:7  file_size:5  rank_size:9  e:52
@@ -357,7 +357,7 @@ class EvaluationRuleMm():
         else:
             # 81 以上は打
             if 81 <= src_value:
-                src_file_str = EvaluationRuleMm._src_num_to_file_str_on_fully_connected[src_value]
+                src_file_str = EvaluationRuleFacade._src_num_to_file_str_on_fully_connected[src_value]
                 src_rank_str = '*'
 
             # 盤上
@@ -416,31 +416,23 @@ class EvaluationRuleMm():
         if a_move_obj.as_usi == b_move_obj.as_usi:
             return 0
 
-        # 後手なら、指し手の先後をひっくり返す（将棋盤を１８０°回転させるのと同等）
+        # 相手番なら、指し手の先後をひっくり返す（将棋盤を１８０°回転させるのと同等）
+        # 常に自分の盤から見た状態にする
         if turn == cshogi.WHITE:
             a_move_obj = MoveHelper.flip_turn(a_move_obj)
             b_move_obj = MoveHelper.flip_turn(b_move_obj)
 
-        a_index = EvaluationRuleMm.get_m_index_by_move(
+        a_index = EvaluationRuleFacade.get_m_index_by_move(
                 move=a_move_obj,
                 is_king=a_is_king,
                 is_symmetrical_half_board=is_symmetrical_half_board)
 
-        b_index = EvaluationRuleMm.get_m_index_by_move(
+        b_index = EvaluationRuleFacade.get_m_index_by_move(
                 move=b_move_obj,
                 is_king=b_is_king,
                 is_symmetrical_half_board=is_symmetrical_half_board)
 
-        move_indexes = [a_index, b_index]
-        move_indexes.sort()
 
-        # 昇順
-        if a_index <= b_index:
-            mm_index = a_index * list_of_move_size[1] + b_index
-            #print(f"[DEBUG] 昇順 a:{a_index:3} b:{b_index:3} mm_index:{mm_index}", flush=True)
-
-        # 降順
-        else:
-            mm_index = b_index * list_of_move_size[1] + a_index
-
+        # 組み合わせは実装が難しいので、ただの ab 関係とします
+        mm_index = a_index * list_of_move_size[1] + b_index
         return mm_index

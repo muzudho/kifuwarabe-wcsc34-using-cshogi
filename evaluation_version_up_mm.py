@@ -3,7 +3,7 @@ import datetime
 from move import Move
 from display_helper import DisplayHelper
 from evaluation_table_size import EvaluationTableSize
-from evaluation_rule_mm import EvaluationRuleMm
+from evaluation_rule_facade import EvaluationRuleFacade
 from evaluation_table_property import EvaluationTableProperty
 
 
@@ -40,10 +40,10 @@ class EvaluationVersionUpMm():
         new_table_size = new_table_size_obj.relation
 
         list_of_move_size = [
-            EvaluationRuleMm.get_move_number(
+            EvaluationRuleFacade.get_move_number(
                 is_king=is_king_of_a,
                 is_symmetrical_half_board=False),
-            EvaluationRuleMm.get_move_number(
+            EvaluationRuleFacade.get_move_number(
                 is_king=is_king_of_b,
                 is_symmetrical_half_board=False)]
 
@@ -106,7 +106,7 @@ class EvaluationVersionUpMm():
                             is_finish = True
                             break
 
-                        pair_of_list_of_move_as_usi = EvaluationRuleMm.get_pair_of_list_of_move_as_usi_by_mm_index(
+                        pair_of_list_of_move_as_usi = EvaluationRuleFacade.get_pair_of_list_of_move_as_usi_by_mm_index(
                                 mm_index=old_mm_index,
                                 is_king_of_b=is_king_of_b,
                                 is_symmetrical_half_board=False)
@@ -122,7 +122,7 @@ class EvaluationVersionUpMm():
                         b_obj = Move.from_usi(b_as_usi)
 
                         # 新しいテーブルでのインデックス
-                        new_mm_index = EvaluationRuleMm.get_mm_index_by_2_moves(
+                        new_mm_index = EvaluationRuleFacade.get_mm_index_by_2_moves(
                                 a_move_obj=a_obj,
                                 a_is_king=is_king_of_a,
                                 b_move_obj=b_obj,
@@ -242,7 +242,7 @@ class EvaluationVersionUpMm():
                             is_finish = True
                             break
 
-                        pair_of_list_of_move_as_usi = EvaluationRuleMm.get_pair_of_list_of_move_as_usi_by_mm_index(
+                        pair_of_list_of_move_as_usi = EvaluationRuleFacade.get_pair_of_list_of_move_as_usi_by_mm_index(
                                 mm_index=old_mm_index,
                                 is_king_of_b=False,             # V3 は未対応
                                 # 左右対称の盤
@@ -251,7 +251,7 @@ class EvaluationVersionUpMm():
                         # 共役の指し手も付いているケースがある
                         for list_of_move_as_usi in pair_of_list_of_move_as_usi:
                             for move_as_usi in list_of_move_as_usi:
-                                converted_m_index = EvaluationRuleMm.get_m_index_by_move(
+                                converted_m_index = EvaluationRuleFacade.get_m_index_by_move(
                                         move=Move.from_usi(move_as_usi),
                                         is_king=False,                  # 旧仕様では玉の区別なし
                                         is_symmetrical_half_board=True)  # V2 では、左右が異なる盤
