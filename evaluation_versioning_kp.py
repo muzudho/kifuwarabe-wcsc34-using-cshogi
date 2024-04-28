@@ -219,20 +219,23 @@ class EvaluationVersioningKp():
             mm_table, file_version, shall_save_file = tuple
             is_file_modified = mm_table is None
 
-        is_symmetrical_half_board = True
-        if file_version == "V3":
-            # V3 から盤面を左右対称ではなく、全体を使うよう変更
-            is_symmetrical_half_board = False
-
         if file_version in ("V4", "V5"):
             evaluation_table_property = EvaluationTableProperty(
-                    is_king_size_of_a=True,     # 玉の指し手は評価値テーブル・サイズを縮めれる
-                    is_king_size_of_b=False)    # P なんで
+                    is_king_size_of_a=True,             # 玉の指し手は評価値テーブル・サイズを縮めれる
+                    is_king_size_of_b=False,            # P なんで
+                    is_symmetrical_half_board=False)
 
-        elif file_version == None or file_version in ("V0", "V1", "V2", "V3"):
+        elif file_version == None or file_version in ("V3"):
             evaluation_table_property = EvaluationTableProperty(
-                    is_king_size_of_a=False,    # 過去バージョンではフラグ未対応
-                    is_king_size_of_b=False)    # 過去バージョンではフラグ未対応
+                    is_king_size_of_a=False,            # 過去バージョンではフラグ未対応
+                    is_king_size_of_b=False,            # 過去バージョンではフラグ未対応
+                    is_symmetrical_half_board=False)    # V3 から盤面を左右対称ではなく、全体を使うよう変更
+
+        elif file_version == None or file_version in ("V0", "V1", "V2"):
+            evaluation_table_property = EvaluationTableProperty(
+                    is_king_size_of_a=False,            # 過去バージョンではフラグ未対応
+                    is_king_size_of_b=False,            # 過去バージョンではフラグ未対応
+                    is_symmetrical_half_board=True)     # V2 まで左右対称
 
         else:
             raise Exception(f"unexpected file version:'{file_version}'")
@@ -242,7 +245,7 @@ class EvaluationVersioningKp():
             new_table_size_obj = EvaluationTableSize(
                     is_king_of_a=evaluation_table_property.is_king_size_of_a,
                     is_king_of_b=evaluation_table_property.is_king_size_of_b,
-                    is_symmetrical_half_board=is_symmetrical_half_board)
+                    is_symmetrical_half_board=evaluation_table_property.is_symmetrical_half_board)
 
             mm_table = EvaluationVersioning.create_random_table(
                     hint=f"n{file_number}  kind=kp)",
@@ -254,7 +257,7 @@ class EvaluationVersioningKp():
                 file_version=file_version,
                 evaluation_table_property=evaluation_table_property,
                 evaluation_mm_table=mm_table,
-                is_symmetrical_half_board=is_symmetrical_half_board,
+                is_symmetrical_half_board=evaluation_table_property.is_symmetrical_half_board,
                 is_file_modified=is_file_modified)
 
         return (kp_table, shall_save_file)
