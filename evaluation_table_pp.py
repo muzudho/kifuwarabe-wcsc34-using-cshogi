@@ -57,6 +57,7 @@ class EvaluationTablePp(EvaluationTableMm):
                 file_number=file_number,
                 file_name=file_name,
                 file_version=file_version,
+                evaluation_version_record=evaluation_version_record,
                 list_of_move_size=[p_size, p_size],
                 table_size_obj=new_table_size_obj,
                 evaluation_mm_table=evaluation_mm_table,

@@ -34,12 +34,7 @@ class EvaluationTableKk(EvaluationTableMm):
             保存されていない評価値テーブルを引数で渡したなら真
         """
 
-        is_king = evaluation_version_record.is_king_size_of_kk
-
-        if file_version in ("V4", "V5"):
-            is_king = True
-        else:
-            is_king = False
+        is_king = evaluation_version_record.is_king_size_of_a   # FIXME a と b の区別は？
 
         if is_symmetrical_half_board:
             k_size = EvaluationRuleKk.get_move_number(
@@ -66,6 +61,7 @@ class EvaluationTableKk(EvaluationTableMm):
                 file_number=file_number,
                 file_name=file_name,
                 file_version=file_version,
+                evaluation_version_record=evaluation_version_record,
                 list_of_move_size=[k_size, k_size],
                 table_size_obj=new_table_size_obj,
                 evaluation_mm_table=evaluation_mm_table,
