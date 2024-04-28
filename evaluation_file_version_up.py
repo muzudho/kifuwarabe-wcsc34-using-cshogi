@@ -115,8 +115,8 @@ class EvaluationFileVersionUp():
                         b_as_usi = list_of_b_as_usi[0]
                         #print(f"old_mm_index:{old_mm_index_with_underscore}  a_as_usi:{a_as_usi}  b_as_usi:{b_as_usi}", flush=True)
 
-                        a_obj = Move(a_as_usi)
-                        b_obj = Move(b_as_usi)
+                        a_obj = Move.from_usi(a_as_usi)
+                        b_obj = Move.from_usi(b_as_usi)
 
                         # 新しいテーブルでのインデックス
                         new_mm_index = EvaluationConfiguration.get_mm_index_by_2_moves(
@@ -246,7 +246,7 @@ class EvaluationFileVersionUp():
                         for list_of_move_as_usi in pair_of_list_of_move_as_usi:
                             for move_as_usi in list_of_move_as_usi:
                                 converted_m_index = EvaluationRuleMm.get_m_index_by_move(
-                                        move=Move(move_as_usi),
+                                        move=Move.from_usi(move_as_usi),
                                         is_king=False,                  # 旧仕様では玉の区別なし
                                         is_symmetrical_half_board=True)  # V2 では、左右が異なる盤
 

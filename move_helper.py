@@ -68,7 +68,7 @@ class MoveHelper():
         else:
             pro = ""
 
-        return Move(f"{reversed_src_str}{reversed_dst_str}{pro}")
+        return Move.from_usi(f"{reversed_src_str}{reversed_dst_str}{pro}")
 
 
     @staticmethod
@@ -108,4 +108,4 @@ class MoveHelper():
         else:
             pro = ""
 
-        return Move(f"{reversed_src_str}{reversed_dst_str}{pro}")
+        return Move.from_usi(f"{reversed_src_str}{reversed_dst_str}{pro}")

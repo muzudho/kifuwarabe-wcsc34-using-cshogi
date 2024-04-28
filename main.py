@@ -344,7 +344,7 @@ class Kifuwarabe():
             #
             is_symmetrical_half_board_in_kk = self._evaluation_facade_obj.kk_policy_table.is_symmetrical_half_board
             is_symmetrical_half_board_in_kp = self._evaluation_facade_obj.kp_policy_table.is_symmetrical_half_board
-            k_obj = Move(k_as_usi)
+            k_obj = Move.from_usi(k_as_usi)
 
             k_index_in_kk = EvaluationRuleMm.get_m_index_by_move(    # FIXME KK
                     move=k_obj,
@@ -390,7 +390,7 @@ class Kifuwarabe():
             #
             is_symmetrical_half_board_in_kp = self._evaluation_facade_obj.kp_policy_table.is_symmetrical_half_board
             is_symmetrical_half_board_in_pp = self._evaluation_facade_obj.pp_policy_table.is_symmetrical_half_board
-            p_obj = Move(p_as_usi)
+            p_obj = Move.from_usi(p_as_usi)
 
             # TODO ＫＰを、ＰＫにひっくり返してみる必要がある？
             p_index_in_kp = EvaluationRuleMm.get_m_index_by_move(   # FIXME KP
@@ -447,7 +447,7 @@ class Kifuwarabe():
                 for opponent_move_id in self._board.legal_moves:
                     opponent_move_as_usi = cshogi.move_to_usi(opponent_move_id)
 
-                    opponent_move_obj = Move(opponent_move_as_usi)
+                    opponent_move_obj = Move.from_usi(opponent_move_as_usi)
                     src_sq_or_none = opponent_move_obj.src_sq_or_none
 
                     # 敵玉の指し手
@@ -477,7 +477,7 @@ class Kifuwarabe():
             #
             is_symmetrical_half_board_in_kk = self._evaluation_facade_obj.kk_policy_table.is_symmetrical_half_board
             is_symmetrical_half_board_in_kp = self._evaluation_facade_obj.kp_policy_table.is_symmetrical_half_board
-            l_obj = Move(l_as_usi)
+            l_obj = Move.from_usi(l_as_usi)
 
             k_index_in_kk = EvaluationRuleMm.get_m_index_by_move(    # FIXME KK
                     move=l_obj,
@@ -528,7 +528,7 @@ class Kifuwarabe():
             #
             is_symmetrical_half_board_in_kp = self._evaluation_facade_obj.kp_policy_table.is_symmetrical_half_board
             is_symmetrical_half_board_in_pp = self._evaluation_facade_obj.pp_policy_table.is_symmetrical_half_board
-            q_obj = Move(q_as_usi)
+            q_obj = Move.from_usi(q_as_usi)
 
             # TODO ＫＰを、ＰＫにひっくり返してみる必要がある？
             p_index_in_kp = EvaluationRuleMm.get_m_index_by_move(   # FIXME KP
@@ -601,7 +601,7 @@ class Kifuwarabe():
             #
             is_symmetrical_half_board_is_kk = self._evaluation_facade_obj.kk_policy_table.is_symmetrical_half_board
             is_symmetrical_half_board_is_kp = self._evaluation_facade_obj.kp_policy_table.is_symmetrical_half_board
-            k_obj = Move(k_as_usi)
+            k_obj = Move.from_usi(k_as_usi)
 
             k_index_in_kk = EvaluationRuleMm.get_m_index_by_move(   # FIXME KK
                     move=k_obj,
@@ -657,7 +657,7 @@ class Kifuwarabe():
             #
             is_symmetrical_half_board_in_kp = self._evaluation_facade_obj.kp_policy_table.is_symmetrical_half_board
             is_symmetrical_half_board_in_pp = self._evaluation_facade_obj.pp_policy_table.is_symmetrical_half_board
-            p_obj = Move(p_as_usi)
+            p_obj = Move.from_usi(p_as_usi)
 
             # TODO ＫＰを、ＰＫにひっくり返してみる必要がある？
             p_index_in_kp = EvaluationRuleMm.get_m_index_by_move(   # FIXME KP

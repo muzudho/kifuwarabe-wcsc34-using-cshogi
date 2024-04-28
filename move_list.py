@@ -25,7 +25,7 @@ def create_move_lists(
         move_as_usi = cshogi.move_to_usi(move)
 
         # 指し手の移動元を取得
-        move_obj = Move(move_as_usi)
+        move_obj = Move.from_usi(move_as_usi)
         src_sq_or_none = move_obj.src_sq_or_none
 
         # コウならスキップする

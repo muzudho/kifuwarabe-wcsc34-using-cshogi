@@ -226,12 +226,12 @@ class EvaluationMmTable():
 
         # 主体
         for a_move_as_usi in a_move_collection_as_usi:
-            a_move_obj = Move(a_move_as_usi)
+            a_move_obj = Move.from_usi(a_move_as_usi)
             sum_value = 0
 
             # 客体と総当たり
             for b_move_as_usi in b_move_collection_as_usi:
-                b_move_obj = Move(b_move_as_usi)
+                b_move_obj = Move.from_usi(b_move_as_usi)
                 sum_value += self.get_evaluation_value(
                         a_move_obj=a_move_obj,
                         b_move_obj=b_move_obj,

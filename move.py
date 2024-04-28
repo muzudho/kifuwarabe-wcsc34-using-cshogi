@@ -123,90 +123,150 @@ class Move():
         return Move._rank_num_to_str[rank_num]
 
 
-    def __init__(self, move_as_usi):
-        """初期化
+    @staticmethod
+    def from_usi(move_as_usi):
+        """生成
 
         Parameters
         ----------
         move_as_usi : str
             "7g7f" や "3d3c+"、 "R*5e" のような文字列を想定。 "resign" のような文字列は想定外
         """
-        self._move_as_usi = move_as_usi
 
         # 移動元
-        self._src_str = self._move_as_usi[0: 2]
+        src_str = move_as_usi[0: 2]
 
         # 移動先
-        self._dst_str = self._move_as_usi[2: 4]
+        dst_str = move_as_usi[2: 4]
 
         #
         # 移動元の列番号を序数で。打にはマス番号は無い
         #
-        if self.src_str in Move._src_drops:
-            self._src_file_or_none = None
+        if src_str in Move._src_drops:
+            src_file_or_none = None
 
         else:
-            file_str = self.src_str[0]
+            file_str = src_str[0]
 
             try:
-                self._src_file_or_none = Move._file_str_to_num[file_str]
+                src_file_or_none = Move._file_str_to_num[file_str]
             except:
-                raise Exception(f"src file error: '{file_str}' in '{self._move_as_usi}'")
+                raise Exception(f"src file error: '{file_str}' in '{move_as_usi}'")
 
         #
         # 移動元の段番号を序数で。打は無い
         #
-        if self.src_str in Move._src_drops:
-            self._src_rank_or_none = None
+        if src_str in Move._src_drops:
+            src_rank_or_none = None
 
         else:
-            rank_str = self.src_str[1]
+            rank_str = src_str[1]
 
             try:
-                self._src_rank_or_none = Move._rank_str_to_num[rank_str]
+                src_rank_or_none = Move._rank_str_to_num[rank_str]
             except:
-                raise Exception(f"src rank error: '{rank_str}' in '{self._move_as_usi}'")
+                raise Exception(f"src rank error: '{rank_str}' in '{move_as_usi}'")
 
         #
         # 移動元のマス番号を基数で。打にはマス番号は無い
         #
-        if self.src_file_or_none is not None and self.src_rank_or_none is not None:
-            self._src_sq_or_none = (self.src_file_or_none - 1) * 9 + (self.src_rank_or_none - 1)
+        if src_file_or_none is not None and src_rank_or_none is not None:
+            src_sq_or_none = (src_file_or_none - 1) * 9 + (src_rank_or_none - 1)
         else:
-            self._src_sq_or_none = None
+            src_sq_or_none = None
 
         #
         # 移動先の列番号を序数で
         #
-        file_str = self.dst_str[0]
+        file_str = dst_str[0]
 
         try:
-            self._dst_file = Move._file_str_to_num[file_str]
+            dst_file = Move._file_str_to_num[file_str]
         except:
-            raise Exception(f"dst file error: '{file_str}' in '{self._move_as_usi}'")
-
+            raise Exception(f"dst file error: '{file_str}' in '{move_as_usi}'")
 
         #
         # 移動先の段番号を序数で
         #
-        rank_str = self.dst_str[1]
+        rank_str = dst_str[1]
 
         try:
-            self._dst_rank = Move._rank_str_to_num[rank_str]
+            dst_rank = Move._rank_str_to_num[rank_str]
         except:
-            raise Exception(f"dst rank error: '{rank_str}' in '{self._move_as_usi}'")
+            raise Exception(f"dst rank error: '{rank_str}' in '{move_as_usi}'")
 
         #
         # 移動先のマス番号を序数で
         #
-        self._dst_sq = (self.dst_rank - 1) * 9 + (self.dst_file - 1)
+        dst_sq = (dst_rank - 1) * 9 + (dst_file - 1)
 
         #
         # 成ったか？
         #
         #   - ５文字なら成りだろう
         #
-        self._promoted = 4 < len(self._move_as_usi)
+        promoted = 4 < len(move_as_usi)
+
+        return Move(
+                move_as_usi=move_as_usi,
+                src_str=src_str,
+                dst_str=dst_str,
+                src_file_or_none=src_file_or_none,
+                src_rank_or_none=src_rank_or_none,
+                src_sq_or_none=src_sq_or_none,
+                dst_file=dst_file,
+                dst_rank=dst_rank,
+                dst_sq=dst_sq,
+                promoted=promoted)
+
+
+    def __init__(
+            self,
+            move_as_usi,
+            src_str,
+            dst_str,
+            src_file_or_none,
+            src_rank_or_none,
+            src_sq_or_none,
+            dst_file,
+            dst_rank,
+            dst_sq,
+            promoted):
+        """初期化
+
+        Parameters
+        ----------
+        move_as_usi : str
+            "7g7f" や "3d3c+"、 "R*5e" のような文字列を想定。 "resign" のような文字列は想定外
+        src_str : str
+            移動元
+        dst_str : str
+            移動先
+        src_file_or_none : int
+            移動元の列番号を序数で。打にはマス番号は無い
+        src_rank_or_none : int
+            移動元の段番号を序数で。打は無い
+        src_sq_or_none : int
+            移動元のマス番号を基数で。打にはマス番号は無い
+        dst_file : int
+            移動先の列番号を序数で
+        dst_rank : int
+            移動先の段番号を序数で
+        dst_sq : int
+            移動先のマス番号を序数で
+        promoted : bool
+            成ったか？
+        """
+        self._move_as_usi = move_as_usi
+        self._src_str = src_str
+        self._dst_str = dst_str
+        self._src_file_or_none = src_file_or_none
+        self._src_rank_or_none = src_rank_or_none
+        self._src_sq_or_none = src_sq_or_none
+        self._dst_file = dst_file
+        self._dst_rank = dst_rank
+        self._dst_sq = dst_sq
+        self._promoted = promoted
 
 
     @property

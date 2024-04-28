@@ -54,8 +54,8 @@ class Learn():
         for a_as_usi in canditates_memory.move_set:
             for b_as_usi in canditates_memory.move_set:
 
-                a_obj = Move(a_as_usi)
-                b_obj = Move(b_as_usi)
+                a_obj = Move.from_usi(a_as_usi)
+                b_obj = Move.from_usi(b_as_usi)
 
                 mm_index = EvaluationConfiguration.get_mm_index_by_2_moves(
                         a_move_obj=a_obj,

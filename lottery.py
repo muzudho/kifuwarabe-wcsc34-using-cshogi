@@ -50,7 +50,7 @@ class Lottery():
                 for opponent_move_id in board.legal_moves:
                     opponent_move_as_usi = cshogi.move_to_usi(opponent_move_id)
 
-                    opponent_move_obj = Move(opponent_move_as_usi)
+                    opponent_move_obj = Move.from_usi(opponent_move_as_usi)
                     src_sq_or_none = opponent_move_obj.src_sq_or_none
 
                     # 敵玉の指し手
