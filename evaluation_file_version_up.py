@@ -65,34 +65,34 @@ class EvaluationFileVersionUp():
 
                     # プログレス表示
                     if old_mm_index == 1:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index}", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 10:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index}", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 100:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index}", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 1_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index}", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 10_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index}", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 100_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index}", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 1_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index}", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 10_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index}", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 100_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index}", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 1_000_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index}", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 10_000_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index}", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 100_000_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index}", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 1_000_000_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} ...", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size} ...", flush=True)
 
                     one_byte_num = int.from_bytes(one_byte_binary, signed=False)
-                    print(f"old_mm_index:{old_mm_index}  one_byte_num:{one_byte_num}", flush=True)
+                    #print(f"old_mm_index:{old_mm_index}  one_byte_num:{one_byte_num}", flush=True)
 
                     #
                     # V2 ---> V3 で、インデックスがずれる
@@ -205,34 +205,34 @@ class EvaluationFileVersionUp():
 
                     # プログレス表示
                     if old_mm_index == 1:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index}", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 10:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index}", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 100:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index}", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 1_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index}", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 10_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index}", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 100_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index}", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 1_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index}", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 10_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index}", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 100_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index}", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 1_000_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index}", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 10_000_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index}", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 100_000_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index}", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 1_000_000_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} ...", flush=True)
+                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size} ...", flush=True)
 
                     one_byte_num = int.from_bytes(one_byte_binary, signed=False)
-                    print(f"old_mm_index:{old_mm_index}  one_byte_num:{one_byte_num}", flush=True)
+                    #print(f"old_mm_index:{old_mm_index}  one_byte_num:{one_byte_num}", flush=True)
 
                     #
                     # V2 ---> V3 で、インデックスがずれる
