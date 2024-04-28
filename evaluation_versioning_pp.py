@@ -4,6 +4,7 @@ from evaluation_table_pp import EvaluationTablePp
 from evaluation_versioning import EvaluationVersioning
 from evaluation_table_property import EvaluationTableProperty
 from evaluation_table_size_facade_pp import EvaluationTableSizeFacadePp
+from evaluation_load import EvaluationLoad
 
 
 class EvaluationVersioningPp():
@@ -36,7 +37,7 @@ class EvaluationVersioningPp():
         print(f"[{datetime.datetime.now()}] {file_name} file exists check ...", flush=True)
 
         # V4ファイル読込
-        mm_table = EvaluationVersioning.read_evaluation_from_binary_v2_v3_file(
+        mm_table = EvaluationLoad.read_evaluation_file(
                 file_name=file_name)
 
         return mm_table
