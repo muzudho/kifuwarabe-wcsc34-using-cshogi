@@ -220,6 +220,50 @@ class Move():
                 promoted=promoted)
 
 
+    @staticmethod
+    def from_src_dst_pro(
+            src_sq,
+            dst_sq,
+            promoted):
+        """生成
+
+        Parameters
+        ----------
+        src_sq : str
+            移動元マス
+        dst_sq : str
+            移動先マス
+        promoted : bool
+            成ったか？
+        """
+
+        src_file = src_sq // 9 + 1
+        src_rank = src_sq % 9 + 1
+
+        dst_file = dst_sq // 9 + 1
+        dst_rank = dst_sq % 9 + 1
+
+        src_str = f"{src_file}{Move._rank_num_to_str[src_rank]}"
+        dst_str = f"{dst_file}{Move._rank_num_to_str[dst_rank]}"
+
+        if promoted:
+            pro_str = "+"
+        else:
+            pro_str = ""
+
+        return Move(
+                move_as_usi=f"{src_str}{dst_str}{pro_str}",
+                src_str=src_str,
+                dst_str=dst_str,
+                src_file_or_none=src_file,
+                src_rank_or_none=src_rank,
+                src_sq_or_none=src_sq,
+                dst_file=dst_file,
+                dst_rank=dst_rank,
+                dst_sq=dst_sq,
+                promoted=promoted)
+
+
     def __init__(
             self,
             move_as_usi,
