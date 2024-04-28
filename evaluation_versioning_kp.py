@@ -18,33 +18,6 @@ class EvaluationVersioningKp():
 
 
     @staticmethod
-    def load_from_file(
-            file_number,
-            evaluation_kind):
-        """評価関数テーブルをファイルから読み込む
-
-        ファイルのバージョンがアップすることがある
-
-        Returns
-        -------
-        - mm_table
-        """
-
-        file_name = EvaluationVersioningKp.create_file_name(
-                file_number=file_number,
-                evaluation_kind=evaluation_kind)
-
-        print(f"[{datetime.datetime.now()}] {file_name} file exists check ...", flush=True)
-
-        # V4ファイル読込
-        mm_table = EvaluationLoad.read_evaluation_file(
-                file_name=file_name)
-
-        return mm_table
-
-
-
-    @staticmethod
     def load_on_usinewgame(
             file_number):
         """ＫＰポリシー読込
@@ -62,9 +35,15 @@ class EvaluationVersioningKp():
                 evaluation_kind=evaluation_kind)
 
         # 読込
-        mm_table = EvaluationVersioningKp.load_from_file(
+        file_name = EvaluationVersioningKp.create_file_name(
                 file_number=file_number,
                 evaluation_kind=evaluation_kind)
+
+        print(f"[{datetime.datetime.now()}] {file_name} file exists check ...", flush=True)
+
+        # V4ファイル読込
+        mm_table = EvaluationLoad.read_evaluation_file(
+                file_name=file_name)
 
         if mm_table is None:
             is_file_modified = True     # 新規作成だから

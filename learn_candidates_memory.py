@@ -44,12 +44,6 @@ class CandidatesMemory():
             CandidatesMemory.read_file(candidates_memory, file_name)
             return candidates_memory
 
-        # 旧称のファイルが存在するとき
-        file_name = f'n{candidates_memory._file_number}_canditates_memory_minions.txt'
-        if os.path.isfile(file_name):
-            CandidatesMemory.read_file(candidates_memory, file_name)
-            return candidates_memory
-
         return candidates_memory
 
 
@@ -63,8 +57,6 @@ class CandidatesMemory():
         if is_king:
             self._file_name = f'n{self._file_number}_canditates_memory_king.txt'
         else:
-            # 旧名：　ｍｉｎｉｏｎｓ
-            # 新名：　ｐｉｅｃｅｓ
             self._file_name = f'n{self._file_number}_canditates_memory_pieces.txt'
 
         self._move_set = set()

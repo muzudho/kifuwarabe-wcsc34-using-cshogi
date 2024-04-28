@@ -18,29 +18,6 @@ class EvaluationVersioningKk():
 
 
     @staticmethod
-    def load_from_file(
-            file_number,
-            evaluation_kind):
-        """評価関数テーブルをファイルから読み込む
-
-        Returns
-        -------
-        - mm_table
-        """
-
-        file_name = EvaluationVersioningKk.create_file_name(
-                file_number=file_number,
-                evaluation_kind=evaluation_kind)
-
-        print(f"[{datetime.datetime.now()}] {file_name} file exists check ...", flush=True)
-
-        mm_table = EvaluationLoad.read_evaluation_file(
-                file_name=file_name)
-
-        return mm_table
-
-
-    @staticmethod
     def load_on_usinewgame(
             file_number):
         """ＫＫポリシー読込
@@ -58,17 +35,21 @@ class EvaluationVersioningKk():
                 evaluation_kind=evaluation_kind)
 
         # 読込
-        tuple = EvaluationVersioningKk.load_from_file(
+        file_name = EvaluationVersioningKk.create_file_name(
                 file_number=file_number,
                 evaluation_kind=evaluation_kind)
 
-        if tuple is None:
-            mm_table = None
+        print(f"[{datetime.datetime.now()}] {file_name} file exists check ...", flush=True)
+
+        mm_table = EvaluationLoad.read_evaluation_file(
+                file_name=file_name)
+
+        if mm_table is None:
             is_file_modified = True     # 新規作成だから
             shall_save_file = True      # 保存しておかないと、毎回作成して時間がかかる
         else:
-            mm_table, shall_save_file = tuple
-            is_file_modified = mm_table is None
+            is_file_modified = False
+            shall_save_file = False
 
 
         evaluation_table_property = EvaluationTableProperty(
