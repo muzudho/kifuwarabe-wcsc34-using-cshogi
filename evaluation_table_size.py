@@ -12,7 +12,7 @@ class EvaluationTableSize():
             is_king_of_b,
             is_symmetrical_half_board):
         """初期化
-        
+
         symmetrical_half_board
         +--------------+------------------------+
         |   b          |       king       piece |

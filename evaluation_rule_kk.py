@@ -1,3 +1,6 @@
+from move import Move
+
+
 class EvaluationRuleKK():
 
 
@@ -105,5 +108,8 @@ class EvaluationRuleKK():
 
         relative_sq = EvaluationRuleKK._k_index_to_relative_sq[k_index]
         dst_sq = src_sq + relative_sq
-
-        pass
+        
+        return Move.from_src_dst_pro(
+            src_sq=src_sq,
+            dst_sq=dst_sq,
+            promoted=False)
