@@ -95,14 +95,8 @@ class EvaluationVersioningPp():
 
         # バイナリ・ファイル V3 に保存されているとき
         if file_version == "V3":
-            #mm_table = EvaluationVersioning.read_evaluation_from_binary_v2_v3_file(
-            #        file_name=file_names_by_version[3])
-
-            # バージョンアップする
-            mm_table = EvaluationVersionUpMm.update_v3_to_v4(
-                is_king_of_a=False, # PP だから
-                is_king_of_b=False, # PP だから
-                file_name=file_names_by_version[3])
+            mm_table = EvaluationVersioning.read_evaluation_from_binary_v2_v3_file(
+                    file_name=file_names_by_version[3])
 
             # 旧形式ファイル削除
             EvaluationVersioningPp.delete_old_files_cascade(
@@ -114,10 +108,8 @@ class EvaluationVersioningPp():
 
         # バイナリV2ファイルに保存されているとき
         if file_version == "V2":
-
-            # バージョンアップする
-            mm_table = EvaluationVersionUpMm.update_v2_to_v3(
-                file_name=file_names_by_version[2])
+            mm_table = EvaluationVersioning.read_evaluation_from_binary_v2_v3_file(
+                    file_name=file_names_by_version[2])
 
             # 旧形式ファイル削除
             EvaluationVersioningPp.delete_old_files_cascade(

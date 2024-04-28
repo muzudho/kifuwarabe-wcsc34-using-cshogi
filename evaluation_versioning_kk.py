@@ -95,15 +95,9 @@ class EvaluationVersioningKk():
         # バイナリ・ファイル V3 に保存されているとき
         if file_version == "V3":
 
-            ## V3ファイル読込
-            #mm_table = EvaluationVersioning.read_evaluation_from_binary_v2_v3_file(
-            #        file_name=file_names_by_version[3])
-
-            # バージョンアップする
-            mm_table = EvaluationVersionUpMm.update_v3_to_v4(
-                is_king_of_a=True,  # KK だから
-                is_king_of_b=True,  # KK だから
-                file_name=file_names_by_version[3])
+            # V3ファイル読込
+            mm_table = EvaluationVersioning.read_evaluation_from_binary_v2_v3_file(
+                    file_name=file_names_by_version[3])
 
             # 旧形式ファイル削除
             EvaluationVersioningKk.delete_old_files_cascade(
