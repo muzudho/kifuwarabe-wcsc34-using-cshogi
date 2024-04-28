@@ -34,7 +34,7 @@ class EvaluationMmTable():
             file_name,
             file_version,
             list_of_move_size,
-            table_size,
+            table_size_obj,
             evaluation_mm_table,
             is_king_of_a,
             is_king_of_b,
@@ -48,6 +48,8 @@ class EvaluationMmTable():
             ファイルのバージョン
         list_of_move_size : str[]
             指し手 a, b それぞれのサイズ
+        table_size_obj: EvaluationTableSize
+            テーブル・サイズ。計算過程付き
         is_king_of_a : bool
             指し手 a は玉か？
         is_king_of_b : bool
@@ -111,7 +113,7 @@ class EvaluationMmTable():
         self._file_name = file_name
         self._file_version = file_version
         self._list_of_move_size = list_of_move_size
-        self._table_size = table_size
+        self._table_size_obj = table_size_obj
         self._evaluation_mm_table = evaluation_mm_table
         self._is_king_of_a = is_king_of_a
         self._is_king_of_b = is_king_of_b
@@ -137,6 +139,12 @@ class EvaluationMmTable():
     @property
     def list_of_move_size(self):
         return self._list_of_move_size
+
+
+    @property
+    def table_size_obj(self):
+        """テーブル・サイズ。計算過程付き"""
+        return self._table_size_obj
 
 
     @property

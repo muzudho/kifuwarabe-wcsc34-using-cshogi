@@ -92,8 +92,8 @@ class EvaluationKpFileVersioning():
                     is_symmetrical_connected=is_symmetrical_connected)
 
             mm_table = FileVersioning.create_random_table(
-                    hint=f"n{file_number}  kind=kp  new_table_size_obj:({new_table_size_obj.to_debug_str()})",
-                    table_size=new_table_size_obj.combination)
+                    hint=f"n{file_number}  kind=kp)",
+                    table_size_obj=new_table_size_obj)
 
         kp_table = EvaluationKpTable(
                 file_number=file_number,

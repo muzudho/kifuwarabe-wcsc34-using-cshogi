@@ -94,9 +94,9 @@ class EvaluationTableSize():
 
     def to_debug_str(self):
         """デバッグ用"""
-        a = DisplayHelper.with_underscore(self._is_king_of_a)
-        b = DisplayHelper.with_underscore(self._is_king_of_b)
-        c = DisplayHelper.with_underscore(self._is_symmetrical_connected)
+        a = self._is_king_of_a   # bool
+        b = self._is_king_of_b
+        c = self._is_symmetrical_connected
         d = DisplayHelper.with_underscore(self._a_number)
         e = DisplayHelper.with_underscore(self._b_number)
         f = DisplayHelper.with_underscore(self._combination)

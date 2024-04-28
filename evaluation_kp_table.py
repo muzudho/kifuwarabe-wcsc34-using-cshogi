@@ -48,7 +48,6 @@ class EvaluationKpTable(EvaluationMmTable):
                     is_king_of_a=False,     # P なんで
                     is_king_of_b=False,     # P なんで
                     is_symmetrical_connected=True)
-            table_size = new_table_size_obj.combination
 
         else:
             k_size = EvaluationConfiguration.get_move_number(
@@ -62,7 +61,6 @@ class EvaluationKpTable(EvaluationMmTable):
                     is_king_of_a=False,     # P なんで
                     is_king_of_b=False,     # P なんで
                     is_symmetrical_connected=False)
-            table_size = new_table_size_obj.combination
 
         EvaluationMmTable.__init__(
                 self,
@@ -70,7 +68,7 @@ class EvaluationKpTable(EvaluationMmTable):
                 file_name=file_name,
                 file_version=file_version,
                 list_of_move_size=[k_size, p_size],
-                table_size=table_size,
+                table_size_obj=new_table_size_obj,
                 evaluation_mm_table=evaluation_mm_table,
                 is_king_of_a=is_king_of_a,
                 is_king_of_b=is_king_of_b,

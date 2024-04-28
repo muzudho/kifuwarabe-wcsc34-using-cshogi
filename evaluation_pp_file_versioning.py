@@ -83,8 +83,8 @@ class EvaluationPpFileVersioning():
                     is_symmetrical_connected=is_symmetrical_connected)
 
             mm_table = FileVersioning.create_random_table(
-                    hint=f'n{file_number}  kind=pp  new_table_size_obj:({new_table_size_obj.to_debug_str()})',
-                    table_size=new_table_size_obj.combination)
+                    hint=f'n{file_number}  kind=pp)',
+                    table_size_obj=new_table_size_obj)
 
         pp_table = EvaluationPpTable(
                 file_number=file_number,
