@@ -1,11 +1,4 @@
-import cshogi
-from move import Move
-from move_helper import MoveHelper
-from evaluation_move_specification import EvaluationMoveSpecification
-from evaluation_rule_mm import EvaluationRuleMm
-
-
-class EvaluationConfiguration():
+class EvaluationRuleWhole():
 
 
     _src_num_to_file_str_on_symmetrical_half_board = {
@@ -96,7 +89,7 @@ class EvaluationConfiguration():
         # ------------
         #
 
-        b_size = EvaluationConfiguration.get_move_number(
+        b_size = EvaluationRuleWhole.get_move_number(
             is_king=is_king_of_b,
             is_symmetrical_half_board=is_symmetrical_half_board)
 
@@ -108,7 +101,7 @@ class EvaluationConfiguration():
         a_index = bits
 
         try:
-            list_of_b_move = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
+            list_of_b_move = EvaluationRuleWhole.get_list_of_move_as_usi_by_m_index(
                     m_index=b_index,
                     is_king=is_king_of_b,
                     is_symmetrical_half_board=is_symmetrical_half_board)
@@ -118,7 +111,7 @@ class EvaluationConfiguration():
             raise
 
         try:
-            list_of_a_move = EvaluationConfiguration.get_list_of_move_as_usi_by_m_index(
+            list_of_a_move = EvaluationRuleWhole.get_list_of_move_as_usi_by_m_index(
                     m_index=a_index,
                     is_king=is_king_of_b,
                     is_symmetrical_half_board=is_symmetrical_half_board)
@@ -236,7 +229,7 @@ class EvaluationConfiguration():
             # 45 ～ 51 は打
             if 45 <= src_value:
                 try:
-                    src_file_str = EvaluationConfiguration._src_num_to_file_str_on_symmetrical_half_board[src_value]
+                    src_file_str = EvaluationRuleWhole._src_num_to_file_str_on_symmetrical_half_board[src_value]
 
                 except KeyError as e:
                     # 例： single_move error.  src_value:52  dst_value:0  m_index:4680  move_patterns:4680  (src_size:52  dst_size:45  pro_size:2)  rest:52  drop_kind:7  file_size:5  rank_size:9  e:52
@@ -283,7 +276,7 @@ class EvaluationConfiguration():
         else:
             # 81 以上は打
             if 81 <= src_value:
-                src_file_str = EvaluationConfiguration._src_num_to_file_str_on_fully_connected[src_value]
+                src_file_str = EvaluationRuleWhole._src_num_to_file_str_on_fully_connected[src_value]
                 src_rank_str = '*'
 
             # 盤上

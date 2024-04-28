@@ -1,10 +1,10 @@
 import cshogi
 import datetime
-from evaluation_configuration import EvaluationConfiguration
 from move import Move
 from display_helper import DisplayHelper
 from evaluation_table_size import EvaluationTableSize
 from evaluation_rule_mm import EvaluationRuleMm
+from evaluation_rule_whole import EvaluationRuleWhole
 
 
 class EvaluationVersionUpMm():
@@ -37,10 +37,10 @@ class EvaluationVersionUpMm():
         new_table_size = new_table_size_obj.combination
 
         list_of_move_size = [
-            EvaluationConfiguration.get_move_number(
+            EvaluationRuleWhole.get_move_number(
                 is_king=is_king_of_a,
                 is_symmetrical_half_board=False),
-            EvaluationConfiguration.get_move_number(
+            EvaluationRuleWhole.get_move_number(
                 is_king=is_king_of_b,
                 is_symmetrical_half_board=False)]
 
@@ -103,7 +103,7 @@ class EvaluationVersionUpMm():
                             is_finish = True
                             break
 
-                        pair_of_list_of_move_as_usi = EvaluationConfiguration.get_pair_of_list_of_move_as_usi_by_mm_index(
+                        pair_of_list_of_move_as_usi = EvaluationRuleWhole.get_pair_of_list_of_move_as_usi_by_mm_index(
                                 mm_index=old_mm_index,
                                 is_king_of_b=is_king_of_b,
                                 is_symmetrical_half_board=False)
@@ -119,7 +119,7 @@ class EvaluationVersionUpMm():
                         b_obj = Move.from_usi(b_as_usi)
 
                         # 新しいテーブルでのインデックス
-                        new_mm_index = EvaluationConfiguration.get_mm_index_by_2_moves(
+                        new_mm_index = EvaluationRuleWhole.get_mm_index_by_2_moves(
                                 a_move_obj=a_obj,
                                 a_is_king=is_king_of_a,
                                 b_move_obj=b_obj,
@@ -236,7 +236,7 @@ class EvaluationVersionUpMm():
                             is_finish = True
                             break
 
-                        pair_of_list_of_move_as_usi = EvaluationConfiguration.get_pair_of_list_of_move_as_usi_by_mm_index(
+                        pair_of_list_of_move_as_usi = EvaluationRuleWhole.get_pair_of_list_of_move_as_usi_by_mm_index(
                                 mm_index=old_mm_index,
                                 is_king_of_b=False,             # V3 は未対応
                                 # 左右対称の盤

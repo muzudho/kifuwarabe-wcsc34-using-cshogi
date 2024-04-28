@@ -1,4 +1,3 @@
-from evaluation_configuration import EvaluationConfiguration
 from display_helper import DisplayHelper
 
 

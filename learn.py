@@ -3,7 +3,6 @@ import random
 import datetime
 from move import Move
 from move_helper import MoveHelper
-from evaluation_configuration import EvaluationConfiguration
 
 
 class Learn():
@@ -57,7 +56,7 @@ class Learn():
                 a_obj = Move.from_usi(a_as_usi)
                 b_obj = Move.from_usi(b_as_usi)
 
-                mm_index = EvaluationConfiguration.get_mm_index_by_2_moves(
+                mm_index = EvaluationRuleWhole.get_mm_index_by_2_moves(
                         a_move_obj=a_obj,
                         a_is_king=a_is_king,
                         b_move_obj=b_obj,
@@ -81,7 +80,7 @@ class Learn():
                 rev_a_obj = MoveHelper.flip_horizontal(a_obj)
                 rev_b_obj = MoveHelper.flip_horizontal(b_obj)
 
-                mm_index = EvaluationConfiguration.get_mm_index_by_2_moves(
+                mm_index = EvaluationRuleWhole.get_mm_index_by_2_moves(
                         a_move_obj=rev_a_obj,
                         a_is_king=a_is_king,
                         b_move_obj=rev_b_obj,
