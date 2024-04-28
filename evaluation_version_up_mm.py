@@ -33,7 +33,7 @@ class EvaluationVersionUpMm():
                 is_king_of_a=is_king_of_a,          # V4 は未対応
                 is_king_of_b=is_king_of_b,          # V4 は未対応
                 is_symmetrical_half_board=False)     # V4 は fully connected
-        new_table_size = new_table_size_obj.combination
+        new_table_size = new_table_size_obj.relation
 
         list_of_move_size = [
             EvaluationRuleMm.get_move_number(
@@ -177,7 +177,7 @@ class EvaluationVersionUpMm():
                 is_king_of_a=False,             # V3 は未対応
                 is_king_of_b=False,             # V3 は未対応
                 is_symmetrical_half_board=False) # V3 は fully connected
-        new_table_size = new_table_size_obj.combination
+        new_table_size = new_table_size_obj.relation
 
         # ２の累乗、１バイト分
         two_powers = [128, 64, 32, 16, 8, 4, 2, 1]

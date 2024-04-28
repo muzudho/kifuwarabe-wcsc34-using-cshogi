@@ -27,10 +27,12 @@ class EvaluationTableSizeKk():
     81 *    8  *      8 =      5_184
     (file * rank) * around = k_patterns
 
+    組み合わせだと n * (n-1) のようにしたいところだが実装が難しいので単に n * n にするとし、これを関係と呼ぶとき
+
     KL関係なら、以下で足りる
 
-        5_184 * (     5_184 - 1) =     26_868_672
-    k_patterns * (k_patterns - 1) = kk_combination
+         5_184 *       5_184 =  26_873_856
+    k_patterns * (k_patterns = kk_relation
 
     ※ PP関係が 203_219_280 あるので、１桁は少ない
     """
@@ -42,10 +44,7 @@ class EvaluationTableSizeKk():
 
         self._a_number = 8      # 玉の合法手は最大で８手
         self._b_number = 8      # 玉の合法手は最大で８手
-
-        # a と b のどちらを -1 するかで計算結果に違いが出てくるが、難しいところだ
-        self._combination = self._a_number * (self._b_number - 1)
-        #self._combination = (self._a_number - 1) * self._b_number
+        self._relation = self._a_number * self._b_number
 
 
     @property
@@ -81,9 +80,9 @@ class EvaluationTableSizeKk():
 
 
     @property
-    def combination(self):
-        """指し手 a, b の組み合わせの数"""
-        return self._combination
+    def relation(self):
+        """指し手 a, b の関係の数"""
+        return self._relation
 
 
     def to_debug_str(self):
@@ -93,6 +92,6 @@ class EvaluationTableSizeKk():
         c = self._is_symmetrical_half_board
         d = DisplayHelper.with_underscore(self._a_number)
         e = DisplayHelper.with_underscore(self._b_number)
-        f = DisplayHelper.with_underscore(self._combination)
+        f = DisplayHelper.with_underscore(self._relation)
 
-        return f"is_king_of_a:{a}  is_king_of_b:{b}  is_symmetrical_half_board:{c}  a_number:{d}  b_number:{e}  combination:{f}"
+        return f"is_king_of_a:{a}  is_king_of_b:{b}  is_symmetrical_half_board:{c}  a_number:{d}  b_number:{e}  relation:{f}"

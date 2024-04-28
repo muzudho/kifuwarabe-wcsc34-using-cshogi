@@ -140,7 +140,7 @@ class EvaluationVersioning():
 
         new_mm_table = []
 
-        for _index in range(0, table_size_obj.combination):
+        for _index in range(0, table_size_obj.relation):
             # 値は 0, 1 の２値
             new_mm_table.append(random.randint(0,1))
 

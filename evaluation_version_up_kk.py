@@ -4,7 +4,6 @@ from move import Move
 from display_helper import DisplayHelper
 from evaluation_table_size import EvaluationTableSize
 from evaluation_rule_kk import EvaluationRuleKk
-from evaluation_rule_mm import EvaluationRuleMm
 
 
 class EvaluationVersionUpKk():
@@ -32,7 +31,7 @@ class EvaluationVersionUpKk():
                 is_king_of_a=True,                  # KK なんで
                 is_king_of_b=True,                  # KK なんで
                 is_symmetrical_half_board=False)    # fully connected
-        new_table_size = new_table_size_obj.combination
+        new_table_size = new_table_size_obj.relation
 
         list_of_move_size = [
             EvaluationRuleKk.get_move_number(

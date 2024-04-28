@@ -13,22 +13,24 @@ class EvaluationTableSize():
             is_symmetrical_half_board):
         """初期化
 
-        symmetrical_half_board
+        組み合わせは n * (n - 1) だが、実装が難しいので関係 n * n にしている
+
+        symmetrical_half_board relation
         +--------------+------------------------+
         |   b          |       king       piece |
-        | a            |    2_340-1     4_680-1 |
+        | a            |      2_340       4_680 |
         +--------------+------------------------+
-        | king   2_340 |  5_473_260  10_948_860 |
-        | piece  4_680 | 10_946_520  21_897_720 |
+        | king   2_340 |  5_475_600  10_951_200 |
+        | piece  4_680 | 10_951_200  21_902_400 |
         +--------------+------------------------+
 
-        fully
+        fully relation relation
         +---------------+--------------------------+
         |   b           |        king        piece |
-        | a             |     7_128-1     14_256-1 |
+        | a             |       7_128       14_256 |
         |---------------+--------------------------+
-        | king    7_128 |  50_801_256  101_609_640 |
-        | piece  14_256 | 101_602_512  203_219_280 |
+        | king    7_128 |  50_808_384  101_616_768 |
+        | piece  14_256 | 101_616_768  203_233_536 |
         +---------------+--------------------------+
 
         Parameters
@@ -52,9 +54,7 @@ class EvaluationTableSize():
                 is_king=is_king_of_b,
                 is_symmetrical_half_board=is_symmetrical_half_board)
 
-        # a と b のどちらを -1 するかで計算結果に違いが出てくるが、難しいところだ
-        self._combination = self._a_number * (self._b_number - 1)
-        #self._combination = (self._a_number - 1) * self._b_number
+        self._relation = self._a_number * self._b_number
 
 
     @property
@@ -88,9 +88,9 @@ class EvaluationTableSize():
 
 
     @property
-    def combination(self):
-        """指し手 a, b の組み合わせの数"""
-        return self._combination
+    def relation(self):
+        """指し手 a, b の関係の数"""
+        return self._relation
 
 
     def to_debug_str(self):
@@ -100,6 +100,6 @@ class EvaluationTableSize():
         c = self._is_symmetrical_half_board
         d = DisplayHelper.with_underscore(self._a_number)
         e = DisplayHelper.with_underscore(self._b_number)
-        f = DisplayHelper.with_underscore(self._combination)
+        f = DisplayHelper.with_underscore(self._relation)
 
-        return f"is_king_of_a:{a}  is_king_of_b:{b}  is_symmetrical_half_board:{c}  a_number:{d}  b_number:{e}  combination:{f}"
+        return f"is_king_of_a:{a}  is_king_of_b:{b}  is_symmetrical_half_board:{c}  a_number:{d}  b_number:{e}  relation:{f}"
