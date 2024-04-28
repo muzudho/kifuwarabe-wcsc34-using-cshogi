@@ -1,6 +1,6 @@
 import datetime
 from evaluation_file_pp import EvaluationFilePp
-from evaluation_file import EvaluationFile
+from evaluation_save import EvaluationSave
 
 
 class EvaluationSavePp():
@@ -24,7 +24,7 @@ class EvaluationSavePp():
                     file_number=pp_table_obj.file_number,
                     evaluation_kind="pp")   # V3 の途中からの新名を使っていく
 
-            EvaluationFile.save_evaluation_to_file(
+            EvaluationSave.save_evaluation_file(
                     file_name=file_name,
                     evaluation_mm_table=pp_table_obj.evaluation_mm_table)
         else:

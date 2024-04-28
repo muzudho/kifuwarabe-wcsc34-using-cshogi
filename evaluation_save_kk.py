@@ -1,6 +1,6 @@
 import datetime
 from evaluation_file_kk import EvaluationFileKk
-from evaluation_file import EvaluationFile
+from evaluation_save import EvaluationSave
 
 
 class EvaluationSaveKk():
@@ -23,7 +23,7 @@ class EvaluationSaveKk():
                     file_number=kk_table_obj.file_number,
                     evaluation_kind="kk")
 
-            EvaluationFile.save_evaluation_to_file(
+            EvaluationSave.save_evaluation_file(
                     file_name=file_name,
                     evaluation_mm_table=kk_table_obj.evaluation_mm_table)
         else:

@@ -1,6 +1,5 @@
 from move import Move
 from evaluation_rule_facade import EvaluationRuleFacade
-from evaluation_table_size_facade import EvaluationTableSizeFacade
 
 
 class EvaluationTableMm():
