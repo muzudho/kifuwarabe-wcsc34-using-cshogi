@@ -10,19 +10,16 @@ class EvaluationMmTable():
 
     評価値テーブルは MM である
 
-    旧：　さらに自軍を F（Friend）、相手を O（Opponent） と呼ぶとし、
+    自軍を F（Friend）、相手を O（Opponent） と呼ぶことがある
 
-    旧：　玉の合法手を K（King）、
-    新：　自玉の合法手を K（King）、敵玉の合法手を L（next K） と呼ぶ
+    自玉の合法手を K（King）、
+    敵玉の合法手を L（Lord; next K） と呼ぶ
+    自軍の玉以外の合法手を P (Piece) と呼ぶとする
+    敵軍の玉以外の合法手を Q (Quaffers;next P) と呼ぶとする
 
-    旧：　玉以外の合法手を M (Minions) と呼ぶとする。
-    新：　自軍の玉以外の合法手を P (Piece) と呼ぶとする
-    新：　敵軍の玉以外の合法手を Q (next P) と呼ぶとする
-
-    新：　K と P の関係を KP、
-    新：　P と P の関係を PP、
-    新：　K と O の関係を KO、
-    新：　P と O の関係を PO
+    K と K の関係を KK、
+    K と P の関係を KP、
+    P と P の関係を PP、
 
     と呼ぶ
     """
