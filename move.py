@@ -58,7 +58,7 @@ class Move():
     """段数を英字に変換"""
 
 
-    _src_dst_str_1st_figure_to_sq_on_fully_connected = {
+    _src_dst_str_1st_figure_to_sq = {
         'R' : 81,   # 'R*' 移動元の打 72+9=81
         'B' : 82,   # 'B*'
         'G' : 83,   # 'G*'

@@ -7,7 +7,7 @@ from move_helper import MoveHelper
 class EvaluationRuleFacade():
 
 
-    _src_num_to_file_str_on_fully_connected = {
+    _src_num_to_file_str = {
         81:'R',   # 'R*' 移動元の打 72+9=81
         82:'B',   # 'B*'
         83:'G',   # 'G*'
@@ -40,15 +40,15 @@ class EvaluationRuleFacade():
 
         # 移動元マス番号
         try:
-            src_sq = Move._src_dst_str_1st_figure_to_sq_on_fully_connected[move.src_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.src_str[1]]
+            src_sq = Move._src_dst_str_1st_figure_to_sq[move.src_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.src_str[1]]
         except Exception as e:
-            raise Exception(f"fully_connected src_sq error in '{move.as_usi}'.  ('{move.src_str[0]}', '{move.src_str[1]}')  e: {e}")
+            raise Exception(f"src_sq error in '{move.as_usi}'.  ('{move.src_str[0]}', '{move.src_str[1]}')  e: {e}")
 
         # 移動先マス番号
         try:
-            dst_sq = Move._src_dst_str_1st_figure_to_sq_on_fully_connected[move.dst_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.dst_str[1]]
+            dst_sq = Move._src_dst_str_1st_figure_to_sq[move.dst_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.dst_str[1]]
         except Exception as e:
-            raise Exception(f"fully_connected dst_sq error in '{move.as_usi}'.  ('{move.dst_str[0]}', '{move.dst_str[1]}')  e: {e}")
+            raise Exception(f"dst_sq error in '{move.as_usi}'.  ('{move.dst_str[0]}', '{move.dst_str[1]}')  e: {e}")
 
         # 玉は成りの判定を削る
         if is_king:
@@ -223,7 +223,7 @@ class EvaluationRuleFacade():
 
         # 81 以上は打
         if 81 <= src_value:
-            src_file_str = EvaluationRuleFacade._src_num_to_file_str_on_fully_connected[src_value]
+            src_file_str = EvaluationRuleFacade._src_num_to_file_str[src_value]
             src_rank_str = '*'
 
         # 盤上
