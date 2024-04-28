@@ -1,4 +1,4 @@
-from evaluation_rule_kk import EvaluationRuleKk
+from evaluation_rule_k import EvaluationRuleK
 from evaluation_table_size import EvaluationTableSize
 
 
@@ -46,5 +46,5 @@ class EvaluationTableSizeFacadeKk():
         return EvaluationTableSize(
                 is_king_of_a=True,
                 is_king_of_b=True,
-                a_number=EvaluationRuleKk.get_move_number(),
-                b_number=EvaluationRuleKk.get_move_number())
+                a_number=EvaluationRuleK.get_king_move_number(),
+                b_number=EvaluationRuleK.get_king_move_number())

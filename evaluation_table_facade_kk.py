@@ -1,5 +1,5 @@
 from evaluation_table_mm import EvaluationTableMm
-from evaluation_rule_kk import EvaluationRuleKk
+from evaluation_rule_k import EvaluationRuleK
 from evaluation_table_size_facade_kk import EvaluationTableSizeFacadeKk
 
 
@@ -24,9 +24,8 @@ class EvaluationTableKk():
         # テーブル・サイズ。計算過程付き
         table_size_obj = EvaluationTableSizeFacadeKk.create_it()
 
-        # KKテーブルは左右対称に非対応
-        k_size = EvaluationRuleKk.get_move_number()
-        l_size = EvaluationRuleKk.get_move_number()
+        k_size = EvaluationRuleK.get_king_move_number()
+        l_size = EvaluationRuleK.get_king_move_number()
 
         return EvaluationTableMm(
                 file_number=file_number,

@@ -34,19 +34,6 @@ class EvaluationRuleKk():
 
 
     @staticmethod
-    def get_move_number():
-        """玉の指し手の数
-
-        Returns
-        -------
-        - int
-        """
-        # move_number = sq * directions
-        #         648 = 81 *          8
-        return 648
-
-
-    @staticmethod
     def get_k_index_by_move(
             move_obj):
         """指し手を指定すると、指し手のインデックスを返す。
@@ -114,7 +101,7 @@ class EvaluationRuleKk():
         """インデックス分解"""
         rest = k_index
 
-        move_number = EvaluationRuleKk.get_move_number()
+        move_number = EvaluationRuleK.get_king_move_number()
 
         relative_index = rest % move_number
         rest //= move_number
@@ -175,7 +162,7 @@ class EvaluationRuleKk():
         # ------------
         #
 
-        l_size = EvaluationRuleKk.get_move_number()
+        l_size = EvaluationRuleK.get_king_move_number()
 
         rest = kl_index
 
@@ -251,6 +238,6 @@ class EvaluationRuleKk():
         move_indexes = [l_index, k_index]
         move_indexes.sort()
 
-        # 組み合わせは実装が難しいので廃止
-        kl_index = l_index * EvaluationRuleKk.get_move_number() + k_index
+        # ab関連。組み合わせは実装が難しいので廃止
+        kl_index = l_index * EvaluationRuleK.get_king_move_number() + k_index
         return kl_index
