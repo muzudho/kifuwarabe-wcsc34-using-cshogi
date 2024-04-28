@@ -7,16 +7,6 @@ from move_helper import MoveHelper
 class EvaluationRuleFacade():
 
 
-    _src_num_to_file_str_on_symmetrical_half_board = {
-        45:'R',   # 'R*' 移動元の打 36+9=45
-        46:'B',   # 'B*'
-        47:'G',   # 'G*'
-        48:'S',   # 'S*'
-        49:'N',   # 'N*'
-        50:'L',   # 'L*'
-        51:'P',   # 'P*'
-    }
-
     _src_num_to_file_str_on_fully_connected = {
         81:'R',   # 'R*' 移動元の打 72+9=81
         82:'B',   # 'B*'
@@ -28,11 +18,11 @@ class EvaluationRuleFacade():
     }
 
 
+    # FIXME KK,KP,PP で分けたい
     @staticmethod
     def get_m_index_by_move(
             move,
-            is_king,
-            is_symmetrical_half_board):
+            is_king):
         """指し手を指定すると、指し手のインデックスを返す。
         ＭＭ関係用。ただしＫＫ関係を除く
 
@@ -42,40 +32,23 @@ class EvaluationRuleFacade():
             指し手
         is_king : bool
             玉の動きか？
-        is_symmetrical_half_board : bool
-            盤は左右対称か？
 
         Returns
         -------
             - 指し手のインデックス
         """
 
-        # 左右対称の盤か？
-        if is_symmetrical_half_board:
-            # 移動元マス番号、または打の種類
-            try:
-                src_sq = Move._src_dst_str_1st_figure_to_sq_on_symmetrical_board[move.src_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.src_str[1]]
-            except Exception as e:
-                raise Exception(f"symmetrical_half_board src_sq error in '{move.as_usi}'.  ('{move.src_str[0]}', '{move.src_str[1]}')  e: {e}")
+        # 移動元マス番号
+        try:
+            src_sq = Move._src_dst_str_1st_figure_to_sq_on_fully_connected[move.src_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.src_str[1]]
+        except Exception as e:
+            raise Exception(f"fully_connected src_sq error in '{move.as_usi}'.  ('{move.src_str[0]}', '{move.src_str[1]}')  e: {e}")
 
-            # 移動先マス番号
-            try:
-                dst_sq = Move._src_dst_str_1st_figure_to_sq_on_symmetrical_board[move.dst_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.dst_str[1]]
-            except Exception as e:
-                raise Exception(f"symmetrical_half_board dst_sq error in '{move.as_usi}'.  ('{move.dst_str[0]}', '{move.dst_str[1]}')  e: {e}")
-
-        else:
-            # 移動元マス番号
-            try:
-                src_sq = Move._src_dst_str_1st_figure_to_sq_on_fully_connected[move.src_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.src_str[1]]
-            except Exception as e:
-                raise Exception(f"fully_connected src_sq error in '{move.as_usi}'.  ('{move.src_str[0]}', '{move.src_str[1]}')  e: {e}")
-
-            # 移動先マス番号
-            try:
-                dst_sq = Move._src_dst_str_1st_figure_to_sq_on_fully_connected[move.dst_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.dst_str[1]]
-            except Exception as e:
-                raise Exception(f"fully_connected dst_sq error in '{move.as_usi}'.  ('{move.dst_str[0]}', '{move.dst_str[1]}')  e: {e}")
+        # 移動先マス番号
+        try:
+            dst_sq = Move._src_dst_str_1st_figure_to_sq_on_fully_connected[move.dst_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.dst_str[1]]
+        except Exception as e:
+            raise Exception(f"fully_connected dst_sq error in '{move.as_usi}'.  ('{move.dst_str[0]}', '{move.dst_str[1]}')  e: {e}")
 
         # 玉は成りの判定を削る
         if is_king:
@@ -93,10 +66,7 @@ class EvaluationRuleFacade():
 
         rank_size = 9
 
-        if is_symmetrical_half_board:
-            file_size = 5
-        else:
-            file_size = 9
+        file_size = 9
 
         return (src_sq * file_size * rank_size * pro_size) + (dst_sq * pro_size) + pro_num
 
@@ -105,52 +75,33 @@ class EvaluationRuleFacade():
 
     @staticmethod
     def get_move_number(
-            is_king,
-            is_symmetrical_half_board):
+            is_king):
         """指し手の数
 
         Parameters
         ----------
         is_king : bool
             玉の動きか？
-        is_symmetrical_half_board : bool
-            盤は左右対称か？
 
         Returns
         -------
         - int
         """
 
-        # symmetrical connected move 数
-        if is_symmetrical_half_board:
-            # 玉は成らないから pro を削れる
-            if is_king:
-                #  file   rank   drop     file   rank
-                # (   5 *    9 +    7) * (   5 *    9) = 2_340
-                return 2_340
-
-            else:
-                #  file   rank   drop     file   rank    pro
-                # (   5 *    9 +    7) * (   5 *    9) *   2 = 4_680
-                return 4_680
-
-        # fully_connected move 数
+        if is_king:
+            #  sq   drop    sq
+            # (81 +    7) * 81 = 7_128
+            return 7_128
         else:
-            if is_king:
-                #  sq   drop    sq
-                # (81 +    7) * 81 = 7_128
-                return 7_128
-            else:
-                #  sq   drop    sq   pro
-                # (81 +    7) * 81 *   2 = 14_256
-                return 14_256
+            #  sq   drop    sq   pro
+            # (81 +    7) * 81 *   2 = 14_256
+            return 14_256
 
 
     @staticmethod
     def get_pair_of_list_of_move_as_usi_by_mm_index(
             mm_index,
-            is_king_of_b,
-            is_symmetrical_half_board):
+            is_king_of_b):
         """逆関数
 
         指し手２つ分返す
@@ -161,8 +112,6 @@ class EvaluationRuleFacade():
             指し手 a, b のペアの通しインデックス
         is_king_of_b : bool
             指し手 b は、玉の動きか？
-        is_symmetrical_half_board : bool
-            盤は左右対称か？
         """
 
         #
@@ -171,8 +120,7 @@ class EvaluationRuleFacade():
         #
 
         b_size = EvaluationRuleFacade.get_move_number(
-            is_king=is_king_of_b,
-            is_symmetrical_half_board=is_symmetrical_half_board)
+            is_king=is_king_of_b)
 
         rest = mm_index
 
@@ -184,8 +132,7 @@ class EvaluationRuleFacade():
         try:
             list_of_b_move = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
                     m_index=b_index,
-                    is_king=is_king_of_b,
-                    is_symmetrical_half_board=is_symmetrical_half_board)
+                    is_king=is_king_of_b)
         except Exception as e:
             # 例： list_of_b_move error.  a_index:0  b_index:4680  mm_index:21902400  e:52
             print(f"list_of_b_move error.  a_index:{a_index}  b_index:{b_index}  mm_index:{mm_index}  e:{e}")
@@ -194,13 +141,12 @@ class EvaluationRuleFacade():
         try:
             list_of_a_move = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
                     m_index=a_index,
-                    is_king=is_king_of_b,
-                    is_symmetrical_half_board=is_symmetrical_half_board)
+                    is_king=is_king_of_b)
         except Exception as e:
             # mm_index がでかすぎる？
             # 例： list_of_a_move error.  a_index:4680  b_index:0  e:52
             # 例： list_of_a_move error.  a_index:4680  b_index:0  mm_index:21902400  e:52
-            print(f"list_of_a_move error.  a_index:{a_index}  b_index:{b_index}  mm_index:{mm_index}  is_king_of_b:{is_king_of_b}  is_symmetrical_half_board:{is_symmetrical_half_board}  e:{e}")
+            print(f"list_of_a_move error.  a_index:{a_index}  b_index:{b_index}  mm_index:{mm_index}  is_king_of_b:{is_king_of_b}  e:{e}")
             raise
 
         return [list_of_a_move, list_of_b_move]
@@ -209,8 +155,7 @@ class EvaluationRuleFacade():
     @staticmethod
     def get_list_of_move_as_usi_by_m_index(
             m_index,
-            is_king,
-            is_symmetrical_half_board):
+            is_king):
         """逆関数
 
         指し手１つ分。ただし鏡面の場合、共役が付いて２つ返ってくる
@@ -221,14 +166,11 @@ class EvaluationRuleFacade():
             指し手１つ分のインデックス
         is_king : bool
             玉の動きか？
-        is_symmetrical_half_board : bool
-            盤は左右対称か？
         """
 
         m_spec = EvaluationMoveSpecification(
             # 玉は成らないから pro を削れる
-            is_king=is_king,
-            is_symmetrical_half_board=is_symmetrical_half_board)
+            is_king=is_king)
 
         rest = m_index
 
@@ -251,144 +193,68 @@ class EvaluationRuleFacade():
         conjugate_src_file_str = None
         conjugate_dst_file_str = None
 
-        # 移動先（列は左右対称）
-        if is_symmetrical_half_board:
-            if 36 <= dst_value:
-                dst_file = '5'
-                conjugate_dst_file_str = '5'
-                dst_rank_str = Move.get_rank_num_to_str(dst_value - 36 + 1)
-            elif 27 <= dst_value:
-                dst_file = '4'
-                conjugate_dst_file_str = '6'
-                dst_rank_str = Move.get_rank_num_to_str(dst_value - 27 + 1)
-            elif 18 <= dst_value:
-                dst_file = '3'
-                conjugate_dst_file_str = '7'
-                dst_rank_str = Move.get_rank_num_to_str(dst_value - 18 + 1)
-            elif 9 <= dst_value:
-                dst_file = '2'
-                conjugate_dst_file_str = '8'
-                dst_rank_str = Move.get_rank_num_to_str(dst_value - 9 + 1)
-            else:
-                dst_file = '1'
-                conjugate_dst_file_str = '9'
-                dst_rank_str = Move.get_rank_num_to_str(dst_value + 1)
-
+        if 72 <= dst_value:
+            dst_file = '9'
+            dst_rank_str = Move.get_rank_num_to_str(dst_value - 72 + 1)
+        elif 63 <= dst_value:
+            dst_file = '8'
+            dst_rank_str = Move.get_rank_num_to_str(dst_value - 63 + 1)
+        elif 54 <= dst_value:
+            dst_file = '7'
+            dst_rank_str = Move.get_rank_num_to_str(dst_value - 54 + 1)
+        elif 45 <= dst_value:
+            dst_file = '6'
+            dst_rank_str = Move.get_rank_num_to_str(dst_value - 45 + 1)
+        elif 36 <= dst_value:
+            dst_file = '5'
+            dst_rank_str = Move.get_rank_num_to_str(dst_value - 36 + 1)
+        elif 27 <= dst_value:
+            dst_file = '4'
+            dst_rank_str = Move.get_rank_num_to_str(dst_value - 27 + 1)
+        elif 18 <= dst_value:
+            dst_file = '3'
+            dst_rank_str = Move.get_rank_num_to_str(dst_value - 18 + 1)
+        elif 9 <= dst_value:
+            dst_file = '2'
+            dst_rank_str = Move.get_rank_num_to_str(dst_value - 9 + 1)
         else:
-            if 72 <= dst_value:
-                dst_file = '9'
-                dst_rank_str = Move.get_rank_num_to_str(dst_value - 72 + 1)
-            elif 63 <= dst_value:
-                dst_file = '8'
-                dst_rank_str = Move.get_rank_num_to_str(dst_value - 63 + 1)
-            elif 54 <= dst_value:
-                dst_file = '7'
-                dst_rank_str = Move.get_rank_num_to_str(dst_value - 54 + 1)
-            elif 45 <= dst_value:
-                dst_file = '6'
-                dst_rank_str = Move.get_rank_num_to_str(dst_value - 45 + 1)
-            elif 36 <= dst_value:
-                dst_file = '5'
-                dst_rank_str = Move.get_rank_num_to_str(dst_value - 36 + 1)
-            elif 27 <= dst_value:
-                dst_file = '4'
-                dst_rank_str = Move.get_rank_num_to_str(dst_value - 27 + 1)
-            elif 18 <= dst_value:
-                dst_file = '3'
-                dst_rank_str = Move.get_rank_num_to_str(dst_value - 18 + 1)
-            elif 9 <= dst_value:
-                dst_file = '2'
-                dst_rank_str = Move.get_rank_num_to_str(dst_value - 9 + 1)
-            else:
-                dst_file = '1'
-                dst_rank_str = Move.get_rank_num_to_str(dst_value + 1)
+            dst_file = '1'
+            dst_rank_str = Move.get_rank_num_to_str(dst_value + 1)
 
-        # 移動元（列は左右対称）
-        if is_symmetrical_half_board:
-            # FIXME 52 以上は何？
+        # 81 以上は打
+        if 81 <= src_value:
+            src_file_str = EvaluationRuleFacade._src_num_to_file_str_on_fully_connected[src_value]
+            src_rank_str = '*'
 
-            # 45 ～ 51 は打
-            if 45 <= src_value:
-                try:
-                    src_file_str = EvaluationRuleFacade._src_num_to_file_str_on_symmetrical_half_board[src_value]
-
-                except KeyError as e:
-                    # 例： single_move error.  src_value:52  dst_value:0  m_index:4680  move_patterns:4680  (src_size:52  dst_size:45  pro_size:2)  rest:52  drop_kind:7  file_size:5  rank_size:9  e:52
-                    # 例： single_move error.  src_value:52  dst_value:0  m_index:4680  move_patterns:4680  (src_size:52  dst_size:45  pro_size:2)  rest:52  drop_kind:7  file_size:5  rank_size:9  e:52
-                    # 例： single_move error.  src_value:52  dst_value:0  m_index:4680  move_patterns:4680  (src_size:52  dst_size:45  pro_size:2)  rest:52  drop_kind:7  file_size:5  rank_size:9  e:52
-                    # 例： single_move error.  src_value:52  dst_value:0  m_index:4680  move_patterns:4680  (src_size:52  dst_size:45  pro_size:2)  rest:52  drop_kind:7  file_size:5  rank_size:9  e:52
-                    # 例： single_move error.  src_value:52  dst_value:0  pro_str:''  m_index:4680  rest:52  m_spec:is_king:False  is_symmetrical_half_board:True  pro_patterns:2  rank_size:9  file_size:5  dst_patterns:45  drop_patterns:7  src_patterns:52  move_patterns:728  e:52
-                    print(f"single_move error.  src_value:{src_value}  dst_value:{dst_value}  pro_str:'{pro_str}'  m_index:{m_index}  rest:{rest}  m_spec:{m_spec.to_debug_str()}  e:{e}")
-                    raise
-
-                # FIXME 不具合調査
-                if not src_file_str in Move._src_drop_files:
-                    error_message = f"drop file error.  src_value:{src_value}  src_file_str:{src_file_str}"
-                    print(error_message)
-                    raise Exception(error_message)
-
-                # 打の駒種類に左右の違いはない
-                conjugate_src_file_str = src_file_str
-                src_rank_str = '*'
-
-            # 盤上
-            else:
-                if 36 <= src_value:
-                    src_file_str = '5'
-                    conjugate_src_file_str = '5'
-                    src_rank_str = Move.get_rank_num_to_str(src_value - 36 + 1)
-                elif 27 <= src_value:
-                    src_file_str = '4'
-                    conjugate_src_file_str = '6'
-                    src_rank_str = Move.get_rank_num_to_str(src_value - 27 + 1)
-                elif 18 <= src_value:
-                    src_file_str = '3'
-                    conjugate_src_file_str = '7'
-                    src_rank_str = Move.get_rank_num_to_str(src_value - 18 + 1)
-                elif 9 <= src_value:
-                    src_file_str = '2'
-                    conjugate_src_file_str = '8'
-                    src_rank_str = Move.get_rank_num_to_str(src_value - 9 + 1)
-                else:
-                    src_file_str = '1'
-                    conjugate_src_file_str = '9'
-                    src_rank_str = Move.get_rank_num_to_str(src_value + 1)
-
+        # 盤上
         else:
-            # 81 以上は打
-            if 81 <= src_value:
-                src_file_str = EvaluationRuleFacade._src_num_to_file_str_on_fully_connected[src_value]
-                src_rank_str = '*'
-
-            # 盤上
+            if 72 <= src_value:
+                src_file_str = '9'
+                src_rank_str = Move.get_rank_num_to_str(src_value - 72 + 1)
+            elif 63 <= src_value:
+                src_file_str = '8'
+                src_rank_str = Move.get_rank_num_to_str(src_value - 63 + 1)
+            elif 54 <= src_value:
+                src_file_str = '7'
+                src_rank_str = Move.get_rank_num_to_str(src_value - 54 + 1)
+            elif 45 <= src_value:
+                src_file_str = '6'
+                src_rank_str = Move.get_rank_num_to_str(src_value - 45 + 1)
+            elif 36 <= src_value:
+                src_file_str = '5'
+                src_rank_str = Move.get_rank_num_to_str(src_value - 36 + 1)
+            elif 27 <= src_value:
+                src_file_str = '4'
+                src_rank_str = Move.get_rank_num_to_str(src_value - 27 + 1)
+            elif 18 <= src_value:
+                src_file_str = '3'
+                src_rank_str = Move.get_rank_num_to_str(src_value - 18 + 1)
+            elif 9 <= src_value:
+                src_file_str = '2'
+                src_rank_str = Move.get_rank_num_to_str(src_value - 9 + 1)
             else:
-                if 72 <= src_value:
-                    src_file_str = '9'
-                    src_rank_str = Move.get_rank_num_to_str(src_value - 72 + 1)
-                elif 63 <= src_value:
-                    src_file_str = '8'
-                    src_rank_str = Move.get_rank_num_to_str(src_value - 63 + 1)
-                elif 54 <= src_value:
-                    src_file_str = '7'
-                    src_rank_str = Move.get_rank_num_to_str(src_value - 54 + 1)
-                elif 45 <= src_value:
-                    src_file_str = '6'
-                    src_rank_str = Move.get_rank_num_to_str(src_value - 45 + 1)
-                elif 36 <= src_value:
-                    src_file_str = '5'
-                    src_rank_str = Move.get_rank_num_to_str(src_value - 36 + 1)
-                elif 27 <= src_value:
-                    src_file_str = '4'
-                    src_rank_str = Move.get_rank_num_to_str(src_value - 27 + 1)
-                elif 18 <= src_value:
-                    src_file_str = '3'
-                    src_rank_str = Move.get_rank_num_to_str(src_value - 18 + 1)
-                elif 9 <= src_value:
-                    src_file_str = '2'
-                    src_rank_str = Move.get_rank_num_to_str(src_value - 9 + 1)
-                else:
-                    src_file_str = '1'
-                    src_rank_str = Move.get_rank_num_to_str(src_value + 1)
+                src_file_str = '1'
+                src_rank_str = Move.get_rank_num_to_str(src_value + 1)
 
         list_of_move_as_usi = [
             f'{src_file_str}{src_rank_str}{dst_file}{dst_rank_str}{pro_str}'
@@ -401,6 +267,7 @@ class EvaluationRuleFacade():
         return list_of_move_as_usi
 
 
+    # FIXME KK,KP,PP で分けたい
     @staticmethod
     def get_mm_index_by_2_moves(
             a_move_obj,
@@ -408,8 +275,7 @@ class EvaluationRuleFacade():
             b_move_obj,
             b_is_king,
             turn,
-            list_of_move_size,
-            is_symmetrical_half_board):
+            list_of_move_size):
         """指し手２つの組み合わせインデックス"""
 
         # 同じ指し手を比較したら 0 とする（総当たりの二重ループとかでここを通る）
@@ -422,15 +288,15 @@ class EvaluationRuleFacade():
             a_move_obj = MoveHelper.flip_turn(a_move_obj)
             b_move_obj = MoveHelper.flip_turn(b_move_obj)
 
+        # FIXME KK,KP,PP で分けたい
         a_index = EvaluationRuleFacade.get_m_index_by_move(
                 move=a_move_obj,
-                is_king=a_is_king,
-                is_symmetrical_half_board=is_symmetrical_half_board)
+                is_king=a_is_king)
 
+        # FIXME KK,KP,PP で分けたい
         b_index = EvaluationRuleFacade.get_m_index_by_move(
                 move=b_move_obj,
-                is_king=b_is_king,
-                is_symmetrical_half_board=is_symmetrical_half_board)
+                is_king=b_is_king)
 
 
         # 組み合わせは実装が難しいので、ただの ab 関係とします

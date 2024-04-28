@@ -222,20 +222,17 @@ class EvaluationVersioningKp():
         if file_version in ("V4", "V5"):
             evaluation_table_property = EvaluationTableProperty(
                     is_king_size_of_a=True,             # 玉の指し手は評価値テーブル・サイズを縮めれる
-                    is_king_size_of_b=False,            # P なんで
-                    is_symmetrical_half_board=False)
+                    is_king_size_of_b=False)            # P なんで
 
         elif file_version == None or file_version in ("V3"):
             evaluation_table_property = EvaluationTableProperty(
                     is_king_size_of_a=False,            # 過去バージョンではフラグ未対応
-                    is_king_size_of_b=False,            # 過去バージョンではフラグ未対応
-                    is_symmetrical_half_board=False)    # V3 から盤面を左右対称ではなく、全体を使うよう変更
+                    is_king_size_of_b=False)            # 過去バージョンではフラグ未対応
 
         elif file_version == None or file_version in ("V0", "V1", "V2"):
             evaluation_table_property = EvaluationTableProperty(
                     is_king_size_of_a=False,            # 過去バージョンではフラグ未対応
-                    is_king_size_of_b=False,            # 過去バージョンではフラグ未対応
-                    is_symmetrical_half_board=True)     # V2 まで左右対称
+                    is_king_size_of_b=False)            # 過去バージョンではフラグ未対応
 
         else:
             raise Exception(f"unexpected file version:'{file_version}'")

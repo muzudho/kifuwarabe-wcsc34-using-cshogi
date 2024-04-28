@@ -358,19 +358,15 @@ class Kifuwarabe():
             # ＫＫ表と、ＫＰ表
             # --------------
             #
-            is_symmetrical_half_board_in_kk = self._evaluation_facade_obj.kk_table_obj.is_symmetrical_half_board
-            is_symmetrical_half_board_in_kp = self._evaluation_facade_obj.kp_table_obj.is_symmetrical_half_board
             k_obj = Move.from_usi(k_as_usi)
 
             k_index_in_kk = EvaluationRuleFacade.get_m_index_by_move(    # FIXME KK
                     move=k_obj,
-                    is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a,
-                    is_symmetrical_half_board=is_symmetrical_half_board_in_kk)
+                    is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
 
             k_index_in_kp = EvaluationRuleFacade.get_m_index_by_move(    # FIXME KP
                     move=k_obj,
-                    is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a,
-                    is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
+                    is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
 
             #
             # 検算
@@ -378,13 +374,11 @@ class Kifuwarabe():
             #
             list_of_k_as_usi_in_kk = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
                     m_index=k_index_in_kk,
-                    is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a,
-                    is_symmetrical_half_board=is_symmetrical_half_board_in_kk)
+                    is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
 
             list_of_k_as_usi_in_kp = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
                     m_index=k_index_in_kp,
-                    is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a,
-                    is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
+                    is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
 
             verify_usi_in_kk = ",".join(list_of_k_as_usi_in_kk)
             verify_usi_in_kp = ",".join(list_of_k_as_usi_in_kp)
@@ -404,20 +398,16 @@ class Kifuwarabe():
             # ＫＰ表と、ＰＰ表
             # --------------
             #
-            is_symmetrical_half_board_in_kp = self._evaluation_facade_obj.kp_table_obj.is_symmetrical_half_board
-            is_symmetrical_half_board_in_pp = self._evaluation_facade_obj.pp_table_obj.is_symmetrical_half_board
             p_obj = Move.from_usi(p_as_usi)
 
             # TODO ＫＰを、ＰＫにひっくり返してみる必要がある？
             p_index_in_kp = EvaluationRuleFacade.get_m_index_by_move(   # FIXME KP
                     move=p_obj,
-                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b,
-                    is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
+                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b)
 
             p_index_in_pp = EvaluationRuleFacade.get_m_index_by_move(
                     move=p_obj,
-                    is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a,
-                    is_symmetrical_half_board=is_symmetrical_half_board_in_pp)
+                    is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a)
 
             #
             # 検算
@@ -425,13 +415,11 @@ class Kifuwarabe():
             #
             list_of_p_as_usi_in_kp = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
                     m_index=p_index_in_kp,
-                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b,
-                    is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
+                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b)
 
             list_of_p_as_usi_in_pp = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
                     m_index=p_index_in_pp,
-                    is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a,
-                    is_symmetrical_half_board=is_symmetrical_half_board_in_pp)
+                    is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a)
 
             verify_usi_in_kp = ",".join(list_of_p_as_usi_in_kp)
             verify_usi_in_pp = ",".join(list_of_p_as_usi_in_pp)
@@ -491,19 +479,15 @@ class Kifuwarabe():
             # ＫＫ表と、ＫＰ表
             # --------------
             #
-            is_symmetrical_half_board_in_kk = self._evaluation_facade_obj.kk_table_obj.is_symmetrical_half_board
-            is_symmetrical_half_board_in_kp = self._evaluation_facade_obj.kp_table_obj.is_symmetrical_half_board
             l_obj = Move.from_usi(l_as_usi)
 
             k_index_in_kk = EvaluationRuleFacade.get_m_index_by_move(    # FIXME KK
                     move=l_obj,
-                    is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a,
-                    is_symmetrical_half_board=is_symmetrical_half_board_in_kk)
+                    is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
 
             k_index_in_kp = EvaluationRuleFacade.get_m_index_by_move(   # FIXME KP
                     move=l_obj,
-                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_a,
-                    is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
+                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_a)
 
             #
             # 検算
@@ -511,13 +495,11 @@ class Kifuwarabe():
             #
             list_of_k_as_usi_in_kk = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
                     m_index=k_index_in_kk,
-                    is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a,
-                    is_symmetrical_half_board=is_symmetrical_half_board_in_kk)
+                    is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
 
             list_of_k_as_usi_in_kp = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
                     m_index=k_index_in_kp,
-                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_a,
-                    is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
+                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_a)
 
             verofy_usi_in_kk = ",".join(list_of_k_as_usi_in_kk)
             verify_usi_in_kp = ",".join(list_of_k_as_usi_in_kp)
@@ -542,20 +524,16 @@ class Kifuwarabe():
             # ＫＰ表と、ＰＰ表
             # --------------
             #
-            is_symmetrical_half_board_in_kp = self._evaluation_facade_obj.kp_table_obj.is_symmetrical_half_board
-            is_symmetrical_half_board_in_pp = self._evaluation_facade_obj.pp_table_obj.is_symmetrical_half_board
             q_obj = Move.from_usi(q_as_usi)
 
             # TODO ＫＰを、ＰＫにひっくり返してみる必要がある？
             p_index_in_kp = EvaluationRuleFacade.get_m_index_by_move(   # FIXME KP
                     move=q_obj,
-                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b,
-                    is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
+                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b)
 
             p_index_in_pp = EvaluationRuleFacade.get_m_index_by_move(
                     move=q_obj,
-                    is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a,
-                    is_symmetrical_half_board=is_symmetrical_half_board_in_pp)
+                    is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a)
 
             #
             # 検算
@@ -564,13 +542,11 @@ class Kifuwarabe():
             # TODO ＫＰを、ＰＫにひっくり返してみる必要がある？
             list_of_p_as_usi_in_kp = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
                     m_index=p_index_in_kp,
-                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b,
-                    is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
+                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b)
 
             list_of_p_as_usi_in_pp = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
                     m_index=p_index_in_pp,
-                    is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a,
-                    is_symmetrical_half_board=is_symmetrical_half_board_in_pp)
+                    is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a)
 
             verify_usi_in_kp = ",".join(list_of_p_as_usi_in_kp)
             verify_usi_in_pp = ",".join(list_of_p_as_usi_in_pp)
@@ -615,19 +591,15 @@ class Kifuwarabe():
             # ＫＫ表と、ＫＰ表
             # --------------
             #
-            is_symmetrical_half_board_is_kk = self._evaluation_facade_obj.kk_table_obj.is_symmetrical_half_board
-            is_symmetrical_half_board_is_kp = self._evaluation_facade_obj.kp_table_obj.is_symmetrical_half_board
             k_obj = Move.from_usi(k_as_usi)
 
             k_index_in_kk = EvaluationRuleFacade.get_m_index_by_move(   # FIXME KK
                     move=k_obj,
-                    is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a,
-                    is_symmetrical_half_board=is_symmetrical_half_board_is_kk)
+                    is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
 
             k_index_in_kp = EvaluationRuleFacade.get_m_index_by_move(   # FIXME KP
                     move=k_obj,
-                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_a,
-                    is_symmetrical_half_board=is_symmetrical_half_board_is_kp)
+                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_a)
 
             #
             # 検算
@@ -635,13 +607,11 @@ class Kifuwarabe():
             #
             list_of_k_as_usi_in_kk = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
                     m_index=k_index_in_kk,
-                    is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a,
-                    is_symmetrical_half_board=is_symmetrical_half_board_is_kk)
+                    is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
 
             list_of_k_as_usi_in_kp = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
                     m_index=k_index_in_kp,
-                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_a,
-                    is_symmetrical_half_board=is_symmetrical_half_board_is_kp)
+                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_a)
 
             verify_usi_in_kk = ",".join(list_of_k_as_usi_in_kk)
             verify_usi_in_kp = ",".join(list_of_k_as_usi_in_kp)
@@ -671,20 +641,16 @@ class Kifuwarabe():
             # ＫＰ表と、ＰＰ表
             # --------------
             #
-            is_symmetrical_half_board_in_kp = self._evaluation_facade_obj.kp_table_obj.is_symmetrical_half_board
-            is_symmetrical_half_board_in_pp = self._evaluation_facade_obj.pp_table_obj.is_symmetrical_half_board
             p_obj = Move.from_usi(p_as_usi)
 
             # TODO ＫＰを、ＰＫにひっくり返してみる必要がある？
             p_index_in_kp = EvaluationRuleFacade.get_m_index_by_move(   # FIXME KP
                     move=p_obj,
-                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b,
-                    is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
+                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b)
 
             p_index_in_pp = EvaluationRuleFacade.get_m_index_by_move(
                     move=p_obj,
-                    is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a,
-                    is_symmetrical_half_board=is_symmetrical_half_board_in_pp)
+                    is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a)
 
             #
             # 検算
@@ -693,13 +659,11 @@ class Kifuwarabe():
             # TODO ＫＰを、ＰＫにひっくり返してみる必要がある？
             list_of_p_as_usi_in_kp = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
                     m_index=p_index_in_kp,
-                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b,
-                    is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
+                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b)
 
             list_of_p_as_usi_in_pp = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
                     m_index=p_index_in_pp,
-                    is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a,
-                    is_symmetrical_half_board=is_symmetrical_half_board_in_pp)
+                    is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a)
 
             verify_usi_in_kp = ",".join(list_of_p_as_usi_in_kp)
             verify_usi_in_pp = ",".join(list_of_p_as_usi_in_pp)

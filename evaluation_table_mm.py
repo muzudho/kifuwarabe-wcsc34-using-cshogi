@@ -83,16 +83,6 @@ class EvaluationTableMm():
 
         ----------
 
-        しかし、家のＰＣでこのサイズの配列を２つ読み込んで２つのエンジンで対局させることはできなかったので、
-        左右対称と仮定して、９筋ではなく、５筋にする。
-
-            (5 * 9 + 7) * (5 * 9) * 2 = 4_680     ... symmetrical_half_board_move 数
-
-
-            (4_680 - 1) * 4_680 = 21_897_720    ... symmetrical_half_board_table_size 数
-
-        ----------
-
         評価値テーブルのセル値は、 0,1 の２値とする
 
         (2024-04-12 fri)
@@ -110,7 +100,6 @@ class EvaluationTableMm():
         self._evaluation_mm_table = evaluation_mm_table
         self._is_king_of_a = evaluation_table_property.is_king_size_of_a
         self._is_king_of_b = evaluation_table_property.is_king_size_of_b
-        self._is_symmetrical_half_board = evaluation_table_property.is_symmetrical_half_board
         self._is_file_modified = is_file_modified
 
 
@@ -166,11 +155,6 @@ class EvaluationTableMm():
 
 
     @property
-    def is_symmetrical_half_board(self):
-        return self._is_symmetrical_half_board
-
-
-    @property
     def evaluation_mm_table(self):
         return self._evaluation_mm_table
 
@@ -182,14 +166,14 @@ class EvaluationTableMm():
             turn):
         """両方残すなら 0点、インデックスが小さい方を残すなら -1点、インデックスが大きい方を残すなら +1点"""
 
+        # FIXME KK,KP,PP で分けたい
         mm_index = EvaluationRuleFacade.get_mm_index_by_2_moves(
                 a_move_obj=a_move_obj,
                 a_is_king=self._is_king_of_a,
                 b_move_obj=b_move_obj,
                 b_is_king=self._is_king_of_b,
                 turn=turn,
-                list_of_move_size=self.list_of_move_size,
-                is_symmetrical_half_board=self.is_symmetrical_half_board)
+                list_of_move_size=self.list_of_move_size)
         #print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} mm_index:{mm_index}", flush=True)
 
         try:
@@ -198,10 +182,13 @@ class EvaluationTableMm():
                 self._evaluation_mm_table[mm_index] = 1
 
         except IndexError as e:
-            # 例： table length: 70955352  mm_index: 102593390  except: list index out of range
-            # 例： table length:64  mm_index:63456  a_move_obj.as_usi:5i4h  b_move_obj.as_usi:5a4b  turn:0  except: list index out of range
-            print(f"table length:{len(self._evaluation_mm_table)}  mm_index:{mm_index}  a_move_obj.as_usi:{a_move_obj.as_usi}  b_move_obj.as_usi:{b_move_obj.as_usi}  turn:{turn}  except: {e}")
-            raise
+            # FIXME 大量に発生している。
+            pass
+            ## 例： table length: 70955352  mm_index: 102593390  except: list index out of range
+            ## 例： table length:64  mm_index:63456  a_move_obj.as_usi:5i4h  b_move_obj.as_usi:5a4b  turn:0  except: list index out of range
+            ## 例： table length:419904  mm_index:4668914  a_move_obj.as_usi:5i4h  b_move_obj.as_usi:5a5b  turn:0  except: list index out of range
+            #print(f"table length:{len(self._evaluation_mm_table)}  mm_index:{mm_index}  a_move_obj:{a_move_obj.as_usi}  b_move_obj:{b_move_obj.as_usi}  turn:{turn}  except: {e}")
+            #raise
 
         return self._evaluation_mm_table[mm_index]
 

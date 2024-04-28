@@ -29,8 +29,7 @@ class EvaluationVersionUpKk():
 
         evaluation_table_property = EvaluationTableProperty(
                 is_king_size_of_a=True,                 # KK なんで
-                is_king_size_of_b=True,                 # KK なんで
-                is_symmetrical_half_board=False)        # 非対応
+                is_king_size_of_b=True)                 # KK なんで
 
         new_table_size_obj = EvaluationTableSizeFacadeKk.create_it(
                 evaluation_table_property=evaluation_table_property)    # fully connected
@@ -38,11 +37,9 @@ class EvaluationVersionUpKk():
 
         list_of_move_size = [
             EvaluationRuleKk.get_move_number(
-                is_king=True,
-                is_symmetrical_half_board=evaluation_table_property.is_symmetrical_half_board),
+                is_king=True),
             EvaluationRuleKk.get_move_number(
-                is_king=True,
-                is_symmetrical_half_board=evaluation_table_property.is_symmetrical_half_board)]
+                is_king=True)]
 
         # ２の累乗、１バイト分
         two_powers = [128, 64, 32, 16, 8, 4, 2, 1]

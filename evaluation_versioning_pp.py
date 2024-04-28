@@ -219,14 +219,12 @@ class EvaluationVersioningPp():
         if file_version in ("V3", "V4", "V5"):
             evaluation_table_property = EvaluationTableProperty(
                     is_king_size_of_a=False,            # P なんで
-                    is_king_size_of_b=False,            # P なんで
-                    is_symmetrical_half_board=False)    # V3 から左右対称を廃止
+                    is_king_size_of_b=False)            # P なんで
 
         elif file_version in ("V0", "V1", "V2"):
             evaluation_table_property = EvaluationTableProperty(
                     is_king_size_of_a=False,            # P なんで
-                    is_king_size_of_b=False,            # P なんで
-                    is_symmetrical_half_board=True)     # V2 まで左右対称
+                    is_king_size_of_b=False)            # P なんで
 
         else:
             raise Exception(f"unexpected file version:'{file_version}'")

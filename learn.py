@@ -57,14 +57,14 @@ class Learn():
                 a_obj = Move.from_usi(a_as_usi)
                 b_obj = Move.from_usi(b_as_usi)
 
+                # FIXME KK,KP,PP で分けたい
                 mm_index = EvaluationRuleFacade.get_mm_index_by_2_moves(
                         a_move_obj=a_obj,
                         a_is_king=a_is_king,
                         b_move_obj=b_obj,
                         b_is_king=b_is_king,
                         turn=turn,
-                        list_of_move_size=evaluation_mm_table_obj.list_of_move_size,
-                        is_symmetrical_half_board=evaluation_mm_table_obj.is_symmetrical_half_board)
+                        list_of_move_size=evaluation_mm_table_obj.list_of_move_size)
 
                 if len(evaluation_mm_table_obj.evaluation_mm_table) <= mm_index:
                     # 範囲外エラー
@@ -81,14 +81,14 @@ class Learn():
                 rev_a_obj = MoveHelper.flip_horizontal(a_obj)
                 rev_b_obj = MoveHelper.flip_horizontal(b_obj)
 
+                # FIXME KK,KP,PP で分けたい
                 mm_index = EvaluationRuleFacade.get_mm_index_by_2_moves(
                         a_move_obj=rev_a_obj,
                         a_is_king=a_is_king,
                         b_move_obj=rev_b_obj,
                         b_is_king=b_is_king,
                         turn=turn,
-                        list_of_move_size=evaluation_mm_table_obj.list_of_move_size,
-                        is_symmetrical_half_board=evaluation_mm_table_obj.is_symmetrical_half_board)
+                        list_of_move_size=evaluation_mm_table_obj.list_of_move_size)
 
                 if len(evaluation_mm_table_obj.evaluation_mm_table) <= mm_index:
                     # 範囲外エラー

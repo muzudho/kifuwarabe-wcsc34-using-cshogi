@@ -17,16 +17,13 @@ class EvaluationTableSizeFacadeKp():
         """
 
         a_number = EvaluationRuleFacade.get_move_number(
-                is_king=evaluation_table_property.is_king_size_of_a,
-                is_symmetrical_half_board=evaluation_table_property.is_symmetrical_half_board)
+                is_king=evaluation_table_property.is_king_size_of_a)
 
         b_number = EvaluationRuleFacade.get_move_number(
-                is_king=evaluation_table_property.is_king_size_of_b,
-                is_symmetrical_half_board=evaluation_table_property.is_symmetrical_half_board)
+                is_king=evaluation_table_property.is_king_size_of_b)
 
         return EvaluationTableSize(
                 is_king_of_a=evaluation_table_property.is_king_size_of_a,
                 is_king_of_b=evaluation_table_property.is_king_size_of_b,
-                is_symmetrical_half_board=evaluation_table_property.is_symmetrical_half_board,
                 a_number=a_number,
                 b_number=b_number)

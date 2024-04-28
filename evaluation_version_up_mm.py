@@ -32,8 +32,7 @@ class EvaluationVersionUpMm():
 
         evaluation_table_property = EvaluationTableProperty(
                 is_king_size_of_a=is_king_of_a,          # V4 は未対応
-                is_king_size_of_b=is_king_of_b,          # V4 は未対応
-                is_symmetrical_half_board=False)         # V4 は fully connected
+                is_king_size_of_b=is_king_of_b)          # V4 は未対応
 
         # TODO KK,KP,PP は分けたい
         new_table_size_obj = EvaluationTableSizeFacade.create_it(
@@ -42,11 +41,9 @@ class EvaluationVersionUpMm():
 
         list_of_move_size = [
             EvaluationRuleFacade.get_move_number(
-                is_king=is_king_of_a,
-                is_symmetrical_half_board=False),
+                is_king=is_king_of_a),
             EvaluationRuleFacade.get_move_number(
-                is_king=is_king_of_b,
-                is_symmetrical_half_board=False)]
+                is_king=is_king_of_b)]
 
         # ２の累乗、１バイト分
         two_powers = [128, 64, 32, 16, 8, 4, 2, 1]
@@ -109,8 +106,7 @@ class EvaluationVersionUpMm():
 
                         pair_of_list_of_move_as_usi = EvaluationRuleFacade.get_pair_of_list_of_move_as_usi_by_mm_index(
                                 mm_index=old_mm_index,
-                                is_king_of_b=is_king_of_b,
-                                is_symmetrical_half_board=False)
+                                is_king_of_b=is_king_of_b)
 
                         list_of_a_as_usi, list_of_b_as_usi = pair_of_list_of_move_as_usi
 
@@ -123,14 +119,14 @@ class EvaluationVersionUpMm():
                         b_obj = Move.from_usi(b_as_usi)
 
                         # 新しいテーブルでのインデックス
+                        # FIXME KK,KP,PP で分けたい
                         new_mm_index = EvaluationRuleFacade.get_mm_index_by_2_moves(
                                 a_move_obj=a_obj,
                                 a_is_king=is_king_of_a,
                                 b_move_obj=b_obj,
                                 b_is_king=is_king_of_b,
                                 turn=cshogi.BLACK,  # FIXME 全部、先手視点？
-                                list_of_move_size=list_of_move_size,
-                                is_symmetrical_half_board=False)
+                                list_of_move_size=list_of_move_size)
                         #print(f"old_mm_index:{old_mm_index_with_underscore}  new_mm_index:{new_mm_index}", flush=True)
 
                         try:
@@ -180,8 +176,7 @@ class EvaluationVersionUpMm():
 
         evaluation_table_property = EvaluationTableProperty(
                 is_king_size_of_a=False,             # V3 は未対応
-                is_king_size_of_b=False,             # V3 は未対応
-                is_symmetrical_half_board=False)     # V3 は fully connected
+                is_king_size_of_b=False)             # V3 は未対応
 
         new_table_size_obj = EvaluationTableSizeFacade.create_it(
                 evaluation_table_property=evaluation_table_property)
@@ -245,17 +240,14 @@ class EvaluationVersionUpMm():
 
                         pair_of_list_of_move_as_usi = EvaluationRuleFacade.get_pair_of_list_of_move_as_usi_by_mm_index(
                                 mm_index=old_mm_index,
-                                is_king_of_b=False,             # V3 は未対応
-                                # 左右対称の盤
-                                is_symmetrical_half_board=True)
+                                is_king_of_b=False)             # V3 は未対応
 
                         # 共役の指し手も付いているケースがある
                         for list_of_move_as_usi in pair_of_list_of_move_as_usi:
                             for move_as_usi in list_of_move_as_usi:
                                 converted_m_index = EvaluationRuleFacade.get_m_index_by_move(
                                         move=Move.from_usi(move_as_usi),
-                                        is_king=False,                  # 旧仕様では玉の区別なし
-                                        is_symmetrical_half_board=True)  # V2 では、左右が異なる盤
+                                        is_king=False)                  # 旧仕様では玉の区別なし
 
                                 try:
                                     bit = one_byte_num//two_power % 2
