@@ -1,5 +1,5 @@
 from move import Move
-from evaluation_rule_facade import EvaluationRuleFacade
+from evaluation_rule_kk import EvaluationRuleKk
 
 
 class EvaluationTableMm():
@@ -31,7 +31,7 @@ class EvaluationTableMm():
             file_name,
             table_size_obj,
             list_of_move_size,
-            evaluation_mm_table,
+            raw_mm_table,
             is_king_size_of_a,
             is_king_size_of_b,
             is_file_modified):
@@ -90,7 +90,7 @@ class EvaluationTableMm():
         self._file_name = file_name
         self._table_size_obj = table_size_obj
         self._list_of_move_size = list_of_move_size
-        self._evaluation_mm_table = evaluation_mm_table
+        self._raw_mm_table = raw_mm_table
         self._is_king_of_a = is_king_size_of_a
         self._is_king_of_b = is_king_size_of_b
         self._is_file_modified = is_file_modified
@@ -138,8 +138,8 @@ class EvaluationTableMm():
 
 
     @property
-    def evaluation_mm_table(self):
-        return self._evaluation_mm_table
+    def raw_mm_table(self):
+        return self._raw_mm_table
 
 
     def get_evaluation_value(
@@ -149,32 +149,30 @@ class EvaluationTableMm():
             turn):
         """両方残すなら 0点、インデックスが小さい方を残すなら -1点、インデックスが大きい方を残すなら +1点"""
 
-        # FIXME KK,KP,PP で分けたい
-        mm_index = EvaluationRuleFacade.get_mm_index_by_2_moves(
+        kl_index = EvaluationRuleKk.get_kl_index_by_2_moves(
                 a_move_obj=a_move_obj,
-                a_is_king=self._is_king_of_a,
                 b_move_obj=b_move_obj,
-                b_is_king=self._is_king_of_b,
-                turn=turn,
-                list_of_move_size=self.list_of_move_size)
-        #print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} mm_index:{mm_index}", flush=True)
+                turn=turn)
+        #print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} kl_index:{kl_index}", flush=True)
 
         try:
             # 古いデータには 2 が入っているので、 2 は　1 に変換する
-            if self._evaluation_mm_table[mm_index] == 2:
-                self._evaluation_mm_table[mm_index] = 1
+            if self._raw_mm_table[kl_index] == 2:
+                self._raw_mm_table[kl_index] = 1
 
         except IndexError as e:
             # FIXME 大量に発生している。
-            pass
-            ## 例： table length: 70955352  mm_index: 102593390  except: list index out of range
-            ## 例： table length:64  mm_index:63456  a_move_obj.as_usi:5i4h  b_move_obj.as_usi:5a4b  turn:0  except: list index out of range
-            ## 例： table length:419904  mm_index:4668914  a_move_obj.as_usi:5i4h  b_move_obj.as_usi:5a5b  turn:0  except: list index out of range
-            #print(f"table length:{len(self._evaluation_mm_table)}  mm_index:{mm_index}  a_move_obj:{a_move_obj.as_usi}  b_move_obj:{b_move_obj.as_usi}  turn:{turn}  except: {e}")
-            #raise
+            #pass
+
+            ## 例： table length: 70955352  kl_index: 102593390  except: list index out of range
+            ## 例： table length:64  kl_index:63456  a_move_obj.as_usi:5i4h  b_move_obj.as_usi:5a4b  turn:0  except: list index out of range
+            ## 例： table length:419904  kl_index:4668914  a_move_obj.as_usi:5i4h  b_move_obj.as_usi:5a5b  turn:0  except: list index out of range
+            ## 例： table length:419904  kl_index:2334457  a_move_obj:5i4h  b_move_obj:5a5b  turn:0  except: list index out of range
+            print(f"table length:{len(self._raw_mm_table)}  kl_index:{kl_index}  a_move_obj:{a_move_obj.as_usi}  b_move_obj:{b_move_obj.as_usi}  turn:{turn}  except: {e}")
+            raise
 
         try:
-            policy = self._evaluation_mm_table[mm_index]
+            policy = self._raw_mm_table[kl_index]
         except IndexError as e:
             # FIXME 大量に発生している。
             policy = 0

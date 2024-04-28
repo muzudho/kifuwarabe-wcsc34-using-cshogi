@@ -12,7 +12,7 @@ class EvaluationTableFacadeKp():
     def create_it(
             file_number,
             file_name,
-            evaluation_mm_table,
+            raw_mm_table,
             is_file_modified):
         """初期化
 
@@ -33,7 +33,7 @@ class EvaluationTableFacadeKp():
                 file_name=file_name,
                 table_size_obj=table_size_obj,
                 list_of_move_size=[k_size, p_size],
-                evaluation_mm_table=evaluation_mm_table,
+                raw_mm_table=raw_mm_table,
                 is_king_size_of_a=True,
                 is_king_size_of_b=False,
                 is_file_modified=is_file_modified)

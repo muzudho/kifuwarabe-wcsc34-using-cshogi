@@ -35,12 +35,12 @@ class EvaluationFileKk():
 
         if is_file_exists:
             # 読込
-            mm_table = EvaluationLoad.read_evaluation_file(
+            raw_mm_table = EvaluationLoad.read_evaluation_file(
                     file_name=file_name)
         else:
-            mm_table = None
+            raw_mm_table = None
 
-        if mm_table is None:
+        if raw_mm_table is None:
             is_file_modified = True     # 新規作成だから
             shall_save_file = True      # 保存しておかないと、毎回作成して時間がかかる
         else:
@@ -49,9 +49,9 @@ class EvaluationFileKk():
 
 
         # ファイルが存在しないとき
-        if mm_table is None:
+        if raw_mm_table is None:
             new_table_size_obj = EvaluationTableSizeFacadeKk.create_it()
-            mm_table = EvaluationTableRawRandom.create_random_table(
+            raw_mm_table = EvaluationTableRawRandom.create_random_table(
                     hint=f"n{file_number}  kind=kk)",
                     table_size_obj=new_table_size_obj)
 
@@ -61,7 +61,7 @@ class EvaluationFileKk():
         kk_table = EvaluationTableKk.create_it(
                 file_number=file_number,
                 file_name=file_name,
-                evaluation_mm_table=mm_table,
+                raw_mm_table=raw_mm_table,
                 is_file_modified=is_file_modified)
 
         return (kk_table, shall_save_file)

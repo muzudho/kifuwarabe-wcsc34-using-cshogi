@@ -24,6 +24,6 @@ class EvaluationSaveKk():
 
             EvaluationSave.save_evaluation_file(
                     file_name=file_name,
-                    evaluation_mm_table=kk_table_obj.evaluation_mm_table)
+                    raw_mm_table=kk_table_obj.raw_mm_table)
         else:
             print(f"[{datetime.datetime.now()}] kk file not changed", flush=True)

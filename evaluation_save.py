@@ -9,7 +9,7 @@ class EvaluationSave():
     @staticmethod
     def save_evaluation_file(
             file_name,
-            evaluation_mm_table):
+            raw_mm_table):
         """最新のバージョンで保存する"""
 
         print(f"[{datetime.datetime.now()}] save {file_name} file ...", flush=True)
@@ -20,7 +20,7 @@ class EvaluationSave():
             length = 0
             sum = 0
 
-            for value in evaluation_mm_table:
+            for value in raw_mm_table:
                 if value==0:
                     # byte型配列に変換して書き込む
                     # 1 byte の数 0
