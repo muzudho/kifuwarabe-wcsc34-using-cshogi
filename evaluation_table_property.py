@@ -1,4 +1,4 @@
-class EvaluationVersionRecord():
+class EvaluationTableProperty():
 
 
     def __init__(

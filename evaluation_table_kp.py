@@ -12,7 +12,7 @@ class EvaluationTableKp(EvaluationTableMm):
             file_number,
             file_name,
             file_version,
-            evaluation_version_record,
+            evaluation_table_property,
             evaluation_mm_table,
             is_file_modified,
             is_symmetrical_half_board):
@@ -22,7 +22,7 @@ class EvaluationTableKp(EvaluationTableMm):
         ----------
         file_version : str
             ファイルのバージョン
-        evaluation_version_record : EvaluationVersionRecord
+        evaluation_table_property : EvaluationTableProperty
             バージョン別の仕様の情報
         is_file_modified : bool
             保存されていない評価値テーブルを引数で渡したなら真
@@ -30,28 +30,28 @@ class EvaluationTableKp(EvaluationTableMm):
 
         if is_symmetrical_half_board:
             k_size = EvaluationRuleMm.get_move_number(
-                    is_king=evaluation_version_record.is_king_size_of_a,
+                    is_king=evaluation_table_property.is_king_size_of_a,
                     is_symmetrical_half_board=True)
             p_size = EvaluationRuleMm.get_move_number(
-                    is_king=evaluation_version_record.is_king_size_of_b,
+                    is_king=evaluation_table_property.is_king_size_of_b,
                     is_symmetrical_half_board=True)
 
             new_table_size_obj = EvaluationTableSize(
-                    is_king_of_a=evaluation_version_record.is_king_size_of_a,
-                    is_king_of_b=evaluation_version_record.is_king_size_of_b,
+                    is_king_of_a=evaluation_table_property.is_king_size_of_a,
+                    is_king_of_b=evaluation_table_property.is_king_size_of_b,
                     is_symmetrical_half_board=True)
 
         else:
             k_size = EvaluationRuleMm.get_move_number(
-                    is_king=evaluation_version_record.is_king_size_of_a,
+                    is_king=evaluation_table_property.is_king_size_of_a,
                     is_symmetrical_half_board=False)
             p_size = EvaluationRuleMm.get_move_number(
-                    is_king=evaluation_version_record.is_king_size_of_b,
+                    is_king=evaluation_table_property.is_king_size_of_b,
                     is_symmetrical_half_board=False)
 
             new_table_size_obj = EvaluationTableSize(
-                    is_king_of_a=evaluation_version_record.is_king_size_of_a,
-                    is_king_of_b=evaluation_version_record.is_king_size_of_b,
+                    is_king_of_a=evaluation_table_property.is_king_size_of_a,
+                    is_king_of_b=evaluation_table_property.is_king_size_of_b,
                     is_symmetrical_half_board=False)
 
         EvaluationTableMm.__init__(
@@ -59,7 +59,7 @@ class EvaluationTableKp(EvaluationTableMm):
                 file_number=file_number,
                 file_name=file_name,
                 file_version=file_version,
-                evaluation_version_record=evaluation_version_record,
+                evaluation_table_property=evaluation_table_property,
                 list_of_move_size=[k_size, p_size],
                 table_size_obj=new_table_size_obj,
                 evaluation_mm_table=evaluation_mm_table,

@@ -4,7 +4,7 @@ from evaluation_table_pp import EvaluationTablePp
 from evaluation_versioning import EvaluationVersioning
 from evaluation_version_up_mm import EvaluationVersionUpMm
 from evaluation_table_size import EvaluationTableSize
-from evaluation_version_record import EvaluationVersionRecord
+from evaluation_table_property import EvaluationTableProperty
 
 
 class EvaluationVersioningPp():
@@ -221,7 +221,7 @@ class EvaluationVersioningPp():
         if file_version == "V3":
             is_symmetrical_half_board = False
 
-        evaluation_version_record = EvaluationVersionRecord(
+        evaluation_table_property = EvaluationTableProperty(
                 is_king_size_of_a=False,    # P なんで
                 is_king_size_of_b=False)    # P なんで
 
@@ -229,8 +229,8 @@ class EvaluationVersioningPp():
         if mm_table is None:
             # ファイルが存在しないとき
             new_table_size_obj = EvaluationTableSize(
-                    is_king_of_a=evaluation_version_record.is_king_size_of_a,
-                    is_king_of_b=evaluation_version_record.is_king_size_of_b,
+                    is_king_of_a=evaluation_table_property.is_king_size_of_a,
+                    is_king_of_b=evaluation_table_property.is_king_size_of_b,
                     is_symmetrical_half_board=is_symmetrical_half_board)
 
             mm_table = EvaluationVersioning.create_random_table(
@@ -241,7 +241,7 @@ class EvaluationVersioningPp():
                 file_number=file_number,
                 file_name=file_name,
                 file_version=file_version,
-                evaluation_version_record=evaluation_version_record,
+                evaluation_table_property=evaluation_table_property,
                 evaluation_mm_table=mm_table,
                 is_symmetrical_half_board=is_symmetrical_half_board,
                 is_file_modified=is_file_modified)

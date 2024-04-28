@@ -30,7 +30,7 @@ class EvaluationTableMm():
             file_number,
             file_name,
             file_version,
-            evaluation_version_record,
+            evaluation_table_property,
             list_of_move_size,
             table_size_obj,
             evaluation_mm_table,
@@ -42,7 +42,7 @@ class EvaluationTableMm():
         ----------
         file_version : str
             ファイルのバージョン
-        evaluation_version_record : EvaluationVersionRecord
+        evaluation_table_property : EvaluationTableProperty
             バージョン別の仕様の情報
         list_of_move_size : str[]
             指し手 a, b それぞれのサイズ
@@ -106,12 +106,12 @@ class EvaluationTableMm():
         self._file_number = file_number
         self._file_name = file_name
         self._file_version = file_version
-        self._evaluation_version_record = evaluation_version_record
+        self._evaluation_table_property = evaluation_table_property
         self._list_of_move_size = list_of_move_size
         self._table_size_obj = table_size_obj
         self._evaluation_mm_table = evaluation_mm_table
-        self._is_king_of_a = evaluation_version_record.is_king_size_of_a
-        self._is_king_of_b = evaluation_version_record.is_king_size_of_b
+        self._is_king_of_a = evaluation_table_property.is_king_size_of_a
+        self._is_king_of_b = evaluation_table_property.is_king_size_of_b
         self._is_symmetrical_half_board = is_symmetrical_half_board
         self._is_file_modified = is_file_modified
 
@@ -132,8 +132,8 @@ class EvaluationTableMm():
 
 
     @property
-    def evaluation_version_record(self):
-        return self._evaluation_version_record
+    def evaluation_table_property(self):
+        return self._evaluation_table_property
 
 
     @property

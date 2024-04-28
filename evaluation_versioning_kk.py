@@ -4,7 +4,7 @@ from evaluation_table_kk import EvaluationTableKk
 from evaluation_versioning import EvaluationVersioning
 from evaluation_version_up_mm import EvaluationVersionUpMm
 from evaluation_table_size import EvaluationTableSize
-from evaluation_version_record import EvaluationVersionRecord
+from evaluation_table_property import EvaluationTableProperty
 
 
 class EvaluationVersioningKk():
@@ -158,12 +158,12 @@ class EvaluationVersioningKk():
             is_file_modified = mm_table is None
 
         if file_version in ("V4", "V5"):
-            evaluation_version_record = EvaluationVersionRecord(
+            evaluation_table_property = EvaluationTableProperty(
                     is_king_size_of_a=True,     # 玉の指し手は評価値テーブル・サイズを縮めれる
                     is_king_size_of_b=True)     # 玉の指し手は評価値テーブル・サイズを縮めれる
 
         elif file_version == None or file_version in ("V0", "V1", "V2", "V3", "V4"):
-            evaluation_version_record = EvaluationVersionRecord(
+            evaluation_table_property = EvaluationTableProperty(
                     is_king_size_of_a=False,    # 過去バージョンではフラグ未対応
                     is_king_size_of_b=False)    # 過去バージョンではフラグ未対応
 
@@ -173,8 +173,8 @@ class EvaluationVersioningKk():
         # ファイルが存在しないとき
         if mm_table is None:
             new_table_size_obj = EvaluationTableSize(
-                    is_king_of_a=evaluation_version_record.is_king_size_of_a,
-                    is_king_of_b=evaluation_version_record.is_king_size_of_b,
+                    is_king_of_a=evaluation_table_property.is_king_size_of_a,
+                    is_king_of_b=evaluation_table_property.is_king_size_of_b,
                     is_symmetrical_half_board=is_symmetrical_half_board)
             mm_table = EvaluationVersioning.create_random_table(
                     hint=f"n{file_number}  kind=kk)",
@@ -184,7 +184,7 @@ class EvaluationVersioningKk():
                 file_number=file_number,
                 file_name=file_name,
                 file_version=file_version,
-                evaluation_version_record=evaluation_version_record,
+                evaluation_table_property=evaluation_table_property,
                 evaluation_mm_table=mm_table,
                 is_symmetrical_half_board=is_symmetrical_half_board,
                 is_file_modified=is_file_modified)

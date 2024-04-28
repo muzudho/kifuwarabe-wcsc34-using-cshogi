@@ -12,7 +12,7 @@ class EvaluationTableKk(EvaluationTableMm):
             file_number,
             file_name,
             file_version,
-            evaluation_version_record,
+            evaluation_table_property,
             evaluation_mm_table,
             is_file_modified,
             is_symmetrical_half_board):
@@ -22,7 +22,7 @@ class EvaluationTableKk(EvaluationTableMm):
         ----------
         file_version : str
             ファイルのバージョン
-        evaluation_version_record : EvaluationVersionRecord
+        evaluation_table_property : EvaluationTableProperty
             バージョン別の仕様の情報
         is_file_modified : bool
             保存されていない評価値テーブルを引数で渡したなら真
@@ -34,8 +34,8 @@ class EvaluationTableKk(EvaluationTableMm):
             l_size = EvaluationRuleKk.get_move_number()
 
             new_table_size_obj = EvaluationTableSize(
-                    is_king_of_a=evaluation_version_record.is_king_size_of_a,
-                    is_king_of_b=evaluation_version_record.is_king_size_of_b,
+                    is_king_of_a=evaluation_table_property.is_king_size_of_a,
+                    is_king_of_b=evaluation_table_property.is_king_size_of_b,
                     is_symmetrical_half_board=True)
 
         else:
@@ -43,8 +43,8 @@ class EvaluationTableKk(EvaluationTableMm):
             l_size = EvaluationRuleKk.get_move_number()
 
             new_table_size_obj = EvaluationTableSize(
-                    is_king_of_a=evaluation_version_record.is_king_size_of_a,
-                    is_king_of_b=evaluation_version_record.is_king_size_of_b,
+                    is_king_of_a=evaluation_table_property.is_king_size_of_a,
+                    is_king_of_b=evaluation_table_property.is_king_size_of_b,
                     is_symmetrical_half_board=False)
 
         EvaluationTableMm.__init__(
@@ -52,7 +52,7 @@ class EvaluationTableKk(EvaluationTableMm):
                 file_number=file_number,
                 file_name=file_name,
                 file_version=file_version,
-                evaluation_version_record=evaluation_version_record,
+                evaluation_table_property=evaluation_table_property,
                 list_of_move_size=[k_size, l_size],
                 table_size_obj=new_table_size_obj,
                 evaluation_mm_table=evaluation_mm_table,
