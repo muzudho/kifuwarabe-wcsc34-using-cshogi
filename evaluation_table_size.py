@@ -20,6 +20,8 @@ class EvaluationTableSize():
         self._is_symmetrical_half_board = is_symmetrical_half_board
         self._a_number = a_number
         self._b_number = b_number
+
+        # ab関係に固定
         self._relation = a_number * b_number
 
 

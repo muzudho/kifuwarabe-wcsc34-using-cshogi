@@ -1,4 +1,4 @@
-from evaluation_rule_facade import EvaluationRuleFacade
+from evaluation_rule_kk import EvaluationRuleKk
 from evaluation_table_size import EvaluationTableSize
 
 
@@ -43,13 +43,10 @@ class EvaluationTableSizeFacadeKk():
         ※ PP関係が 203_219_280 あるので、１桁は少ない
         """
 
+        # FIXME バージョン対応したい
         return EvaluationTableSize(
                 is_king_of_a=evaluation_table_property.is_king_size_of_a,
                 is_king_of_b=evaluation_table_property.is_king_size_of_b,
                 is_symmetrical_half_board=evaluation_table_property.is_symmetrical_half_board,
-                a_number=EvaluationRuleFacade.get_move_number(
-                        is_king=evaluation_table_property.is_king_size_of_a,
-                        is_symmetrical_half_board=evaluation_table_property.is_symmetrical_half_board),
-                b_number=EvaluationRuleFacade.get_move_number(
-                        is_king=evaluation_table_property.is_king_size_of_b,
-                        is_symmetrical_half_board=evaluation_table_property.is_symmetrical_half_board))
+                a_number=EvaluationRuleKk.get_move_number(),
+                b_number=EvaluationRuleKk.get_move_number())

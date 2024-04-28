@@ -33,16 +33,27 @@ class EvaluationRuleKk():
 
 
     @staticmethod
-    def get_move_number():
-        """指し手の数
-
-        左右対称の盤には非対応
+    def get_king_direction_max_number():
+        """玉の移動方向の最大数
 
         Returns
         -------
         - int
         """
         return 8
+
+
+    @staticmethod
+    def get_move_number():
+        """玉の指し手の数
+
+        Returns
+        -------
+        - int
+        """
+        # move_number = sq * directions
+        #         648 = 81 *          8
+        return 648
 
 
     @staticmethod
@@ -104,7 +115,7 @@ class EvaluationRuleKk():
 
 
         #      0～80  *                                  8 +           0～7
-        return src_sq * EvaluationRuleKk.get_move_number() + relative_index
+        return src_sq * EvaluationRuleKk.get_king_direction_max_number() + relative_index
 
 
     @staticmethod
@@ -250,12 +261,6 @@ class EvaluationRuleKk():
         move_indexes = [l_index, k_index]
         move_indexes.sort()
 
-        # 昇順
-        if l_index <= k_index:
-            kl_index = l_index * EvaluationRuleKk.get_move_number() + k_index
-
-        # 降順
-        else:
-            kl_index = k_index * EvaluationRuleKk.get_move_number() + l_index
-
+        # 組み合わせは実装が難しいので廃止
+        kl_index = l_index * EvaluationRuleKk.get_move_number() + k_index
         return kl_index

@@ -199,6 +199,7 @@ class EvaluationTableMm():
 
         except IndexError as e:
             # 例： table length: 70955352  mm_index: 102593390  except: list index out of range
+            # 例： table length:64  mm_index:63456  a_move_obj.as_usi:5i4h  b_move_obj.as_usi:5a4b  turn:0  except: list index out of range
             print(f"table length:{len(self._evaluation_mm_table)}  mm_index:{mm_index}  a_move_obj.as_usi:{a_move_obj.as_usi}  b_move_obj.as_usi:{b_move_obj.as_usi}  turn:{turn}  except: {e}")
             raise
 
