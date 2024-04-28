@@ -10,6 +10,22 @@ class EvaluationKkFileVersioning():
 
 
     @staticmethod
+    def create_file_names_each_version(
+            file_number,
+            evaluation_kind):
+        return [
+            # ↑ 旧い
+            f'n{file_number}_eval_{evaluation_kind}.txt',       # 0
+            f'n{file_number}_eval_{evaluation_kind}.bin',       # 1
+            f'n{file_number}_eval_{evaluation_kind}_v2.bin',    # 2
+            f'n{file_number}_eval_{evaluation_kind}_v3.bin',    # 3
+            f'n{file_number}_eval_{evaluation_kind}_v4.bin',    # 4
+            f'n{file_number}_eval_{evaluation_kind}_v5.bin',    # 5
+            # ↓ 新しい
+        ]
+
+
+    @staticmethod
     def delete_old_files_cascade(
             current_number,
             file_names_by_version):
@@ -83,7 +99,7 @@ class EvaluationKkFileVersioning():
             #        file_name=file_names_by_version[3])
 
             # バージョンアップする
-            mm_table = EvaluationFileVersionUp.read_evaluation_v3_file_and_convert_to_v4(
+            mm_table = EvaluationFileVersionUp.update_v3_to_v4(
                 is_king_of_a=True,  # KK だから
                 is_king_of_b=True,  # KK だから
                 file_name=file_names_by_version[3])
@@ -168,19 +184,6 @@ class EvaluationKkFileVersioning():
                 is_file_modified=is_file_modified)
 
         return (kk_table, shall_save_file)
-
-
-    @staticmethod
-    def create_file_names_each_version(
-            file_number,
-            evaluation_kind):
-        return [
-            f'n{file_number}_eval_{evaluation_kind}.txt',       # 旧 V0
-            f'n{file_number}_eval_{evaluation_kind}.bin',       # 旧 V1
-            f'n{file_number}_eval_{evaluation_kind}_v2.bin',    # 旧 V2
-            f'n{file_number}_eval_{evaluation_kind}_v3.bin',    # 現 V3
-            f'n{file_number}_eval_{evaluation_kind}_v4.bin',    # 次期 V4
-        ]
 
 
     @staticmethod

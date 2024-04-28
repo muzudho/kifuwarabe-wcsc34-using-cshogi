@@ -10,6 +10,22 @@ class EvaluationKpFileVersioning():
 
 
     @staticmethod
+    def create_file_names_each_version(
+            file_number,
+            evaluation_kind):
+        return [
+            # ↑ 旧い
+            f'n{file_number}_eval_{evaluation_kind}.txt',       # 0
+            f'n{file_number}_eval_{evaluation_kind}.bin',       # 1
+            f'n{file_number}_eval_{evaluation_kind}_v2.bin',    # 2
+            f'n{file_number}_eval_{evaluation_kind}_v3.bin',    # 3
+            f'n{file_number}_eval_{evaluation_kind}_v4.bin',    # 4
+            f'n{file_number}_eval_{evaluation_kind}_v5.bin',    # 5
+            # ↓ 新しい
+        ]
+
+
+    @staticmethod
     def delete_old_files_cascade(
             current_number,
             file_names_by_version):
@@ -84,7 +100,7 @@ class EvaluationKpFileVersioning():
             #        file_name=file_names_by_version[3])
 
             # バージョンアップする
-            mm_table = EvaluationFileVersionUp.read_evaluation_v3_file_and_convert_to_v4(
+            mm_table = EvaluationFileVersionUp.update_v3_to_v4(
                 is_king_of_a=True,  # KP だから
                 is_king_of_b=False, # KP だから
                 file_name=file_names_by_version[3])
@@ -101,7 +117,7 @@ class EvaluationKpFileVersioning():
         if file_version == "V2":
 
             # バージョンアップする
-            mm_table = EvaluationFileVersionUp.read_evaluation_v2_file_and_convert_to_v3(
+            mm_table = EvaluationFileVersionUp.update_v2_to_v3(
                 file_name=file_names_by_version[2])
 
             # 旧形式ファイル削除
@@ -236,19 +252,6 @@ class EvaluationKpFileVersioning():
                 is_file_modified=is_file_modified)
 
         return (kp_table, shall_save_file)
-
-
-    @staticmethod
-    def create_file_names_each_version(
-            file_number,
-            evaluation_kind):
-        return [
-            f'n{file_number}_eval_{evaluation_kind}.txt',       # 旧 V0
-            f'n{file_number}_eval_{evaluation_kind}.bin',       # 旧 V1
-            f'n{file_number}_eval_{evaluation_kind}_v2.bin',    # 旧 V2
-            f'n{file_number}_eval_{evaluation_kind}_v3.bin',    # 現 V3
-            f'n{file_number}_eval_{evaluation_kind}_v4.bin',    # 次期 V4
-        ]
 
 
     @staticmethod

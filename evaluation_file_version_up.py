@@ -11,7 +11,7 @@ class EvaluationFileVersionUp():
 
 
     @staticmethod
-    def read_evaluation_v3_file_and_convert_to_v4(
+    def update_v3_to_v4(
             is_king_of_a,
             is_king_of_b,
             file_name):
@@ -157,7 +157,7 @@ class EvaluationFileVersionUp():
 
 
     @staticmethod
-    def read_evaluation_v2_file_and_convert_to_v3(
+    def update_v2_to_v3(
             file_name):
         """バイナリ・ファイル V2 を読込み、V3 にバージョンアップして使う
         ファイルの存在チェックを済ませておくこと
