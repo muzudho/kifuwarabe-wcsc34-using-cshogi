@@ -1,9 +1,9 @@
 import cshogi
 import datetime
 from display_helper import DisplayHelper
-from evaluation_table_size import EvaluationTableSize
 from evaluation_rule_kk import EvaluationRuleKk
 from evaluation_table_property import EvaluationTableProperty
+from evaluation_table_size_facade_kk import EvaluationTableSizeFacadeKk
 
 
 class EvaluationVersionUpKk():
@@ -32,7 +32,7 @@ class EvaluationVersionUpKk():
                 is_king_size_of_b=True,                 # KK なんで
                 is_symmetrical_half_board=False)        # 非対応
 
-        new_table_size_obj = EvaluationTableSize(
+        new_table_size_obj = EvaluationTableSizeFacadeKk.create_it(
                 evaluation_table_property=evaluation_table_property)    # fully connected
         new_table_size = new_table_size_obj.relation
 

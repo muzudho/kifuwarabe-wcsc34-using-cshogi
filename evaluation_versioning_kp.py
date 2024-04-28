@@ -3,8 +3,8 @@ import datetime
 from evaluation_table_kp import EvaluationTableKp
 from evaluation_versioning import EvaluationVersioning
 from evaluation_version_up_mm import EvaluationVersionUpMm
-from evaluation_table_size import EvaluationTableSize
 from evaluation_table_property import EvaluationTableProperty
+from evaluation_table_size_facade_kp import EvaluationTableSizeFacadeKp
 
 
 class EvaluationVersioningKp():
@@ -242,7 +242,7 @@ class EvaluationVersioningKp():
 
         # ファイルが存在しないとき
         if mm_table is None:
-            new_table_size_obj = EvaluationTableSize(
+            new_table_size_obj = EvaluationTableSizeFacadeKp.create_it(
                     evaluation_table_property=evaluation_table_property)
 
             mm_table = EvaluationVersioning.create_random_table(

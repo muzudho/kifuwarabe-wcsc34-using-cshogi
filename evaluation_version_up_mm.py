@@ -5,6 +5,7 @@ from display_helper import DisplayHelper
 from evaluation_table_size import EvaluationTableSize
 from evaluation_rule_facade import EvaluationRuleFacade
 from evaluation_table_property import EvaluationTableProperty
+from evaluation_table_size_facade import EvaluationTableSizeFacade
 
 
 class EvaluationVersionUpMm():
@@ -35,7 +36,8 @@ class EvaluationVersionUpMm():
                 is_king_size_of_b=is_king_of_b,          # V4 は未対応
                 is_symmetrical_half_board=False)         # V4 は fully connected
 
-        new_table_size_obj = EvaluationTableSize(
+        # TODO KK,KP,PP は分けたい
+        new_table_size_obj = EvaluationTableSizeFacade.create_it(
                 evaluation_table_property=evaluation_table_property)
         new_table_size = new_table_size_obj.relation
 
