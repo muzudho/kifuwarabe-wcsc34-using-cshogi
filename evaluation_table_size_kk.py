@@ -1,4 +1,5 @@
 from display_helper import DisplayHelper
+from evaluation_rule_kk import EvaluationRuleKk
 
 
 class EvaluationTableSizeKk():
@@ -42,8 +43,8 @@ class EvaluationTableSizeKk():
             self):
         """初期化"""
 
-        self._a_number = 8      # 玉の合法手は最大で８手
-        self._b_number = 8      # 玉の合法手は最大で８手
+        self._a_number = EvaluationRuleKk.get_move_number()     # 玉の合法手は最大で８手
+        self._b_number = EvaluationRuleKk.get_move_number()     # 玉の合法手は最大で８手
         self._relation = self._a_number * self._b_number
 
 
@@ -62,7 +63,6 @@ class EvaluationTableSizeKk():
     @property
     def is_symmetrical_half_board(self):
         """盤は左右対称にして半分だけ使っているか？"""
-
         # 非対応
         return False
 
