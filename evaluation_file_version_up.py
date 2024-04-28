@@ -2,6 +2,7 @@ import cshogi
 import datetime
 from evaluation_configuration import EvaluationConfiguration
 from move import Move
+from display_helper import DisplayHelper
 
 
 class EvaluationFileVersionUp():
@@ -43,9 +44,12 @@ class EvaluationFileVersionUp():
         # ２の累乗、１バイト分
         two_powers = [128, 64, 32, 16, 8, 4, 2, 1]
 
-        # ロードする。１分ほどかかる
+        # サイズに応じて時間のかかる処理
         #
-        print(f"[{datetime.datetime.now()}] (v3 to v4) update {file_name} file initialize ... (new_table_size:{new_table_size}, a_size:{list_of_move_size[0]}, b_size:{list_of_move_size[1]})", flush=True)
+        new_table_size_with_underscore = DisplayHelper.with_underscore(new_table_size)
+        a_size_with_underscore = list_of_move_size[0]
+        b_size_with_underscore = list_of_move_size[1]
+        print(f"[{datetime.datetime.now()}] (v3 to v4) update {file_name} file initialize ... (new_table_size:{new_table_size_with_underscore}, a_size:{a_size_with_underscore}, b_size:{b_size_with_underscore})", flush=True)
 
         new_mm_table = [0] * new_table_size
 
@@ -64,25 +68,26 @@ class EvaluationFileVersionUp():
                 while one_byte_binary:
 
                     # プログレス表示
-                    if old_mm_index == 1:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                    elif old_mm_index == 10:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                    elif old_mm_index == 100:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                    elif old_mm_index == 1_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                    elif old_mm_index == 10_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                    elif old_mm_index == 100_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                    elif old_mm_index == 1_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                        print(f"[{datetime.datetime.now()}] データが巨大で終わらないので、打ち切ります", flush=True)
-                        break
+                    if old_mm_index % 10 == 0:
+                        old_mm_index_with_underscore = DisplayHelper.with_underscore(old_mm_index)
+
+                        if old_mm_index == 10:
+                            print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index_with_underscore} / {new_table_size_with_underscore}", flush=True)
+                        elif old_mm_index == 100:
+                            print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index_with_underscore} / {new_table_size_with_underscore}", flush=True)
+                        elif old_mm_index == 1_000:
+                            print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index_with_underscore} / {new_table_size_with_underscore}", flush=True)
+                        elif old_mm_index == 10_000:
+                            print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index_with_underscore} / {new_table_size_with_underscore}", flush=True)
+                        elif old_mm_index == 100_000:
+                            print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index_with_underscore} / {new_table_size_with_underscore}", flush=True)
+                        elif old_mm_index == 1_000_000:
+                            print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index_with_underscore} / {new_table_size_with_underscore}", flush=True)
+                            print(f"[{datetime.datetime.now()}] データが巨大で終わらないので、打ち切ります", flush=True)
+                            break
 
                     one_byte_num = int.from_bytes(one_byte_binary, signed=False)
-                    #print(f"old_mm_index:{old_mm_index}  one_byte_num:{one_byte_num}", flush=True)
+                    #print(f"old_mm_index:{old_mm_index_with_underscore}  one_byte_num:{one_byte_num}", flush=True)
 
                     #
                     # V2 ---> V3 で、インデックスがずれる
@@ -91,7 +96,7 @@ class EvaluationFileVersionUp():
 
                         # ビットフィールドを全て使わず、途中で切れるケース
                         if new_table_size <= old_mm_index:
-                            print(f"old_mm_index:{old_mm_index}  new_table_size:{new_table_size} < old_mm_index:{old_mm_index} break", flush=True)
+                            print(f"new_table_size:{new_table_size_with_underscore} < old_mm_index:{old_mm_index_with_underscore} break", flush=True)
                             is_finish = True
                             break
 
@@ -105,7 +110,7 @@ class EvaluationFileVersionUp():
                         # 共役の指し手は付いていないはず
                         a_as_usi = list_of_a_as_usi[0]
                         b_as_usi = list_of_b_as_usi[0]
-                        #print(f"old_mm_index:{old_mm_index}  a_as_usi:{a_as_usi}  b_as_usi:{b_as_usi}", flush=True)
+                        #print(f"old_mm_index:{old_mm_index_with_underscore}  a_as_usi:{a_as_usi}  b_as_usi:{b_as_usi}", flush=True)
 
                         a_obj = Move(a_as_usi)
                         b_obj = Move(b_as_usi)
@@ -119,27 +124,27 @@ class EvaluationFileVersionUp():
                                 turn=cshogi.BLACK,  # FIXME 全部、先手視点？
                                 list_of_move_size=list_of_move_size,
                                 is_symmetrical_connected=False)
-                        #print(f"old_mm_index:{old_mm_index}  new_mm_index:{new_mm_index}", flush=True)
+                        #print(f"old_mm_index:{old_mm_index_with_underscore}  new_mm_index:{new_mm_index}", flush=True)
 
                         try:
                             bit = one_byte_num//two_power % 2
-                            #print(f"old_mm_index:{old_mm_index}  bit:{bit}", flush=True)
+                            #print(f"old_mm_index:{old_mm_index_with_underscore}  bit:{bit}", flush=True)
 
                             new_mm_table[new_mm_index] = bit
 
                         except IndexError as e:
-                            print(f"old_mm_index:{old_mm_index}  table length:{len(new_mm_table)}  new_mm_index:{new_mm_index}  except:{e}")
+                            print(f"old_mm_index:{old_mm_index_with_underscore}  table length:{new_table_size_with_underscore}  new_mm_index:{new_mm_index}  except:{e}")
                             raise
 
                         old_mm_index+=1
-                        #print(f"old_mm_index:{old_mm_index}  incremented", flush=True)
+                        #print(f"old_mm_index:{old_mm_index_with_underscore}  incremented", flush=True)
 
                     if is_finish:
                         break
 
                     one_byte_binary = f.read(1)
 
-            print(f"[{datetime.datetime.now()}] (v3 to v4) '{file_name}' file updated. evaluation table size: {len(new_mm_table)}", flush=True)
+            print(f"[{datetime.datetime.now()}] (v3 to v4) '{file_name}' file updated. evaluation table size: {new_table_size_with_underscore}", flush=True)
 
         except FileNotFoundError as ex:
             print(f"[evaluation table / load from file] [{file_name}] file error. {ex}")
@@ -174,8 +179,10 @@ class EvaluationFileVersionUp():
         # ２の累乗、１バイト分
         two_powers = [128, 64, 32, 16, 8, 4, 2, 1]
 
-        # ロードする。１分ほどかかる
-        print(f"[{datetime.datetime.now()}] (v2 to v3) update {file_name} file ... (new_table_size:{new_table_size})", flush=True)
+        # サイズに応じて時間のかかる処理
+        #
+        new_table_size_with_underscore = DisplayHelper.with_underscore(new_table_size)
+        print(f"[{datetime.datetime.now()}] (v2 to v3) update {file_name} file ... (new_table_size:{new_table_size_with_underscore})", flush=True)
 
         evaluation_mm_table = [0] * new_table_size
 
@@ -194,25 +201,26 @@ class EvaluationFileVersionUp():
                 while one_byte_binary:
 
                     # プログレス表示
-                    if old_mm_index == 1:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                    elif old_mm_index == 10:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                    elif old_mm_index == 100:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                    elif old_mm_index == 1_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                    elif old_mm_index == 10_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                    elif old_mm_index == 100_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                    elif old_mm_index == 1_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                        print(f"[{datetime.datetime.now()}] データが巨大で終わらないので、打ち切ります", flush=True)
-                        break
+                    if old_mm_index % 10 == 0:
+                        old_mm_index_with_underscore = DisplayHelper.with_underscore(old_mm_index)
+
+                        if old_mm_index == 10:
+                            print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index_with_underscore} / {new_table_size_with_underscore}", flush=True)
+                        elif old_mm_index == 100:
+                            print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index_with_underscore} / {new_table_size_with_underscore}", flush=True)
+                        elif old_mm_index == 1_000:
+                            print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index_with_underscore} / {new_table_size_with_underscore}", flush=True)
+                        elif old_mm_index == 10_000:
+                            print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index_with_underscore} / {new_table_size_with_underscore}", flush=True)
+                        elif old_mm_index == 100_000:
+                            print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index_with_underscore} / {new_table_size_with_underscore}", flush=True)
+                        elif old_mm_index == 1_000_000:
+                            print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index_with_underscore} / {new_table_size_with_underscore}", flush=True)
+                            print(f"[{datetime.datetime.now()}] データが巨大で終わらないので、打ち切ります", flush=True)
+                            break
 
                     one_byte_num = int.from_bytes(one_byte_binary, signed=False)
-                    #print(f"old_mm_index:{old_mm_index}  one_byte_num:{one_byte_num}", flush=True)
+                    #print(f"old_mm_index:{old_mm_index_with_underscore}  one_byte_num:{one_byte_num}", flush=True)
 
                     #
                     # V2 ---> V3 で、インデックスがずれる
@@ -243,7 +251,7 @@ class EvaluationFileVersionUp():
                                     evaluation_mm_table[converted_m_index] = bit
 
                                 except IndexError as e:
-                                    print(f"table length:{len(evaluation_mm_table)}  old_mm_index:{old_mm_index}  converted_m_index:{converted_m_index}  except:{e}")
+                                    print(f"table length:{new_table_size_with_underscore}  old_mm_index:{old_mm_index_with_underscore}  converted_m_index:{converted_m_index}  except:{e}")
                                     raise
 
 
@@ -254,7 +262,7 @@ class EvaluationFileVersionUp():
 
                     one_byte_binary = f.read(1)
 
-            print(f"[{datetime.datetime.now()}] (v2 to v3) '{file_name}' file updated. evaluation table size: {len(evaluation_mm_table)}", flush=True)
+            print(f"[{datetime.datetime.now()}] (v2 to v3) '{file_name}' file updated. evaluation table size: {new_table_size_with_underscore}", flush=True)
 
         except FileNotFoundError as ex:
             print(f"[evaluation table / load from file] [{file_name}] file error. {ex}")

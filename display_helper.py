@@ -2,7 +2,7 @@ class DisplayHelper():
 
 
     @staticmethod
-    def pretty_number(number):
+    def with_underscore(number):
         """数を、アンダースコア区切りの文字列に変換します
 
         'abc' ３文字なら 'abc' アンダースコア要らない
@@ -30,14 +30,7 @@ class DisplayHelper():
             return text
 
         # アンダースコア挿入の次位置を指すカウンター target を用意する
-        mod3 = (text_len - 4) % 3
-
-        if mod3 == 0:
-            target = 1
-        elif mod3 == 1:
-            target = 2
-        else:
-            target = 3
+        target = (text_len - 4) % 3 + 1
 
         # ループカウンタ―
         i = 0
@@ -57,5 +50,5 @@ class DisplayHelper():
 if __name__ == '__main__':
     """コマンドから実行時"""
 
-    for i in [1_000_000_000, 1, 10, 100, 1_000, 10_000, 100_000, 1_000_000, 10_000_000, 100_000_000, 1_000_000_000]:
-        print(f"{i} --> {DisplayHelper.pretty_number(i)}")
+    for i in [1, 10, 100, 1_000, 10_000, 100_000, 1_000_000, 10_000_000, 100_000_000, 1_000_000_000, 10_000_000_000, 100_000_000_000, 1_000_000_000_000]:
+        print(f"{i} --> {DisplayHelper.with_underscore(i)}")
