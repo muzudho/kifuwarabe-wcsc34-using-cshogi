@@ -1,8 +1,8 @@
 import datetime
-from evaluation_versioning_kk import EvaluationVersioningKk
-from evaluation_versioning_kp import EvaluationVersioningKp
-from evaluation_versioning_pp import EvaluationVersioningPp
-from evaluation_versioning import EvaluationVersioning
+from evaluation_file_kk import EvaluationFileKk
+from evaluation_file_kp import EvaluationFileKp
+from evaluation_file_pp import EvaluationFilePp
+from evaluation_file import EvaluationFile
 from learn import Learn
 from evaluation_save_kk import EvaluationSaveKk
 from evaluation_save_kp import EvaluationSaveKp
@@ -61,7 +61,7 @@ class EvaluationFacade():
         #
         # ＫＫポリシー
         #
-        self._kk_table_obj, shall_save_file = EvaluationVersioningKk.load_on_usinewgame(
+        self._kk_table_obj, shall_save_file = EvaluationFileKk.load_on_usinewgame(
                 file_number=self._file_number)
 
         if shall_save_file:
@@ -77,7 +77,7 @@ class EvaluationFacade():
         #
         # ＫＰポリシー
         #
-        self._kp_table_obj, shall_save_file = EvaluationVersioningKp.load_on_usinewgame(
+        self._kp_table_obj, shall_save_file = EvaluationFileKp.load_on_usinewgame(
                 file_number=self._file_number)
 
         if shall_save_file:
@@ -93,7 +93,7 @@ class EvaluationFacade():
         #
         # ＰＰポリシー
         #
-        self._pp_table_obj, shall_save_file = EvaluationVersioningPp.load_on_usinewgame(
+        self._pp_table_obj, shall_save_file = EvaluationFilePp.load_on_usinewgame(
                 file_number=self._file_number)
 
         if shall_save_file:

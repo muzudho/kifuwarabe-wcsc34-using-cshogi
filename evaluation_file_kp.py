@@ -1,13 +1,13 @@
 import os
 import datetime
-from evaluation_table_pp import EvaluationTablePp
-from evaluation_versioning import EvaluationVersioning
+from evaluation_table_kp import EvaluationTableKp
+from evaluation_file import EvaluationFile
 from evaluation_table_property import EvaluationTableProperty
-from evaluation_table_size_facade_pp import EvaluationTableSizeFacadePp
+from evaluation_table_size_facade_kp import EvaluationTableSizeFacadeKp
 from evaluation_load import EvaluationLoad
 
 
-class EvaluationVersioningPp():
+class EvaluationFileKp():
 
 
     @staticmethod
@@ -20,7 +20,7 @@ class EvaluationVersioningPp():
     @staticmethod
     def load_on_usinewgame(
             file_number):
-        """ＰＰポリシー読込
+        """ＫＰポリシー読込
 
         Returns
         -------
@@ -28,19 +28,20 @@ class EvaluationVersioningPp():
         - バージョンアップしたので保存要求の有無
         """
         shall_save_file = False
-        evaluation_kind = "pp"
+        evaluation_kind = "kp"
 
-        file_name, is_file_exists = EvaluationVersioningPp.check_file_exists(
+        file_name, is_file_exists = EvaluationFileKp.check_file_exists(
                 file_number=file_number,
                 evaluation_kind=evaluation_kind)
 
         # 読込
-        file_name = EvaluationVersioningPp.create_file_name(
+        file_name = EvaluationFileKp.create_file_name(
                 file_number=file_number,
                 evaluation_kind=evaluation_kind)
 
         print(f"[{datetime.datetime.now()}] {file_name} file exists check ...", flush=True)
 
+        # V4ファイル読込
         mm_table = EvaluationLoad.read_evaluation_file(
                 file_name=file_name)
 
@@ -52,29 +53,29 @@ class EvaluationVersioningPp():
             shall_save_file = False
 
         evaluation_table_property = EvaluationTableProperty(
-                is_king_size_of_a=False,            # P なんで
+                is_king_size_of_a=True,             # 玉の指し手は評価値テーブル・サイズを縮めれる
                 is_king_size_of_b=False)            # P なんで
 
+        # ファイルが存在しないとき
         if mm_table is None:
-            # ファイルが存在しないとき
-            new_table_size_obj = EvaluationTableSizeFacadePp.create_it(
+            new_table_size_obj = EvaluationTableSizeFacadeKp.create_it(
                     evaluation_table_property=evaluation_table_property)
 
-            mm_table = EvaluationVersioning.create_random_table(
-                    hint=f'n{file_number}  kind=pp)',
+            mm_table = EvaluationFile.create_random_table(
+                    hint=f"n{file_number}  kind=kp)",
                     table_size_obj=new_table_size_obj)
 
             shall_save_file = True
             is_file_modified = True
 
-        pp_table = EvaluationTablePp(
+        kp_table = EvaluationTableKp(
                 file_number=file_number,
                 file_name=file_name,
                 evaluation_table_property=evaluation_table_property,
                 evaluation_mm_table=mm_table,
                 is_file_modified=is_file_modified)
 
-        return (pp_table, shall_save_file)
+        return (kp_table, shall_save_file)
 
 
     @staticmethod
@@ -83,12 +84,10 @@ class EvaluationVersioningPp():
             evaluation_kind):
         """ファイルの存在確認"""
 
-        file_name = EvaluationVersioningPp.create_file_name(
+        file_name = EvaluationFileKp.create_file_name(
                 file_number=file_number,
                 evaluation_kind=evaluation_kind)
 
         print(f"[{datetime.datetime.now()}] {file_name} file exists check ...", flush=True)
 
-        # バイナリV3ファイルに保存されているとき
         return (file_name, os.path.isfile(file_name))
-

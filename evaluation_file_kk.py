@@ -1,13 +1,13 @@
 import os
 import datetime
 from evaluation_table_kk import EvaluationTableKk
-from evaluation_versioning import EvaluationVersioning
+from evaluation_file import EvaluationFile
 from evaluation_table_property import EvaluationTableProperty
 from evaluation_table_size_facade_kk import EvaluationTableSizeFacadeKk
 from evaluation_load import EvaluationLoad
 
 
-class EvaluationVersioningKk():
+class EvaluationFileKk():
 
 
     @staticmethod
@@ -30,12 +30,12 @@ class EvaluationVersioningKk():
         shall_save_file = False
         evaluation_kind = "kk"
 
-        file_name, is_file_exists = EvaluationVersioningKk.check_file_exists(
+        file_name, is_file_exists = EvaluationFileKk.check_file_exists(
                 file_number=file_number,
                 evaluation_kind=evaluation_kind)
 
         # 読込
-        file_name = EvaluationVersioningKk.create_file_name(
+        file_name = EvaluationFileKk.create_file_name(
                 file_number=file_number,
                 evaluation_kind=evaluation_kind)
 
@@ -60,7 +60,7 @@ class EvaluationVersioningKk():
         if mm_table is None:
             new_table_size_obj = EvaluationTableSizeFacadeKk.create_it(
                     evaluation_table_property=evaluation_table_property)
-            mm_table = EvaluationVersioning.create_random_table(
+            mm_table = EvaluationFile.create_random_table(
                     hint=f"n{file_number}  kind=kk)",
                     table_size_obj=new_table_size_obj)
 
@@ -83,7 +83,7 @@ class EvaluationVersioningKk():
             evaluation_kind):
         """ファイルの存在確認"""
 
-        file_name = EvaluationVersioningKk.create_file_name(
+        file_name = EvaluationFileKk.create_file_name(
                 file_number=file_number,
                 evaluation_kind=evaluation_kind)
 

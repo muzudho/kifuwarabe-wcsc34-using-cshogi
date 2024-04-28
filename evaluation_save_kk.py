@@ -1,6 +1,6 @@
 import datetime
-from evaluation_versioning_kk import EvaluationVersioningKk
-from evaluation_versioning import EvaluationVersioning
+from evaluation_file_kk import EvaluationFileKk
+from evaluation_file import EvaluationFile
 
 
 class EvaluationSaveKk():
@@ -19,11 +19,11 @@ class EvaluationSaveKk():
 
         # 保存するかどうかは先に判定しておくこと
         if kk_table_obj.is_file_modified:
-            file_name = EvaluationVersioningKk.create_file_name(
+            file_name = EvaluationFileKk.create_file_name(
                     file_number=kk_table_obj.file_number,
                     evaluation_kind="kk")
 
-            EvaluationVersioning.save_evaluation_to_file(
+            EvaluationFile.save_evaluation_to_file(
                     file_name=file_name,
                     evaluation_mm_table=kk_table_obj.evaluation_mm_table)
         else:

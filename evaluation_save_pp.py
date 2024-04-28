@@ -1,6 +1,6 @@
 import datetime
-from evaluation_versioning_pp import EvaluationVersioningPp
-from evaluation_versioning import EvaluationVersioning
+from evaluation_file_pp import EvaluationFilePp
+from evaluation_file import EvaluationFile
 
 
 class EvaluationSavePp():
@@ -20,11 +20,11 @@ class EvaluationSavePp():
         # 保存するかどうかは先に判定しておくこと
         if pp_table_obj.is_file_modified:
             # ＰＰポリシー
-            file_name = EvaluationVersioningPp.create_file_name(
+            file_name = EvaluationFilePp.create_file_name(
                     file_number=pp_table_obj.file_number,
                     evaluation_kind="pp")   # V3 の途中からの新名を使っていく
 
-            EvaluationVersioning.save_evaluation_to_file(
+            EvaluationFile.save_evaluation_to_file(
                     file_name=file_name,
                     evaluation_mm_table=pp_table_obj.evaluation_mm_table)
         else:
