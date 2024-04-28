@@ -1,23 +1,8 @@
-import os
 import datetime
 import random
 
 
-class EvaluationFile():
-    """評価値ファイル等の読込や、バージョン更新などを担当"""
-
-
-    @staticmethod
-    def delete_file(file_name):
-        """ファイル削除"""
-        try:
-            print(f"[{datetime.datetime.now()}] try {file_name} file delete...", flush=True)
-            os.remove(file_name)
-            print(f"[{datetime.datetime.now()}] {file_name} file deleted", flush=True)
-
-        except FileNotFoundError:
-            # ファイルが無いのなら、削除に失敗しても問題ない
-            pass
+class EvaluationTableRawRandom():
 
 
     def create_random_table(

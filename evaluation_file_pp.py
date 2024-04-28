@@ -1,9 +1,9 @@
 import os
 import datetime
 from evaluation_table_facade_pp import EvaluationTableFacadePp
-from evaluation_file import EvaluationFile
 from evaluation_table_size_facade_pp import EvaluationTableSizeFacadePp
 from evaluation_load import EvaluationLoad
+from evaluation_table_raw_random import EvaluationTableRawRandom
 
 
 class EvaluationFilePp():
@@ -55,7 +55,7 @@ class EvaluationFilePp():
             # ファイルが存在しないとき
             new_table_size_obj = EvaluationTableSizeFacadePp.create_it()
 
-            mm_table = EvaluationFile.create_random_table(
+            mm_table = EvaluationTableRawRandom.create_random_table(
                     hint=f'n{file_number}  kind=pp)',
                     table_size_obj=new_table_size_obj)
 

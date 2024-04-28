@@ -1,9 +1,9 @@
 import os
 import datetime
 from evaluation_table_facade_kk import EvaluationTableKk
-from evaluation_file import EvaluationFile
 from evaluation_table_size_facade_kk import EvaluationTableSizeFacadeKk
 from evaluation_load import EvaluationLoad
+from evaluation_table_raw_random import EvaluationTableRawRandom
 
 
 class EvaluationFileKk():
@@ -54,7 +54,7 @@ class EvaluationFileKk():
         # ファイルが存在しないとき
         if mm_table is None:
             new_table_size_obj = EvaluationTableSizeFacadeKk.create_it()
-            mm_table = EvaluationFile.create_random_table(
+            mm_table = EvaluationTableRawRandom.create_random_table(
                     hint=f"n{file_number}  kind=kk)",
                     table_size_obj=new_table_size_obj)
 
