@@ -174,12 +174,12 @@ class EvaluationRuleMm():
             is_king=is_king_of_b,
             is_symmetrical_half_board=is_symmetrical_half_board)
 
-        bits = mm_index
+        rest = mm_index
 
-        b_index = bits % b_size
-        bits //= b_size
+        b_index = rest % b_size
+        rest //= b_size
 
-        a_index = bits
+        a_index = rest
 
         try:
             list_of_b_move = EvaluationRuleMm.get_list_of_move_as_usi_by_m_index(

@@ -3,6 +3,7 @@ import datetime
 from move import Move
 from display_helper import DisplayHelper
 from evaluation_table_size import EvaluationTableSize
+from evaluation_rule_kk import EvaluationRuleKk
 from evaluation_rule_mm import EvaluationRuleMm
 
 
@@ -34,10 +35,10 @@ class EvaluationVersionUpKk():
         new_table_size = new_table_size_obj.combination
 
         list_of_move_size = [
-            EvaluationRuleMm.get_move_number(
+            EvaluationRuleKk.get_move_number(
                 is_king=True,
                 is_symmetrical_half_board=False),
-            EvaluationRuleMm.get_move_number(
+            EvaluationRuleKk.get_move_number(
                 is_king=True,
                 is_symmetrical_half_board=False)]
 
