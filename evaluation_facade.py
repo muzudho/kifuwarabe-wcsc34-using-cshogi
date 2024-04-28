@@ -58,7 +58,7 @@ class EvaluationFacade():
         #
         # ＫＫポリシー
         #
-        self._kk_policy_table, shall_save_file = EvaluationKkFileVersioning.load_kk_policy(
+        self._kk_policy_table, shall_save_file = EvaluationKkFileVersioning.load_on_usinewgame(
                 file_number=self._file_number)
 
         if shall_save_file:
@@ -73,7 +73,7 @@ class EvaluationFacade():
         #
         # ＫＰポリシー
         #
-        self._kp_policy_table, shall_save_file = EvaluationKpFileVersioning.load_kp_policy(
+        self._kp_policy_table, shall_save_file = EvaluationKpFileVersioning.load_on_usinewgame(
                 file_number=self._file_number)
 
         if shall_save_file:
@@ -88,7 +88,7 @@ class EvaluationFacade():
         #
         # ＰＰポリシー
         #
-        self._pp_policy_table, shall_save_file = EvaluationPpFileVersioning.load_pp_policy(
+        self._pp_policy_table, shall_save_file = EvaluationPpFileVersioning.load_on_usinewgame(
                 file_number=self._file_number)
 
         if shall_save_file:
