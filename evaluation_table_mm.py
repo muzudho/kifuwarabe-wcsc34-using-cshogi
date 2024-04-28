@@ -190,7 +190,13 @@ class EvaluationTableMm():
             #print(f"table length:{len(self._evaluation_mm_table)}  mm_index:{mm_index}  a_move_obj:{a_move_obj.as_usi}  b_move_obj:{b_move_obj.as_usi}  turn:{turn}  except: {e}")
             #raise
 
-        return self._evaluation_mm_table[mm_index]
+        try:
+            policy = self._evaluation_mm_table[mm_index]
+        except IndexError as e:
+            # FIXME 大量に発生している。
+            policy = 0
+
+        return policy
 
 
     def make_move_as_usi_and_policy_dictionary_2(
