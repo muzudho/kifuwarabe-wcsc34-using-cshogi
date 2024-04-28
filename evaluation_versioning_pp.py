@@ -243,8 +243,6 @@ class EvaluationVersioningPp():
                 file_version=file_version,
                 evaluation_version_record=evaluation_version_record,
                 evaluation_mm_table=mm_table,
-                is_king_of_a=evaluation_version_record.is_king_size_of_a,
-                is_king_of_b=evaluation_version_record.is_king_size_of_b,
                 is_symmetrical_half_board=is_symmetrical_half_board,
                 is_file_modified=is_file_modified)
 

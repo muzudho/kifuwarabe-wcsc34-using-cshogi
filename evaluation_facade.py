@@ -111,7 +111,7 @@ class EvaluationFacade():
                     file_number=self._kk_policy_table.file_number,
                     evaluation_kind="kk")
 
-            file_name = file_names_by_version[4]    # V4
+            file_name = file_names_by_version[5]    # V5
 
             EvaluationVersioning.save_evaluation_to_file(
                     file_name=file_name,

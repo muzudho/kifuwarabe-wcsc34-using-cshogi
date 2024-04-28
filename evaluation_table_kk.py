@@ -14,8 +14,6 @@ class EvaluationTableKk(EvaluationTableMm):
             file_version,
             evaluation_version_record,
             evaluation_mm_table,
-            is_king_of_a,
-            is_king_of_b,
             is_file_modified,
             is_symmetrical_half_board):
         """初期化
@@ -26,34 +24,27 @@ class EvaluationTableKk(EvaluationTableMm):
             ファイルのバージョン
         evaluation_version_record : EvaluationVersionRecord
             バージョン別の仕様の情報
-        is_king_of_a : bool
-            指し手 a は玉か？
-        is_king_of_b : bool
-            指し手 b は玉か？
         is_file_modified : bool
             保存されていない評価値テーブルを引数で渡したなら真
         """
 
-        is_king = evaluation_version_record.is_king_size_of_a   # FIXME a と b の区別は？
-
         if is_symmetrical_half_board:
-            k_size = EvaluationRuleKk.get_move_number(
-                    is_king=is_king,
-                    is_symmetrical_half_board=True)
+            # KKテーブルは左右対称に非対応
+            k_size = EvaluationRuleKk.get_move_number()
+            l_size = EvaluationRuleKk.get_move_number()
 
             new_table_size_obj = EvaluationTableSize(
-                    is_king_of_a=is_king,
-                    is_king_of_b=is_king,
+                    is_king_of_a=evaluation_version_record.is_king_size_of_a,
+                    is_king_of_b=evaluation_version_record.is_king_size_of_b,
                     is_symmetrical_half_board=True)
 
         else:
-            k_size = EvaluationRuleKk.get_move_number(
-                    is_king=is_king,
-                    is_symmetrical_half_board=False)
+            k_size = EvaluationRuleKk.get_move_number()
+            l_size = EvaluationRuleKk.get_move_number()
 
             new_table_size_obj = EvaluationTableSize(
-                    is_king_of_a=is_king,
-                    is_king_of_b=is_king,
+                    is_king_of_a=evaluation_version_record.is_king_size_of_a,
+                    is_king_of_b=evaluation_version_record.is_king_size_of_b,
                     is_symmetrical_half_board=False)
 
         EvaluationTableMm.__init__(
@@ -62,10 +53,8 @@ class EvaluationTableKk(EvaluationTableMm):
                 file_name=file_name,
                 file_version=file_version,
                 evaluation_version_record=evaluation_version_record,
-                list_of_move_size=[k_size, k_size],
+                list_of_move_size=[k_size, l_size],
                 table_size_obj=new_table_size_obj,
                 evaluation_mm_table=evaluation_mm_table,
-                is_king_of_a=is_king_of_a,
-                is_king_of_b=is_king_of_b,
                 is_symmetrical_half_board=is_symmetrical_half_board,
                 is_file_modified=is_file_modified)

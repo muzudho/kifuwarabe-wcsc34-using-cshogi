@@ -229,7 +229,7 @@ class EvaluationVersioningKp():
                     is_king_size_of_a=True,     # 玉の指し手は評価値テーブル・サイズを縮めれる
                     is_king_size_of_b=False)    # P なんで
 
-        elif file_version in ("V0", "V1", "V2", "V3"):
+        elif file_version == None or file_version in ("V0", "V1", "V2", "V3"):
             evaluation_version_record = EvaluationVersionRecord(
                     is_king_size_of_a=False,    # 過去バージョンではフラグ未対応
                     is_king_size_of_b=False)    # 過去バージョンではフラグ未対応
@@ -254,8 +254,6 @@ class EvaluationVersioningKp():
                 file_version=file_version,
                 evaluation_version_record=evaluation_version_record,
                 evaluation_mm_table=mm_table,
-                is_king_of_a=evaluation_version_record.is_king_size_of_a,
-                is_king_of_b=evaluation_version_record.is_king_size_of_b,
                 is_symmetrical_half_board=is_symmetrical_half_board,
                 is_file_modified=is_file_modified)
 

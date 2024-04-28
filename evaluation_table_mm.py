@@ -34,8 +34,6 @@ class EvaluationTableMm():
             list_of_move_size,
             table_size_obj,
             evaluation_mm_table,
-            is_king_of_a,
-            is_king_of_b,
             is_symmetrical_half_board,
             is_file_modified):
         """初期化
@@ -50,10 +48,6 @@ class EvaluationTableMm():
             指し手 a, b それぞれのサイズ
         table_size_obj: EvaluationTableSize
             テーブル・サイズ。計算過程付き
-        is_king_of_a : bool
-            指し手 a は玉か？
-        is_king_of_b : bool
-            指し手 b は玉か？
         is_symmetrical_half_board : bool
             左右対称の盤か？
         is_file_modified : bool
@@ -116,8 +110,8 @@ class EvaluationTableMm():
         self._list_of_move_size = list_of_move_size
         self._table_size_obj = table_size_obj
         self._evaluation_mm_table = evaluation_mm_table
-        self._is_king_of_a = is_king_of_a
-        self._is_king_of_b = is_king_of_b
+        self._is_king_of_a = evaluation_version_record.is_king_size_of_a
+        self._is_king_of_b = evaluation_version_record.is_king_size_of_b
         self._is_symmetrical_half_board = is_symmetrical_half_board
         self._is_file_modified = is_file_modified
 
