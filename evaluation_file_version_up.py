@@ -78,18 +78,8 @@ class EvaluationFileVersionUp():
                         print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 1_000_000:
                         print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                    elif old_mm_index == 10_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                    elif old_mm_index == 100_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                    elif old_mm_index == 1_000_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                    elif old_mm_index == 10_000_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                    elif old_mm_index == 100_000_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                    elif old_mm_index == 1_000_000_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size} ...", flush=True)
+                        print(f"[{datetime.datetime.now()}] データが巨大で終わらないので、打ち切ります", flush=True)
+                        break
 
                     one_byte_num = int.from_bytes(one_byte_binary, signed=False)
                     #print(f"old_mm_index:{old_mm_index}  one_byte_num:{one_byte_num}", flush=True)
@@ -218,18 +208,8 @@ class EvaluationFileVersionUp():
                         print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
                     elif old_mm_index == 1_000_000:
                         print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                    elif old_mm_index == 10_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                    elif old_mm_index == 100_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                    elif old_mm_index == 1_000_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                    elif old_mm_index == 10_000_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                    elif old_mm_index == 100_000_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size}", flush=True)
-                    elif old_mm_index == 1_000_000_000_000:
-                        print(f"[{datetime.datetime.now()}] old_mm_index:{old_mm_index} / {new_table_size} ...", flush=True)
+                        print(f"[{datetime.datetime.now()}] データが巨大で終わらないので、打ち切ります", flush=True)
+                        break
 
                     one_byte_num = int.from_bytes(one_byte_binary, signed=False)
                     #print(f"old_mm_index:{old_mm_index}  one_byte_num:{one_byte_num}", flush=True)
