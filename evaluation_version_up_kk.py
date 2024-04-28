@@ -3,7 +3,7 @@ import datetime
 from move import Move
 from display_helper import DisplayHelper
 from evaluation_table_size import EvaluationTableSize
-from evaluation_rule_whole import EvaluationRuleWhole
+from evaluation_rule_mm import EvaluationRuleMm
 
 
 class EvaluationVersionUpKk():
@@ -34,10 +34,10 @@ class EvaluationVersionUpKk():
         new_table_size = new_table_size_obj.combination
 
         list_of_move_size = [
-            EvaluationRuleWhole.get_move_number(
+            EvaluationRuleMm.get_move_number(
                 is_king=True,
                 is_symmetrical_half_board=False),
-            EvaluationRuleWhole.get_move_number(
+            EvaluationRuleMm.get_move_number(
                 is_king=True,
                 is_symmetrical_half_board=False)]
 
@@ -100,7 +100,7 @@ class EvaluationVersionUpKk():
                             is_finish = True
                             break
 
-                        pair_of_list_of_move_as_usi = EvaluationRuleWhole.get_pair_of_list_of_move_as_usi_by_mm_index(
+                        pair_of_list_of_move_as_usi = EvaluationRuleMm.get_pair_of_list_of_move_as_usi_by_mm_index(
                                 mm_index=old_mm_index,
                                 is_king_of_b=True,
                                 is_symmetrical_half_board=False)
@@ -116,7 +116,7 @@ class EvaluationVersionUpKk():
                         b_obj = Move.from_usi(b_as_usi)
 
                         # 新しいテーブルでのインデックス
-                        new_mm_index = EvaluationRuleWhole.get_mm_index_by_2_moves(
+                        new_mm_index = EvaluationRuleMm.get_mm_index_by_2_moves(
                                 a_move_obj=a_obj,
                                 a_is_king=True,
                                 b_move_obj=b_obj,

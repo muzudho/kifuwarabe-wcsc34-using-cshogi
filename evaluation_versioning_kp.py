@@ -205,7 +205,7 @@ class EvaluationVersioningKp():
                 file_version, file_name = tuple
 
         # 読込
-        tuple = EvaluationVersioningKpd_from_file(
+        tuple = EvaluationVersioningKp.load_from_file(
                 file_number=file_number,
                 evaluation_kind=evaluation_kind,
                 file_version=file_version)

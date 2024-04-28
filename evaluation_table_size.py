@@ -1,5 +1,5 @@
 from display_helper import DisplayHelper
-from evaluation_rule_whole import EvaluationRuleWhole
+from evaluation_rule_mm import EvaluationRuleMm
 
 
 class EvaluationTableSize():
@@ -44,11 +44,11 @@ class EvaluationTableSize():
         self._is_king_of_b = is_king_of_b
         self._is_symmetrical_half_board = is_symmetrical_half_board
 
-        self._a_number = EvaluationRuleWhole.get_move_number(
+        self._a_number = EvaluationRuleMm.get_move_number(
                 is_king=is_king_of_a,
                 is_symmetrical_half_board=is_symmetrical_half_board)
 
-        self._b_number = EvaluationRuleWhole.get_move_number(
+        self._b_number = EvaluationRuleMm.get_move_number(
                 is_king=is_king_of_b,
                 is_symmetrical_half_board=is_symmetrical_half_board)
 

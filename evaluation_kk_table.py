@@ -1,6 +1,6 @@
 from evaluation_mm_table import EvaluationMmTable
 from evaluation_table_size import EvaluationTableSize
-from evaluation_rule_whole import EvaluationRuleWhole
+from evaluation_rule_mm import EvaluationRuleMm
 
 
 class EvaluationKkTable(EvaluationMmTable):
@@ -37,7 +37,7 @@ class EvaluationKkTable(EvaluationMmTable):
             is_king = False
 
         if is_symmetrical_half_board:
-            k_size = EvaluationRuleWhole.get_move_number(
+            k_size = EvaluationRuleMm.get_move_number(
                     is_king=is_king,
                     is_symmetrical_half_board=True)
 
@@ -47,7 +47,7 @@ class EvaluationKkTable(EvaluationMmTable):
                     is_symmetrical_half_board=True)
 
         else:
-            k_size = EvaluationRuleWhole.get_move_number(
+            k_size = EvaluationRuleMm.get_move_number(
                     is_king=is_king,
                     is_symmetrical_half_board=False)
 

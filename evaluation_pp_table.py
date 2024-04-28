@@ -1,6 +1,6 @@
 from evaluation_mm_table import EvaluationMmTable
 from evaluation_table_size import EvaluationTableSize
-from evaluation_rule_whole import EvaluationRuleWhole
+from evaluation_rule_mm import EvaluationRuleMm
 
 
 class EvaluationPpTable(EvaluationMmTable):
@@ -32,7 +32,7 @@ class EvaluationPpTable(EvaluationMmTable):
         """
 
         if is_symmetrical_half_board:
-            p_size = EvaluationRuleWhole.get_move_number(
+            p_size = EvaluationRuleMm.get_move_number(
                     is_king=False,          # P なんで
                     is_symmetrical_half_board=True)
             new_table_size_obj = EvaluationTableSize(
@@ -41,7 +41,7 @@ class EvaluationPpTable(EvaluationMmTable):
                     is_symmetrical_half_board=True)
 
         else:
-            p_size = EvaluationRuleWhole.get_move_number(
+            p_size = EvaluationRuleMm.get_move_number(
                     is_king=False,          # P なんで
                     is_symmetrical_half_board=False)
             new_table_size_obj = EvaluationTableSize(

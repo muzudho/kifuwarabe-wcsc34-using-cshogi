@@ -359,12 +359,12 @@ class Kifuwarabe():
             # 検算
             # ----
             #
-            list_of_k_as_usi_in_kk = EvaluationRuleWhole.get_list_of_move_as_usi_by_m_index(
+            list_of_k_as_usi_in_kk = EvaluationRuleMm.get_list_of_move_as_usi_by_m_index(
                     m_index=k_index_in_kk,
                     is_king=self._evaluation_facade_obj.kk_policy_table.is_king_of_a,
                     is_symmetrical_half_board=is_symmetrical_half_board_in_kk)
 
-            list_of_k_as_usi_in_kp = EvaluationRuleWhole.get_list_of_move_as_usi_by_m_index(
+            list_of_k_as_usi_in_kp = EvaluationRuleMm.get_list_of_move_as_usi_by_m_index(
                     m_index=k_index_in_kp,
                     is_king=self._evaluation_facade_obj.kk_policy_table.is_king_of_a,
                     is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
@@ -406,12 +406,12 @@ class Kifuwarabe():
             # 検算
             # ----
             #
-            list_of_p_as_usi_in_kp = EvaluationRuleWhole.get_list_of_move_as_usi_by_m_index(
+            list_of_p_as_usi_in_kp = EvaluationRuleMm.get_list_of_move_as_usi_by_m_index(
                     m_index=p_index_in_kp,
                     is_king=self._evaluation_facade_obj.kp_policy_table.is_king_of_b,
                     is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
 
-            list_of_p_as_usi_in_pp = EvaluationRuleWhole.get_list_of_move_as_usi_by_m_index(
+            list_of_p_as_usi_in_pp = EvaluationRuleMm.get_list_of_move_as_usi_by_m_index(
                     m_index=p_index_in_pp,
                     is_king=self._evaluation_facade_obj.pp_policy_table.is_king_of_a,
                     is_symmetrical_half_board=is_symmetrical_half_board_in_pp)
@@ -492,12 +492,12 @@ class Kifuwarabe():
             # 検算
             # ----
             #
-            list_of_k_as_usi_in_kk = EvaluationRuleWhole.get_list_of_move_as_usi_by_m_index(
+            list_of_k_as_usi_in_kk = EvaluationRuleMm.get_list_of_move_as_usi_by_m_index(
                     m_index=k_index_in_kk,
                     is_king=self._evaluation_facade_obj.kk_policy_table.is_king_of_a,
                     is_symmetrical_half_board=is_symmetrical_half_board_in_kk)
 
-            list_of_k_as_usi_in_kp = EvaluationRuleWhole.get_list_of_move_as_usi_by_m_index(
+            list_of_k_as_usi_in_kp = EvaluationRuleMm.get_list_of_move_as_usi_by_m_index(
                     m_index=k_index_in_kp,
                     is_king=self._evaluation_facade_obj.kp_policy_table.is_king_of_a,
                     is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
@@ -545,12 +545,12 @@ class Kifuwarabe():
             # ----
             #
             # TODO ＫＰを、ＰＫにひっくり返してみる必要がある？
-            list_of_p_as_usi_in_kp = EvaluationRuleWhole.get_list_of_move_as_usi_by_m_index(
+            list_of_p_as_usi_in_kp = EvaluationRuleMm.get_list_of_move_as_usi_by_m_index(
                     m_index=p_index_in_kp,
                     is_king=self._evaluation_facade_obj.kp_policy_table.is_king_of_b,
                     is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
 
-            list_of_p_as_usi_in_pp = EvaluationRuleWhole.get_list_of_move_as_usi_by_m_index(
+            list_of_p_as_usi_in_pp = EvaluationRuleMm.get_list_of_move_as_usi_by_m_index(
                     m_index=p_index_in_pp,
                     is_king=self._evaluation_facade_obj.pp_policy_table.is_king_of_a,
                     is_symmetrical_half_board=is_symmetrical_half_board_in_pp)
@@ -616,12 +616,12 @@ class Kifuwarabe():
             # 検算
             # ----
             #
-            list_of_k_as_usi_in_kk = EvaluationRuleWhole.get_list_of_move_as_usi_by_m_index(
+            list_of_k_as_usi_in_kk = EvaluationRuleMm.get_list_of_move_as_usi_by_m_index(
                     m_index=k_index_in_kk,
                     is_king=self._evaluation_facade_obj.kk_policy_table.is_king_of_a,
                     is_symmetrical_half_board=is_symmetrical_half_board_is_kk)
 
-            list_of_k_as_usi_in_kp = EvaluationRuleWhole.get_list_of_move_as_usi_by_m_index(
+            list_of_k_as_usi_in_kp = EvaluationRuleMm.get_list_of_move_as_usi_by_m_index(
                     m_index=k_index_in_kp,
                     is_king=self._evaluation_facade_obj.kp_policy_table.is_king_of_a,
                     is_symmetrical_half_board=is_symmetrical_half_board_is_kp)
@@ -674,12 +674,12 @@ class Kifuwarabe():
             # ----
             #
             # TODO ＫＰを、ＰＫにひっくり返してみる必要がある？
-            list_of_p_as_usi_in_kp = EvaluationRuleWhole.get_list_of_move_as_usi_by_m_index(
+            list_of_p_as_usi_in_kp = EvaluationRuleMm.get_list_of_move_as_usi_by_m_index(
                     m_index=p_index_in_kp,
                     is_king=self._evaluation_facade_obj.kp_policy_table.is_king_of_b,
                     is_symmetrical_half_board=is_symmetrical_half_board_in_kp)
 
-            list_of_p_as_usi_in_pp = EvaluationRuleWhole.get_list_of_move_as_usi_by_m_index(
+            list_of_p_as_usi_in_pp = EvaluationRuleMm.get_list_of_move_as_usi_by_m_index(
                     m_index=p_index_in_pp,
                     is_king=self._evaluation_facade_obj.pp_policy_table.is_king_of_a,
                     is_symmetrical_half_board=is_symmetrical_half_board_in_pp)
