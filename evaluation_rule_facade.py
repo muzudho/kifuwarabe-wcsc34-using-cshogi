@@ -41,8 +41,9 @@ class EvaluationRuleFacade():
             return EvaluationRuleP.get_piece_move_number()
 
 
+    # FIXME 使っていない？
     @staticmethod
-    def get_pair_of_list_of_move_as_usi_by_mm_index(
+    def get_pair_of_move_as_usi_by_mm_index(
             mm_index,
             is_king_of_b):
         """逆関数
@@ -73,7 +74,7 @@ class EvaluationRuleFacade():
         a_index = rest
 
         try:
-            list_of_b_move = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
+            b_move = EvaluationRuleFacade.get_move_as_usi_by_m_index(
                     m_index=b_index,
                     is_king=is_king_of_b)
         except Exception as e:
@@ -82,7 +83,7 @@ class EvaluationRuleFacade():
             raise
 
         try:
-            list_of_a_move = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
+            a_move = EvaluationRuleFacade.get_move_as_usi_by_m_index(
                     m_index=a_index,
                     is_king=is_king_of_b)
         except Exception as e:
@@ -92,16 +93,16 @@ class EvaluationRuleFacade():
             print(f"list_of_a_move error.  a_index:{a_index}  b_index:{b_index}  mm_index:{mm_index}  is_king_of_b:{is_king_of_b}  e:{e}")
             raise
 
-        return [list_of_a_move, list_of_b_move]
+        return [a_move, b_move]
 
 
     @staticmethod
-    def get_list_of_move_as_usi_by_m_index(
+    def get_move_as_usi_by_m_index(
             m_index,
             is_king):
         """逆関数
 
-        指し手１つ分。ただし鏡面の場合、共役が付いて２つ返ってくる
+        テーブルの番地を、指し手の USI 表記に変換
 
         Parameters
         ----------
@@ -132,9 +133,6 @@ class EvaluationRuleFacade():
 
         src_value = rest
 
-        # 共役の移動元の筋。左右対称の盤で、反対側の方の筋
-        conjugate_src_file_str = None
-        conjugate_dst_file_str = None
 
         if 72 <= dst_value:
             dst_file = '9'
@@ -199,12 +197,4 @@ class EvaluationRuleFacade():
                 src_file_str = '1'
                 src_rank_str = Move.get_rank_num_to_str(src_value + 1)
 
-        list_of_move_as_usi = [
-            f'{src_file_str}{src_rank_str}{dst_file}{dst_rank_str}{pro_str}'
-        ]
-
-        if conjugate_src_file_str is not None or conjugate_dst_file_str is not None:
-            move_as_usi = f'{conjugate_src_file_str}{src_rank_str}{conjugate_dst_file_str}{dst_rank_str}{pro_str}'
-            list_of_move_as_usi.append(move_as_usi)
-
-        return list_of_move_as_usi
+        return f'{src_file_str}{src_rank_str}{dst_file}{dst_rank_str}{pro_str}'

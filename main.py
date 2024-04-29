@@ -8,8 +8,10 @@ from lottery import Lottery
 from ko_memory import KoMemory
 from result_file import ResultFile
 from move import Move
-from move_list import create_move_lists
+from move_list import create_move_lists_of_king_and_pieces
 from evaluation_rule_facade import EvaluationRuleFacade
+from evaluation_rule_k import EvaluationRuleK
+from evaluation_rule_p import EvaluationRuleP
 from evaluation_save_kk import EvaluationSaveKk
 from evaluation_save_kp import EvaluationSaveKp
 from evaluation_save_pp import EvaluationSavePp
@@ -346,7 +348,7 @@ class Kifuwarabe():
         #
         # 自玉の指し手と、自玉を除く自軍の指し手を分けて取得
         #
-        king_move_list_as_usi, pieces_move_list_as_usi = create_move_lists(
+        king_move_list_as_usi, pieces_move_list_as_usi = create_move_lists_of_king_and_pieces(
                 legal_move_list=list(self._board.legal_moves),
                 ko_memory=self._ko_memory,
                 board=self._board)
@@ -363,42 +365,38 @@ class Kifuwarabe():
         number = 1
         print('自玉の合法手一覧：')
 
-        # Ｋ＊表　（辞書には a だけが入っているので、 b は分からない）
+        # Ｋの指し手ということは分かるが、相手がＬなのかＱなのか分からない
         for k_as_usi in king_move_list_as_usi:
+            #
+            # 指し手　ｋ
+            # ---------
+            #
+            k_obj = Move.from_usi(k_as_usi)
+            k_index = EvaluationRuleK.get_m_index_by_move(
+                    move_obj=k_obj)
+
             #
             # ＫＫ表と、ＫＰ表
             # --------------
             #
-            k_obj = Move.from_usi(k_as_usi)
-
-            k_index_in_kk = EvaluationRuleFacade.get_m_index_by_move(    # FIXME KK
-                    move_obj=k_obj,
-                    is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
-
-            k_index_in_kp = EvaluationRuleFacade.get_m_index_by_move(    # FIXME KP
-                    move_obj=k_obj,
-                    is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
 
             #
             # 検算
             # ----
             #
-            list_of_k_as_usi_in_kk = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
-                    m_index=k_index_in_kk,
+            verify_usi_in_kk = EvaluationRuleFacade.get_move_as_usi_by_m_index(
+                    m_index=k_index,
                     is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
 
-            list_of_k_as_usi_in_kp = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
-                    m_index=k_index_in_kp,
+            verify_usi_in_kp = EvaluationRuleFacade.get_move_as_usi_by_m_index(
+                    m_index=k_index,
                     is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
-
-            verify_usi_in_kk = ",".join(list_of_k_as_usi_in_kk)
-            verify_usi_in_kp = ",".join(list_of_k_as_usi_in_kp)
 
             #
             # 表示
             # ----
             #
-            print(f'  ({number:3}) {k_as_usi:5} = KK{k_index_in_kk:5}  KP{k_index_in_kp:5}  検算 KK:{verify_usi_in_kk:11}  KP:{verify_usi_in_kp:11}')
+            print(f'  ({number:3}) {k_as_usi:5} = K{k_index:5}  検算 KK:{verify_usi_in_kk:5}  KP:{verify_usi_in_kp:5}')
             number += 1
 
         print('自玉以外の自軍の合法手一覧：')
@@ -424,22 +422,19 @@ class Kifuwarabe():
             # 検算
             # ----
             #
-            list_of_p_as_usi_in_kp = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
+            verify_usi_in_kp = EvaluationRuleFacade.get_move_as_usi_by_m_index(
                     m_index=p_index_in_kp,
                     is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b)
 
-            list_of_p_as_usi_in_pp = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
+            verify_usi_in_pp = EvaluationRuleFacade.get_move_as_usi_by_m_index(
                     m_index=p_index_in_pp,
                     is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a)
-
-            verify_usi_in_kp = ",".join(list_of_p_as_usi_in_kp)
-            verify_usi_in_pp = ",".join(list_of_p_as_usi_in_pp)
 
             #
             # 表示
             # ----
             #
-            print(f'  ({number:3}) {p_as_usi:5} = KP{p_index_in_kp:5} PP{p_index_in_pp:5}  検算 KP:{verify_usi_in_kp:11}  PP:{verify_usi_in_pp:11}')
+            print(f'  ({number:3}) {p_as_usi:5} = KP{p_index_in_kp:5} PP{p_index_in_pp:5}  検算 KP:{verify_usi_in_kp:5}  PP:{verify_usi_in_pp:5}')
             number += 1
 
         #
@@ -504,22 +499,19 @@ class Kifuwarabe():
             # 検算
             # ----
             #
-            list_of_k_as_usi_in_kk = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
+            verofy_usi_in_kk = EvaluationRuleFacade.get_move_as_usi_by_m_index(
                     m_index=k_index_in_kk,
                     is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
 
-            list_of_k_as_usi_in_kp = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
+            verify_usi_in_kp = EvaluationRuleFacade.get_move_as_usi_by_m_index(
                     m_index=k_index_in_kp,
                     is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_a)
-
-            verofy_usi_in_kk = ",".join(list_of_k_as_usi_in_kk)
-            verify_usi_in_kp = ",".join(list_of_k_as_usi_in_kp)
 
             #
             # 表示
             # ----
             #
-            print(f'  ({number:3}) L:{l_as_usi:5} = KK{k_index_in_kk:5}  KP{k_index_in_kp:5}  検算 KK:{verofy_usi_in_kk:11}  KP:{verify_usi_in_kp:11}')
+            print(f'  ({number:3}) L:{l_as_usi:5} = KK{k_index_in_kk:5}  KP{k_index_in_kp:5}  検算 KK:{verofy_usi_in_kk:5}  KP:{verify_usi_in_kp:5}')
             number += 1
 
         #
@@ -551,22 +543,19 @@ class Kifuwarabe():
             # ----
             #
             # TODO ＫＰを、ＰＫにひっくり返してみる必要がある？
-            list_of_p_as_usi_in_kp = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
+            verify_usi_in_kp = EvaluationRuleFacade.get_move_as_usi_by_m_index(
                     m_index=p_index_in_kp,
                     is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b)
 
-            list_of_p_as_usi_in_pp = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
+            verify_usi_in_pp = EvaluationRuleFacade.get_move_as_usi_by_m_index(
                     m_index=p_index_in_pp,
                     is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a)
-
-            verify_usi_in_kp = ",".join(list_of_p_as_usi_in_kp)
-            verify_usi_in_pp = ",".join(list_of_p_as_usi_in_pp)
 
             #
             # 表示
             # ----
             #
-            print(f'  ({number:3}) Q:{q_as_usi:5} = KP{p_index_in_kp:5}  PP{p_index_in_pp:5}  検算 KP:{verify_usi_in_kp:11}  PP:{verify_usi_in_pp:11}')
+            print(f'  ({number:3}) Q:{q_as_usi:5} = KP{p_index_in_kp:5}  PP{p_index_in_pp:5}  検算 KP:{verify_usi_in_kp:5}  PP:{verify_usi_in_pp:5}')
             number += 1
 
         #
@@ -616,22 +605,19 @@ class Kifuwarabe():
             # 検算
             # ----
             #
-            list_of_k_as_usi_in_kk = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
+            verify_usi_in_kk = EvaluationRuleFacade.get_move_as_usi_by_m_index(
                     m_index=k_index_in_kk,
                     is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
 
-            list_of_k_as_usi_in_kp = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
+            verify_usi_in_kp = EvaluationRuleFacade.get_move_as_usi_by_m_index(
                     m_index=k_index_in_kp,
                     is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_a)
-
-            verify_usi_in_kk = ",".join(list_of_k_as_usi_in_kk)
-            verify_usi_in_kp = ",".join(list_of_k_as_usi_in_kp)
 
             #
             # 表示
             # ----
             #
-            print(f'  ({number:3}) K:{k_as_usi:5} = KK{k_index_in_kk}  KP{k_index_in_kp:5}  policy:{km_policy:3}  検算 KK:{verify_usi_in_kk:11}  KP:{verify_usi_in_kp:11}')
+            print(f'  ({number:3}) K:{k_as_usi:5} = KK{k_index_in_kk}  KP{k_index_in_kp:5}  policy:{km_policy:3}  検算 KK:{verify_usi_in_kk:5}  KP:{verify_usi_in_kp:5}')
             number += 1
 
         #
@@ -668,22 +654,19 @@ class Kifuwarabe():
             # ----
             #
             # TODO ＫＰを、ＰＫにひっくり返してみる必要がある？
-            list_of_p_as_usi_in_kp = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
+            verify_usi_in_kp = EvaluationRuleFacade.get_move_as_usi_by_m_index(
                     m_index=p_index_in_kp,
                     is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b)
 
-            list_of_p_as_usi_in_pp = EvaluationRuleFacade.get_list_of_move_as_usi_by_m_index(
+            verify_usi_in_pp = EvaluationRuleFacade.get_move_as_usi_by_m_index(
                     m_index=p_index_in_pp,
                     is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a)
-
-            verify_usi_in_kp = ",".join(list_of_p_as_usi_in_kp)
-            verify_usi_in_pp = ",".join(list_of_p_as_usi_in_pp)
 
             #
             # 表示
             # ----
             #
-            print(f'  ({number:3}) P:{p_as_usi:5} = PP{p_index_in_pp:5}  policy:{pm_policy:3}  検算 KP:{verify_usi_in_kp:11}  PP:{verify_usi_in_pp:11}')
+            print(f'  ({number:3}) P:{p_as_usi:5} = PP{p_index_in_pp:5}  policy:{pm_policy:3}  検算 KP:{verify_usi_in_kp:5}  PP:{verify_usi_in_pp:5}')
             number += 1
 
 

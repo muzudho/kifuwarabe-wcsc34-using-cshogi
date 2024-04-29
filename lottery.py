@@ -1,7 +1,7 @@
 import cshogi
 import random
 from move import Move
-from move_list import create_move_lists
+from move_list import create_move_lists_of_king_and_pieces
 
 
 class Lottery():
@@ -18,10 +18,14 @@ class Lottery():
         """くじを引く"""
 
         # 自玉の指し手の集合と、自玉を除く自軍の指し手の集合
-        king_move_list_as_usi, pieces_move_list_as_usi = create_move_lists(
+        king_move_list_as_usi, pieces_move_list_as_usi = create_move_lists_of_king_and_pieces(
                 legal_move_list,
                 ko_memory,
                 board)
+
+        # ソート
+        king_move_list_as_usi.sort()
+        pieces_move_list_as_usi.sort()
 
         #
         # 相手が指せる手の集合
