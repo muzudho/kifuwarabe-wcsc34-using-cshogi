@@ -136,3 +136,23 @@ class EvaluationTableMm():
     @property
     def raw_mm_table(self):
         return self._raw_mm_table
+
+
+    def get_policy_by_mm_index(
+            self,
+            mm_index):
+        """値取得
+
+        Parameters
+        ----------
+        mm_index : int
+            MM関係テーブルの番地
+        """
+
+        try:
+            return self._raw_mm_table[mm_index]
+
+        except IndexError as ex:
+            # FIXME 大量に発生している。
+            print(f"[evaluation_table_mm.py > get_policy_by_mm_index] ignored. index error.  ex:{ex}")
+            return 0

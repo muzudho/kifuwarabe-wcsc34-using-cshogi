@@ -42,7 +42,7 @@ class EvaluationTableFacadePp():
 
     @staticmethod
     def get_pq_policy(
-            self,
+            pq_table_obj,
             p_obj,
             q_obj,
             turn):
@@ -52,31 +52,8 @@ class EvaluationTableFacadePp():
                 p_obj=p_obj,
                 q_obj=q_obj,
                 turn=turn)
-        #print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} pq_index:{pq_index}", flush=True)
 
-        try:
-            # 古いデータには 2 が入っているので、 2 は　1 に変換する
-            if self._raw_mm_table[pq_index] == 2:
-                self._raw_mm_table[pq_index] = 1
-
-        except IndexError as e:
-            # FIXME 大量に発生している。
-            #pass
-
-            ## 例： table length: 70955352  pq_index: 102593390  except: list index out of range
-            ## 例： table length:64  pq_index:63456  p_obj.as_usi:5i4h  q_obj.as_usi:5a4b  turn:0  except: list index out of range
-            ## 例： table length:419904  pq_index:4668914  p_obj.as_usi:5i4h  q_obj.as_usi:5a5b  turn:0  except: list index out of range
-            ## 例： table length:419904  pq_index:2334457  p_obj:5i4h  q_obj:5a5b  turn:0  except: list index out of range
-            print(f"table length:{len(self._raw_mm_table)}  pq_index:{pq_index}  p_obj:{p_obj.as_usi}  q_obj:{q_obj.as_usi}  turn:{turn}  except: {e}")
-            raise
-
-        try:
-            policy = self._raw_mm_table[pq_index]
-        except IndexError as e:
-            # FIXME 大量に発生している。
-            policy = 0
-
-        return policy
+        return pq_table_obj.get_policy_by_mm_index(pq_index)
 
 
     @staticmethod
@@ -108,7 +85,8 @@ class EvaluationTableFacadePp():
             # 客体と総当たり
             for q_as_usi in q_move_collection_as_usi:
                 q_obj = Move.from_usi(q_as_usi)
-                sum_policy += pq_table_obj.get_evaluation_value(
+                sum_policy += EvaluationTableFacadePp.get_pq_policy(
+                        pq_table_obj=pq_table_obj,
                         a_move_obj=p_obj,
                         b_move_obj=q_obj,
                         turn=turn)

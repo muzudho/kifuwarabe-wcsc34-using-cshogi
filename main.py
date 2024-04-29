@@ -113,7 +113,7 @@ class Kifuwarabe():
                 engine_name = f.read().strip()
 
         except FileNotFoundError as ex:
-            print(f"[usi protocol > usi] '{file_name}' file not found. {ex}")
+            print(f"[usi protocol > usi] '{file_name}' file not found.  ex:{ex}")
             raise
 
         print(f'id name {engine_name}')
@@ -128,8 +128,20 @@ class Kifuwarabe():
     def usinewgame(self):
         """新しい対局"""
 
-        # さいころに倣って６個
-        self._player_file_number = random.randint(1,6)
+        # 内部的なプレイヤー数。多重人格みたいなもの。別ファイルから読込。pythonファイルはよく差し替えるのでデータは外に出したい。
+        # 毎対局同じ指し手を繰り返すという千日手を回避するために多重人格にしている
+        try:
+            file_name = "player_size.txt"
+            with open(file_name, 'r', encoding="utf-8") as f:
+                player_size = int(f.read().strip())
+
+        except FileNotFoundError as ex:
+            print(f"[usi protocol > usinewgame] ignored. '{file_name}' file not found.  ex:{ex}")
+
+            # 1 で続行
+            player_size = 1
+
+        self._player_file_number = random.randint(1,player_size)
 
         # 前回の対局の指し手の候補手の記憶
         self._king_canditates_memory = LearnCandidatesKing.from_file(

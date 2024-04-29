@@ -42,7 +42,7 @@ class EvaluationTableFacadeKk():
 
     @staticmethod
     def get_kl_policy(
-            self,
+            kl_table_obj,
             k_obj,
             l_obj,
             turn):
@@ -52,31 +52,8 @@ class EvaluationTableFacadeKk():
                 k_obj=k_obj,
                 l_obj=l_obj,
                 turn=turn)
-        #print(f"[DEBUG] 逆順 b:{index_b:3} a:{index_a:3} kl_index:{kl_index}", flush=True)
 
-        try:
-            # 古いデータには 2 が入っているので、 2 は　1 に変換する
-            if self._raw_mm_table[kl_index] == 2:
-                self._raw_mm_table[kl_index] = 1
-
-        except IndexError as e:
-            # FIXME 大量に発生している。
-            #pass
-
-            ## 例： table length: 70955352  kl_index: 102593390  except: list index out of range
-            ## 例： table length:64  kl_index:63456  k_obj.as_usi:5i4h  l_obj.as_usi:5a4b  turn:0  except: list index out of range
-            ## 例： table length:419904  kl_index:4668914  k_obj.as_usi:5i4h  l_obj.as_usi:5a5b  turn:0  except: list index out of range
-            ## 例： table length:419904  kl_index:2334457  k_obj:5i4h  l_obj:5a5b  turn:0  except: list index out of range
-            print(f"table length:{len(self._raw_mm_table)}  kl_index:{kl_index}  k_obj:{k_obj.as_usi}  l_obj:{l_obj.as_usi}  turn:{turn}  except: {e}")
-            raise
-
-        try:
-            policy = self._raw_mm_table[kl_index]
-        except IndexError as e:
-            # FIXME 大量に発生している。
-            policy = 0
-
-        return policy
+        return kl_table_obj.get_policy_by_mm_index(kl_index)
 
 
     @staticmethod
@@ -108,7 +85,7 @@ class EvaluationTableFacadeKk():
             # 客体と総当たり
             for l_as_usi in l_move_collection_as_usi:
                 l_obj = Move.from_usi(l_as_usi)
-                sum_policy += EvaluationRuleKk.get_kl_policy(
+                sum_policy += EvaluationTableFacadeKk.get_kl_policy(
                         k_obj=k_obj,
                         l_obj=l_obj,
                         turn=turn)
