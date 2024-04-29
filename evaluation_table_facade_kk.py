@@ -5,7 +5,7 @@ from evaluation_table_size_facade_kk import EvaluationTableSizeFacadeKk
 from move import Move
 
 
-class EvaluationTableKk():
+class EvaluationTableFacadeKk():
     """評価値テーブル　ＫＫ"""
 
 

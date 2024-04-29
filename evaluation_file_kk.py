@@ -1,6 +1,6 @@
 import os
 import datetime
-from evaluation_table_facade_kk import EvaluationTableKk
+from evaluation_table_facade_kk import EvaluationTableFacadeKk
 from evaluation_table_size_facade_kk import EvaluationTableSizeFacadeKk
 from evaluation_load import EvaluationLoad
 from evaluation_table_raw_random import EvaluationTableRawRandom
@@ -58,7 +58,7 @@ class EvaluationFileKk():
             shall_save_file = True
             is_file_modified = True
 
-        kk_table = EvaluationTableKk.create_it(
+        kk_table = EvaluationTableFacadeKk.create_it(
                 file_number=file_number,
                 file_name=file_name,
                 raw_mm_table=raw_mm_table,
