@@ -147,8 +147,7 @@ class EvaluationFacade():
                 mm_table_obj=self._kp_table_obj,
                 a_move_collection_as_usi=king_move_collection_as_usi,
                 b_move_collection_as_usi=pieces_move_collection_as_usi,
-                turn=turn,
-                get_mm_index_by_2_moves=EvaluationRuleKp.get_kp_index_by_2_moves)
+                turn=turn)
 
         # 評価値をマージ
         for king_move_as_usi, policy in kp_policy_dictionary.items():
@@ -162,8 +161,7 @@ class EvaluationFacade():
                 mm_table_obj=self.kk_table_obj,
                 a_move_collection_as_usi=king_move_collection_as_usi,
                 b_move_collection_as_usi=lord_move_collection_as_usi,
-                turn=turn,
-                get_mm_index_by_2_moves=EvaluationRuleKk.get_kl_index_by_2_moves)
+                turn=turn)
 
         # 評価値をマージ
         for king_move_as_usi, policy in kl_policy_dictionary.items():
@@ -177,8 +175,7 @@ class EvaluationFacade():
                 mm_table_obj=self._kp_table_obj,
                 a_move_collection_as_usi=king_move_collection_as_usi,
                 b_move_collection_as_usi=quaffers_move_collection_as_usi,
-                turn=turn,
-                get_mm_index_by_2_moves=EvaluationRuleKk.get_kp_index_by_2_moves)
+                turn=turn)
 
         # 評価値をマージ
         for king_move_as_usi, policy in kq_policy_dictionary.items():
@@ -192,8 +189,7 @@ class EvaluationFacade():
                 mm_table_obj=self._pp_table_obj,
                 a_move_collection_as_usi=pieces_move_collection_as_usi,
                 b_move_collection_as_usi=pieces_move_collection_as_usi,
-                turn=turn,
-                get_mm_index_by_2_moves=EvaluationRulePp.get_pq_index_by_2_moves)
+                turn=turn)
 
         # 評価値をマージ
         for piece_move_as_usi, policy in pp_policy_dictionary.items():
@@ -208,8 +204,7 @@ class EvaluationFacade():
                 mm_table_obj=self._kp_table_obj,
                 a_move_collection_as_usi=pieces_move_collection_as_usi,
                 b_move_collection_as_usi=lord_move_collection_as_usi,
-                turn=turn,
-                get_mm_index_by_2_moves=EvaluationRuleKp.get_kp_index_by_2_moves)
+                turn=turn)
 
         # 評価値をマージ
         for piece_move_as_usi, policy in pl_policy_dictionary.items():
@@ -223,8 +218,7 @@ class EvaluationFacade():
                 mm_table_obj=self._pp_table_obj,
                 a_move_collection_as_usi=pieces_move_collection_as_usi,
                 b_move_collection_as_usi=quaffers_move_collection_as_usi,
-                turn=turn,
-                get_mm_index_by_2_moves=EvaluationRulePp.get_pq_index_by_2_moves)
+                turn=turn)
 
         # 評価値をマージ
         for piece_move_as_usi, policy in pq_policy_dictionary.items():

@@ -26,6 +26,7 @@ class EvaluationRuleMm():
             手番
         b_index_size : int
             指し手 b のパターン数
+            例： EvaluationRuleK.get_king_move_number()
         get_a_index_by_move : func
             指し手 a のテーブル番地を求める
         get_b_index_by_move : func
@@ -57,8 +58,7 @@ class EvaluationRuleMm():
             mm_table_obj,
             a_move_collection_as_usi,
             b_move_collection_as_usi,
-            turn,
-            get_mm_index_by_2_moves):
+            turn):
         """指し手に評価値を付ける
 
         Parameters
@@ -69,8 +69,6 @@ class EvaluationRuleMm():
             指し手の収集（客体）
         turn : int
             手番
-        get_mm_index_by_2_moves : func
-            ２つの指し手を渡すと、MM関係のテーブル番地を返す関数
         """
 
         # 指し手に評価値を付ける
@@ -86,10 +84,11 @@ class EvaluationRuleMm():
                 b_obj = Move.from_usi(b_as_usi)
 
                 # ２つの指し手を、テーブルの番地に変換
-                mm_index = get_mm_index_by_2_moves(
+                mm_index = EvaluationRuleMm.get_mm_index_by_2_moves(
                         a_obj=a_obj,
                         b_obj=b_obj,
-                        turn=turn)
+                        turn=turn,
+                        b_index_size=mm_table_obj.list_of_move_size[1])
 
                 # テーブルの番地を、ポリシー値に変換
                 policy = mm_table_obj.get_policy_by_mm_index(mm_index)

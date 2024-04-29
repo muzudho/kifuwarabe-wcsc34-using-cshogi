@@ -1,7 +1,7 @@
 import cshogi
 import random
 import datetime
-from evaluation_rule_facade import EvaluationRuleFacade
+from evaluation_rule_mm import EvaluationRuleMm
 from move import Move
 from move_helper import MoveHelper
 
@@ -58,13 +58,11 @@ class Learn():
                 b_obj = Move.from_usi(b_as_usi)
 
                 # FIXME KK,KP,PP で分けたい
-                mm_index = EvaluationRuleFacade.get_mm_index_by_2_moves(
+                mm_index = EvaluationRuleMm.get_mm_index_by_2_moves(
                         a_move_obj=a_obj,
-                        a_is_king=a_is_king,
                         b_move_obj=b_obj,
-                        b_is_king=b_is_king,
                         turn=turn,
-                        list_of_move_size=mm_table_obj.list_of_move_size)
+                        b_index_size=mm_table_obj.list_of_move_size[1])
 
                 if len(mm_table_obj.raw_mm_table) <= mm_index:
                     # 範囲外エラー
@@ -82,13 +80,11 @@ class Learn():
                 rev_b_obj = MoveHelper.flip_horizontal(b_obj)
 
                 # FIXME KK,KP,PP で分けたい
-                mm_index = EvaluationRuleFacade.get_mm_index_by_2_moves(
+                mm_index = EvaluationRuleMm.get_mm_index_by_2_moves(
                         a_move_obj=rev_a_obj,
-                        a_is_king=a_is_king,
                         b_move_obj=rev_b_obj,
-                        b_is_king=b_is_king,
                         turn=turn,
-                        list_of_move_size=mm_table_obj.list_of_move_size)
+                        a_index_size=mm_table_obj.list_of_move_size[1])
 
                 if len(mm_table_obj.raw_mm_table) <= mm_index:
                     # 範囲外エラー
