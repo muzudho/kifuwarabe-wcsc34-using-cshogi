@@ -79,7 +79,9 @@ class EvaluationFacade():
         Learn.update_evaluation_table(
                 mm_table_obj=self._kk_table_obj,
                 canditates_memory=king_canditates_memory, # キング
-                result_file=result_file)
+                result_file=result_file,
+                get_a_index_by_move=EvaluationRuleK.get_m_index_by_move,
+                get_b_index_by_move=EvaluationRuleK.get_m_index_by_move)
 
         #
         # ＫＰポリシー
@@ -95,7 +97,9 @@ class EvaluationFacade():
         Learn.update_evaluation_table(
                 mm_table_obj=self._kp_table_obj,
                 canditates_memory=king_canditates_memory, # キング
-                result_file=result_file)
+                result_file=result_file,
+                get_a_index_by_move=EvaluationRuleK.get_m_index_by_move,
+                get_b_index_by_move=EvaluationRuleP.get_m_index_by_move)
 
         #
         # ＰＰポリシー
@@ -111,7 +115,9 @@ class EvaluationFacade():
         Learn.update_evaluation_table(
                 mm_table_obj=self._pp_table_obj,
                 canditates_memory=pieces_canditates_memory,  # 自軍の玉以外の合法手
-                result_file=result_file)
+                result_file=result_file,
+                get_a_index_by_move=EvaluationRuleP.get_m_index_by_move,
+                get_b_index_by_move=EvaluationRuleP.get_m_index_by_move)
 
 
     def make_move_as_usi_and_policy_dictionary(

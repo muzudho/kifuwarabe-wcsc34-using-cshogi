@@ -14,7 +14,9 @@ class Learn():
     def update_evaluation_table(
             mm_table_obj,
             canditates_memory,
-            result_file):
+            result_file,
+            get_a_index_by_move,
+            get_b_index_by_move):
         """結果ファイルを読み込んで、持将棋や、負けかどうか判定する。
         そうなら、評価値テーブルのうち、指した手（CanditatesMemory）に関連する箇所をランダムに変更してみる"""
 
@@ -35,21 +37,31 @@ class Learn():
             if result_text in ('lose', 'draw'):
                 Learn.modify_mm_table(
                         mm_table_obj=mm_table_obj,
-                        a_is_king=False,    # TODO
-                        b_is_king=False,    # TODO
                         canditates_memory=canditates_memory,
-                        turn=turn)
+                        turn=turn,
+                        get_a_index_by_move=get_a_index_by_move,
+                        get_b_index_by_move=get_b_index_by_move)
                 print(f"[{datetime.datetime.now()}] {mm_table_obj._file_name} file updated", flush=True)
 
 
     @staticmethod
     def modify_mm_table(
             mm_table_obj,
-            a_is_king,
-            b_is_king,
             canditates_memory,
-            turn):
-        """指した手の評価値を適当に変更します"""
+            turn,
+            get_a_index_by_move,
+            get_b_index_by_move):
+        """指した手の評価値を適当に変更します
+
+        Parameters
+        ----------
+        turn : int
+            手番
+        get_a_index_by_move : func
+            指し手 a のテーブル番地を求める
+        get_b_index_by_move : func
+            指し手 b のテーブル番地を求める
+        """
 
         for a_as_usi in canditates_memory.move_set:
             for b_as_usi in canditates_memory.move_set:
@@ -59,10 +71,12 @@ class Learn():
 
                 # FIXME KK,KP,PP で分けたい
                 mm_index = EvaluationRuleMm.get_mm_index_by_2_moves(
-                        a_move_obj=a_obj,
-                        b_move_obj=b_obj,
+                        a_obj=a_obj,
+                        b_obj=b_obj,
                         turn=turn,
-                        b_index_size=mm_table_obj.list_of_move_size[1])
+                        b_index_size=mm_table_obj.list_of_move_size[1],
+                        get_a_index_by_move=get_a_index_by_move,
+                        get_b_index_by_move=get_b_index_by_move)
 
                 if len(mm_table_obj.raw_mm_table) <= mm_index:
                     # 範囲外エラー
@@ -73,18 +87,19 @@ class Learn():
                     mm_table_obj.raw_mm_table[mm_index] = random.randint(0,1)
 
                 #
-                # 左右反転して、同じようにしたい
+                # 盤を左右反転して、同じように学習したい
                 #
                 # reverse
                 rev_a_obj = MoveHelper.flip_horizontal(a_obj)
                 rev_b_obj = MoveHelper.flip_horizontal(b_obj)
 
-                # FIXME KK,KP,PP で分けたい
                 mm_index = EvaluationRuleMm.get_mm_index_by_2_moves(
-                        a_move_obj=rev_a_obj,
-                        b_move_obj=rev_b_obj,
+                        a_obj=rev_a_obj,
+                        b_obj=rev_b_obj,
                         turn=turn,
-                        a_index_size=mm_table_obj.list_of_move_size[1])
+                        b_index_size=mm_table_obj.list_of_move_size[1],
+                        get_a_index_by_move=get_a_index_by_move,
+                        get_b_index_by_move=get_b_index_by_move)
 
                 if len(mm_table_obj.raw_mm_table) <= mm_index:
                     # 範囲外エラー
