@@ -46,7 +46,8 @@ class EvaluationTableFacadeKp():
             kp_table_obj,
             k_move_collection_as_usi,
             p_move_collection_as_usi,
-            turn):
+            turn,
+            get_mm_index_by_2_moves):
         """指し手に評価値を付ける
 
         Parameters
@@ -57,6 +58,8 @@ class EvaluationTableFacadeKp():
             指し手の収集（客体）
         turn
             手番
+        get_mm_index_by_2_moves : func
+            ２つの指し手を渡すと、MM関係のテーブル番地を返す関数
         """
 
         # 指し手に評価値を付ける
@@ -72,7 +75,7 @@ class EvaluationTableFacadeKp():
                 p_obj = Move.from_usi(p_as_usi)
 
                 # ２つの指し手を、テーブルの番地に変換
-                kp_index = EvaluationRuleKp.get_kp_index_by_2_moves(
+                kp_index = get_mm_index_by_2_moves(
                         k_obj=k_obj,
                         p_obj=p_obj,
                         turn=turn)

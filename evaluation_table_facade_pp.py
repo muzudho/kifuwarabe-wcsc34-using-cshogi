@@ -45,7 +45,8 @@ class EvaluationTableFacadePp():
             pq_table_obj,
             p_move_collection_as_usi,
             q_move_collection_as_usi,
-            turn):
+            turn,
+            get_pq_index_by_2_moves):
         """指し手に評価値を付ける
 
         Parameters
@@ -56,6 +57,8 @@ class EvaluationTableFacadePp():
             指し手の収集（客体）
         turn
             手番
+        get_pq_index_by_2_moves : func
+            ２つの指し手を渡すと、PQ関係のテーブル番地を返す関数
         """
 
         # 指し手に評価値を付ける
@@ -71,7 +74,7 @@ class EvaluationTableFacadePp():
                 q_obj = Move.from_usi(q_as_usi)
 
                 # ２つの指し手を、テーブルの番地に変換
-                pq_index = EvaluationRulePp.get_pq_index_by_2_moves(
+                pq_index = get_pq_index_by_2_moves(
                         p_obj=p_obj,
                         q_obj=q_obj,
                         turn=turn)

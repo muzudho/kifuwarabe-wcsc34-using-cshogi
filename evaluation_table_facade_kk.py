@@ -42,10 +42,11 @@ class EvaluationTableFacadeKk():
 
     @staticmethod
     def make_move_as_usi_and_policy_dictionary_2(
-            kl_table_obj,
-            k_move_collection_as_usi,
-            l_move_collection_as_usi,
-            turn):
+            mm_table_obj,
+            a_move_collection_as_usi,
+            b_move_collection_as_usi,
+            turn,
+            get_kl_index_by_2_moves):
         """指し手に評価値を付ける
 
         Parameters
@@ -54,34 +55,36 @@ class EvaluationTableFacadeKk():
             指し手の収集（主体）
         b_move_set_as_usi : set
             指し手の収集（客体）
-        turn
+        turn : int
             手番
+        get_kl_index_by_2_moves : func
+            ２つの指し手を渡すと、KL関係のテーブル番地を返す関数
         """
 
         # 指し手に評価値を付ける
         move_as_usi_and_policy_dictionary = {}
 
         # 主体
-        for k_as_usi in k_move_collection_as_usi:
-            k_obj = Move.from_usi(k_as_usi)
+        for a_as_usi in a_move_collection_as_usi:
+            a_obj = Move.from_usi(a_as_usi)
             sum_policy = 0
 
             # 客体と総当たり
-            for l_as_usi in l_move_collection_as_usi:
-                l_obj = Move.from_usi(l_as_usi)
+            for b_as_usi in b_move_collection_as_usi:
+                b_obj = Move.from_usi(b_as_usi)
 
                 # ２つの指し手を、テーブルの番地に変換
-                kl_index = EvaluationRuleKk.get_kl_index_by_2_moves(
-                        k_obj=k_obj,
-                        l_obj=l_obj,
+                kl_index = get_kl_index_by_2_moves(
+                        k_obj=a_obj,
+                        l_obj=b_obj,
                         turn=turn)
 
                 # テーブルの番地を、ポリシー値に変換
-                policy = kl_table_obj.get_policy_by_mm_index(kl_index)
+                policy = mm_table_obj.get_policy_by_mm_index(kl_index)
 
                 # 総和
                 sum_policy += policy
 
-            move_as_usi_and_policy_dictionary[k_as_usi] = sum_policy
+            move_as_usi_and_policy_dictionary[a_as_usi] = sum_policy
 
         return move_as_usi_and_policy_dictionary
