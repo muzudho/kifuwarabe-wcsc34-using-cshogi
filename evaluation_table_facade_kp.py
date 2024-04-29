@@ -42,22 +42,6 @@ class EvaluationTableFacadeKp():
 
 
     @staticmethod
-    def get_kp_policy(
-            kp_table_obj,
-            k_obj,
-            p_obj,
-            turn):
-        """両方残すなら 0点、インデックスが小さい方を残すなら -1点、インデックスが大きい方を残すなら +1点"""
-
-        kp_index = EvaluationRuleKp.get_kp_index_by_2_moves(
-                k_obj=k_obj,
-                p_obj=p_obj,
-                turn=turn)
-
-        return kp_table_obj.get_policy_by_mm_index(kp_index)
-
-
-    @staticmethod
     def make_move_as_usi_and_policy_dictionary_2(
             kp_table_obj,
             k_move_collection_as_usi,
@@ -86,11 +70,18 @@ class EvaluationTableFacadeKp():
             # 客体と総当たり
             for p_as_usi in p_move_collection_as_usi:
                 p_obj = Move.from_usi(p_as_usi)
-                sum_policy += EvaluationTableFacadeKp.get_kp_policy(
-                        kp_table_obj=kp_table_obj,
+
+                # ２つの指し手を、テーブルの番地に変換
+                kp_index = EvaluationRuleKp.get_kp_index_by_2_moves(
                         k_obj=k_obj,
                         p_obj=p_obj,
                         turn=turn)
+
+                # テーブルの番地を、ポリシー値に変換
+                policy = kp_table_obj.get_policy_by_mm_index(kp_index)
+
+                # 総和
+                sum_policy += policy
 
             move_as_usi_and_policy_dictionary[k_as_usi] = sum_policy
 
