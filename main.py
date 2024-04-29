@@ -11,6 +11,7 @@ from move import Move
 from move_list import create_move_lists_of_king_and_pieces
 from evaluation_rule_facade import EvaluationRuleFacade
 from evaluation_rule_k import EvaluationRuleK
+from evaluation_rule_m import EvaluationRuleM
 from evaluation_rule_p import EvaluationRuleP
 from evaluation_save_kk import EvaluationSaveKk
 from evaluation_save_kp import EvaluationSaveKp
@@ -365,7 +366,7 @@ class Kifuwarabe():
         number = 1
         print('自玉の合法手一覧：')
 
-        # Ｋの指し手ということは分かるが、相手がＬなのかＱなのか分からない
+        # Ｋの指し手ということは分かるが、相手がＰなのかＬなのかＱなのか分からない
         for k_as_usi in king_move_list_as_usi:
             #
             # 指し手　ｋ
@@ -376,65 +377,45 @@ class Kifuwarabe():
                     move_obj=k_obj)
 
             #
-            # ＫＫ表と、ＫＰ表
-            # --------------
-            #
-
-            #
             # 検算
             # ----
             #
-            verify_usi_in_kk = EvaluationRuleFacade.get_move_as_usi_by_m_index(
+            verify_usi = EvaluationRuleM.get_move_as_usi_by_m_index(
                     m_index=k_index,
-                    is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
-
-            verify_usi_in_kp = EvaluationRuleFacade.get_move_as_usi_by_m_index(
-                    m_index=k_index,
-                    is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
+                    is_king=True)
 
             #
             # 表示
             # ----
             #
-            print(f'  ({number:3}) {k_as_usi:5} = K{k_index:5}  検算 KK:{verify_usi_in_kk:5}  KP:{verify_usi_in_kp:5}')
+            print(f'  ({number:3}) K:{k_as_usi:5} = {k_index:5}  検算 {verify_usi:5}')
             number += 1
 
         print('自玉以外の自軍の合法手一覧：')
 
-        # ＊Ｐ表、Ｐ＊表　（辞書には a だけが入っているので、 b は分からない）
+        # Ｐの指し手ということは分かるが、相手がＫなのかＰなのかＬなのかＱなのか分からない
         for p_as_usi in pieces_move_list_as_usi:
             #
-            # ＫＰ表と、ＰＰ表
-            # --------------
+            # 指し手　p
+            # ---------
             #
             p_obj = Move.from_usi(p_as_usi)
-
-            # TODO ＫＰを、ＰＫにひっくり返してみる必要がある？
-            p_index_in_kp = EvaluationRuleFacade.get_m_index_by_move(   # FIXME KP
-                    move_obj=p_obj,
-                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b)
-
-            p_index_in_pp = EvaluationRuleFacade.get_m_index_by_move(
-                    move_obj=p_obj,
-                    is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a)
+            p_index = EvaluationRuleP.get_m_index_by_move(
+                    move_obj=p_obj)
 
             #
             # 検算
             # ----
             #
-            verify_usi_in_kp = EvaluationRuleFacade.get_move_as_usi_by_m_index(
-                    m_index=p_index_in_kp,
-                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b)
-
-            verify_usi_in_pp = EvaluationRuleFacade.get_move_as_usi_by_m_index(
-                    m_index=p_index_in_pp,
-                    is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a)
+            verify_usi = EvaluationRuleM.get_move_as_usi_by_m_index(
+                    m_index=p_index,
+                    is_king=False)
 
             #
             # 表示
             # ----
             #
-            print(f'  ({number:3}) {p_as_usi:5} = KP{p_index_in_kp:5} PP{p_index_in_pp:5}  検算 KP:{verify_usi_in_kp:5}  PP:{verify_usi_in_pp:5}')
+            print(f'  ({number:3}) P:{p_as_usi:5} = {p_index:5}  検算 {verify_usi:5}')
             number += 1
 
         #
@@ -477,41 +458,31 @@ class Kifuwarabe():
         print('敵玉の応手の集合：')
         number = 1
 
-        # Ｋ＊表　（辞書には a だけが入っているので、 b は分からない）
+        # Ｌの指し手ということは分かるが、相手がＰなのかＬなのかＱなのか分からない
         # l は lord（敵玉）
         for l_as_usi in lord_move_set_as_usi:
 
             #
-            # ＫＫ表と、ＫＰ表
-            # --------------
+            # 指し手　l
+            # ---------
             #
             l_obj = Move.from_usi(l_as_usi)
-
-            k_index_in_kk = EvaluationRuleFacade.get_m_index_by_move(    # FIXME KK
-                    move_obj=l_obj,
-                    is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
-
-            k_index_in_kp = EvaluationRuleFacade.get_m_index_by_move(   # FIXME KP
-                    move_obj=l_obj,
-                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_a)
+            l_index = EvaluationRuleK.get_m_index_by_move(
+                    move_obj=l_obj)
 
             #
             # 検算
             # ----
             #
-            verofy_usi_in_kk = EvaluationRuleFacade.get_move_as_usi_by_m_index(
+            verofy_usi = EvaluationRuleM.get_move_as_usi_by_m_index(
                     m_index=k_index_in_kk,
-                    is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
-
-            verify_usi_in_kp = EvaluationRuleFacade.get_move_as_usi_by_m_index(
-                    m_index=k_index_in_kp,
-                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_a)
+                    is_king=True)
 
             #
             # 表示
             # ----
             #
-            print(f'  ({number:3}) L:{l_as_usi:5} = KK{k_index_in_kk:5}  KP{k_index_in_kp:5}  検算 KK:{verofy_usi_in_kk:5}  KP:{verify_usi_in_kp:5}')
+            print(f'  ({number:3}) L:{l_as_usi:5} = {l_index:5}  検算 {verofy_usi:5}')
             number += 1
 
         #
@@ -520,42 +491,30 @@ class Kifuwarabe():
         #
 
         print('敵玉以外の敵軍の応手の集合：')
-        # ＊Ｐ表、Ｐ＊表　（辞書には a だけが入っているので、 b は分からない）
+        # Ｑの指し手ということは分かるが、相手がＫなのかＰなのかＬなのかＱなのか分からない
         # q は quaffer
         for q_as_usi in quaffers_move_set_as_usi:
             #
-            # ＫＰ表と、ＰＰ表
-            # --------------
+            # 指し手　q
+            # ---------
             #
             q_obj = Move.from_usi(q_as_usi)
-
-            # TODO ＫＰを、ＰＫにひっくり返してみる必要がある？
-            p_index_in_kp = EvaluationRuleFacade.get_m_index_by_move(   # FIXME KP
-                    move_obj=q_obj,
-                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b)
-
-            p_index_in_pp = EvaluationRuleFacade.get_m_index_by_move(
-                    move_obj=q_obj,
-                    is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a)
+            q_index = EvaluationRuleFacade.get_m_index_by_move(
+                    move_obj=q_obj)
 
             #
             # 検算
             # ----
             #
-            # TODO ＫＰを、ＰＫにひっくり返してみる必要がある？
-            verify_usi_in_kp = EvaluationRuleFacade.get_move_as_usi_by_m_index(
-                    m_index=p_index_in_kp,
-                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b)
-
-            verify_usi_in_pp = EvaluationRuleFacade.get_move_as_usi_by_m_index(
-                    m_index=p_index_in_pp,
-                    is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a)
+            verify_usi = EvaluationRuleM.get_move_as_usi_by_m_index(
+                    m_index=q_index,
+                    is_king=False)
 
             #
             # 表示
             # ----
             #
-            print(f'  ({number:3}) Q:{q_as_usi:5} = KP{p_index_in_kp:5}  PP{p_index_in_pp:5}  検算 KP:{verify_usi_in_kp:5}  PP:{verify_usi_in_pp:5}')
+            print(f'  ({number:3}) Q:{q_as_usi:5} = {q_index:5}  検算 {verify_usi:5}')
             number += 1
 
         #
@@ -605,11 +564,11 @@ class Kifuwarabe():
             # 検算
             # ----
             #
-            verify_usi_in_kk = EvaluationRuleFacade.get_move_as_usi_by_m_index(
+            verify_usi_in_kk = EvaluationRuleM.get_move_as_usi_by_m_index(
                     m_index=k_index_in_kk,
                     is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
 
-            verify_usi_in_kp = EvaluationRuleFacade.get_move_as_usi_by_m_index(
+            verify_usi_in_kp = EvaluationRuleM.get_move_as_usi_by_m_index(
                     m_index=k_index_in_kp,
                     is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_a)
 
@@ -654,11 +613,11 @@ class Kifuwarabe():
             # ----
             #
             # TODO ＫＰを、ＰＫにひっくり返してみる必要がある？
-            verify_usi_in_kp = EvaluationRuleFacade.get_move_as_usi_by_m_index(
+            verify_usi_in_kp = EvaluationRuleM.get_move_as_usi_by_m_index(
                     m_index=p_index_in_kp,
                     is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b)
 
-            verify_usi_in_pp = EvaluationRuleFacade.get_move_as_usi_by_m_index(
+            verify_usi_in_pp = EvaluationRuleM.get_move_as_usi_by_m_index(
                     m_index=p_index_in_pp,
                     is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a)
 
