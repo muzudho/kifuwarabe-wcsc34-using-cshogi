@@ -30,17 +30,10 @@ class EvaluationTableMm():
             raw_mm_table,
             is_king_size_of_a,
             is_king_size_of_b,
-            is_file_modified):
+            is_file_modified,
+            get_a_index_by_move,
+            get_b_index_by_move):
         """初期化
-
-        Parameters
-        ----------
-        table_size_obj: EvaluationTableSize
-            テーブル・サイズ。計算過程付き
-        list_of_move_size : str[]
-            指し手 a, b それぞれのサイズ
-        is_file_modified : bool
-            保存されていない評価値テーブルを引数で渡したなら真
 
         指し手は２種類
         ============
@@ -81,6 +74,19 @@ class EvaluationTableMm():
             （テーブルを１８０°回転させるのではなく）指し手を１８０°回転させて評価値テーブルを利用するものとする
 
         ----------
+
+        Parameters
+        ----------
+        table_size_obj: EvaluationTableSize
+            テーブル・サイズ。計算過程付き
+        list_of_move_size : str[]
+            指し手 a, b それぞれのサイズ
+        is_file_modified : bool
+            保存されていない評価値テーブルを引数で渡したなら真
+        get_a_index_by_move : func
+            指し手 a のテーブル番地を求める
+        get_b_index_by_move : func
+            指し手 b のテーブル番地を求める
         """
         self._file_number = file_number
         self._file_name = file_name
@@ -90,6 +96,8 @@ class EvaluationTableMm():
         self._is_king_of_a = is_king_size_of_a
         self._is_king_of_b = is_king_size_of_b
         self._is_file_modified = is_file_modified
+        self._get_a_index_by_move = get_a_index_by_move
+        self._get_b_index_by_move = get_b_index_by_move
 
 
     @property
@@ -136,6 +144,18 @@ class EvaluationTableMm():
     @property
     def raw_mm_table(self):
         return self._raw_mm_table
+
+
+    @property
+    def get_a_index_by_move(self):
+        """指し手 a のテーブル番地を求める"""
+        return self._get_a_index_by_move
+
+
+    @property
+    def get_b_index_by_move(self):
+        """指し手 b のテーブル番地を求める"""
+        return self._get_b_index_by_move
 
 
     def get_policy_by_mm_index(

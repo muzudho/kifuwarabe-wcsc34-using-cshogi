@@ -1,9 +1,7 @@
 from evaluation_table_mm import EvaluationTableMm
 from evaluation_rule_k import EvaluationRuleK
 from evaluation_rule_p import EvaluationRuleP
-from evaluation_rule_kp import EvaluationRuleKp
 from evaluation_table_size_facade_kp import EvaluationTableSizeFacadeKp
-from move import Move
 
 
 class EvaluationTableFacadeKp():
@@ -38,4 +36,6 @@ class EvaluationTableFacadeKp():
                 raw_mm_table=raw_mm_table,
                 is_king_size_of_a=True,
                 is_king_size_of_b=False,
-                is_file_modified=is_file_modified)
+                is_file_modified=is_file_modified,
+                get_a_index_by_move=EvaluationRuleK.get_m_index_by_move,
+                get_b_index_by_move=EvaluationRuleP.get_m_index_by_move)
