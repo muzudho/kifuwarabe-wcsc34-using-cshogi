@@ -86,28 +86,28 @@ class Learn():
                     # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
                     mm_table_obj.raw_mm_table[mm_index] = random.randint(0,1)
 
+                ##
+                ## 盤を左右反転して、同じように学習したい
+                ##
+                ## reverse
+                #rev_a_obj = MoveHelper.flip_horizontal(a_obj)
+                #rev_b_obj = MoveHelper.flip_horizontal(b_obj)
                 #
-                # 盤を左右反転して、同じように学習したい
+                #mm_index = EvaluationRuleMm.get_mm_index_by_2_moves(
+                #        a_obj=rev_a_obj,
+                #        b_obj=rev_b_obj,
+                #        turn=turn,
+                #        b_index_size=mm_table_obj.list_of_move_size[1],
+                #        get_a_index_by_move=get_a_index_by_move,
+                #        get_b_index_by_move=get_b_index_by_move)
                 #
-                # reverse
-                rev_a_obj = MoveHelper.flip_horizontal(a_obj)
-                rev_b_obj = MoveHelper.flip_horizontal(b_obj)
-
-                mm_index = EvaluationRuleMm.get_mm_index_by_2_moves(
-                        a_obj=rev_a_obj,
-                        b_obj=rev_b_obj,
-                        turn=turn,
-                        b_index_size=mm_table_obj.list_of_move_size[1],
-                        get_a_index_by_move=get_a_index_by_move,
-                        get_b_index_by_move=get_b_index_by_move)
-
-                if len(mm_table_obj.raw_mm_table) <= mm_index:
-                    # 範囲外エラー
-                    # 無視
-                    pass
-                else:
-                    # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
-                    mm_table_obj.raw_mm_table[mm_index] = random.randint(0,1)
+                #if len(mm_table_obj.raw_mm_table) <= mm_index:
+                #    # 範囲外エラー
+                #    # 無視
+                #    pass
+                #else:
+                #    # 値は 0, 1 の２値。乱数で単純に上書き。つまり、変わらないこともある
+                #    mm_table_obj.raw_mm_table[mm_index] = random.randint(0,1)
 
 
         mm_table_obj.is_file_modified = True
