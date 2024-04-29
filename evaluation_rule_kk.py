@@ -208,8 +208,11 @@ class EvaluationRuleKk():
     def get_mm_index_by_2_moves(
             a_obj,
             b_obj,
-            turn):
-        """指し手２つの組み合わせインデックス
+            turn,
+            b_index_size,
+            get_a_index_by_move,
+            get_b_index_by_move):
+        """指し手２つの関係インデックス
 
         Parameters
         ----------
@@ -219,22 +222,31 @@ class EvaluationRuleKk():
             指し手 b
         turn : int
             手番
+        b_index_size : int
+            指し手 b のパターン数
+        get_a_index_by_move : func
+            指し手 a のテーブル番地を求める
+        get_b_index_by_move : func
+            指し手 b のテーブル番地を求める
         """
 
         # 同じ指し手を比較したら 0 とする（総当たりの二重ループとかでここを通る）
         if a_obj.as_usi == b_obj.as_usi:
             return 0
 
-        # 後手なら、指し手の先後をひっくり返す（将棋盤を１８０°回転させるのと同等）
+        # 相手番なら、指し手の先後をひっくり返す（将棋盤を１８０°回転させるのと同等）
+        # 常に自分の盤から見た状態にする
         if turn == cshogi.WHITE:
             a_obj = MoveHelper.flip_turn(a_obj)
             b_obj = MoveHelper.flip_turn(b_obj)
 
-        a_index = EvaluationRuleKk.get_k_index_by_move(
-                move_obj=b_obj)
-        b_index = EvaluationRuleKk.get_k_index_by_move(
+        a_index = get_a_index_by_move(
                 move_obj=a_obj)
+        b_index = get_b_index_by_move(
+                move_obj=b_obj)
 
         # ab関連。組み合わせは実装が難しいので廃止
-        kl_index = a_index * EvaluationRuleK.get_king_move_number() + b_index
-        return kl_index
+        mm_index = a_index * b_index_size + b_index
+        return mm_index
+    
+        #EvaluationRuleK.get_king_move_number()

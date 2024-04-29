@@ -372,11 +372,11 @@ class Kifuwarabe():
             k_obj = Move.from_usi(k_as_usi)
 
             k_index_in_kk = EvaluationRuleFacade.get_m_index_by_move(    # FIXME KK
-                    move=k_obj,
+                    move_obj=k_obj,
                     is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
 
             k_index_in_kp = EvaluationRuleFacade.get_m_index_by_move(    # FIXME KP
-                    move=k_obj,
+                    move_obj=k_obj,
                     is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
 
             #
@@ -413,11 +413,11 @@ class Kifuwarabe():
 
             # TODO ＫＰを、ＰＫにひっくり返してみる必要がある？
             p_index_in_kp = EvaluationRuleFacade.get_m_index_by_move(   # FIXME KP
-                    move=p_obj,
+                    move_obj=p_obj,
                     is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b)
 
             p_index_in_pp = EvaluationRuleFacade.get_m_index_by_move(
-                    move=p_obj,
+                    move_obj=p_obj,
                     is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a)
 
             #
@@ -493,11 +493,11 @@ class Kifuwarabe():
             l_obj = Move.from_usi(l_as_usi)
 
             k_index_in_kk = EvaluationRuleFacade.get_m_index_by_move(    # FIXME KK
-                    move=l_obj,
+                    move_obj=l_obj,
                     is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
 
             k_index_in_kp = EvaluationRuleFacade.get_m_index_by_move(   # FIXME KP
-                    move=l_obj,
+                    move_obj=l_obj,
                     is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_a)
 
             #
@@ -539,11 +539,11 @@ class Kifuwarabe():
 
             # TODO ＫＰを、ＰＫにひっくり返してみる必要がある？
             p_index_in_kp = EvaluationRuleFacade.get_m_index_by_move(   # FIXME KP
-                    move=q_obj,
+                    move_obj=q_obj,
                     is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b)
 
             p_index_in_pp = EvaluationRuleFacade.get_m_index_by_move(
-                    move=q_obj,
+                    move_obj=q_obj,
                     is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a)
 
             #
@@ -605,11 +605,11 @@ class Kifuwarabe():
             k_obj = Move.from_usi(k_as_usi)
 
             k_index_in_kk = EvaluationRuleFacade.get_m_index_by_move(   # FIXME KK
-                    move=k_obj,
+                    move_obj=k_obj,
                     is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
 
             k_index_in_kp = EvaluationRuleFacade.get_m_index_by_move(   # FIXME KP
-                    move=k_obj,
+                    move_obj=k_obj,
                     is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_a)
 
             #
@@ -655,12 +655,12 @@ class Kifuwarabe():
             p_obj = Move.from_usi(p_as_usi)
 
             # TODO ＫＰを、ＰＫにひっくり返してみる必要がある？
-            p_index_in_kp = EvaluationRuleFacade.get_m_index_by_move(   # FIXME KP
-                    move=p_obj,
+            p_index_in_kp = EvaluationRuleFacade.get_m_index_by_move(
+                    move_obj=p_obj,
                     is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b)
 
             p_index_in_pp = EvaluationRuleFacade.get_m_index_by_move(
-                    move=p_obj,
+                    move_obj=p_obj,
                     is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a)
 
             #

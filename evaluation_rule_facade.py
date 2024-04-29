@@ -1,9 +1,7 @@
-import cshogi
 from evaluation_rule_k import EvaluationRuleK
 from evaluation_rule_p import EvaluationRuleP
 from evaluation_move_specification import EvaluationMoveSpecification
 from move import Move
-from move_helper import MoveHelper
 
 
 class EvaluationRuleFacade():
@@ -18,61 +16,6 @@ class EvaluationRuleFacade():
         86:'L',   # 'L*'
         87:'P',   # 'P*'
     }
-
-
-    # FIXME KK,KP,PP で分けたい
-    @staticmethod
-    def get_m_index_by_move(
-            move,
-            is_king):
-        """指し手を指定すると、指し手のインデックスを返す。
-        ＭＭ関係用。ただしＫＫ関係を除く
-
-        Parameters
-        ----------
-        move : Move
-            指し手
-        is_king : bool
-            玉の動きか？
-
-        Returns
-        -------
-            - 指し手のインデックス
-        """
-
-        # 移動元マス番号
-        try:
-            src_sq = Move._src_dst_str_1st_figure_to_sq[move.src_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.src_str[1]]
-        except Exception as e:
-            raise Exception(f"src_sq error in '{move.as_usi}'.  ('{move.src_str[0]}', '{move.src_str[1]}')  e: {e}")
-
-        # 移動先マス番号
-        try:
-            dst_sq = Move._src_dst_str_1st_figure_to_sq[move.dst_str[0]] + Move._src_dst_str_2nd_figure_to_index[move.dst_str[1]]
-        except Exception as e:
-            raise Exception(f"dst_sq error in '{move.as_usi}'.  ('{move.dst_str[0]}', '{move.dst_str[1]}')  e: {e}")
-
-        # 玉は成りの判定を削る
-        if is_king:
-            pro_size = 1
-            pro_num = 0     # 玉は成らない
-
-        else:
-            pro_size = 2
-
-            # 成りか？
-            if move.promoted:
-                pro_num = 1
-            else:
-                pro_num = 0
-
-        rank_size = 9
-
-        file_size = 9
-
-        return (src_sq * file_size * rank_size * pro_size) + (dst_sq * pro_size) + pro_num
-
-
 
 
     @staticmethod
@@ -265,40 +208,3 @@ class EvaluationRuleFacade():
             list_of_move_as_usi.append(move_as_usi)
 
         return list_of_move_as_usi
-
-
-    # FIXME KK,KP,PP で分けたい
-    @staticmethod
-    def get_mm_index_by_2_moves(
-            a_move_obj,
-            a_is_king,
-            b_move_obj,
-            b_is_king,
-            turn,
-            list_of_move_size):
-        """指し手２つの組み合わせインデックス"""
-
-        # 同じ指し手を比較したら 0 とする（総当たりの二重ループとかでここを通る）
-        if a_move_obj.as_usi == b_move_obj.as_usi:
-            return 0
-
-        # 相手番なら、指し手の先後をひっくり返す（将棋盤を１８０°回転させるのと同等）
-        # 常に自分の盤から見た状態にする
-        if turn == cshogi.WHITE:
-            a_move_obj = MoveHelper.flip_turn(a_move_obj)
-            b_move_obj = MoveHelper.flip_turn(b_move_obj)
-
-        # FIXME KK,KP,PP で分けたい
-        a_index = EvaluationRuleFacade.get_m_index_by_move(
-                move=a_move_obj,
-                is_king=a_is_king)
-
-        # FIXME KK,KP,PP で分けたい
-        b_index = EvaluationRuleFacade.get_m_index_by_move(
-                move=b_move_obj,
-                is_king=b_is_king)
-
-
-        # 組み合わせは実装が難しいので、ただの ab 関係とします
-        mm_index = a_index * list_of_move_size[1] + b_index
-        return mm_index
