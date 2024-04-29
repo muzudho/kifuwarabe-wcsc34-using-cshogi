@@ -35,7 +35,7 @@ class EvaluationLoad():
 
                     one_byte_binary = f.read(1)
 
-            print(f"[{datetime.datetime.now()}] (v2,v3) '{file_name}' file loaded. evaluation table size: {len(raw_mm_table)}", flush=True)
+            print(f"[{datetime.datetime.now()}] '{file_name}' file loaded. evaluation table size: {len(raw_mm_table)}", flush=True)
 
         except FileNotFoundError as ex:
             print(f"[evaluation table / load from file] [{file_name}] file error. {ex}")

@@ -263,7 +263,8 @@ class Kifuwarabe():
                 # ［対局結果］　常に記憶する
                 self._result_file.save_win(self._my_turn)
 
-                # ［指した手］　勝ったら全部忘れる
+                # ［指した手］
+                # FIXME　勝ったら全部忘れる（後工程の評価値の保存に失敗するとデータが反映されないが、後回し）
                 self._king_canditates_memory.delete_file()
                 self._pieces_canditates_memory.delete_file()
 
