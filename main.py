@@ -1,7 +1,8 @@
 import cshogi
 import random
 import datetime
-from learn_candidates_memory import CandidatesMemory
+from learn_candidates_king import LearnCandidatesKing
+from learn_candidates_pieces import LearnCandidatesPieces
 from evaluation_facade import EvaluationFacade
 from lottery import Lottery
 from ko_memory import KoMemory
@@ -131,12 +132,10 @@ class Kifuwarabe():
         self._player_file_number = random.randint(1,6)
 
         # 前回の対局の指し手の候補手の記憶
-        self._king_canditates_memory = CandidatesMemory.load_from_file(
-                self._player_file_number,
-                is_king=True)
-        self._pieces_canditates_memory = CandidatesMemory.load_from_file(
-                self._player_file_number,
-                is_king=False)
+        self._king_canditates_memory = LearnCandidatesKing.from_file(
+                self._player_file_number)
+        self._pieces_canditates_memory = LearnCandidatesPieces.from_file(
+                self._player_file_number)
 
         # コウの記録
         self._ko_memory = KoMemory()

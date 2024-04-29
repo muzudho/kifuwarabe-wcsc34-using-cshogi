@@ -5,6 +5,9 @@ from learn import Learn
 from evaluation_save_kk import EvaluationSaveKk
 from evaluation_save_kp import EvaluationSaveKp
 from evaluation_save_pp import EvaluationSavePp
+from evaluation_table_facade_kk import EvaluationTableFacadeKk
+from evaluation_table_facade_kp import EvaluationTableFacadeKp
+from evaluation_table_facade_pp import EvaluationTableFacadePp
 
 
 class EvaluationFacade():
@@ -136,9 +139,10 @@ class EvaluationFacade():
         pieces_move_as_usi_and_policy_dictionary = {}
 
         # ＫＰポリシー　ｉｎ　ＫＰテーブル
-        kp_policy_dictionary = self._kp_table_obj.make_move_as_usi_and_policy_dictionary_2(
-                a_move_collection_as_usi=king_move_collection_as_usi,
-                b_move_collection_as_usi=pieces_move_collection_as_usi,
+        kp_policy_dictionary = EvaluationTableFacadeKp.make_move_as_usi_and_policy_dictionary_2(
+                kp_table_obj=self._kp_table_obj,
+                k_move_collection_as_usi=king_move_collection_as_usi,
+                p_move_collection_as_usi=pieces_move_collection_as_usi,
                 turn=turn)
 
         # 評価値をマージ
@@ -149,9 +153,10 @@ class EvaluationFacade():
                 king_move_as_usi_and_policy_dictionary[king_move_as_usi] = policy
 
         # ＫＬポリシー　ｉｎ　ＫＫテーブル
-        kl_policy_dictionary = self.kk_table_obj.make_move_as_usi_and_policy_dictionary_2(
-                a_move_collection_as_usi=king_move_collection_as_usi,
-                b_move_collection_as_usi=lord_move_collection_as_usi,
+        kl_policy_dictionary = EvaluationTableFacadeKk.make_move_as_usi_and_policy_dictionary_2(
+                kl_table_obj=self.kk_table_obj,
+                k_move_collection_as_usi=king_move_collection_as_usi,
+                l_move_collection_as_usi=lord_move_collection_as_usi,
                 turn=turn)
 
         # 評価値をマージ
@@ -162,9 +167,10 @@ class EvaluationFacade():
                 king_move_as_usi_and_policy_dictionary[king_move_as_usi] = policy
 
         # ＫＱポリシー　ｉｎ　ＫＰテーブル
-        kq_policy_dictionary = self._kp_table_obj.make_move_as_usi_and_policy_dictionary_2(
-                a_move_collection_as_usi=king_move_collection_as_usi,
-                b_move_collection_as_usi=quaffers_move_collection_as_usi,
+        kq_policy_dictionary = EvaluationTableFacadeKp.make_move_as_usi_and_policy_dictionary_2(
+                kp_table_obj=self._kp_table_obj,
+                k_move_collection_as_usi=king_move_collection_as_usi,
+                p_move_collection_as_usi=quaffers_move_collection_as_usi,
                 turn=turn)
 
         # 評価値をマージ
@@ -175,9 +181,10 @@ class EvaluationFacade():
                 king_move_as_usi_and_policy_dictionary[king_move_as_usi] = policy
 
         # ＰＰポリシー　ｉｎ　ＰＰテーブル
-        pp_policy_dictionary = self._pp_table_obj.make_move_as_usi_and_policy_dictionary_2(
-                a_move_collection_as_usi=pieces_move_collection_as_usi,
-                b_move_collection_as_usi=pieces_move_collection_as_usi,
+        pp_policy_dictionary = EvaluationTableFacadePp.make_move_as_usi_and_policy_dictionary_2(
+                pq_table_obj=self._pp_table_obj,
+                p_move_collection_as_usi=pieces_move_collection_as_usi,
+                q_move_collection_as_usi=pieces_move_collection_as_usi,
                 turn=turn)
 
         # 評価値をマージ
@@ -189,9 +196,10 @@ class EvaluationFacade():
 
         # ＰＬポリシー　ｉｎ　ＫＰテーブル
         # TODO 盤の先後をひっくり返さないといけないか？
-        pl_policy_dictionary = self._kp_table_obj.make_move_as_usi_and_policy_dictionary_2(
-                a_move_collection_as_usi=pieces_move_collection_as_usi,
-                b_move_collection_as_usi=lord_move_collection_as_usi,
+        pl_policy_dictionary = EvaluationTableFacadeKp.make_move_as_usi_and_policy_dictionary_2(
+                kp_table_obj=self._kp_table_obj,
+                k_move_collection_as_usi=pieces_move_collection_as_usi,
+                p_move_collection_as_usi=lord_move_collection_as_usi,
                 turn=turn)
 
         # 評価値をマージ
@@ -202,9 +210,10 @@ class EvaluationFacade():
                 pieces_move_as_usi_and_policy_dictionary[piece_move_as_usi] = policy
 
         # ＰＱポリシー　ｉｎ　ＰＰテーブル
-        pq_policy_dictionary = self._pp_table_obj.make_move_as_usi_and_policy_dictionary_2(
-                a_move_collection_as_usi=pieces_move_collection_as_usi,
-                b_move_collection_as_usi=quaffers_move_collection_as_usi,
+        pq_policy_dictionary = EvaluationTableFacadePp.make_move_as_usi_and_policy_dictionary_2(
+                pq_table_obj=self._pp_table_obj,
+                p_move_collection_as_usi=pieces_move_collection_as_usi,
+                q_move_collection_as_usi=quaffers_move_collection_as_usi,
                 turn=turn)
 
         # 評価値をマージ

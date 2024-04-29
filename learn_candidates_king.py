@@ -15,7 +15,7 @@ class LearnCandidatesKing(LearnCandidatesMove):
 
 
     @staticmethod
-    def load_from_file(
+    def from_file(
             file_number):
         """読込"""
         candidates_king = LearnCandidatesKing(file_number)
