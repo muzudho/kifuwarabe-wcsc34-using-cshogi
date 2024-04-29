@@ -8,10 +8,12 @@ from evaluation_save_pp import EvaluationSavePp
 from evaluation_table_facade_kk import EvaluationTableFacadeKk
 from evaluation_table_facade_kp import EvaluationTableFacadeKp
 from evaluation_table_facade_pp import EvaluationTableFacadePp
+from evaluation_rule_k import EvaluationRuleK
 from evaluation_rule_kk import EvaluationRuleKk
 from evaluation_rule_kp import EvaluationRuleKp
-from evaluation_rule_pp import EvaluationRulePp
 from evaluation_rule_mm import EvaluationRuleMm
+from evaluation_rule_p import EvaluationRuleP
+from evaluation_rule_pp import EvaluationRulePp
 
 
 class EvaluationFacade():
@@ -147,7 +149,9 @@ class EvaluationFacade():
                 mm_table_obj=self._kp_table_obj,
                 a_move_collection_as_usi=king_move_collection_as_usi,
                 b_move_collection_as_usi=pieces_move_collection_as_usi,
-                turn=turn)
+                turn=turn,
+                get_a_index_by_move=EvaluationRuleK.get_m_index_by_move,
+                get_b_index_by_move=EvaluationRuleP.get_m_index_by_move)
 
         # 評価値をマージ
         for king_move_as_usi, policy in kp_policy_dictionary.items():
@@ -161,7 +165,9 @@ class EvaluationFacade():
                 mm_table_obj=self.kk_table_obj,
                 a_move_collection_as_usi=king_move_collection_as_usi,
                 b_move_collection_as_usi=lord_move_collection_as_usi,
-                turn=turn)
+                turn=turn,
+                get_a_index_by_move=EvaluationRuleK.get_m_index_by_move,
+                get_b_index_by_move=EvaluationRuleK.get_m_index_by_move)
 
         # 評価値をマージ
         for king_move_as_usi, policy in kl_policy_dictionary.items():
@@ -175,7 +181,9 @@ class EvaluationFacade():
                 mm_table_obj=self._kp_table_obj,
                 a_move_collection_as_usi=king_move_collection_as_usi,
                 b_move_collection_as_usi=quaffers_move_collection_as_usi,
-                turn=turn)
+                turn=turn,
+                get_a_index_by_move=EvaluationRuleK.get_m_index_by_move,
+                get_b_index_by_move=EvaluationRuleP.get_m_index_by_move)
 
         # 評価値をマージ
         for king_move_as_usi, policy in kq_policy_dictionary.items():
@@ -189,7 +197,9 @@ class EvaluationFacade():
                 mm_table_obj=self._pp_table_obj,
                 a_move_collection_as_usi=pieces_move_collection_as_usi,
                 b_move_collection_as_usi=pieces_move_collection_as_usi,
-                turn=turn)
+                turn=turn,
+                get_a_index_by_move=EvaluationRuleP.get_m_index_by_move,
+                get_b_index_by_move=EvaluationRuleP.get_m_index_by_move)
 
         # 評価値をマージ
         for piece_move_as_usi, policy in pp_policy_dictionary.items():
@@ -199,26 +209,32 @@ class EvaluationFacade():
                 pieces_move_as_usi_and_policy_dictionary[piece_move_as_usi] = policy
 
         # ＰＬポリシー　ｉｎ　ＫＰテーブル
-        # TODO 盤の先後をひっくり返さないといけないか？
+        # 敵玉が、自玉を除く自軍の駒を見ている視点
         pl_policy_dictionary = EvaluationRuleMm.make_move_as_usi_and_policy_dictionary_2(
                 mm_table_obj=self._kp_table_obj,
-                a_move_collection_as_usi=pieces_move_collection_as_usi,
-                b_move_collection_as_usi=lord_move_collection_as_usi,
-                turn=turn)
+                a_move_collection_as_usi=lord_move_collection_as_usi,
+                b_move_collection_as_usi=pieces_move_collection_as_usi,
+                turn=turn,
+                get_a_index_by_move=EvaluationRuleK.get_m_index_by_move,
+                get_b_index_by_move=EvaluationRuleP.get_m_index_by_move)
 
         # 評価値をマージ
         for piece_move_as_usi, policy in pl_policy_dictionary.items():
             if piece_move_as_usi in pieces_move_as_usi_and_policy_dictionary:
-                pieces_move_as_usi_and_policy_dictionary[piece_move_as_usi] += policy
+                # 敵玉視点で見ているので、正負を逆にする
+                pieces_move_as_usi_and_policy_dictionary[piece_move_as_usi] += -policy
             else:
-                pieces_move_as_usi_and_policy_dictionary[piece_move_as_usi] = policy
+                # 敵玉視点で見ているので、正負を逆にする
+                pieces_move_as_usi_and_policy_dictionary[piece_move_as_usi] = -policy
 
         # ＰＱポリシー　ｉｎ　ＰＰテーブル
         pq_policy_dictionary = EvaluationRuleMm.make_move_as_usi_and_policy_dictionary_2(
                 mm_table_obj=self._pp_table_obj,
                 a_move_collection_as_usi=pieces_move_collection_as_usi,
                 b_move_collection_as_usi=quaffers_move_collection_as_usi,
-                turn=turn)
+                turn=turn,
+                get_a_index_by_move=EvaluationRuleP.get_m_index_by_move,
+                get_b_index_by_move=EvaluationRuleP.get_m_index_by_move)
 
         # 評価値をマージ
         for piece_move_as_usi, policy in pq_policy_dictionary.items():

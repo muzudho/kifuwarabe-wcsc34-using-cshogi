@@ -58,7 +58,9 @@ class EvaluationRuleMm():
             mm_table_obj,
             a_move_collection_as_usi,
             b_move_collection_as_usi,
-            turn):
+            turn,
+            get_a_index_by_move,
+            get_b_index_by_move):
         """指し手に評価値を付ける
 
         Parameters
@@ -69,6 +71,10 @@ class EvaluationRuleMm():
             指し手の収集（客体）
         turn : int
             手番
+        get_a_index_by_move : func
+            指し手 a のテーブル番地を求める
+        get_b_index_by_move : func
+            指し手 b のテーブル番地を求める
         """
 
         # 指し手に評価値を付ける
@@ -88,7 +94,9 @@ class EvaluationRuleMm():
                         a_obj=a_obj,
                         b_obj=b_obj,
                         turn=turn,
-                        b_index_size=mm_table_obj.list_of_move_size[1])
+                        b_index_size=mm_table_obj.list_of_move_size[1],
+                        get_a_index_by_move=get_a_index_by_move,
+                        get_b_index_by_move=get_b_index_by_move)
 
                 # テーブルの番地を、ポリシー値に変換
                 policy = mm_table_obj.get_policy_by_mm_index(mm_index)

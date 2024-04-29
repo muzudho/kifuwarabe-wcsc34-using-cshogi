@@ -475,7 +475,7 @@ class Kifuwarabe():
             # ----
             #
             verofy_usi = EvaluationRuleM.get_move_as_usi_by_m_index(
-                    m_index=k_index_in_kk,
+                    m_index=l_index,
                     is_king=True)
 
             #
@@ -499,7 +499,7 @@ class Kifuwarabe():
             # ---------
             #
             q_obj = Move.from_usi(q_as_usi)
-            q_index = EvaluationRuleFacade.get_m_index_by_move(
+            q_index = EvaluationRuleP.get_m_index_by_move(
                     move_obj=q_obj)
 
             #
@@ -547,36 +547,27 @@ class Kifuwarabe():
             km_policy = king_move_as_usi_and_policy_dictionary[k_as_usi]
 
             #
-            # ＫＫ表と、ＫＰ表
-            # --------------
+            # 指し手　k
+            # ---------
             #
             k_obj = Move.from_usi(k_as_usi)
-
-            k_index_in_kk = EvaluationRuleFacade.get_m_index_by_move(   # FIXME KK
+            k_index = EvaluationRuleK.get_m_index_by_move(
                     move_obj=k_obj,
-                    is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
-
-            k_index_in_kp = EvaluationRuleFacade.get_m_index_by_move(   # FIXME KP
-                    move_obj=k_obj,
-                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_a)
+                    is_king=True)
 
             #
             # 検算
             # ----
             #
-            verify_usi_in_kk = EvaluationRuleM.get_move_as_usi_by_m_index(
-                    m_index=k_index_in_kk,
-                    is_king=self._evaluation_facade_obj.kk_table_obj.is_king_of_a)
-
-            verify_usi_in_kp = EvaluationRuleM.get_move_as_usi_by_m_index(
-                    m_index=k_index_in_kp,
-                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_a)
+            verify_usi = EvaluationRuleM.get_move_as_usi_by_m_index(
+                    m_index=k_index,
+                    is_king=True)
 
             #
             # 表示
             # ----
             #
-            print(f'  ({number:3}) K:{k_as_usi:5} = KK{k_index_in_kk}  KP{k_index_in_kp:5}  policy:{km_policy:3}  検算 KK:{verify_usi_in_kk:5}  KP:{verify_usi_in_kp:5}')
+            print(f'  ({number:3}) K:{k_as_usi:5} = {k_index}  policy:{km_policy:3}  検算 {verify_usi:5}')
             number += 1
 
         #
@@ -594,38 +585,26 @@ class Kifuwarabe():
             pm_policy = pieces_move_as_usi_and_score_dictionary[p_as_usi]
 
             #
-            # ＫＰ表と、ＰＰ表
-            # --------------
+            # 指し手　p
+            # ---------
             #
             p_obj = Move.from_usi(p_as_usi)
-
-            # TODO ＫＰを、ＰＫにひっくり返してみる必要がある？
-            p_index_in_kp = EvaluationRuleFacade.get_m_index_by_move(
-                    move_obj=p_obj,
-                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b)
-
-            p_index_in_pp = EvaluationRuleFacade.get_m_index_by_move(
-                    move_obj=p_obj,
-                    is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a)
+            p_index = EvaluationRuleP.get_m_index_by_move(
+                    move_obj=p_obj)
 
             #
             # 検算
             # ----
             #
-            # TODO ＫＰを、ＰＫにひっくり返してみる必要がある？
-            verify_usi_in_kp = EvaluationRuleM.get_move_as_usi_by_m_index(
-                    m_index=p_index_in_kp,
-                    is_king=self._evaluation_facade_obj.kp_table_obj.is_king_of_b)
-
-            verify_usi_in_pp = EvaluationRuleM.get_move_as_usi_by_m_index(
-                    m_index=p_index_in_pp,
-                    is_king=self._evaluation_facade_obj.pp_table_obj.is_king_of_a)
+            verify_usi = EvaluationRuleM.get_move_as_usi_by_m_index(
+                    m_index=p_index,
+                    is_king=False)
 
             #
             # 表示
             # ----
             #
-            print(f'  ({number:3}) P:{p_as_usi:5} = PP{p_index_in_pp:5}  policy:{pm_policy:3}  検算 KP:{verify_usi_in_kp:5}  PP:{verify_usi_in_pp:5}')
+            print(f'  ({number:3}) P:{p_as_usi:5} = {p_index:5}  policy:{pm_policy:3}  検算 {verify_usi:5}')
             number += 1
 
 
