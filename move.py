@@ -178,7 +178,7 @@ class Move():
         #
         # 移動先のマス番号を序数で
         #
-        dst_sq = (dst_rank - 1) * 9 + (dst_file - 1)
+        dst_sq = (dst_file - 1) * 9 + (dst_rank - 1)
 
         #
         # 成ったか？
