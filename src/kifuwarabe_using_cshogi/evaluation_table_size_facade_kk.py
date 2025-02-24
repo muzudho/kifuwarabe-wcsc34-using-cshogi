@@ -1,5 +1,5 @@
-from evaluation_rule_k import EvaluationRuleK
-from evaluation_table_size import EvaluationTableSize
+from .evaluation_rule_k import EvaluationRuleK
+from .evaluation_table_size import EvaluationTableSize
 
 
 class EvaluationTableSizeFacadeKk():

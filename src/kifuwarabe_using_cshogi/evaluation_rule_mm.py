@@ -1,6 +1,7 @@
 import cshogi
-from move import Move
-from move_helper import MoveHelper
+
+from .move import Move
+from .move_helper import MoveHelper
 
 
 class EvaluationRuleMm():

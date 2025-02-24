@@ -1,6 +1,7 @@
 import datetime
-from evaluation_file_pp import EvaluationFilePp
-from evaluation_save import EvaluationSave
+
+from .evaluation_file_pp import EvaluationFilePp
+from .evaluation_save import EvaluationSave
 
 
 class EvaluationSavePp():

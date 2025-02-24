@@ -1,7 +1,8 @@
 import cshogi
 import random
-from move import Move
-from move_list import create_move_lists_of_king_and_pieces
+
+from .move import Move
+from .move_list import create_move_lists_of_king_and_pieces
 
 
 class Lottery():

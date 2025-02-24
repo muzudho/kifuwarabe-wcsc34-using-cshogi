@@ -1,6 +1,7 @@
 import os
 import datetime
-from turn import Turn
+
+from .turn import Turn
 
 
 class ResultFile():

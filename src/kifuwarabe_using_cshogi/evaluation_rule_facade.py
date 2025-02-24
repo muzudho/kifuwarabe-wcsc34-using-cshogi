@@ -1,6 +1,6 @@
-from evaluation_rule_k import EvaluationRuleK
-from evaluation_rule_m import EvaluationRuleM
-from evaluation_rule_p import EvaluationRuleP
+from .evaluation_rule_k import EvaluationRuleK
+from .evaluation_rule_m import EvaluationRuleM
+from .evaluation_rule_p import EvaluationRuleP
 
 
 class EvaluationRuleFacade():

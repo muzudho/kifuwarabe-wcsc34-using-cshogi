@@ -1,9 +1,10 @@
 import os
 import datetime
-from evaluation_table_facade_kp import EvaluationTableFacadeKp
-from evaluation_table_size_facade_kp import EvaluationTableSizeFacadeKp
-from evaluation_load import EvaluationLoad
-from evaluation_table_raw_random import EvaluationTableRawRandom
+
+from .evaluation_table_facade_kp import EvaluationTableFacadeKp
+from .evaluation_table_size_facade_kp import EvaluationTableSizeFacadeKp
+from .evaluation_load import EvaluationLoad
+from .evaluation_table_raw_random import EvaluationTableRawRandom
 
 
 class EvaluationFileKp():

@@ -1,6 +1,7 @@
 import os
-from learn_candidates_move import LearnCandidatesMove
-from learn_candidates_load import LearnCandidatesLoad
+
+from .learn_candidates_move import LearnCandidatesMove
+from .learn_candidates_load import LearnCandidatesLoad
 
 
 class LearnCandidatesKing(LearnCandidatesMove):

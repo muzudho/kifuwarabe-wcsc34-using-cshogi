@@ -1,19 +1,19 @@
-from evaluation_file_kk import EvaluationFileKk
-from evaluation_file_kp import EvaluationFileKp
-from evaluation_file_pp import EvaluationFilePp
-from learn import Learn
-from evaluation_save_kk import EvaluationSaveKk
-from evaluation_save_kp import EvaluationSaveKp
-from evaluation_save_pp import EvaluationSavePp
-from evaluation_table_facade_kk import EvaluationTableFacadeKk
-from evaluation_table_facade_kp import EvaluationTableFacadeKp
-from evaluation_table_facade_pp import EvaluationTableFacadePp
-from evaluation_rule_k import EvaluationRuleK
-from evaluation_rule_kk import EvaluationRuleKk
-from evaluation_rule_kp import EvaluationRuleKp
-from evaluation_rule_mm import EvaluationRuleMm
-from evaluation_rule_p import EvaluationRuleP
-from evaluation_rule_pp import EvaluationRulePp
+from .evaluation_file_kk import EvaluationFileKk
+from .evaluation_file_kp import EvaluationFileKp
+from .evaluation_file_pp import EvaluationFilePp
+from .learn import Learn
+from .evaluation_save_kk import EvaluationSaveKk
+from .evaluation_save_kp import EvaluationSaveKp
+from .evaluation_save_pp import EvaluationSavePp
+from .evaluation_table_facade_kk import EvaluationTableFacadeKk
+from .evaluation_table_facade_kp import EvaluationTableFacadeKp
+from .evaluation_table_facade_pp import EvaluationTableFacadePp
+from .evaluation_rule_k import EvaluationRuleK
+from .evaluation_rule_kk import EvaluationRuleKk
+from .evaluation_rule_kp import EvaluationRuleKp
+from .evaluation_rule_mm import EvaluationRuleMm
+from .evaluation_rule_p import EvaluationRuleP
+from .evaluation_rule_pp import EvaluationRulePp
 
 
 class EvaluationFacade():

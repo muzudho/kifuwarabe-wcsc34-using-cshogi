@@ -1,6 +1,6 @@
-from evaluation_table_mm import EvaluationTableMm
-from evaluation_rule_p import EvaluationRuleP
-from evaluation_table_size_facade_pp import EvaluationTableSizeFacadePp
+from .evaluation_table_mm import EvaluationTableMm
+from .evaluation_rule_p import EvaluationRuleP
+from .evaluation_table_size_facade_pp import EvaluationTableSizeFacadePp
 
 
 class EvaluationTableFacadePp():

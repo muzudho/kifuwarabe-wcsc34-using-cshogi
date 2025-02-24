@@ -1,7 +1,7 @@
-from evaluation_table_mm import EvaluationTableMm
-from evaluation_rule_k import EvaluationRuleK
-from evaluation_rule_p import EvaluationRuleP
-from evaluation_table_size_facade_kp import EvaluationTableSizeFacadeKp
+from .evaluation_table_mm import EvaluationTableMm
+from .evaluation_rule_k import EvaluationRuleK
+from .evaluation_rule_p import EvaluationRuleP
+from .evaluation_table_size_facade_kp import EvaluationTableSizeFacadeKp
 
 
 class EvaluationTableFacadeKp():

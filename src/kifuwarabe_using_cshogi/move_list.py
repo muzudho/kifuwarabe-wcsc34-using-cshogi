@@ -1,7 +1,8 @@
 # 指し手のリスト・ヘルパー
 
 import cshogi
-from move import Move
+
+from .move import Move
 
 
 def create_move_lists_of_king_and_pieces(

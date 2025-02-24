@@ -1,4 +1,4 @@
-from display_helper import DisplayHelper
+from .display_helper import DisplayHelper
 
 
 class EvaluationTableSize():

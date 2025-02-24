@@ -1,5 +1,5 @@
-from evaluation_move_specification import EvaluationMoveSpecification
-from move import Move
+from .evaluation_move_specification import EvaluationMoveSpecification
+from .move import Move
 
 
 class EvaluationRuleM():

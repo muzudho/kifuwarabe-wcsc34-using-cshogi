@@ -1,9 +1,10 @@
 import cshogi
 import random
 import datetime
-from evaluation_rule_mm import EvaluationRuleMm
-from move import Move
-from move_helper import MoveHelper
+
+from .evaluation_rule_mm import EvaluationRuleMm
+from .move import Move
+from .move_helper import MoveHelper
 
 
 class Learn():

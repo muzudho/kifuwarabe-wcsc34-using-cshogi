@@ -1,21 +1,31 @@
-from move import Move
+from .move import Move
 
 
-class EvaluationRuleP():
+class EvaluationRuleK():
 
 
     @staticmethod
-    def get_piece_move_number():
-        """玉以外の駒の指し手の数
+    def get_king_direction_max_number():
+        """玉の移動方向の最大数
 
         Returns
         -------
         - int
         """
+        return 8
 
-        #  sq   drop    sq   pro
-        # (81 +    7) * 81 *   2 = 14_256
-        return 14_256
+
+    @staticmethod
+    def get_king_move_number():
+        """玉の指し手の数
+
+        Returns
+        -------
+        - int
+        """
+        # move_number = sq * directions
+        #         648 = 81 *          8
+        return 648
 
 
     @staticmethod
@@ -33,7 +43,7 @@ class EvaluationRuleP():
             - 指し手のインデックス
         """
 
-        # 移動元マス番号
+        # 移動元マス番号。打も含む
         try:
             src_sq = Move._src_dst_str_1st_figure_to_sq[move_obj.src_str[0]] + Move._src_dst_str_2nd_figure_to_index[move_obj.src_str[1]]
         except Exception as e:
@@ -45,14 +55,8 @@ class EvaluationRuleP():
         except Exception as e:
             raise Exception(f"dst_sq error in '{move_obj.as_usi}'.  ('{move_obj.dst_str[0]}', '{move_obj.dst_str[1]}')  e: {e}")
 
-        # 成りか？
-        if move_obj.promoted:
-            pro = 1
-        else:
-            pro = 0
+        # 玉は成らない
 
-        #      src_sq * dst_size * pro_size +
-        #      ----------------------------   dst_sq * pro_size +
-        #                     81          2   -----------------   pro
-        #                                            *        2   ----
-        return src_sq *                 162 + dst_sq *        2 + pro
+        #      src_sq * dst_sq_squares + dst_sq
+        #               9 * 9
+        return src_sq * 81             + dst_sq

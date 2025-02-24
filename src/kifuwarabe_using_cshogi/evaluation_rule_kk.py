@@ -1,7 +1,8 @@
 import cshogi
-from move import Move
-from move_helper import MoveHelper
-from evaluation_rule_k import EvaluationRuleK
+
+from .move import Move
+from .move_helper import MoveHelper
+from .evaluation_rule_k import EvaluationRuleK
 
 
 class EvaluationRuleKk():
